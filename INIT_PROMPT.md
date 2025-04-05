@@ -1,39 +1,44 @@
 <!--
 (EXECUTE THIS PREREQUISITE FIRST THING UPON RECEIVING THE PROMPT, DO NOT LOAD MEMORY BANK AND PROCESS USER INPUT BEFOREHAND, IF THE MEMORY BANK IS ALREADY ACTIVE, DROP OR IGNORE THE MEMORY BANK CONTEXT)
 ROO PREREQUISITE INSTRUCTIONS:
-1. Identify the absolute directory path where this project resides.
-2. Search all files within the `.roo/` directory (specifically `system-prompt-*` files).
-3. Replace ALL occurrences of the hardcoded path `/home/mine/starter-monorepo` within those files with path identified in step 1.
-4. ONLY AFTER step 3 is completed, proceed to parse user-provided configuration values (if any) and load the Memory Bank (if present).
+1. Check the current agent mode that you're running in, switch to `default` mode if possible.
+2. Identify the absolute directory path where this project resides.
+3. Search all files within the `.roo/` directory (specifically `system-prompt-*` files).
+4. Replace ALL occurrences of the hardcoded path `/home/mine/starter-monorepo` within those files with path identified in step 1.
+5. ONLY AFTER step 3 is completed, proceed to parse user-provided configuration values (if any) and load the Memory Bank (if present).
+6. Re-read the internal instructions/rules below (e.g: `ROO EXECUTION OPTIMIZATION INSTRUCTION`, ...) and KEEP THEM IN MIND, DO NOT FORGOT ABOUT THEM, THEY ARE IMPORTANT.
 -->
 <!--
 ROO EXECUTION OPTIMIZATION INSTRUCTION:
 When performing the setup steps below (especially steps involving file modifications like removals, renaming, and context updates), analyze ALL required changes for a specific file based on the user's configuration *before* making any edits. Consolidate these changes into a single file modification operation (e.g., one `apply_diff` or `write_to_file` call per file) whenever feasible, instead of performing multiple separate edits on the same file. Read the file content only once if multiple changes are planned for it.
 -->
-<!-- ROO CORE DEPENDENCY PRESERVATION:
+<!--
+ROO CORE DEPENDENCY PRESERVATION:
 During cleanup steps, DO NOT remove these dependencies, they are core configurations for the monorepo:
 + '@antfu/eslint-config' dependency from package.json or its usage within eslint.config.js.
 -->
-<!-- ROO UNCERTAINTY HANDLING:
+<!--
+ROO UNCERTAINTY HANDLING:
 If, during any removal or modification step, you are not completely certain whether a specific file, code block, configuration entry, or dependency should be removed/modified based on the user's choices and the preservation rules, DO NOT proceed automatically. Instead, ask the user for clarification before taking action. Prioritize avoiding unintended removals.
 -->
-<!-- ROO CLEANUP HANDLING CONSISTENCY:
+<!--
+ROO CLEANUP HANDLING CONSISTENCY:
 When cleaning up contents (e.g., removing demo apps, frontend configs, SST), do double-check and ensure that all corresponding references, descriptions and related codes throughout the project and Memory Bank (`memory-bank/`) are removed.
 -->
 
 # Project Initialization Prompt Template
 
-Welcome! Use this template to configure your new project based on the `starter-monorepo` repository. Provide the required information (detailed below) along with this template content in your prompt to Roo. After completing the prerequisite setup and considering the optimization and safety instructions (see internal comments above), Roo will then perform the following automated setup steps based on your input:
+Welcome! Use this template to configure your new project based on the `starter-monorepo` repository. Provide the required information (detailed below) along with this template content in your prompt to Roo. After completing the prerequisite setup and considering all instructions (see internal comments above), Roo will then perform the following automated setup steps based on your input:
 
 1. **Demo App Removal (Optional):** Based on your `REMOVE_DEMO_FULLSTACK` selection, the demo `frontend` and/or `backend` applications and their references and related codes throughout the project and Memory Bank will be removed.
 2. **Frontend Config Cleanup (Optional):** Based on `TARGET_HAVE_FRONTEND` and `FRONTEND_HAVE_VUE` (see below), unused frontend configurations (like UnoCSS, Vue ESLint rules) and the `locals/common-vue` directory might be removed.
 3. **SST Removal (Optional):** If requested via `REMOVE_SST`, SST configuration files (`sst.config.ts`, `.env.sst`), related scripts/dependencies in `package.json`, and references and related codes will be removed.
-<!-- + For Roo, when doing SST Removal, also remove the `pathe` and `@types/aws-lambda` dependency, they are only used by SST -->
+  <!-- + For Roo, when doing SST Removal, also remove the `pathe` and `@types/aws-lambda` dependency, they are only used by SST -->
 4. **Renaming:** All instances of the default name `starter-monorepo` within the project files and Memory Bank will be replaced with your chosen `MONOREPO_ROOT_NAME`.
 5. **Context Update:** The root `README.md` and `memory-bank/productContext.md` will be updated with your `TARGET_PROJECT_GOAL_AND_DESCRIPTION`.
 6. **Initialize local secret env files:** Scan project for `.env.local` files and copy them to `.env.local.ignored`.
 7. **RooFlow Config Completion:** Roo will remind you to check/update the system information in `.roo/system-prompt-*` files (see [NOTE](#important-note-on-roo-configuration)). **Roo will pause here and wait for your confirmation** that you have completed this check before proceeding.
-8. **Cleanup:** This `INIT_PROMPT.md` file will be removed.
+8. **INIT_PROMPT file cleanup:** This `INIT_PROMPT.md` file will be removed.
 9. **Planning Phase:** After your confirmation and cleanup, Roo can optionally enter a feedback loop with you to help make plans, create goals, and break down your project goals into actionable steps.
 
 **Required Information:**
