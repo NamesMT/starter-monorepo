@@ -10,7 +10,7 @@ ROO PREREQUISITE INSTRUCTIONS:
 -->
 <!--
 ROO EXECUTION OPTIMIZATION INSTRUCTION:
-When performing the setup steps below (especially steps involving file modifications like removals, renaming, and context updates), analyze ALL required changes for a specific file based on the user's configuration *before* making any edits. Consolidate these changes into a single file modification operation (e.g., one `apply_diff` or `write_to_file` call per file) whenever feasible, instead of performing multiple separate edits on the same file. Read the file content only once if multiple changes are planned for it.
+When performing the setup steps below (especially steps involving file modifications like removals, renaming, and context updates), analyze ALL required changes for a specific file based on the user's configuration *before* making any edits. Consolidate these changes into a single file modification operation (e.g., one `apply_diff` or `write_to_file` call per file) whenever feasible, instead of performing multiple separate edits on the same file. Read the file content only once if multiple changes are planned for it. Similarly, if multiple files or directories need to be deleted as part of a single logical step (like removing a demo app), consolidate these deletions into a single `execute_command` call (e.g., `rm -rf path/to/app path/to/related/config`).
 -->
 <!--
 ROO CORE DEPENDENCY PRESERVATION:
