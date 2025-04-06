@@ -25,6 +25,10 @@ If, during any removal or modification step, you are not completely certain whet
 ROO CLEANUP HANDLING CONSISTENCY:
 When cleaning up contents (e.g., removing demo apps, frontend configs, SST), do double-check and ensure that all corresponding references, descriptions and related codes throughout the project and Memory Bank (`memory-bank/`) are removed.
 -->
+<!--
+ROO TOKEN EFFICIENCY:
+While executing the steps below, strive for efficiency in your internal reasoning (<thinking>) and explanations accompanying tool use and output to the user. Be clear and accurate, but avoid unnecessary verbosity or repetition, *especially* after the initial plan is understood. However, DO NOT sacrifice clarity or omit details critical for accurate execution according to all other instructions (Prerequisites, Optimization, Preservation, Uncertainty, Consistency). Adherence to those rules takes precedence over brevity.
+-->
 
 # Project Initialization Prompt Template
 
