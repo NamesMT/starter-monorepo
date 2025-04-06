@@ -44,7 +44,7 @@ Welcome! Use this template to configure your new project based on the `starter-m
 4. **Context Update & Renaming:** Process `TARGET_PROJECT_GOAL_AND_DESCRIPTION` (refine, confirm with user), then update related documents like `README.md` and Memory Bank, as well as replace `starter-monorepo` with `MONOREPO_ROOT_NAME` throughout project/Memory Bank.
 5. **Initialize local secret env files:** Scan project for `.env.local` files and copy them to `.env.local.ignored`.
 6. **RooFlow Config Completion:** Roo reminds you to check/update system info in `.roo/system-prompt-*` files (see [NOTE](#important-note-on-roo-configuration)). **Roo pauses here for your confirmation of done/skip.**
-7. **INIT_PROMPT file cleanup:** This `INIT_PROMPT.md` file will be removed.
+7. **INIT_PROMPT cleanup:** `INIT_PROMPT.md` its related files (`INIT_PROMPT-EXAMPLES.md`) will be removed.
 8. **Planning Phase:** After your confirmation and cleanup, Roo can optionally enter a feedback loop with you to help make plans, create goals, and break down your project goals into actionable steps.
 
 **Required Information:**
@@ -139,43 +139,11 @@ TARGET_PROJECT_GOAL_AND_DESCRIPTION="""
 
 To initialize your project, provide the **entire content of this file** in your prompt to Roo (e.g., by pasting it or attaching the file).
 
-You can specify the configuration values directly in the prompt *before* the template content. Include optional values only if needed:
-
-```
-# Example 1: Removing demo apps, no SST
-MONOREPO_ROOT_NAME="my-cli-tool"
-REMOVE_DEMO_FULLSTACK="remove_both"
-TARGET_PROJECT_GOAL_AND_DESCRIPTION="Build a cool CLI tool."
-TARGET_HAVE_FRONTEND="false" # Explicitly state no frontend. FRONTEND_HAVE_VUE is inferred false.
-REMOVE_SST="true"            # Remove SST config
-
-[Include/Paste INIT_PROMPT.md]
-
-# Example 2: Removing demo apps, target is a non-Vue frontend + Go backend, no SST
-MONOREPO_ROOT_NAME="my-react-go-fullstack"
-REMOVE_DEMO_FULLSTACK="remove_both"
-TARGET_PROJECT_GOAL_AND_DESCRIPTION="Build a fullstack that uses React frontend and Go backend."
-TARGET_HAVE_FRONTEND="true"  # Must specify true if removing demo but still want a frontend
-FRONTEND_HAVE_VUE="false"    # Must specify false if frontend is not Vue
-REMOVE_SST="true"            # Remove SST config (assuming Go backend doesn't use it)
-
-[Include/Paste INIT_PROMPT.md]
-
-# Example 3: Keeping demo backend (uses SST), replacing demo frontend with own Vue app
-MONOREPO_ROOT_NAME="my-custom-vue-fullstack"
-REMOVE_DEMO_FULLSTACK="remove_frontend"
-TARGET_PROJECT_GOAL_AND_DESCRIPTION="Build a fullstack that uses simple Vue"
-TARGET_HAVE_FRONTEND="true"  # Must specify true since demo frontend is removed
-FRONTEND_HAVE_VUE="true"     # Must specify true if the new frontend uses Vue
-# REMOVE_SST is omitted (defaults to false), keeping SST for the demo backend.
-# If TARGET_HAVE_FRONTEND or FRONTEND_HAVE_VUE were omitted here, Roo would ask.
-
-[Include/Paste INIT_PROMPT.md]
-```
-
-Alternatively, if you provide the template content on its own without specifying the required/relevant values upfront, Roo will first ask *how* you'd like to provide the missing information:
+If any required or relevant optional configuration values are missing, Roo will first ask *how* you'd like to provide the missing information:
 * **Interactively:** Roo will ask you for each missing value one by one (recommended for first-time users).
 * **Via Template Snippet:** Roo will provide a consolidated code block containing only the necessary configuration variables for you to fill out and paste back.
+
+(Advanced users: If you prefer to provide configuration values directly in the initial prompt, please see the separate [`INIT_PROMPT-EXAMPLES.md`](./INIT_PROMPT-EXAMPLES.md) file for the required format and examples.)
 
 ---
 
