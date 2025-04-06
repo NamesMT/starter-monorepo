@@ -21,7 +21,7 @@
     "@dotenvx/dotenvx": "1.11.4",
     "@types/aws-lambda": "^8.10.148",
     "@unocss/eslint-plugin": "^66.0.0",
-    "eslint": "^9.23.0",
+    "eslint": "^9.24.0",
     "frontend": "workspace:*",
     "lint-staged": "^15.5.0",
     "pathe": "^2.0.3",
@@ -29,11 +29,10 @@
     "std-env": "^3.9.0",
     "tsx": "^4.19.3",
     "turbo": "^2.5.0",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.3"
   },
   "pnpm": {
     "overrides": {
-      "@intlify/message-compiler": "^11.1.2",
       "is-arguments": "npm:@nolyfill/is-arguments@^1.0.44",
       "is-core-module": "npm:@nolyfill/is-core-module@^1.0.39",
       "is-generator-function": "npm:@nolyfill/is-generator-function@^1.0.44",

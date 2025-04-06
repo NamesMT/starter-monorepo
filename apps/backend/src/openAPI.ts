@@ -1,5 +1,5 @@
 import type { Hono } from 'hono'
-import { apiReference } from '@scalar/hono-api-reference'
+import { Scalar } from '@scalar/hono-api-reference'
 import { openAPISpecs } from 'hono-openapi'
 
 export function setupOpenAPI(app: Hono<any, any>, prefix = '/openapi') {
@@ -16,7 +16,7 @@ export function setupOpenAPI(app: Hono<any, any>, prefix = '/openapi') {
   // OpenAPI UI with Scalar
   app.get(
     `${prefix}/ui`,
-    apiReference({
+    Scalar({
       theme: 'deepSpace',
       url: `${prefix}/spec`,
     }),
