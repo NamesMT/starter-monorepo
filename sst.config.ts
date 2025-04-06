@@ -29,7 +29,7 @@ export default $config({
       handler: 'apps/backend/src/index.handler',
       timeout: '60 seconds',
       // If you need to process a big amount of data, you should create sub "job" functions
-      // instead of rising the the spec of the main function
+      // instead of rising the spec of the main function
       memory: '300 MB',
       streaming: false,
       architecture: 'arm64',
