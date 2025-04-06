@@ -31,6 +31,8 @@ export default frontendNuxtConfig(await antfu(
   {
     files: ['**/*.md'],
     rules: {
+      // // Experimental: allow multiple empty lines, this reduce conflicts AI Agents docs edits.
+      // 'style/no-multiple-empty-lines': 'off',
       'style/no-trailing-spaces': 'off',
     },
   },
