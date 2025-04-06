@@ -25,7 +25,7 @@
         "command",
         "mcp"
       ],
-      "source": "global"
+      "source": "project"
     },
     {
       "slug": "boomerang",
@@ -39,7 +39,7 @@
         "command",
         "mcp"
       ],
-      "source": "global"
+      "source": "project"
     }
   ]
 }
