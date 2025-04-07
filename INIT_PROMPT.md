@@ -7,8 +7,9 @@
 2. Identify the absolute directory path where this project resides.
 3. Search all files within the `.roo/` directory (specifically `system-prompt-*` files).
 4. Replace ALL occurrences of the hardcoded path `/home/mine/starter-monorepo` within those files with path identified in step 1.
-5. ONLY AFTER step 3 is completed, proceed to parse user-provided configuration values (if any) and load the Memory Bank (if present).
-6. Re-read the internal rules below (e.g: `ROO EXECUTION OPTIMIZATION INSTRUCTION`, ...) and KEEP THEM IN MIND, DO NOT FORGOT ABOUT THEM, THEY ARE IMPORTANT.
+5. Proceed to parse and ask (if needed) for configuration values.
+6. ONLY AFTER all steps above is done, load the Memory Bank (if present).
+7. Re-read the internal rules below (e.g: `ROO EXECUTION OPTIMIZATION INSTRUCTION`, ...) and KEEP THEM IN MIND, DO NOT FORGOT ABOUT THEM, THEY ARE IMPORTANT.
 
 ### ROO EXECUTION OPTIMIZATION:
 
@@ -141,7 +142,8 @@ To initialize your project, provide the **entire content of this file** in your 
 
 If any required or relevant optional configuration values are missing, Roo will first ask *how* you'd like to provide the missing information:
 * **Interactively:** Roo will ask you for each missing value one by one (recommended for first-time users).
-* **Via Template Snippet:** Roo will provide a consolidated code block containing only the necessary configuration variables for you to fill out and paste back.
+* **Via Template Snippet:** Roo will provide a consolidated code block containing ONLY the configuration variables for you to fill out and paste back.
+  <!-- Context for Roo: remember to also includes optional configs, and put comments (if any) on top of the config instead of inline -->
 
 (Advanced users: If you prefer to provide configuration values directly in the initial prompt, please see the separate [`INIT_PROMPT-EXAMPLES.md`](./INIT_PROMPT-EXAMPLES.md) file for the required format and examples.)
 
