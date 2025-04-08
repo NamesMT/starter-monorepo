@@ -4,12 +4,9 @@
 (EXECUTE THIS FIRST THING UPON RECEIVING THE PROMPT, DO NOT LOAD MEMORY BANK AND PROCESS USER INPUT BEFOREHAND, IF THE MEMORY BANK IS ALREADY ACTIVE, DROP OR IGNORE THE MEMORY BANK CONTEXT)
 
 1. Check the current agent mode that you're running in, switch to `default` mode if possible.
-2. Identify the absolute directory path where this project resides.
-3. Search all files within the `.roo/` directory (specifically `system-prompt-*` files).
-4. Replace ALL occurrences of the hardcoded path `/home/mine/starter-monorepo` within those files with path identified in step 1.
-5. Proceed to parse and ask (if needed) for configuration values.
-6. ONLY AFTER all steps above is done, load the Memory Bank (if present).
-7. Re-read the internal rules below (e.g: `ROO EXECUTION OPTIMIZATION INSTRUCTION`, ...) and KEEP THEM IN MIND, DO NOT FORGOT ABOUT THEM, THEY ARE IMPORTANT.
+2. Proceed to parse and ask (if needed) for configuration values.
+3. ONLY AFTER all steps above is done, load the Memory Bank (if present).
+4. Re-read the internal rules below (e.g: `ROO EXECUTION OPTIMIZATION INSTRUCTION`, ...) and KEEP THEM IN MIND, DO NOT FORGOT ABOUT THEM, THEY ARE IMPORTANT.
 
 ### ROO EXECUTION OPTIMIZATION:
 
@@ -44,9 +41,8 @@ Welcome! Use this template to configure your new project based on the `starter-m
   <!-- + Context For Roo: when doing SST Removal, these are SST's files: (`sst.config.ts`, `.env.sst`), also remove the `pathe` and `@types/aws-lambda` dependency, they are only used by SST -->
 4. **Context Update & Renaming:** Process `TARGET_PROJECT_GOAL_AND_DESCRIPTION` (refine, confirm with user), then update related documents like `README.md` and Memory Bank, as well as replace `starter-monorepo` with `MONOREPO_ROOT_NAME` throughout project/Memory Bank.
 5. **Initialize local secret env files:** Scan project for `.env.local` files and copy them to `.env.local.ignored`.
-6. **RooFlow Config Completion:** Roo reminds you to check/update system info in `.roo/system-prompt-*` files (see [NOTE](#important-note-on-roo-configuration)). **Roo pauses here for your confirmation of done/skip.**
-7. **INIT_PROMPT cleanup:** `INIT_PROMPT.md` its related files (`INIT_PROMPT-EXAMPLES.md`) will be removed.
-8. **Planning Phase:** After your confirmation and cleanup, Roo can optionally enter a feedback loop with you to help make plans, create goals, and break down your project goals into actionable steps.
+6. **INIT_PROMPT cleanup:** `INIT_PROMPT.md` its related files (`INIT_PROMPT-EXAMPLES.md`) will be removed.
+7. **Planning Phase:** After cleanup, Roo can optionally enter a feedback loop with you to help make plans, create goals, and break down your project goals into actionable steps.
 
 **Required Information:**
 
@@ -146,13 +142,3 @@ If any required or relevant optional configuration values are missing, Roo will 
   <!-- Context for Roo: remember to also includes optional configs, and put comments (if any) on top of the config instead of inline -->
 
 (Advanced users: If you prefer to provide configuration values directly in the initial prompt, please see the separate [`INIT_PROMPT-EXAMPLES.md`](./INIT_PROMPT-EXAMPLES.md) file for the required format and examples.)
-
----
-
-### **IMPORTANT NOTE ON ROO CONFIGURATION:**
-
-During the setup process (at step 7), Roo will pause and remind you to check the files located in the `.roo/` directory (specifically files named `system-prompt-*`).
-
-While Roo attempts to automatically update the `working_directory` path in these files as a prerequisite step, **it is HIGHLY RECOMMENDED THAT YOU SHOULD manually review and update the `SYSTEM INFORMATION` section (OS, shell, paths, etc.) within each of these `.roo/system-prompt-*` files to match YOUR development environment.** Failure to ensure this information is correct might cause Roo to behave unexpectedly or incorrectly later on.
-
-*(Tip: You can potentially use the install script from the RooFlow repository ([https://github.com/GreatScottyMac/RooFlow](https://github.com/GreatScottyMac/RooFlow)) to help automate updating this system information.)*

@@ -61,7 +61,7 @@ Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 This Turborepo has some additional tools already setup for you:
 - [TypeScript](https://www.typescriptlang.org/) for static type checking
 - [ESLint](https://eslint.org/) for code linting
-- 🤖 Includes configuration and initialization prompt for the [Roo Code AI Agent](https://marketplace.visualstudio.com/items?itemName=RooVeterinaryInc.roo-cline) VS Code extension, with [RooFlow Memory Bank System](https://github.com/GreatScottyMac/RooFlow) and [Boomerang Task Orchestration](https://docs.roocode.com/features/boomerang-tasks) **(CUSTOMIZED & OPTIMIZED FOR WORKING WITH MEMORY BANKS)** setup, ready for AI development productivity.
+- 🤖 Includes configuration and initialization prompt for the [**Roo Code AI Agent**](https://marketplace.visualstudio.com/items?itemName=RooVeterinaryInc.roo-cline) VS Code extension, with [**RooFlow *generic***](https://github.com/NamesMT/RooFlow-generic) (includes a customized [Boomerang Task Orchestration](https://docs.roocode.com/features/boomerang-tasks) mode) setup, ready for AI development productivity.
   - To start, open `Roo Code`, and type: `Hi Roo, @/INIT_PROMPT.md, lets start!`
 
 ### Build
