@@ -2,7 +2,7 @@
   "name": "starter-monorepo",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@10.7.1",
+  "packageManager": "pnpm@10.8.0",
   "engines": {
     "node": ">=20.13.1"
   },
@@ -14,16 +14,16 @@
     "prepare": "simple-git-hooks"
   },
   "dependencies": {
-    "sst": "^3.12.3"
+    "sst": "^3.13.10"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^4.11.0",
+    "@antfu/eslint-config": "^4.12.0",
     "@dotenvx/dotenvx": "1.11.4",
-    "@types/aws-lambda": "^8.10.148",
+    "@types/aws-lambda": "^8.10.149",
     "@unocss/eslint-plugin": "^66.0.0",
     "eslint": "^9.24.0",
     "frontend": "workspace:*",
-    "lint-staged": "^15.5.0",
+    "lint-staged": "^15.5.1",
     "pathe": "^2.0.3",
     "simple-git-hooks": "^2.12.1",
     "std-env": "^3.9.0",

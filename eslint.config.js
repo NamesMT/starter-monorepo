@@ -19,8 +19,6 @@ export default frontendNuxtConfig(await antfu(
   },
   {
     rules: {
-      // Allow trailing space in comments, for possible JSDoc formattings
-      'style/no-trailing-spaces': ['error', { ignoreComments: true }],
       // Relaxes inline statements a bit
       'style/max-statements-per-line': ['error', { max: 2 }],
       // Allow top-level await

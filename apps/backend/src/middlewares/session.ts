@@ -3,7 +3,7 @@ import { CookieStore, MemoryStore, Session, sessionMiddleware } from 'hono-sessi
 
 /**
  * `Cookies`-based manager by `hono-sessions`.
- * 
+ *
  * Default configuration uses `CookieStore` and just works out of the box.
  */
 export async function cookieSession() {
@@ -23,24 +23,28 @@ export async function cookieSession() {
 // TODO: Maybe turn this middleware into a package and fully document it.
 /**
  * `HTTP header`-based manager powered by `hono-sessions`'s internal code.
- * 
- * Default configuration uses `Authorization` header and `Bearer` prefix,  
+ *
+ * Default configuration uses `Authorization` header and `Bearer` prefix,
+ *
  * As well as an example `JWT` resolver.
- * 
+ *
  * Requires a store to be configured to be production-ready, default is using `MemoryStore` for demo.
- * 
- * You also need to setup a way to create a session token for the client,  
+ *
+ * You also need to setup a way to create a session token for the client,
+ *
  * A demo is available at `/apps/frontend/app/plugins/rpcApi.ts`,
  * You need to uncomment it, which it then simply creates the token client-side.
- * 
- * WIP: currently this manager doesn't fully work yet, see below for more details, help is welcome!.  
- * Blocking tasks until fully working:  
+ *
+ * WIP: currently this manager doesn't fully work yet, see below for more details, help is welcome!.
+ *
+ * Blocking tasks until fully working:
+ *
  * - [x] Ability to init a session when client enters the login endpoint directly, which we can't set a Header through frontend.
  *   - > All Kinde standard authentication flow demo redirect the client to the backend login endpoint directly and then redirected to sign in with Kinde's SSO, which we can't set a Header through frontend.
  *   - [ ] Solution 1: Maybe we could call the login API from frontend first instead of directly, then redirect to the returned URL?, I think it's possible.
  *   - [x] Solution 2: Allowing input through query param?
  *     - See `allowQuery` and `queryName` options.
- * - [ ] Ability to process the callback endpoint (saving the authenticated state/tokens to the associated session).  
+ * - [ ] Ability to process the callback endpoint (saving the authenticated state/tokens to the associated session).
  *   Kinde redirects back to the callback endpoint after the client signs in, and doesn't allow us to attach some custom data into it's payload, what to do next?.
  *   - [ ] Solution 1: create a `state` id prior to redirect to Kinde then load from it, this requires an additional storage interface, see [reference](https://docs.kinde.com/authenticate/custom-configurations/redirect-users/#use-the-state-parameter).
  *   - [ ] Solution 2: Just put the session token into `state` then read it, no additional store needed compare to s1, how safe is it?

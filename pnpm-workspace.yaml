@@ -1,9 +1,11 @@
 packages:
   - apps/*
   - locals/*
+
 ignoredBuiltDependencies:
   - '@namesmt/vue-query-nuxt'
   - aws-sdk
+
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - esbuild
