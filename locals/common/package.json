@@ -6,8 +6,10 @@
   "scripts": {
     "lint": "eslint ."
   },
-  "devDependencies": {
-    "@local/tsconfig": "workspace:*",
+  "dependencies": {
     "pathe": "^2.0.3"
+  },
+  "devDependencies": {
+    "@local/tsconfig": "workspace:*"
   }
 }

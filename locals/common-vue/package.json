@@ -6,9 +6,12 @@
   "scripts": {
     "lint": "eslint ."
   },
-  "devDependencies": {
-    "@local/tsconfig": "workspace:*",
+  "dependencies": {
     "unocss": "^66.0.0",
     "vue": "^3.5.13"
+
+  },
+  "devDependencies": {
+    "@local/tsconfig": "workspace:*"
   }
 }

@@ -14,7 +14,9 @@
     "prepare": "simple-git-hooks"
   },
   "dependencies": {
-    "sst": "^3.13.10"
+    "pathe": "^2.0.3",
+    "sst": "^3.13.10",
+    "std-env": "^3.9.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.12.0",
@@ -24,9 +26,7 @@
     "eslint": "^9.24.0",
     "frontend": "workspace:*",
     "lint-staged": "^15.5.1",
-    "pathe": "^2.0.3",
     "simple-git-hooks": "^2.12.1",
-    "std-env": "^3.9.0",
     "tsx": "^4.19.3",
     "turbo": "^2.5.0",
     "typescript": "^5.8.3"
