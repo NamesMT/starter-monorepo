@@ -1,5 +1,6 @@
 import { localcertKeyPath, localcertPath } from '@local/common/dev/cert'
 import { config } from 'dotenv'
+import { env } from 'std-env'
 import optimizeExclude from 'vite-plugin-optimize-exclude'
 import { Names } from './app/primevue.config'
 
@@ -9,7 +10,8 @@ const siteConfig = {
   description: '🔥Hono RPC, Nuxt, SST Ion, Kinde Auth, Tanstack Query, Shadcn, Primevue, UnoCSS',
 }
 
-if (import.meta.dev)
+// NODE_ENV as a workaround until https://github.com/nuxt/nuxt/issues/32098 solved
+if (import.meta.dev || env.NODE_ENV === 'development')
   config({ path: ['.env.local', '.env.local.ignored'], override: true })
 
 // https://nuxt.com/docs/api/configuration/nuxt-config

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Carousel, CarouselContent, CarouselNext, CarouselPrevious } from '@/lib/components/ui/carousel'
 import GridMaker from '@local/common-vue/src/components/GridMaker.vue'
+import { Carousel, CarouselContent, CarouselNext, CarouselPrevious } from '@/lib/components/ui/carousel'
 
 definePageMeta({
   title: 'pages.title.home',
@@ -94,10 +94,10 @@ const { isPending, isError, data, error } = useQuery({
     </div>
 
     <div class="max-w-full flex flex-col items-center">
-      <div>
+      <div class="max-w-full overflow-x-auto">
         <span>Configured</span> <code>frontendUrl</code>: <code>{{ runtimeConfig.public.frontendUrl }}</code>
       </div>
-      <div>
+      <div class="max-w-full overflow-x-auto">
         <span>Configured</span> <code>backendUrl</code>: <code>{{ runtimeConfig.public.backendUrl }}</code>
       </div>
       <div>API Response from `<code>{{ $apiClient.api.dummy.hello.$url() }}</code>`:</div>

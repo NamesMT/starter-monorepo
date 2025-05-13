@@ -2,7 +2,7 @@
   "name": "starter-monorepo",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@10.8.0",
+  "packageManager": "pnpm@10.11.0",
   "engines": {
     "node": ">=20.13.1"
   },
@@ -15,20 +15,20 @@
   },
   "dependencies": {
     "pathe": "^2.0.3",
-    "sst": "^3.13.10",
+    "sst": "^3.14.16",
     "std-env": "^3.9.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^4.12.0",
+    "@antfu/eslint-config": "^4.13.0",
     "@dotenvx/dotenvx": "1.11.4",
     "@types/aws-lambda": "^8.10.149",
-    "@unocss/eslint-plugin": "^66.0.0",
-    "eslint": "^9.24.0",
+    "@unocss/eslint-plugin": "^66.1.1",
+    "eslint": "^9.26.0",
     "frontend": "workspace:*",
-    "lint-staged": "^15.5.1",
-    "simple-git-hooks": "^2.12.1",
-    "tsx": "^4.19.3",
-    "turbo": "^2.5.0",
+    "lint-staged": "^16.0.0",
+    "simple-git-hooks": "^2.13.0",
+    "tsx": "^4.19.4",
+    "turbo": "^2.5.3",
     "typescript": "^5.8.3"
   },
   "pnpm": {
