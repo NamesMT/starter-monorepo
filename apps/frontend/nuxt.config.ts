@@ -10,8 +10,7 @@ const siteConfig = {
   description: '🔥Hono RPC, Nuxt, SST Ion, Kinde Auth, Tanstack Query, Shadcn, Primevue, UnoCSS',
 }
 
-// NODE_ENV as a workaround until https://github.com/nuxt/nuxt/issues/32098 solved
-if (import.meta.dev || env.NODE_ENV === 'development')
+if (env.NODE_ENV === 'development')
   config({ path: ['.env.local', '.env.local.ignored'], override: true })
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
