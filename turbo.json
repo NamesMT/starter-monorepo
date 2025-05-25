@@ -44,7 +44,7 @@
     },
     "deploy": {
       "cache": false,
-      "dependsOn": ["build", "lint"]
+      "dependsOn": ["build", "quickcheck"]
     }
   }
 }
