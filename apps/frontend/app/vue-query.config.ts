@@ -1,10 +1,6 @@
 import type { AsyncStorage, PersistedQuery } from '@tanstack/query-persist-client-core'
 import type { UseStore } from 'idb-keyval'
-import {
-
-  experimental_createPersister,
-
-} from '@tanstack/query-persist-client-core'
+import { experimental_createQueryPersister } from '@tanstack/query-persist-client-core'
 import { createStore, del, get, set } from 'idb-keyval'
 
 function newIdbStorage(idbStore: UseStore): AsyncStorage<PersistedQuery> {
@@ -28,12 +24,12 @@ export default defineVueQueryPluginHook(({ queryClient }) => {
       // Set client-side persister to IndexedDB
       persister: !import.meta.client
         ? undefined
-        : experimental_createPersister<PersistedQuery>({
-            storage: newIdbStorage(createStore('tsq_db', 'tsq_store')),
-            maxAge,
-            serialize: persistedQuery => persistedQuery,
-            deserialize: cached => cached,
-          }),
+        : experimental_createQueryPersister<PersistedQuery>({
+          storage: newIdbStorage(createStore('tsq_db', 'tsq_store')),
+          maxAge,
+          serialize: persistedQuery => persistedQuery,
+          deserialize: cached => cached,
+        }).persisterFn,
     },
   })
 

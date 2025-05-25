@@ -15,15 +15,15 @@
   },
   "dependencies": {
     "pathe": "^2.0.3",
-    "sst": "^3.14.16",
+    "sst": "^3.16.0",
     "std-env": "^3.9.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^4.13.0",
+    "@antfu/eslint-config": "^4.13.2",
     "@dotenvx/dotenvx": "1.11.4",
     "@types/aws-lambda": "^8.10.149",
-    "@unocss/eslint-plugin": "^66.1.1",
-    "eslint": "^9.26.0",
+    "@unocss/eslint-plugin": "^66.1.2",
+    "eslint": "^9.27.0",
     "frontend": "workspace:*",
     "lint-staged": "^16.0.0",
     "simple-git-hooks": "^2.13.0",
