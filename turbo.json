@@ -36,6 +36,8 @@
       ]
     },
     "lint": {},
+    "test:types": {},
+    "quickcheck": {},
     "dev": {
       "cache": false,
       "persistent": true

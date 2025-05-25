@@ -4,13 +4,16 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test:types": "vue-tsc --noEmit",
+    "quickcheck": "pnpm run lint && pnpm run test:types"
   },
   "dependencies": {
     "unocss": "^66.1.2",
     "vue": "^3.5.14"
   },
   "devDependencies": {
-    "@local/tsconfig": "workspace:*"
+    "@local/tsconfig": "workspace:*",
+    "vue-tsc": "^2.2.10"
   }
 }

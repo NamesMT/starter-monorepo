@@ -26,6 +26,7 @@ out/
 .idea
 temp
 logs
+tsconfig.tsbuildinfo
 *.log
 *.pem
 # Un-ignore pems in locals/common/dev

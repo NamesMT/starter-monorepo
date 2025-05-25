@@ -4,10 +4,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "nuxt generate",
-    "dev": "nuxt dev",
     "lint": "eslint .",
     "test:types": "nuxt typecheck",
+    "quickcheck": "pnpm run lint && pnpm run test:types",
+    "dev": "nuxt dev",
+    "build": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },

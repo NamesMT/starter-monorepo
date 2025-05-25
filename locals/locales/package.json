@@ -4,8 +4,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "tsx entry.ts",
     "lint": "eslint .",
+    "test:types": "tsc --noEmit --skipLibCheck",
+    "quickcheck": "pnpm run lint && pnpm run test:types",
     "dev": "tsx watch --include \"src/**/*\" entry.ts",
     "postinstall": "tsx entry.ts"
   },

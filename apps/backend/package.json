@@ -6,12 +6,13 @@
   "scripts": {
     "start": "dotenvx run -f .env.local.ignored -f .env.local -f .env -- tsx src/index.ts",
     "watch": "dotenvx run -f .env.local.ignored -f .env.local -f .env -- tsx watch src/index.ts",
-    "stub": "unbuild --stub",
-    "dev": "pnpm run watch",
     "lint": "eslint .",
     "test": "vitest",
     "test:types": "tsc --noEmit --skipLibCheck",
+    "quickcheck": "pnpm run lint && pnpm run test:types",
     "check": "pnpm lint && pnpm test:types && vitest run --coverage",
+    "dev": "pnpm run watch",
+    "stub": "unbuild --stub",
     "build": "dotenvx run -f .env.prod.local -f .env -- unbuild"
   },
   "dependencies": {
