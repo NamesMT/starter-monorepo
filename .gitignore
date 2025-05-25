@@ -5,26 +5,25 @@ node_modules
 .pnpm-store
 
 # testing
-coverage
-lib-cov
+coverage/
+lib-cov/
 
 # dev/builds/outputs
-.output
-.data
-.nuxt
-.nitro
-.cache
-dist
-build
-out/
+.output/
+.out/
+.data/
 .nuxt/
 .next/
+.nitro/
+.cache/
+dist/
 
 # misc
 .DS_Store
 .fleet
 .idea
 temp
+tmp
 logs
 tsconfig.tsbuildinfo
 *.log
