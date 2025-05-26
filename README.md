@@ -1,15 +1,16 @@
+<div align="center">
+
+<h1>Starter Monorepo</h1>
+
+<h3>Monorepo is amazing!</h3>
+<img src="./branding.svg" alt="Project's branding image" width="320"/>
+
+</div>
+
 # starter-monorepo
 
-This is a base monorepo starter template to kick-start your beautifully organized project, whether its a fullstack project, monorepo of multiple libraries and applications, or even just one API server and its related infrastructure deployment and utilities.
-
-It is recommended to use an AI Agent ([`Roo Code`](https://github.com/RooVetGit/Roo-Code) recommended) to help you setup the monorepo according to your needs, see [Utilities](#utilities)
-
-Note: the app comes with a `localcert` SSL at `locals/common/dev` to enable HTTPS for local development, generated with [mkcert](https://github.com/FiloSottile/mkcert), you can install mkcert, generate your own certificate and replace it, or install the `localcert.crt` to your trusted CA to remove the untrusted SSL warning.
-
-## Table of Contents
-
 * [starter-monorepo](#starter-monorepo)
-  * [Table of Contents](#table-of-contents)
+  * [Overview](#overview)
   * [What's inside?](#whats-inside)
     * [Apps and Packages](#apps-and-packages)
     * [Utilities](#utilities)
@@ -19,6 +20,14 @@ Note: the app comes with a `localcert` SSL at `locals/common/dev` to enable HTTP
       * [`import` ordering:](#import-ordering)
     * [Remote Caching](#remote-caching)
   * [Useful Links](#useful-links)
+
+## Overview
+
+This is a base monorepo starter template to kick-start your beautifully organized project, whether its a fullstack project, monorepo of multiple libraries and applications, or even just one API server and its related infrastructure deployment and utilities.
+
+It is recommended to use an AI Agent ([`Roo Code`](https://github.com/RooVetGit/Roo-Code) recommended) to help you setup the monorepo according to your needs, see [Utilities](#utilities)
+
+Note: the app comes with a `localcert` SSL at `locals/common/dev` to enable HTTPS for local development, generated with [mkcert](https://github.com/FiloSottile/mkcert), you can install mkcert, generate your own certificate and replace it, or install the `localcert.crt` to your trusted CA to remove the untrusted SSL warning.
 
 ## What's inside?
 
