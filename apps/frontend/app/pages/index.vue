@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import GridMaker from '@local/common-vue/src/components/GridMaker.vue'
-import { Carousel, CarouselContent, CarouselNext, CarouselPrevious } from '@/lib/components/ui/carousel'
+import { Carousel, CarouselContent, CarouselNext, CarouselPrevious } from '@/lib/shadcn/components/ui/carousel'
 
 definePageMeta({
   title: 'pages.title.home',
@@ -32,8 +32,8 @@ const { isPending, isError, data, error } = useQuery({
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col items-center justify-center gap-4 px-4 py-4 text-center">
-    <div class="flex items-end gap-2">
+  <div class="px-4 py-4 text-center flex flex-col gap-4 min-h-screen items-center justify-center">
+    <div class="flex gap-2 items-end">
       <GridMaker
         :value="[
           '* *',
@@ -52,8 +52,8 @@ const { isPending, isError, data, error } = useQuery({
       />
     </div>
 
-    <div class="w-full flex flex-col items-center justify-center gap-2 sm:flex-row sm:gap-4">
-      <div class="flex items-center gap-2">
+    <div class="flex flex-col gap-2 w-full items-center justify-center sm:flex-row sm:gap-4">
+      <div class="flex gap-2 items-center">
         <p>
           Theme:
         </p>
@@ -74,7 +74,7 @@ const { isPending, isError, data, error } = useQuery({
         </ClientOnly>
       </div>
 
-      <div class="flex items-center gap-2">
+      <div class="flex gap-2 items-center">
         <p>{{ $t('language') }}:</p>
         <Button
           :label="locale"
@@ -93,7 +93,7 @@ const { isPending, isError, data, error } = useQuery({
       />
     </div>
 
-    <div class="max-w-full flex flex-col items-center">
+    <div class="flex flex-col max-w-full items-center">
       <div class="max-w-full overflow-x-auto">
         <span>Configured</span> <code>frontendUrl</code>: <code>{{ runtimeConfig.public.frontendUrl }}</code>
       </div>
@@ -101,12 +101,12 @@ const { isPending, isError, data, error } = useQuery({
         <span>Configured</span> <code>backendUrl</code>: <code>{{ runtimeConfig.public.backendUrl }}</code>
       </div>
       <div>API Response from `<code>{{ $apiClient.api.dummy.hello.$url() }}</code>`:</div>
-      <pre class="max-w-full w-fit overflow-x-auto rounded bg-black p-2 px-4 text-left text-white">{{ apiError || apiResult || 'Empty' }}</pre>
+      <pre class="text-white p-2 px-4 text-left rounded bg-black max-w-full w-fit overflow-x-auto">{{ apiError || apiResult || 'Empty' }}</pre>
     </div>
 
-    <div class="max-w-full flex flex-col items-center">
+    <div class="flex flex-col max-w-full items-center">
       <div>Tanstack Query result (fetched client-side and persisted to IndexedDB for 12 hours)</div>
-      <pre class="max-w-full w-fit overflow-x-auto rounded bg-black p-2 px-4 text-left text-white">{{ isPending ? 'Loading...' : isError ? error : data }}</pre>
+      <pre class="text-white p-2 px-4 text-left rounded bg-black max-w-full w-fit overflow-x-auto">{{ isPending ? 'Loading...' : isError ? error : data }}</pre>
       <Button
         class="mt-2"
         label="Make stale (refetch)"
@@ -117,14 +117,14 @@ const { isPending, isError, data, error } = useQuery({
     <div class="max-w-full">
       <ClientOnly>
         <template #fallback>
-          <div key="fallback" class="h-12 flex items-center">
+          <div key="fallback" class="flex h-12 items-center">
             <p>Auth status: ...</p>
           </div>
         </template>
 
-        <div class="h-12 flex items-center justify-center gap-4">
+        <div class="flex gap-4 h-12 items-center justify-center">
           <p>Auth status: {{ $auth.loggedIn ? 'Logged in' : 'Not logged in' }}</p>
-          <div class="flex items-center justify-center gap-2">
+          <div class="flex gap-2 items-center justify-center">
             <Button v-if="$auth.loggedIn" label="Sign-out" @click="navigateTo(getSignOutUrl(), { external: true })" />
             <Button v-else label="Sign-in" @click="navigateTo(getSignInUrl(), { external: true })" />
           </div>
@@ -132,13 +132,15 @@ const { isPending, isError, data, error } = useQuery({
 
         <div v-if="$auth.loggedIn">
           <div>User information:</div>
-          <pre class="max-w-full overflow-x-auto rounded bg-black p-2 px-4 text-left text-white 2xl:max-w-60vw">{{ $auth }}</pre>
+          <pre class="text-white p-2 px-4 text-left rounded bg-black max-w-full overflow-x-auto 2xl:max-w-60vw">{{ $auth }}</pre>
         </div>
       </ClientOnly>
     </div>
 
-    <div class="max-w-full w-full flex justify-center px-12">
-      <Carousel class="relative max-w-xs w-full">
+    <ShadButton>Button</ShadButton>
+
+    <div class="px-12 flex max-w-full w-full justify-center">
+      <Carousel class="max-w-xs w-full relative">
         <CarouselContent>
           <!-- You could either explicitly import the shadcn components or use them with 'Shad' auto-import prefix -->
           <ShadCarouselItem v-for="(_, index) in 5" :key="index">

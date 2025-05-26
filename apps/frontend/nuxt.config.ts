@@ -104,7 +104,7 @@ export default defineNuxtConfig({
 
   shadcn: {
     prefix: 'Shad',
-    componentDir: './app/lib/components/ui',
+    componentDir: './app/lib/shadcn/components/ui',
   },
 
   css: [

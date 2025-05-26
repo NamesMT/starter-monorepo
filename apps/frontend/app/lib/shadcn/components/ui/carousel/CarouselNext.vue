@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { WithClassAsProps } from './interface'
-import { Button } from '@/lib/components/ui/button'
-import { cn } from '@/lib/utils'
+import { ArrowRight } from 'lucide-vue-next'
+import { Button } from '@/lib/shadcn/components/ui/button'
+import { cn } from '@/lib/shadcn/utils'
 import { useCarousel } from './useCarousel'
 
 const props = defineProps<WithClassAsProps>()
@@ -20,10 +21,11 @@ const { orientation, canScrollNext, scrollNext } = useCarousel()
       props.class,
     )"
     variant="outline"
-    @pointerdown="scrollNext"
+    @click="scrollNext"
   >
     <slot>
-      <div i-lucide:arrow-right class="h-4 w-4 text-current" />
+      <ArrowRight class="text-current h-4 w-4" />
+      <span class="sr-only">Next Slide</span>
     </slot>
   </Button>
 </template>

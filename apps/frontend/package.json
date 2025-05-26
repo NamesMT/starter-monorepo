@@ -14,8 +14,10 @@
   },
   "dependencies": {
     "@primevue/themes": "^4.3.4",
+    "lucide-vue-next": "^0.511.0",
     "nuxt-llms": "^0.1.2",
-    "primevue": "^4.3.4"
+    "primevue": "^4.3.4",
+    "reka-ui": "^2.2.1"
   },
   "devDependencies": {
     "@kinde-oss/kinde-typescript-sdk": "^2.10.1",
@@ -28,8 +30,8 @@
     "@nuxtjs/i18n": "^9.5.4",
     "@nuxtjs/seo": "^3.0.3",
     "@primevue/nuxt-module": "^4.3.4",
-    "@tanstack/query-persist-client-core": "^5.77.0",
-    "@tanstack/vue-query": "^5.77.0",
+    "@tanstack/query-persist-client-core": "^5.77.1",
+    "@tanstack/vue-query": "^5.77.1",
     "@unocss/nuxt": "^66.1.2",
     "@vueuse/core": "^13.2.0",
     "@vueuse/nuxt": "^13.2.0",
@@ -46,10 +48,9 @@
     "nuxt": "^3.17.4",
     "ohash": "^2.0.11",
     "primeicons": "^7.0.0",
-    "radix-vue": "^1.9.17",
     "sass": "^1.89.0",
-    "shadcn-nuxt": "^1.0.3",
-    "tailwind-merge": "^2.6.0",
+    "shadcn-nuxt": "^2.1.0",
+    "tailwind-merge": "^3.3.0",
     "ufo": "^1.6.1",
     "unocss": "^66.1.2",
     "unocss-preset-animations": "^1.2.1",
