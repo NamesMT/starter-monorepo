@@ -2,23 +2,23 @@
 
 This is a base monorepo starter template to kick-start your beautifully organized project, whether its a fullstack project, monorepo of multiple libraries and applications, or even just one API server and its related infrastructure deployment and utilities.
 
-It is recommended to use `Roo Code` AI Agent to help you setup the monorepo according to your needs, see [Utilities](#utilities)
+It is recommended to use an AI Agent ([`Roo Code`](https://github.com/RooVetGit/Roo-Code) recommended) to help you setup the monorepo according to your needs, see [Utilities](#utilities)
 
 Note: the app comes with a `localcert` SSL at `locals/common/dev` to enable HTTPS for local development, generated with [mkcert](https://github.com/FiloSottile/mkcert), you can install mkcert, generate your own certificate and replace it, or install the `localcert.crt` to your trusted CA to remove the untrusted SSL warning.
 
 ## Table of Contents
 
-- [starter-monorepo](#starter-monorepo)
-  - [Table of Contents](#table-of-contents)
-  - [What's inside?](#whats-inside)
-    - [Apps and Packages](#apps-and-packages)
-    - [Utilities](#utilities)
-    - [Build](#build)
-    - [Develop](#develop)
-    - [Notes](#notes)
-      - [`import` ordering:](#import-ordering)
-    - [Remote Caching](#remote-caching)
-  - [Useful Links](#useful-links)
+* [starter-monorepo](#starter-monorepo)
+  * [Table of Contents](#table-of-contents)
+  * [What's inside?](#whats-inside)
+    * [Apps and Packages](#apps-and-packages)
+    * [Utilities](#utilities)
+    * [Build](#build)
+    * [Develop](#develop)
+    * [Notes](#notes)
+      * [`import` ordering:](#import-ordering)
+    * [Remote Caching](#remote-caching)
+  * [Useful Links](#useful-links)
 
 ## What's inside?
 
@@ -61,10 +61,8 @@ Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 This Turborepo has some additional tools already setup for you:
 - [TypeScript](https://www.typescriptlang.org/) for static type checking
 - [ESLint](https://eslint.org/) for code linting
-- 🤖 Includes initialization prompt targeting the [**Roo Code AI Agent**](https://marketplace.visualstudio.com/items?itemName=RooVeterinaryInc.roo-cline) VS Code extension.
-  - To start, open `Roo Code`, and type: `Hi Roo, @/INIT_PROMPT.md, lets start!`
-  - *Tips: to install boomerang mode and brave mcp, you can use:  
-  `npx roo-rocket --repo="NamesMT/config-packs"`*
+- 🤖 Includes an initialization prompt for AI Agents to modify the monorepo according to your needs.
+  - To start, open the chat with your AI Agent, and include the [`INIT_PROMPT.md`](./INIT_PROMPT.md) file in your prompt.
 
 ### Build
 
@@ -77,7 +75,7 @@ To develop all apps and packages, run the following command:
 `pnpm run dev`
 
 To define local development environment variables of each app, either use `git update-index --skip-worktree .env.local` and use it directly, or create a copy of or rename `.env.local` to `.env.local.ignored`.
-  - Roo will help you creating `.env.local.ignored` file if you use the AI initialization prompt.
+  - AI Agent will help you creating the `.env.local.ignored` files if you use the AI initialization prompt.
 
 ### Notes
 #### `import` ordering:
