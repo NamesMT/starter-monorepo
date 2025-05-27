@@ -17,7 +17,8 @@
     * [Build](#build)
     * [Develop](#develop)
     * [Notes](#notes)
-      * [`import` ordering:](#import-ordering)
+      * [`import` ordering](#import-ordering)
+      * [Dev with SSL](#dev-with-ssl)
     * [Remote Caching](#remote-caching)
   * [Useful Links](#useful-links)
 
@@ -26,8 +27,6 @@
 This is a base monorepo starter template to kick-start your beautifully organized project, whether its a fullstack project, monorepo of multiple libraries and applications, or even just one API server and its related infrastructure deployment and utilities.
 
 It is recommended to use an AI Agent ([`Roo Code`](https://github.com/RooVetGit/Roo-Code) recommended) to help you setup the monorepo according to your needs, see [Utilities](#utilities)
-
-Note: the app comes with a `localcert` SSL at `locals/common/dev` to enable HTTPS for local development, generated with [mkcert](https://github.com/FiloSottile/mkcert), you can install mkcert, generate your own certificate and replace it, or install the `localcert.crt` to your trusted CA to remove the untrusted SSL warning.
 
 ## What's inside?
 
@@ -89,8 +88,13 @@ To define local development environment variables of each app, either use `git u
 
 ### Notes
 
-#### `import` ordering:
+#### `import` ordering
+
 Imports should not be separated by empty lines, and should be sorted automatically by eslint.
+
+#### Dev with SSL
+
+The project comes with a `localcert` SSL at `locals/common/dev` to enable HTTPS for local development, generated with [mkcert](https://github.com/FiloSottile/mkcert), you can install mkcert, generate your own certificate and replace it, or install the `localcert.crt` to your trusted CA to remove the untrusted SSL warning.
 
 ### Remote Caching
 
