@@ -49,6 +49,7 @@ So if you use SSR, you could use the official [Nuxt Kinde](https://nuxt.com/modu
   - If you have a good session manager implementation, a PR is greatly appreciated!
 
 ### Apps and Packages
+
 (Click the hyperlink of each app to see its README detail)
 
 - [`frontend`](./apps/frontend/README.md): a [Nuxt](https://nuxt.com/) app, compatible with v4 structure.
@@ -87,6 +88,7 @@ To define local development environment variables of each app, either use `git u
   - AI Agent will help you creating the `.env.local.ignored` files if you use the AI initialization prompt.
 
 ### Notes
+
 #### `import` ordering:
 Imports should not be separated by empty lines, and should be sorted automatically by eslint.
 
