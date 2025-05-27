@@ -68,10 +68,12 @@ Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 ### Utilities
 
 This Turborepo has some additional tools already setup for you:
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- 🤖 Includes an initialization prompt for AI Agents to modify the monorepo according to your needs.
-  - To start, open the chat with your AI Agent, and include the [`INIT_PROMPT.md`](./INIT_PROMPT.md) file in your prompt.
++ 👌 TypeScript
++ 🧐 ESLint + stylistic formatting rules ([antfu](https://github.com/antfu/eslint-config))
++ 📚 A few more goodies like:
+  + [lint-staged](https://github.com/lint-staged/lint-staged) pre-commit hook
+  + 🤖 Initialization prompt for AI Agents to modify the monorepo according to your needs.
+    * To start, open the chat with your AI Agent, and include the [`INIT_PROMPT.md`](./INIT_PROMPT.md) file in your prompt.
 
 ### Build
 
