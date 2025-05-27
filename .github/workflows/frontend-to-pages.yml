@@ -24,6 +24,7 @@ concurrency:
 jobs:
   quickcheck:
     uses: ./.github/workflows/quickcheck.yml
+    secrets: inherit
   build:
     environment: github-pages
 
