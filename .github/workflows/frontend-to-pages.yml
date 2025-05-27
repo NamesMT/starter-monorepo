@@ -30,7 +30,7 @@ jobs:
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
-      TURBO_REMOTE_ONLY: true
+      TURBO_CACHE: 'remote:rw'
       NUXT_PUBLIC_FRONTEND_URL: ${{ vars.NUXT_PUBLIC_FRONTEND_URL }}
       NUXT_PUBLIC_BACKEND_URL: ${{ vars.NUXT_PUBLIC_BACKEND_URL }}
 
