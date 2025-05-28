@@ -79,7 +79,7 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode',
     '@nuxt/image',
     'nuxt-llms',
-    'nuxt-booster',
+    // 'nuxt-booster',
     '@primevue/nuxt-module',
     'shadcn-nuxt',
   ],
@@ -111,9 +111,9 @@ export default defineNuxtConfig({
     },
   },
 
-  booster: {
-    disableNuxtFontaine: true,
-  },
+  // booster: {
+  //   disableNuxtFontaine: true,
+  // },
 
   shadcn: {
     prefix: 'Shad',
