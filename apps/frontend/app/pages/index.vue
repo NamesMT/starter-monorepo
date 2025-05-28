@@ -83,7 +83,13 @@ const { isPending, isError, data, error } = useQuery({
       </div>
 
       <div :key="$li18n.renderKey">
-        {{ dayjs().format('dddd') }}
+        <ClientOnly>
+          <template #fallback>
+            ...
+          </template>
+
+          {{ dayjs().format('dddd') }}
+        </ClientOnly>
       </div>
 
       <InputNumber

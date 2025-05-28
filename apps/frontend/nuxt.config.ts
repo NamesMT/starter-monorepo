@@ -78,9 +78,10 @@ export default defineNuxtConfig({
     '@unocss/nuxt',
     '@nuxtjs/color-mode',
     '@nuxt/image',
+    'nuxt-llms',
+    'nuxt-booster',
     '@primevue/nuxt-module',
     'shadcn-nuxt',
-    'nuxt-llms',
   ],
 
   site: siteConfig,
@@ -100,6 +101,18 @@ export default defineNuxtConfig({
         language: 'vi-VN',
       },
     ],
+  },
+
+  image: {
+    domains: ['img.youtube.com', 'i.vimeocdn.com'],
+    alias: {
+      youtube: 'https://img.youtube.com',
+      vimeo: 'https://i.vimeocdn.com',
+    },
+  },
+
+  booster: {
+    disableNuxtFontaine: true,
   },
 
   shadcn: {

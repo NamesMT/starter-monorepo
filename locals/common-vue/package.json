@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "unocss": "^66.1.2",
-    "vue": "^3.5.14"
+    "vue": "^3.5.15"
   },
   "devDependencies": {
     "@local/tsconfig": "workspace:*",
