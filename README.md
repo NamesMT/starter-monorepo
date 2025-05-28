@@ -58,7 +58,7 @@ So if you use SSR, you could use the official [Nuxt Kinde](https://nuxt.com/modu
     - If the `frontend` and `backend` are on different domains then the backend will be called directly without proxy.
     - This could be configured in frontend's [`app.config.ts`](./apps/frontend/app/app.config.ts)
 - [`backend`](./apps/backend/README.md): a [Hono🔥](https://hono.dev/) app.
-- [`@local/locales`](./locals/locales/README.md): a shared locales/i18n library powered by [unplugin-sheet-i18n](https://github.com/NamesMT/unplugin-sheet-i18n).
+- [`@local/locales`](./locals/locales/README.md): a shared locales/i18n library powered by [spreadsheet-i18n](https://github.com/NamesMT/spreadsheet-i18n--mono).
 - `@local/common`: a shared library that can contain constants, functions, types.
 - `@local/common-vue`: a shared library that can contain components, constants, functions, types for vue-based apps.
 - `tsconfig`: `tsconfig.json`s used throughout the monorepo.

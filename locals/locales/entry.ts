@@ -1,5 +1,5 @@
-import { createContext } from 'unplugin-sheet-i18n'
+import { scanConvert } from 'spreadsheet-i18n'
 
-createContext({
+scanConvert({
   outDir: 'dist',
-}).scanConvert()
+})
