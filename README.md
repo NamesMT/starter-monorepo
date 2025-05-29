@@ -12,7 +12,11 @@
 * [starter-monorepo](#starter-monorepo)
   * [Overview](#overview)
   * [What's inside?](#whats-inside)
-    * [Apps and Packages](#apps-and-packages)
+    * [Overview of the tech](#overview-of-the-tech)
+    * [Apps and Libraries](#apps-and-libraries)
+      * [`frontend`: a Nuxt app, compatible with v4 structure.](#frontend-a-nuxt-app-compatible-with-v4-structure)
+      * [`backend`: a Hono🔥 app.](#backend-a-hono-app)
+    * [Local packages](#local-packages)
     * [Utilities](#utilities)
     * [Build](#build)
     * [Develop](#develop)
@@ -29,6 +33,8 @@ This is a base monorepo starter template to kick-start your beautifully organize
 It is recommended to use an AI Agent ([`Roo Code`](https://github.com/RooVetGit/Roo-Code) recommended) to help you setup the monorepo according to your needs, see [Utilities](#utilities)
 
 ## What's inside?
+
+### Overview of the tech
 
 ⏩ This template is powered by [Turborepo](https://turbo.build/repo).
 
@@ -47,28 +53,29 @@ It is recommended to use an AI Agent ([`Roo Code`](https://github.com/RooVetGit/
 So if you use SSR, you could use the official [Nuxt Kinde](https://nuxt.com/modules/kinde) module or implement your own way to manage the session at `apps/backend/src/middlewares/session.ts`.
   - If you have a good session manager implementation, a PR is greatly appreciated!
 
-### Apps and Packages
+👌 The repo is always [**TypeScript**](https://www.typescriptlang.org/)-first.
 
-(Click the hyperlink of each app to see its README detail)
+### Apps and Libraries
 
-- [`frontend`](./apps/frontend/README.md): a [Nuxt](https://nuxt.com/) app, compatible with v4 structure.
-  - By default, the frontend `/api/*` routes is proxied to the `backendUrl`.
-  - The `rpcApi` plugin will call the `/api/*` proxy if they're on the same domain but different ports (e.g: 127.0.0.1)
-    - > this mimics a production environment where the static frontend and the backend lives on the same domain at /api, which is the most efficient configuration for Cloudfront + Lambda Function Url
-    - If the `frontend` and `backend` are on different domains then the backend will be called directly without proxy.
-    - This could be configured in frontend's [`app.config.ts`](./apps/frontend/app/app.config.ts)
-- [`backend`](./apps/backend/README.md): a [Hono🔥](https://hono.dev/) app.
-- [`@local/locales`](./locals/locales/README.md): a shared locales/i18n library powered by [spreadsheet-i18n](https://github.com/NamesMT/spreadsheet-i18n--mono).
-- `@local/common`: a shared library that can contain constants, functions, types.
-- `@local/common-vue`: a shared library that can contain components, constants, functions, types for vue-based apps.
-- `tsconfig`: `tsconfig.json`s used throughout the monorepo.
+#### [`frontend`](./apps/frontend/README.md): a [Nuxt](https://nuxt.com/) app, compatible with v4 structure.
+  + By default, the frontend `/api/*` routes is proxied to the `backendUrl`.
+  + The `rpcApi` plugin will call the `/api/*` proxy if they're on the same domain but different ports (e.g: 127.0.0.1)
+    + > this mimics a production environment where the static frontend and the backend lives on the same domain at /api, which is the most efficient configuration for Cloudfront + Lambda Function Url
+    + If the `frontend` and `backend` are on different domains then the backend will be called directly without proxy.
+    + This could be configured in frontend's [`app.config.ts`](./apps/frontend/app/app.config.ts)
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+#### [`backend`](./apps/backend/README.md): a [Hono🔥](https://hono.dev/) app.
+
+### Local packages
+
++ [`@local/locales`](./locals/locales/README.md): a shared locales/i18n library powered by [spreadsheet-i18n](https://github.com/NamesMT/spreadsheet-i18n--mono).
++ `@local/common`: a shared library that can contain constants, functions, types.
++ `@local/common-vue`: a shared library that can contain components, constants, functions, types for vue-based apps.
++ `tsconfig`: `tsconfig.json`s used throughout the monorepo.
 
 ### Utilities
 
 This Turborepo has some additional tools already setup for you:
-+ 👌 TypeScript
 + 🧐 ESLint + stylistic formatting rules ([antfu](https://github.com/antfu/eslint-config))
 + 📚 A few more goodies like:
   + [lint-staged](https://github.com/lint-staged/lint-staged) pre-commit hook
