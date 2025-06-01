@@ -21,7 +21,7 @@ export default $config({
     const currentDir = dirname(fileURLToPath(import.meta.url))
     const rootDir = resolve(currentDir, '../../../')
     const backendDir = resolve(rootDir, 'apps/backend/')
-    config({ path: [resolve(backendDir, '.env.prod.ignored'), resolve(backendDir, '.env')], debug: true })
+    config({ path: [resolve(backendDir, '.env.prod.ignored'), resolve(backendDir, '.env.prod'), resolve(backendDir, '.env')], debug: true })
     // //
 
     const backend = new sst.aws.Function('Backend', {

@@ -1,17 +1,19 @@
 import { localcertKeyPath, localcertPath } from '@local/common/dev/cert'
 import { config } from 'dotenv'
-import { env } from 'std-env'
 import optimizeExclude from 'vite-plugin-optimize-exclude'
 import { Names } from './app/primevue.config'
 
+if (import.meta.env.NODE_ENV === 'development')
+  config({ path: ['.env.local.ignored', '.env.local'] })
+else
+  config({ path: ['.env.prod.ignored', '.env.prod'] })
+
 const siteConfig = {
   url: import.meta.env.NUXT_PUBLIC_FRONTEND_URL,
+  backend: import.meta.env.NUXT_PUBLIC_BACKEND_URL,
   name: 'starter-monorepo',
   description: '🔥Hono RPC, Nuxt, SST Ion, Kinde Auth, Tanstack Query, Shadcn, Primevue, UnoCSS',
 }
-
-if (env.NODE_ENV === 'development')
-  config({ path: ['.env.local', '.env.local.ignored'], override: true })
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -41,8 +43,8 @@ export default defineNuxtConfig({
     isSst: false,
     // Keys within public are also exposed client-side
     public: {
-      frontendUrl: import.meta.env.NUXT_PUBLIC_FRONTEND_URL,
-      backendUrl: import.meta.env.NUXT_PUBLIC_BACKEND_URL,
+      frontendUrl: siteConfig.url,
+      backendUrl: siteConfig.backend,
     },
   },
 
@@ -87,7 +89,7 @@ export default defineNuxtConfig({
   site: siteConfig,
 
   i18n: {
-    baseUrl: import.meta.env.NUXT_PUBLIC_FRONTEND_URL,
+    baseUrl: siteConfig.url,
     vueI18n: 'i18n.config.ts',
     strategy: 'no_prefix',
     defaultLocale: 'en',
