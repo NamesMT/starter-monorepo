@@ -4,7 +4,8 @@
   "main": "./apps/backend/src/app.ts",
   "compatibility_date": "2025-06-01",
   "compatibility_flags": [
-    "nodejs_compat"
+    "nodejs_compat",
+    "assets_navigation_has_no_effect"
   ],
   "observability": {
     "enabled": true
@@ -38,11 +39,11 @@
    *
    */
   "vars": {
-    // "KINDE_DOMAIN": "string",
-    // "KINDE_LOGOUT_REDIRECT_URI": "string",
-    // "KINDE_REDIRECT_URI": "string",
     // "KINDE_CLIENT_ID": "secret",
-    // "KINDE_CLIENT_SECRET": "secret"
+    // "KINDE_CLIENT_SECRET": "secret",
+    "KINDE_DOMAIN": "https://topnames-dev.eu.kinde.com",
+    "KINDE_LOGOUT_REDIRECT_URI": "https://starter-monorepo.isthe.top",
+    "KINDE_REDIRECT_URI": "https://starter-monorepo.isthe.top/api/auth/callback"
   },
 
   /**
