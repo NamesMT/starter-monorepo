@@ -43,7 +43,8 @@
     // "KINDE_CLIENT_SECRET": "secret",
     "KINDE_DOMAIN": "https://topnames-dev.eu.kinde.com",
     "KINDE_LOGOUT_REDIRECT_URI": "https://starter-monorepo.isthe.top",
-    "KINDE_REDIRECT_URI": "https://starter-monorepo.isthe.top/api/auth/callback"
+    "KINDE_REDIRECT_URI": "https://starter-monorepo.isthe.top/api/auth/callback",
+    "FRONTEND_URL": "https://starter-monorepo.isthe.top"
   },
 
   /**
