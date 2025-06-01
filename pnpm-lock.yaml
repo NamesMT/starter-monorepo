@@ -36,6 +36,9 @@ importers:
       '@dotenvx/dotenvx':
         specifier: 1.11.4
         version: 1.11.4
+      '@namesmt/utils':
+        specifier: ^0.5.13
+        version: 0.5.13
       '@types/aws-lambda':
         specifier: ^8.10.149
         version: 8.10.149

@@ -1,6 +1,7 @@
 /// <reference path="./.sst/platform/config.d.ts" />
 
 import { fileURLToPath } from 'node:url'
+import { objectPick } from '@namesmt/utils'
 import { config } from 'dotenv'
 import { dirname, resolve } from 'pathe'
 import { env } from 'std-env'
@@ -28,17 +29,20 @@ export default $config({
       // bundle: 'apps/backend/dist',
       handler: 'apps/backend/src/aws.handler',
       timeout: '60 seconds',
-      // If you need to process a big amount of data, you should create sub "job" functions
-      // instead of rising the spec of the main function
-      memory: '300 MB',
+      // If you need to process a big amount of data, you should create sub functions
+      // instead of rising the spec of the main function.
+      memory: '300 MB', // 300 MB is a sweet spot for good performance, capability, and cost from my own experience.
       streaming: false,
       architecture: 'arm64',
       environment: {
-        KINDE_DOMAIN: env.KINDE_DOMAIN!,
-        KINDE_CLIENT_ID: env.KINDE_CLIENT_ID!,
-        KINDE_CLIENT_SECRET: env.KINDE_CLIENT_SECRET!,
-        KINDE_REDIRECT_URI: env.KINDE_REDIRECT_URI!,
-        KINDE_LOGOUT_REDIRECT_URI: env.KINDE_LOGOUT_REDIRECT_URI!,
+        ...objectPick(env, [
+          'KINDE_CLIENT_ID',
+          'KINDE_CLIENT_SECRET',
+          'KINDE_DOMAIN',
+          'KINDE_REDIRECT_URI',
+          'KINDE_LOGOUT_REDIRECT_URI',
+          'FRONTEND_URL',
+        ]),
       },
     })
 
