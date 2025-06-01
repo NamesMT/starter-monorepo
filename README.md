@@ -20,6 +20,7 @@
     * [Utilities](#utilities)
     * [Build](#build)
     * [Develop](#develop)
+    * [Deploy](#deploy)
     * [Notes](#notes)
       * [`import` ordering](#import-ordering)
       * [Dev with SSL](#dev-with-ssl)
@@ -94,6 +95,13 @@ To develop all apps and packages, run the following command:
 
 To define local development environment variables of each app, either use `git update-index --skip-worktree .env.local` and use it directly, or create a copy of or rename `.env.local` to `.env.local.ignored`.
   - AI Agent will help you creating the `.env.local.ignored` files if you use the AI initialization prompt.
+
+### Deploy
+
+* The repo currently contains some deployment samples:
+  + [Action to deploy frontend to GitHub Pages](./.github/workflows/frontend-to-gh-pages.yml)
+  + [Wrangler configured to deploy fullstack to Cloudflare](./wrangler.jsonc), just run `npx wrangler deploy` or connect and deploy it through the Cloudflare Dashboard.
+  + [Deploy backend to Lambda via SST](./sst.config.ts)
 
 ### Notes
 
