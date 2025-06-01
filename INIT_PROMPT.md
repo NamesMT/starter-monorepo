@@ -43,7 +43,7 @@ Welcome! Use this template to configure your new project based on the `starter-m
    3. **SST removal (optional):** If `REMOVE_SST` is true, SST files, scripts, dependencies, and references will be removed.
      <!-- + Context for Agent: when doing SST Removal, these are SST's files: (`sst.config.ts`, `.env.sst`), also remove the `pathe` and `@types/aws-lambda` dependency, they are only used by SST -->
    4. **Project context update & renaming:** The agent will update all related documents like `README.md` and Memory Bank with your (revised) goals and descriptions, as well as replace `starter-monorepo` with `MONOREPO_ROOT_NAME` throughout project/Memory Bank.
-   5. **Initialize local secret env files:** Scan the project for `.env.local` files and copy them to `.env.local.ignored` if they exists.
+   5. **Initialize local secret env files:** Scan the project for `.env.local` files and duplicate them as `.env.local.ignored` for each that exists.
 3. **Finalizing steps**:
   <!-- + Context for Agent: ONLY START THIS STEP IF PRIOR STEPS IS DONE -->
    1. **INIT_PROMPT cleanup:** `INIT_PROMPT.md` and its related files (`INIT_PROMPT-EXAMPLES.md`) will be removed.
