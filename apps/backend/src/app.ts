@@ -6,6 +6,7 @@ import { appFactory, triggerFactory } from '~/helpers/factory'
 import { cookieSession } from '~/middlewares/session'
 import { apiApp } from './api/$'
 import { logger } from './helpers/logger'
+import { setupOpenAPI } from './openAPI'
 import { providersInit } from './providers'
 
 export const app = appFactory.createApp()
@@ -35,3 +36,8 @@ export const app = appFactory.createApp()
 
   // Register API routes
   .route('/api', apiApp)
+
+export default app
+
+// Setup OpenAPI stuff
+setupOpenAPI(app)

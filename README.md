@@ -60,7 +60,7 @@ So if you use SSR, you could use the official [Nuxt Kinde](https://nuxt.com/modu
 #### [`frontend`](./apps/frontend/README.md): a [Nuxt](https://nuxt.com/) app, compatible with v4 structure.
   + By default, the frontend `/api/*` routes is proxied to the `backendUrl`.
   + The `rpcApi` plugin will call the `/api/*` proxy if they're on the same domain but different ports (e.g: 127.0.0.1)
-    + > this mimics a production environment where the static frontend and the backend lives on the same domain at /api, which is the most efficient configuration for Cloudfront + Lambda Function Url
+    + > this mimics a production environment where the static frontend and the backend lives on the same domain at /api, which is the most efficient configuration for Cloudfront + Lambda Function Url, or Cloudflare Workers.
     + If the `frontend` and `backend` are on different domains then the backend will be called directly without proxy.
     + This could be configured in frontend's [`app.config.ts`](./apps/frontend/app/app.config.ts)
 

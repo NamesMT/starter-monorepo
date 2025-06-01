@@ -1,0 +1,56 @@
+{
+  "$schema": "https://esm.sh/wrangler@4.18.0/config-schema.json",
+  "name": "starter-monorepo",
+  "main": "./apps/backend/src/app.ts",
+  "compatibility_date": "2025-06-01",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "observability": {
+    "enabled": true
+  },
+  "assets": {
+    "run_worker_first": false,
+    "not_found_handling": "single-page-application",
+    "binding": "ASSETS",
+    "directory": "./apps/frontend/.output/public/"
+  },
+
+  /**
+   * Smart Placement
+   * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
+   */
+  // "placement": { "mode": "smart" },
+
+  /**
+   * Bindings
+   * Bindings allow your Worker to interact with resources on the Cloudflare Developer Platform, including
+   * databases, object storage, AI inference, real-time communication and more.
+   * https://developers.cloudflare.com/workers/runtime-apis/bindings/
+   */
+
+  /**
+   * Environment Variables
+   * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
+   *
+   * Note: Use secrets to store sensitive data.
+   * https://developers.cloudflare.com/workers/configuration/secrets/
+   *
+   */
+  "vars": {
+    // "KINDE_DOMAIN": "string",
+    // "KINDE_LOGOUT_REDIRECT_URI": "string",
+    // "KINDE_REDIRECT_URI": "string",
+    // "KINDE_CLIENT_ID": "secret",
+    // "KINDE_CLIENT_SECRET": "secret"
+  },
+
+  /**
+   * Service Bindings (communicate between multiple Workers)
+   * https://developers.cloudflare.com/workers/wrangler/configuration/#service-bindings
+   */
+  // "services": [{ "binding": "MY_SERVICE", "service": "my-service" }],
+
+  // I put this at the end so there's less comma issues when you add features above.
+  "upload_source_maps": true
+}
