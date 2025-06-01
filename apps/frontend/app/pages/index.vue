@@ -106,7 +106,9 @@ const { isPending, isError, data, error } = useQuery({
       <div class="max-w-full overflow-x-auto">
         <span>Configured</span> <code>backendUrl</code>: <code>{{ runtimeConfig.public.backendUrl }}</code>
       </div>
-      <div>API Response from `<code>{{ $apiClient.api.dummy.hello.$url() }}</code>`:</div>
+      <div class="max-w-full overflow-x-auto">
+        <span>API Response from</span> <code>{{ $apiClient.api.dummy.hello.$url() }}</code>:
+      </div>
       <pre class="max-w-full w-fit overflow-x-auto rounded bg-black p-2 px-4 text-left text-white">{{ apiError || apiResult || 'Empty' }}</pre>
     </div>
 
