@@ -101,6 +101,9 @@ export default defineNuxtConfig({
         language: 'vi-VN',
       },
     ],
+    bundle: {
+      optimizeTranslationDirective: false,
+    },
   },
 
   image: {
