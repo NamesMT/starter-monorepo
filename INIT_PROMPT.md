@@ -112,7 +112,7 @@ TARGET_PROJECT_GOAL_AND_DESCRIPTION="""
     * If you kept the demo `frontend`, this is strictly automatically `true`.
   * **When to Specify/Ask:** This setting is only relevant if you have removed the demo `frontend` (chosen `frontend` or `both`).
   * **Effect:**
-    * If `false`: Roo will remove frontend-specific configurations like the root `uno.config.ts` and related ESLint settings/plugins.
+    * If `false`: Agent will remove frontend-specific configurations like the root `uno.config.ts` and related ESLint settings/plugins.
 
 ```text
 # TARGET_HAVE_FRONTEND="<true-or-false>"
@@ -129,7 +129,7 @@ TARGET_PROJECT_GOAL_AND_DESCRIPTION="""
     * If `TARGET_HAVE_FRONTEND` is `false`, this is automatically `false`.
   * **When to Specify/Ask:** This setting is only relevant if you have removed the demo `frontend`, and `TARGET_HAVE_FRONTEND` is `true`.
   * **Effect:**
-    * If `false`, Roo will remove Vue-specific configurations (like ESLint configs) and the `locals/common-vue` directory.
+    * If `false`, Agent will remove Vue-specific configurations (like ESLint configs) and the `locals/common-vue` directory.
 
 ```text
 # FRONTEND_HAVE_VUE="<true-or-false>"
@@ -155,6 +155,6 @@ To initialize your project, provide the **entire content of this file** in your 
 If any required or relevant optional configuration values are missing, the AI Agent will first ask *how* you'd like to provide the missing information:
 * **Interactively:** Agent will ask you for each missing value one by one (recommended for first-time users).
 * **Via Template Snippet:** Agent will provide a consolidated code block containing ONLY the configuration variables for you to fill out and paste back.
-  <!-- Context for Roo: remember to also includes optional configs, and put comments (if any) on top of the config instead of inline -->
+  <!-- Context for Agent: remember to also includes optional configs, and put comments (if any) on top of the config instead of inline -->
 
 (Advanced users: If you prefer to provide configuration values directly in the initial prompt, please see the separate [`INIT_PROMPT-EXAMPLES.md`](./INIT_PROMPT-EXAMPLES.md) file for the required format and examples.)
