@@ -1,5 +1,4 @@
 {
-  "$schema": "https://esm.sh/wrangler@4.18.0/config-schema.json",
   "name": "starter-monorepo",
   "main": "./apps/backend/src/app.ts",
   "compatibility_date": "2025-06-01",
@@ -16,6 +15,7 @@
     "binding": "ASSETS",
     "directory": "./apps/frontend/.output/public/"
   },
+  "upload_source_maps": true,
 
   /**
    * Smart Placement
@@ -53,6 +53,5 @@
    */
   // "services": [{ "binding": "MY_SERVICE", "service": "my-service" }],
 
-  // I put this at the end so there's less comma issues when you add features above.
-  "upload_source_maps": true
+  "$schema": "https://esm.sh/wrangler@4/config-schema.json"
 }
