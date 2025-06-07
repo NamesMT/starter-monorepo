@@ -14,17 +14,17 @@
     "build": "dotenvx run -f .env.prod.ignored -f .env.prod -f .env -- unbuild"
   },
   "dependencies": {
-    "srvx": "^0.7.3"
+    "srvx": "^0.7.5"
   },
   "devDependencies": {
     "@hono/arktype-validator": "^2.0.1",
-    "@kinde-oss/kinde-typescript-sdk": "^2.10.1",
+    "@kinde-oss/kinde-typescript-sdk": "^2.11.0",
     "@local/common": "workspace:*",
     "@local/locales": "workspace:*",
     "@local/tsconfig": "workspace:*",
     "@namesmt/utils": "^0.5.13",
-    "@scalar/hono-api-reference": "^0.9.1",
-    "@vitest/coverage-v8": "^3.1.4",
+    "@scalar/hono-api-reference": "^0.9.3",
+    "@vitest/coverage-v8": "^3.2.2",
     "arktype": "^2.1.20",
     "consola": "^3.4.2",
     "hono": "^4.7.11",
@@ -34,6 +34,6 @@
     "petite-vue-i18n": "^11.1.5",
     "std-env": "^3.9.0",
     "unbuild": "^3.5.0",
-    "vitest": "^3.1.4"
+    "vitest": "^3.2.2"
   }
 }

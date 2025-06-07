@@ -53,3 +53,4 @@ yarn-error.log*
 
 # pnpm have a bug with tsx that creates the `tsx-0` folder everywhere
 tsx-0
+i18n.cache
