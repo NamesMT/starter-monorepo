@@ -17,16 +17,30 @@ dayjs.extend(localizedFormat)
 
 export { dayjs }
 
-const asyncLocaleMap = {
-  en: () => import('dayjs/locale/en'),
-  vi: () => import('dayjs/locale/vi'),
+// Its necessary to pre-define the map of all locales that will be used here for optimized bundling.
+// Refer to https://github.com/iamkun/dayjs/tree/dev/src/locale for all locales.
+const asyncLocaleMap: Record<string, () => Promise<any>> = {
+  'en': () => import('dayjs/locale/en'),
+  'es': () => import('dayjs/locale/es'),
+  'fr': () => import('dayjs/locale/fr'),
+  'ru': () => import('dayjs/locale/ru'),
+  'vi': () => import('dayjs/locale/vi'),
+  'zh-cn': () => import('dayjs/locale/zh-cn'),
 }
 
-export async function setDayjsLocale(locale: keyof typeof asyncLocaleMap) {
-  if (!(locale in asyncLocaleMap))
-    throw new Error(`locale ${locale} not defined`)
+export async function setDayjsLocale(locale: string) {
+  locale = locale.toLowerCase()
 
-  return asyncLocaleMap[locale]().then(() => dayjs.locale(locale))
+  const localeInMap = asyncLocaleMap[locale]
+  if (!localeInMap) {
+    console.error(`Locale "${locale}" does not exists, fallback to "en"`)
+    locale = 'en'
+  }
+  else {
+    await localeInMap()
+  }
+
+  dayjs.locale(locale)
 }
 
 export interface dateSuffixParams {

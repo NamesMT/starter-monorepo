@@ -20,7 +20,7 @@ export default defineNuxtPlugin({
     })
 
     watchImmediate(() => $i18n.locale.value, async (locale) => {
-      await setDayjsLocale(locale).catch(() => { console.error(`Failed to set '${locale}' for dayjs hook`) })
+      await setDayjsLocale(locale)
 
       switch (locale) {
         default:
