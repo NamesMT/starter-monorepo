@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import { Carousel, CarouselContent, CarouselNext, CarouselPrevious } from '@/lib/components/ui/carousel'
 
-const { locale, setLocale } = useI18n()
+const { locale, locales, setLocale } = useI18n()
 const runtimeConfig = useRuntimeConfig()
 const colorMode = useColorMode()
 const { $apiClient, $auth } = useNuxtApp()
 
+const computedNextLocale = computed(() => {
+  const currentLocaleIndex = locales.value.findIndex(lO => lO.code === locale.value)
+  return locales.value[(currentLocaleIndex + 1) % locales.value.length]!.code
+})
 const number = ref()
 
 // API
@@ -53,7 +57,7 @@ const { isPending, isError, data, error } = useQuery({
       <p>{{ $t('language') }}:</p>
       <Button
         :label="locale"
-        @pointerdown="setLocale(locale === 'en' ? 'vi' : 'en')"
+        @pointerdown="setLocale(computedNextLocale)"
       />
     </div>
 
