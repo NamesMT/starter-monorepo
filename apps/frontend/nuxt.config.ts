@@ -1,3 +1,4 @@
+import { resolve } from 'node:path'
 import { localcertKeyPath, localcertPath } from '@local/common/dev/cert'
 import { config } from 'dotenv'
 import optimizeExclude from 'vite-plugin-optimize-exclude'
@@ -13,6 +14,14 @@ const siteConfig = {
   backend: import.meta.env.NUXT_PUBLIC_BACKEND_URL,
   name: 'starter-monorepo',
   description: '🔥Hono RPC, Nuxt, SST Ion, Kinde Auth, Tanstack Query, Shadcn, Primevue, UnoCSS',
+}
+
+function genFrontendLocale(code: string, languageISO: string) {
+  return {
+    code,
+    language: languageISO,
+    files: [`${code}.json`, `frontend/${code}.json`],
+  }
 }
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
@@ -94,18 +103,15 @@ export default defineNuxtConfig({
     strategy: 'no_prefix',
     defaultLocale: 'en',
     locales: [
-      {
-        code: 'en',
-        language: 'en-US',
-      },
-      {
-        code: 'vi',
-        language: 'vi-VN',
-      },
+      genFrontendLocale('en', 'en-US'),
+      genFrontendLocale('vi', 'vi-VN'),
+      genFrontendLocale('fr', 'fr-FR'),
+      genFrontendLocale('zh-CN', 'zh-CN'),
     ],
     bundle: {
       optimizeTranslationDirective: false,
     },
+    langDir: resolve(import.meta.dirname, '../../locals/locales/dist'),
   },
 
   image: {
@@ -175,14 +181,4 @@ export default defineNuxtConfig({
   sourcemap: {
     server: false,
   },
-  ignore: [
-    '**\/*.stories.{js,cts,mts,ts,jsx,tsx}',
-    '**\/*.{spec,test}.{js,cts,mts,ts,jsx,tsx}',
-    '**\/*.d.{cts,mts,ts}',
-    '**\/.{pnpm-store,vercel,netlify,output,git,cache,data}',
-    '.nuxt/analyze',
-    '.nuxt',
-    '**\/-*.*',
-    'dist',
-  ],
 })

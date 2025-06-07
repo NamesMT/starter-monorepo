@@ -9,7 +9,7 @@ const title = computed(() => route.meta.title && t(route.meta.title))
 
 <template>
   <div>
-    <Html :lang="head.htmlAttrs.lang" :dir="head.htmlAttrs.dir" class="font-sans">
+    <Html class="font-sans">
       <Head>
         <!-- Don't set Title tag if we doesn't have a title, this allows `Nuxt SEO`'s fallback title to be used -->
         <Title v-if="title">

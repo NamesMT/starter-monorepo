@@ -26,7 +26,7 @@
     "@namesmt/utils": "^0.5.13",
     "@types/aws-lambda": "^8.10.149",
     "@types/node": "^20.19.0",
-    "@unocss/eslint-plugin": "^66.1.3",
+    "@unocss/eslint-plugin": "^66.1.4",
     "eslint": "^9.28.0",
     "frontend": "workspace:*",
     "lint-staged": "^16.1.0",

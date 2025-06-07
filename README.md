@@ -69,7 +69,8 @@ So if you use SSR, you could use the official [Nuxt Kinde](https://nuxt.com/modu
 
 ### Local packages
 
-+ [`@local/locales`](./locals/locales/README.md): a shared locales/i18n library powered by [spreadsheet-i18n](https://github.com/NamesMT/spreadsheet-i18n--mono).
++ [`@local/locales`](./locals/locales/README.md): a shared central locales/i18n data library powered by [**spreadsheet-i18n**](https://github.com/NamesMT/spreadsheet-i18n--mono).
+  + 🔄️ Hot-reload and automatic-reload supported, changes are reflected in apps (`frontend`, `backend`) instantly.
 + `@local/common`: a shared library that can contain constants, functions, types.
 + `@local/common-vue`: a shared library that can contain components, constants, functions, types for vue-based apps.
 + `tsconfig`: `tsconfig.json`s used throughout the monorepo.
