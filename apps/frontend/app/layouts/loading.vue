@@ -5,8 +5,6 @@ const head = useLocaleHead({
   key: 'id',
 })
 const title = computed(() => route.meta.title && t(route.meta.title))
-
-const windowsScroll = useWindowScroll()
 </script>
 
 <template>
@@ -27,23 +25,10 @@ const windowsScroll = useWindowScroll()
 
       <Body>
         <div class="min-h-screen w-full flex flex-col">
-          <!-- Header -->
-          <DefaultHeader
-            v-motion-slide-visible-once-left
-            class="fixed w-full transition-top"
-            :class="windowsScroll.arrivedState.top ? 'top-0' : '-top-20'"
-          />
-
           <!-- NuxtPage -->
           <div id="app-body" class="flex grow px-5 py-15 pt-20 2xl:px-20 lg:px-10 xl:px-15">
             <slot />
           </div>
-
-          <!-- Footer -->
-          <DefaultFooter
-            class="fixed w-full transition-bottom"
-            :class="windowsScroll.arrivedState.bottom ? 'bottom-0' : '-bottom-20'"
-          />
         </div>
       </Body>
     </Html>

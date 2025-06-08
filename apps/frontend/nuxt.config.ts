@@ -1,4 +1,4 @@
-import { resolve } from 'node:path'
+import type { LocaleObject } from '@nuxtjs/i18n'
 import { localcertKeyPath, localcertPath } from '@local/common/dev/cert'
 import { config } from 'dotenv'
 import optimizeExclude from 'vite-plugin-optimize-exclude'
@@ -16,11 +16,12 @@ const siteConfig = {
   description: '🔥Hono RPC, Nuxt, SST Ion, Kinde Auth, Tanstack Query, Shadcn, Primevue, UnoCSS',
 }
 
-function genFrontendLocale(code: string, languageISO: string) {
+function genFrontendLocale(code: string, languageISO: string, dir?: LocaleObject<string>['dir']): LocaleObject<string> {
   return {
     code,
     language: languageISO,
     files: [`${code}.json`, `frontend/${code}.json`],
+    dir,
   }
 }
 
@@ -57,6 +58,15 @@ export default defineNuxtConfig({
     },
   },
 
+  app: {
+    head: {
+      link: [
+        { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' },
+        { rel: 'mask-icon', href: '/favicon.svg', type: 'image/svg+xml' },
+      ],
+    },
+  },
+
   components: [
     {
       path: '~/components',
@@ -83,12 +93,14 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/eslint',
     '@vueuse/nuxt',
+    '@vueuse/motion/nuxt',
     '@namesmt/vue-query-nuxt',
     '@nuxtjs/i18n',
     '@nuxtjs/seo',
     '@unocss/nuxt',
     '@nuxtjs/color-mode',
     '@nuxt/image',
+    'nuxt-svgo',
     'nuxt-llms',
     // 'nuxt-booster',
     '@primevue/nuxt-module',
@@ -113,7 +125,7 @@ export default defineNuxtConfig({
     bundle: {
       optimizeTranslationDirective: false,
     },
-    langDir: resolve(import.meta.dirname, '../../locals/locales/dist'),
+    langDir: '../../../locals/locales/dist',
   },
 
   image: {
@@ -154,9 +166,10 @@ export default defineNuxtConfig({
     },
   },
 
-  features: {
-    // For UnoCSS
-    inlineStyles: false,
+  svgo: {
+    autoImportPath: false,
+    svgo: false,
+    defaultImport: 'component',
   },
 
   // @nuxtjs/color-mode

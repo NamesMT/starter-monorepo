@@ -43,6 +43,7 @@ export default defineConfig({
         DEFAULT: 'hsl(var(--primary))',
         foreground: 'hsl(var(--primary-foreground))',
       },
+      'surface-0': 'hsl(var(--surface-0))',
 
       'primary-inverse': 'hsl(var(--primary-inverse))',
       'primary-hover': 'hsl(var(--primary-hover))',
@@ -53,9 +54,14 @@ export default defineConfig({
       'primary-highlight-hover': 'hsl(var(--primary)/var(--primary-highlight-hover-opacity))',
 
       ...colorsPaletteMap,
+
+      'mono': 'hsl(var(--mono))',
+      'mono-i': 'hsl(var(--mono-i))',
     },
   },
   shortcuts: [
+    ['bg-mainGradient', 'bg-gradient-to-b from-primary to-pink'],
+    ['text-mainGradient', 'bg-mainGradient bg-clip-text text-transparent transition-color duration-200'],
   ],
   rules: [
     // Declaring css variable with Uno: $mainColor-primary-500

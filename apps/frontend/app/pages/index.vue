@@ -2,12 +2,12 @@
 import GridMaker from '@local/common-vue/src/components/GridMaker.vue'
 
 definePageMeta({
-  title: 'pages.title.home',
+  title: 'pages.home.title',
 })
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col items-center justify-center gap-4 px-4 py-4 text-center">
+  <div class="w-full flex flex-col items-center justify-center gap-4 px-4 py-4 text-center">
     <div class="flex items-end gap-2">
       <GridMaker
         :value="[

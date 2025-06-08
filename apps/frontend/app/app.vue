@@ -14,7 +14,20 @@ onMounted(async () => {
 </script>
 
 <template>
-  <NuxtLayout>
-    <NuxtPage />
-  </NuxtLayout>
+  <div>
+    <template v-if="!$init.mounted">
+      <NuxtLayout name="loading">
+        <NuxtPage />
+        <!-- <LoadingScreen /> -->
+      </NuxtLayout>
+    </template>
+
+    <template v-else>
+      <GlobalRegister />
+
+      <NuxtLayout>
+        <NuxtPage />
+      </NuxtLayout>
+    </template>
+  </div>
 </template>

@@ -55,7 +55,7 @@ const { isPending, isError, data, error } = useQuery({
     <div class="flex items-center gap-2">
       <p>{{ $lmw($t('language'), 8) }}:</p>
       <Button
-        :label="$lmw(locale)"
+        :label="$lmw(locale.substring(0, 2))"
         @pointerdown="setLocale(computedNextLocale)"
       />
     </div>
@@ -139,13 +139,5 @@ const { isPending, isError, data, error } = useQuery({
       <CarouselPrevious />
       <CarouselNext />
     </Carousel>
-  </div>
-
-  <div>
-    <NuxtLink to="/test">
-      <Button size="small">
-        To /test
-      </Button>
-    </NuxtLink>
   </div>
 </template>

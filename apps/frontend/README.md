@@ -10,6 +10,8 @@
   * [@antfu/eslint-config](https://github.com/antfu/eslint-config)
 * [UnoCSS](https://unocss.dev/guide/)
   * UnoCSS is an atomic CSS engine, similar to Tailwind but is super fast and have some amazing features like automatically imported icons in pure CSS.
+* [VueUse](https://vueuse.org/)
+  * + [VueUse Motion](https://motion.vueuse.org/)
 * Tanstack Query
   * Default is configured for client-side fetching usage, data is persisted to IndexedDB.
 * PrimeVue * UI library
@@ -24,6 +26,8 @@
   * Dark and Light mode with auto detection made easy with Nuxt.
 * [NuxtImage](https://image.nuxt.com/)
   * Automatic optimized images for the app, as well as placeholder support.
+* [NuxtSVGO](https://github.com/cpsoinos/nuxt-svgo)
+  * Support for loading SVGs and optimizing them.
 * [Nuxt Booster](https://basics.github.io/nuxt-booster/)
   * Lighthouse score optimizations
 * [NuxtI18n](https://i18n.nuxtjs.org/)

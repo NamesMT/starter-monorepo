@@ -3,7 +3,8 @@ checksums:
   fdf23e1cc2ec83ec2119d6e6b991ce37:
     hello: f01e599cced8b7d7105329947b5096de
   fa34a32ee742667d36ef7288982efb9c:
-    pages.title.home: 104a3db3b671c04e167eafbe21e57881
+    pages.home.title: 104a3db3b671c04e167eafbe21e57881
+    pages.test.title: 82a46f197779af4dde92e7e5f9336ccf
     language: 277fd1a41cc237a437cd1d5e4a80463b
     welcome: 3180ad6b8de344b781637750259e0f53
     number-input: ab4080c339b27dbf5775f8a7ec34d666

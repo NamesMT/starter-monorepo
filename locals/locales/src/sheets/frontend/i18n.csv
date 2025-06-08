@@ -1,5 +1,6 @@
 KEY,Description,en,es,fr,ru,vi,zh-CN
-pages.title.home,,Home,Inicio,Accueil,Главная,Trang chủ,首页
+pages.home.title,,Home,Inicio,Accueil,Главная,Trang chủ,首页
+pages.test.title,,Test,Prueba,Test,Тест,Kiểm tra,测试
 language,,Language,Idioma,Langue,Язык,Ngôn ngữ,语言
 welcome,,Welcome,Bienvenido,Bienvenue,Добро пожаловать,Chào mừng,欢迎
 number-input,,Number input,Entrada numérica,Saisie numérique,Числовой ввод,Nhập số,数字输入
