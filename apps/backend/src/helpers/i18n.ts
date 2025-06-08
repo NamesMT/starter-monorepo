@@ -11,8 +11,10 @@ export const i18n = createI18n({
   ...defaultOptions,
   messages: {
     'en': await importBackendLocale('en'),
-    'vi': await importBackendLocale('vi'),
+    'es': await importBackendLocale('es'),
     'fr': await importBackendLocale('fr'),
+    'ru': await importBackendLocale('ru'),
+    'vi': await importBackendLocale('vi'),
     'zh-CN': await importBackendLocale('zh-CN'),
   },
 })

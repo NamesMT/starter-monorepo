@@ -13,6 +13,7 @@
     "dev": "dotenvx run -- turbo run dev",
     "devSST": "dotenvx run -f .env.sst -f .env -- sst dev \"pnpm -F=frontend run dev\"",
     "build": "dotenvx run -- turbo run build",
+    "i18n": "lingo.dev run",
     "prepare": "simple-git-hooks"
   },
   "dependencies": {
@@ -29,6 +30,7 @@
     "@unocss/eslint-plugin": "^66.1.4",
     "eslint": "^9.28.0",
     "frontend": "workspace:*",
+    "lingo.dev": "^0.94.3",
     "lint-staged": "^16.1.0",
     "simple-git-hooks": "^2.13.0",
     "tsx": "^4.19.4",
@@ -42,11 +44,13 @@
       "is-generator-function": "npm:@nolyfill/is-generator-function@^1.0.44",
       "is-typed-array": "npm:@nolyfill/is-typed-array@^1.0.44",
       "isarray": "npm:@nolyfill/isarray@^1.0.44",
-      "safe-buffer": "npm:@nolyfill/safe-buffer@^1.0.44",
       "safer-buffer": "npm:@nolyfill/safer-buffer@^1.0.44",
       "side-channel": "npm:@nolyfill/side-channel@^1.0.44",
       "string.prototype.codepointat": "npm:@nolyfill/string.prototype.codepointat@^1.0.44",
       "which-typed-array": "npm:@nolyfill/which-typed-array@^1.0.44"
+    },
+    "patchedDependencies": {
+      "lingo.dev": "patches/lingo.dev.patch"
     }
   },
   "simple-git-hooks": {

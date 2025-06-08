@@ -1,0 +1,74 @@
+diff --git a/build/cli.cjs b/build/cli.cjs
+index 90c0d48efcfe478ddd2be74682082515fb0f6223..99cf37ee6429e1ee32d6e55d1b4851e7a84fc72a 100644
+--- a/build/cli.cjs
++++ b/build/cli.cjs
+@@ -1865,7 +1865,7 @@ function createCsvLoader() {
+       });
+       const result = {};
+       _lodash2.default.forEach(input2, (row) => {
+-        const key = row.id;
++        const key = row.KEY;
+         if (key && row[locale] && row[locale].trim() !== "") {
+           result[key] = row[locale];
+         }
+@@ -1878,19 +1878,19 @@ function createCsvLoader() {
+         skip_empty_lines: true,
+         relax_column_count_less: true
+       });
+-      const columns = input2.length > 0 ? Object.keys(input2[0]) : ["id", locale];
++      const columns = input2.length > 0 ? Object.keys(input2[0]) : ["KEY", locale];
+       if (!columns.includes(locale)) {
+         columns.push(locale);
+       }
+       const updatedRows = input2.map((row) => ({
+         ...row,
+-        [locale]: data[row.id] || row[locale] || ""
++        [locale]: data[row.KEY] || row[locale] || ""
+       }));
+-      const existingKeys = new Set(input2.map((row) => row.id));
++      const existingKeys = new Set(input2.map((row) => row.KEY));
+       Object.entries(data).forEach(([key, value]) => {
+         if (!existingKeys.has(key)) {
+           const newRow = {
+-            id: key,
++            KEY: key,
+             ...Object.fromEntries(columns.map((column) => [column, ""]))
+           };
+           newRow[locale] = value;
+diff --git a/build/cli.mjs b/build/cli.mjs
+index dd246777cc2084af56ef5f6e746409784a247b46..ea73f64e4345073d6e3be663c9e870f86cd97e59 100644
+--- a/build/cli.mjs
++++ b/build/cli.mjs
+@@ -1865,7 +1865,7 @@ function createCsvLoader() {
+       });
+       const result = {};
+       _11.forEach(input2, (row) => {
+-        const key = row.id;
++        const key = row.KEY;
+         if (key && row[locale] && row[locale].trim() !== "") {
+           result[key] = row[locale];
+         }
+@@ -1878,19 +1878,19 @@ function createCsvLoader() {
+         skip_empty_lines: true,
+         relax_column_count_less: true
+       });
+-      const columns = input2.length > 0 ? Object.keys(input2[0]) : ["id", locale];
++      const columns = input2.length > 0 ? Object.keys(input2[0]) : ["KEY", locale];
+       if (!columns.includes(locale)) {
+         columns.push(locale);
+       }
+       const updatedRows = input2.map((row) => ({
+         ...row,
+-        [locale]: data[row.id] || row[locale] || ""
++        [locale]: data[row.KEY] || row[locale] || ""
+       }));
+-      const existingKeys = new Set(input2.map((row) => row.id));
++      const existingKeys = new Set(input2.map((row) => row.KEY));
+       Object.entries(data).forEach(([key, value]) => {
+         if (!existingKeys.has(key)) {
+           const newRow = {
+-            id: key,
++            KEY: key,
+             ...Object.fromEntries(columns.map((column) => [column, ""]))
+           };
+           newRow[locale] = value;

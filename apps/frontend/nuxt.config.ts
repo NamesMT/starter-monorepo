@@ -104,8 +104,10 @@ export default defineNuxtConfig({
     defaultLocale: 'en',
     locales: [
       genFrontendLocale('en', 'en-US'),
-      genFrontendLocale('vi', 'vi-VN'),
+      genFrontendLocale('es', 'es-ES'),
       genFrontendLocale('fr', 'fr-FR'),
+      genFrontendLocale('ru', 'ru-RU'),
+      genFrontendLocale('vi', 'vi-VN'),
       genFrontendLocale('zh-CN', 'zh-CN'),
     ],
     bundle: {

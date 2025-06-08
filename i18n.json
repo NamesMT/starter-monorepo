@@ -1,0 +1,23 @@
+{
+  "version": 1.8,
+  "locale": {
+    "source": "en",
+    "targets": [
+      "es",
+      "fr",
+      "ru",
+      "vi",
+      "zh-CN"
+    ]
+  },
+  "buckets": {
+    "csv": {
+      "include": [
+        "locals/locales/src/sheets/i18n.csv",
+        "locals/locales/src/sheets/frontend/i18n.csv",
+        "locals/locales/src/sheets/backend/i18n.csv"
+      ]
+    }
+  },
+  "$schema": "https://lingo.dev/schema/i18n.json"
+}
