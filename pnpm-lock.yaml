@@ -101,6 +101,9 @@ importers:
       '@namesmt/utils':
         specifier: ^0.5.13
         version: 0.5.13
+      '@rollup/plugin-dynamic-import-vars':
+        specifier: ^2.1.5
+        version: 2.1.5(rollup@4.42.0)
       '@scalar/hono-api-reference':
         specifier: ^0.9.3
         version: 0.9.3(hono@4.7.11)
@@ -2571,6 +2574,15 @@ packages:
       rollup:
         optional: true
 
+  '@rollup/plugin-dynamic-import-vars@2.1.5':
+    resolution: {integrity: sha512-Mymi24fd9hlRifdZV/jYIFj1dn99F34imiYu3KzlAcgBcRi3i9SucgW/VRo5SQ9K4NuQ7dCep6pFWgNyhRdFHQ==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+
   '@rollup/plugin-inject@5.0.5':
     resolution: {integrity: sha512-2+DEJbNBoPROPkgTDNe8/1YXWcqxbN5DTjASVIOx8HS+pITXushyNiBV56RB08zuptzz8gT3YfkqriTBVycepg==}
     engines: {node: '>=14.0.0'}
@@ -3841,6 +3853,10 @@ packages:
   ast-walker-scope@0.6.2:
     resolution: {integrity: sha512-1UWOyC50xI3QZkRuDj6PqDtpm1oHWtYs+NQGwqL/2R11eN3Q81PHAHPM0SWW3BNQm53UDwS//Jv8L4CCVLM1bQ==}
     engines: {node: '>=16.14.0'}
+
+  astring@1.9.0:
+    resolution: {integrity: sha512-LElXdjswlqjWrPpJFg1Fx4wpkOCxj1TDHlSV4PlaRxHGWko024xICaa97ZkMfs6DRKlCguiAI+rbXv5GWwXIkg==}
+    hasBin: true
 
   async-scheduler@1.4.4:
     resolution: {integrity: sha512-KVWlF6WKlUGJA8FOJYVVk7xDm3PxITWXp9hTeDsXMtUPvItQ2x6g2rIeNAa0TtAiiWvHJqhyA3wo+pj0rA7Ldg==}
@@ -11851,6 +11867,16 @@ snapshots:
     optionalDependencies:
       rollup: 4.42.0
 
+  '@rollup/plugin-dynamic-import-vars@2.1.5(rollup@4.42.0)':
+    dependencies:
+      '@rollup/pluginutils': 5.1.4(rollup@4.42.0)
+      astring: 1.9.0
+      estree-walker: 2.0.2
+      fast-glob: 3.3.3
+      magic-string: 0.30.17
+    optionalDependencies:
+      rollup: 4.42.0
+
   '@rollup/plugin-inject@5.0.5(rollup@4.42.0)':
     dependencies:
       '@rollup/pluginutils': 5.1.4(rollup@4.42.0)
@@ -13468,6 +13494,8 @@ snapshots:
     dependencies:
       '@babel/parser': 7.27.5
       ast-kit: 1.4.3
+
+  astring@1.9.0: {}
 
   async-scheduler@1.4.4: {}
 

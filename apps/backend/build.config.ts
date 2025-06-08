@@ -1,3 +1,4 @@
+import dynamicImportVars from '@rollup/plugin-dynamic-import-vars'
 import { defineBuildConfig } from 'unbuild'
 import sharedConfig from './shared.config'
 
@@ -21,6 +22,11 @@ export default defineBuildConfig({
     esbuild: {
       target: 'esnext',
       // minify: true,
+    },
+  },
+  hooks: {
+    'rollup:options': function (_ctx, options) {
+      options.plugins = [options.plugins, dynamicImportVars()]
     },
   },
   ...sharedConfig,
