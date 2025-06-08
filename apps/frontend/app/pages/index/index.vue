@@ -39,7 +39,6 @@ const { isPending, isError, data, error } = useQuery({
       <ClientOnly>
         <template #fallback>
           <Button
-            key="fallback"
             label="..."
           />
         </template>
