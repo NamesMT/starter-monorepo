@@ -48,9 +48,14 @@
   "typescript.tsdk": "node_modules/typescript/lib",
 
   "i18n-ally.keystyle": "flat",
-  "i18n-ally.enabledFrameworks": ["vue-sfc", "vue"],
+  "i18n-ally.enabledFrameworks": [
+    "vue-sfc",
+    "vue",
+    "general"
+  ],
   "i18n-ally.localesPaths": [
-    "locals/locales/dist"
+    "locals/locales/dist",
+    "locals/locales/dist/**"
   ],
 
   "errorLens.followCursor": "allLines"
