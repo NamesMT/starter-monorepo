@@ -19,16 +19,21 @@ export default defineNuxtPlugin({
       renderKey: 0,
     })
 
-    watchImmediate(() => $i18n.locale.value, async (locale) => {
-      await setDayjsLocale(locale)
+    until(() => $init.mounted).toBeTruthy().then(() => {
+      watchImmediate(
+        () => $i18n.locale.value,
+        async (locale) => {
+          await setDayjsLocale(locale)
 
-      switch (locale) {
-        default:
-          primevue.config.locale = { ...baseLocale }
-          break
-      }
+          switch (locale) {
+            default:
+              primevue.config.locale = { ...baseLocale }
+              break
+          }
 
-      ++li18n.renderKey
+          ++li18n.renderKey
+        },
+      )
     })
 
     return {
@@ -36,11 +41,13 @@ export default defineNuxtPlugin({
         li18n,
 
         /**
-         * This function wraps the value in a computed with `renderKey`, so it is properly reactive with i18n context
+         * lmw - Localized-text Mount Wrap
+         *
+         * If the initial locale haven't been loaded yet, this function returns a placeholder value, so it is safe for SSG-consumption without hydration mismatch.
          */
-        lw: (v: MaybeRef<string>, lengthEstimate = 3) => computed(() =>
-          $init.mounted && li18n.renderKey ? unref(v) : '-'.repeat(lengthEstimate),
-        ),
+        lmw: (v: string, stringOrLengthEstimate: string | number = 3) => li18n.renderKey
+          ? v
+          : typeof stringOrLengthEstimate === 'string' ? stringOrLengthEstimate : '-'.repeat(stringOrLengthEstimate),
       },
     }
   },
