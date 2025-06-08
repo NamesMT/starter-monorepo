@@ -54,8 +54,9 @@
     "general"
   ],
   "i18n-ally.localesPaths": [
-    "locals/locales/dist",
-    "locals/locales/dist/**"
+    "locals/locales/dist/frontend",
+    "locals/locales/dist/backend",
+    "locals/locales/dist"
   ],
 
   "errorLens.followCursor": "allLines"
