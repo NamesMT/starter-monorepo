@@ -5,6 +5,12 @@ defineOgImageComponent('NuxtSeo', {
   theme: '#bf83fc',
   colorMode: 'dark',
 })
+
+const { $init } = useNuxtApp()
+onMounted(async () => {
+  await nextTick()
+  $init.mounted = true
+})
 </script>
 
 <template>

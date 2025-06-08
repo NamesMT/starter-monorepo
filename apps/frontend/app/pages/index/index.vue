@@ -53,27 +53,20 @@ const { isPending, isError, data, error } = useQuery({
     </div>
 
     <div class="flex items-center gap-2">
-      <p>{{ $t('language') }}:</p>
+      <p>{{ $lw($t('language'), 8) }}:</p>
       <Button
-        :label="locale"
+        :label="$lw(locale).value"
         @pointerdown="setLocale(computedNextLocale)"
       />
     </div>
 
-    <div :key="$li18n.renderKey">
-      <ClientOnly>
-        <template #fallback>
-          ...
-        </template>
-
-        {{ dayjs().format('dddd') }}
-      </ClientOnly>
+    <div>
+      {{ $lw(dayjs().format('dddd'), 6) }}
     </div>
 
     <InputNumber
       v-model="number"
-      input-id="integeronly"
-      :placeholder="$t('number-input')"
+      :placeholder="$lw($t('number-input'), 18).value"
     />
   </div>
 

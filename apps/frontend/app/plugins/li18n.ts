@@ -7,7 +7,7 @@ export default defineNuxtPlugin({
     'local-auth',
   ],
   async setup() {
-    const { $i18n } = useNuxtApp()
+    const { $i18n, $init } = useNuxtApp()
     const primevue = usePrimeVue()
 
     const baseLocale = {
@@ -34,6 +34,13 @@ export default defineNuxtPlugin({
     return {
       provide: {
         li18n,
+
+        /**
+         * This function wraps the value in a computed with `renderKey`, so it is properly reactive with i18n context
+         */
+        lw: (v: MaybeRef<string>, lengthEstimate = 3) => computed(() =>
+          $init.mounted && li18n.renderKey ? unref(v) : '-'.repeat(lengthEstimate),
+        ),
       },
     }
   },
