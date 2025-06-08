@@ -1,7 +1,8 @@
 import { defaultOptions } from '@local/locales/src/index'
 import { createI18n } from 'petite-vue-i18n'
 
-async function importBackendLocale(locale: string) {
+export type DeepStringRecord = { [key: string]: string | DeepStringRecord }
+async function importBackendLocale(locale: string): Promise<DeepStringRecord> {
   const commonLocale = await import(`@local/locales/dist/${locale}.json`).then(r => r.default)
   const backendLocale = await import(`@local/locales/dist/backend/${locale}.json`).then(r => r.default)
   return { ...commonLocale, ...backendLocale }
