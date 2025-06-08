@@ -1,6 +1,7 @@
 {
   "name": "starter-monorepo",
   "type": "module",
+  "version": "1.0.0",
   "private": true,
   "packageManager": "pnpm@10.11.1",
   "engines": {
