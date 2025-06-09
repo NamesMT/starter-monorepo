@@ -1,4 +1,4 @@
-import type { HonoEnv } from '#src/types'
+import type { HonoEnv } from '#src/types.js'
 import type { ErrorHandler } from 'hono'
 import type { ContentfulStatusCode } from 'hono/utils/http-status'
 import { logger } from '#src/helpers/logger.js'
