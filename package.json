@@ -3,7 +3,7 @@
   "type": "module",
   "version": "1.0.0",
   "private": true,
-  "packageManager": "pnpm@10.11.1",
+  "packageManager": "pnpm@10.12.1",
   "engines": {
     "node": ">=20.13.1"
   },
@@ -19,13 +19,13 @@
   },
   "dependencies": {
     "pathe": "^2.0.3",
-    "sst": "^3.17.3",
+    "sst": "^3.17.4",
     "std-env": "^3.9.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.14.1",
     "@dotenvx/dotenvx": "1.11.4",
-    "@namesmt/utils": "^0.5.13",
+    "@namesmt/utils": "^0.5.14",
     "@types/aws-lambda": "^8.10.149",
     "@types/node": "^20.19.0",
     "@unocss/eslint-plugin": "^66.1.4",
@@ -40,6 +40,8 @@
   },
   "pnpm": {
     "overrides": {
+      "@nuxt/kit": "4.0.0-alpha.1",
+      "@nuxt/schema": "4.0.0-alpha.1",
       "is-arguments": "npm:@nolyfill/is-arguments@^1.0.44",
       "is-core-module": "npm:@nolyfill/is-core-module@^1.0.39",
       "is-generator-function": "npm:@nolyfill/is-generator-function@^1.0.44",
@@ -51,7 +53,8 @@
       "which-typed-array": "npm:@nolyfill/which-typed-array@^1.0.44"
     },
     "patchedDependencies": {
-      "lingo.dev": "patches/lingo.dev.patch"
+      "lingo.dev": "patches/lingo.dev.patch",
+      "@primevue/nuxt-module": "patches/@primevue__nuxt-module.patch"
     }
   },
   "simple-git-hooks": {

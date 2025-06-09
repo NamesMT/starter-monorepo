@@ -1,6 +1,6 @@
 # frontend
 
-**frontend** is the consumer-facing website for the project, powered by [Nuxt🔥](https://nuxt.com/) (`compatibilityVersion: 4`)
+**frontend** is the consumer-facing website for the project, powered by [Nuxt 4](https://nuxt.com/)
 
 ## Features:
 
@@ -37,7 +37,7 @@
   * All the boring SEO work for Nuxt done.
 * [Nuxt LLMs](https://github.com/nuxtlabs/nuxt-llms)
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Check the [Nuxt documentation](https://nuxt.com/) to learn more.
 
 ## Setup
 

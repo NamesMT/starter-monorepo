@@ -1,0 +1,13 @@
+diff --git a/dist/module.mjs b/dist/module.mjs
+index 8f47951e0d9ccd8691b9d6256db5d8342945c30d..10512b88d9a541c59184b34463b7d308dcb4cc35 100644
+--- a/dist/module.mjs
++++ b/dist/module.mjs
+@@ -162,7 +162,7 @@ const module = defineNuxtModule({
+     name: "@primevue/nuxt-module",
+     configKey: "primevue",
+     compatibility: {
+-      nuxt: "^3.0.0"
++      nuxt: ">=3.0.0"
+     }
+   },
+   defaults: {
