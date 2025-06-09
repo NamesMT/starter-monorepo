@@ -16,6 +16,7 @@
     * [Apps and Libraries](#apps-and-libraries)
       * [`frontend`: a Nuxt app, compatible with v4 structure.](#frontend-a-nuxt-app-compatible-with-v4-structure)
       * [`backend`: a Hono🔥 app.](#backend-a-hono-app)
+      * [`backend-convex`: a Convex app.](#backend-convex-a-convex-app)
     * [Local packages](#local-packages)
     * [Utilities](#utilities)
     * [Build](#build)
@@ -58,14 +59,18 @@ So if you use SSR, you could use the official [Nuxt Kinde](https://nuxt.com/modu
 
 ### Apps and Libraries
 
-#### [`frontend`](./apps/frontend/README.md): a [Nuxt](https://nuxt.com/) app, compatible with v4 structure.
-  + By default, the frontend `/api/*` routes is proxied to the `backendUrl`.
-  + The `rpcApi` plugin will call the `/api/*` proxy if they're on the same domain but different ports (e.g: 127.0.0.1)
-    + > this mimics a production environment where the static frontend and the backend lives on the same domain at /api, which is the most efficient configuration for Cloudfront + Lambda Function Url, or Cloudflare Workers.
-    + If the `frontend` and `backend` are on different domains then the backend will be called directly without proxy.
-    + This could be configured in frontend's [`app.config.ts`](./apps/frontend/app/app.config.ts)
+#### [`frontend`](./apps/frontend): a [Nuxt](https://nuxt.com/) app, compatible with v4 structure.
+  * By default, the frontend `/api/*` routes is proxied to the `backendUrl`.
+  * The `rpcApi` plugin will call the `/api/*` proxy if they're on the same domain but different ports (e.g: 127.0.0.1)
+    * > this mimics a production environment where the static frontend and the backend lives on the same domain at /api, which is the most efficient configuration for Cloudfront + Lambda Function Url, or Cloudflare Workers.
+    * If the `frontend` and `backend` are on different domains then the backend will be called directly without proxy.
+    * This could be configured in frontend's [`app.config.ts`](./apps/frontend/app/app.config.ts)
 
-#### [`backend`](./apps/backend/README.md): a [Hono🔥](https://hono.dev/) app.
+#### [`backend`](./apps/backend): a [Hono🔥](https://hono.dev/) app.
+
+#### [`backend-convex`](./apps/backend-convex): a [Convex](https://convex.dev/) app.
+  * By default, the Convex app is not enabled in development, to enable it, change the root `dev` script from `dev:noConvex` to `dev:full`.
+  * To deploy with Convex in production, simply run the `deploy` script of `backend-convex` app, then, set your Convex's production url to `NUXT_PUBLIC_CONVEX_URL` env in `frontend`'s `.env.prod` file or CI / build machine env variable.
 
 ### Local packages
 

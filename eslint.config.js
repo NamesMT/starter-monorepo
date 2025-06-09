@@ -8,6 +8,7 @@ export default frontendNuxtConfig(await antfu(
     unocss: true,
     ignores: [
       '.sst',
+      '**/convex/_generated/**',
     ],
   },
   {

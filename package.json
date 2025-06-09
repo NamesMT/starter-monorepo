@@ -11,7 +11,9 @@
     "lint": "turbo run lint",
     "test:types": "turbo run test:types",
     "quickcheck": "turbo run quickcheck",
-    "dev": "dotenvx run -- turbo run dev",
+    "dev": "pnpm run dev:noConvex",
+    "dev:noConvex": "dotenvx run -- turbo run dev --filter=!backend-convex",
+    "dev:full": "dotenvx run -- turbo run dev",
     "devSST": "dotenvx run -f .env.sst -f .env -- sst dev \"pnpm -F=frontend run dev\"",
     "build": "dotenvx run -- turbo run build",
     "i18n": "lingo.dev run",
@@ -42,6 +44,7 @@
     "overrides": {
       "@nuxt/kit": "4.0.0-alpha.1",
       "@nuxt/schema": "4.0.0-alpha.1",
+      "convex-vue": "npm:@namesmt/convex-vue@^0.1.1",
       "is-arguments": "npm:@nolyfill/is-arguments@^1.0.44",
       "is-core-module": "npm:@nolyfill/is-core-module@^1.0.39",
       "is-generator-function": "npm:@nolyfill/is-generator-function@^1.0.44",
@@ -54,7 +57,8 @@
     },
     "patchedDependencies": {
       "lingo.dev": "patches/lingo.dev.patch",
-      "@primevue/nuxt-module": "patches/@primevue__nuxt-module.patch"
+      "@primevue/nuxt-module": "patches/@primevue__nuxt-module.patch",
+      "convex-nuxt": "patches/convex-nuxt.patch"
     }
   },
   "simple-git-hooks": {

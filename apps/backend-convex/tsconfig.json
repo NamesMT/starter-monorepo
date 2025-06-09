@@ -1,0 +1,11 @@
+{
+  "extends": "@local/tsconfig/base.json",
+  "compilerOptions": {
+    "composite": true,
+    "types": [
+      "vitest"
+    ]
+  },
+  "include": ["./convex/**/*"],
+  "exclude": ["./convex/_generated"]
+}

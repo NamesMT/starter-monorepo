@@ -1,0 +1,27 @@
+{
+  "name": "backend-convex",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "imports": {
+    "#src/*": "./src/*"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "test": "vitest",
+    "test:types": "tsc --noEmit --skipLibCheck",
+    "quickcheck": "pnpm run lint && pnpm run test:types",
+    "check": "pnpm lint && pnpm test:types && vitest run",
+    "dev": "convex dev",
+    "deploy": "convex deploy -y",
+    "predev": "convex dev --once"
+  },
+  "devDependencies": {
+    "@local/common": "workspace:*",
+    "@local/locales": "workspace:*",
+    "@local/tsconfig": "workspace:*",
+    "@namesmt/utils": "^0.5.14",
+    "convex": "^1.24.8",
+    "vitest": "^3.2.2"
+  }
+}

@@ -12,6 +12,7 @@
     "pathe": "^2.0.3"
   },
   "devDependencies": {
-    "@local/tsconfig": "workspace:*"
+    "@local/tsconfig": "workspace:*",
+    "dotenv": "^16.5.0"
   }
 }

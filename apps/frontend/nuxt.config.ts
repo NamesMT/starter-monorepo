@@ -1,5 +1,6 @@
 import type { LocaleObject } from '@nuxtjs/i18n'
 import { localcertKeyPath, localcertPath } from '@local/common/dev/cert'
+import { getConvexEnvs } from 'backend-convex/_util'
 import { config } from 'dotenv'
 import optimizeExclude from 'vite-plugin-optimize-exclude'
 import { Names } from './app/primevue.config'
@@ -24,6 +25,8 @@ function genFrontendLocale(code: string, languageISO: string, dir?: LocaleObject
     dir,
   }
 }
+
+const convexLocalEnvs = await getConvexEnvs()
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -105,7 +108,13 @@ export default defineNuxtConfig({
     // 'nuxt-booster',
     '@primevue/nuxt-module',
     'shadcn-nuxt',
+    'convex-nuxt',
   ],
+
+  convex: {
+    url: import.meta.env.NUXT_PUBLIC_CONVEX_URL || convexLocalEnvs.CONVEX_URL || '',
+    manualInit: true,
+  },
 
   site: siteConfig,
 
