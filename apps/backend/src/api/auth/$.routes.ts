@@ -1,8 +1,8 @@
 import type { ClaimTokenType, FlagType } from '@kinde-oss/kinde-typescript-sdk'
+import { appFactory } from '#src/helpers/factory.js'
+import { getSessionManager } from '#src/helpers/kinde.js'
+import { getKindeClient } from '#src/providers/auth/kinde-main.js'
 import { env } from 'std-env'
-import { appFactory } from '~/helpers/factory'
-import { getSessionManager } from '~/helpers/kinde'
-import { getKindeClient } from '~/providers/auth/kinde-main'
 
 export const authRoutesApp = appFactory.createApp()
   .get('/health', async (c) => {

@@ -1,4 +1,4 @@
-import { appFactory } from '~/helpers/factory'
+import { appFactory } from '#src/helpers/factory.js'
 import { apiRouteApp } from './$$'
 import { authApp } from './auth/$'
 import { dummyGreetRouteApp } from './dummy/greet'

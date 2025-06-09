@@ -14,11 +14,11 @@
 
 ## Structuring cookbook:
 #### Root level:
-Things like 3rd party APIs, DBs, Storages connectors, etc, should be placed in `~/providers` folder, grouped by their purpose if possible, e.g: `~/providers/auth/kinde-main.ts`, `~/providers/db/neon-main.ts`.
+Things like 3rd party APIs, DBs, Storages connectors, etc, should be placed in `#src/providers` folder, grouped by their purpose if possible, e.g: `#src/providers/auth/kinde-main.ts`, `#src/providers/db/neon-main.ts`.
 
-Things that interact with `~/providers` should be placed in `~/services` folder. (like an `user` service)
+Things that interact with `#src/providers` should be placed in `#src/services` folder. (like an `user` service)
 
-Other globally reuseable code should be placed in `~/helpers` folder. (like `error`, `logger` utils)
+Other globally reuseable code should be placed in `#src/helpers` folder. (like `error`, `logger` utils)
 
 Locally reusable code should be placed in the same folder as the file that uses it, its name should be its usable scope, suffixing the file name with `.helper`, e.g: `/api/dummy/hello.helper.ts`, `/api/$.helper.ts`.
 

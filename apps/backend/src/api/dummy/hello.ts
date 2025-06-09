@@ -1,4 +1,4 @@
-import { appFactory } from '~/helpers/factory'
+import { appFactory } from '#src/helpers/factory.js'
 import { getHelloMessage } from './hello.helper'
 
 export const dummyHelloRouteApp = appFactory.createApp()

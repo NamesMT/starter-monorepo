@@ -1,6 +1,6 @@
+import { logger } from '#src/helpers/logger.js'
 import { createKindeServerClient, GrantType } from '@kinde-oss/kinde-typescript-sdk'
 import { env } from 'std-env'
-import { logger } from '~/helpers/logger'
 import { cacheProvider, getCachedProvider, isNonSharingPlatforms } from '..'
 
 export function getCachedKindeClient() {

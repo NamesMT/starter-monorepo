@@ -1,9 +1,9 @@
+import type { HonoEnv } from '#src/types'
 import type { ErrorHandler } from 'hono'
 import type { ContentfulStatusCode } from 'hono/utils/http-status'
-import type { HonoEnv } from '~/types'
+import { logger } from '#src/helpers/logger.js'
 import { DetailedError } from '@namesmt/utils'
 import { HTTPException } from 'hono/http-exception'
-import { logger } from '~/helpers/logger'
 
 export const errorHandler: ErrorHandler<HonoEnv> = (err, c) => {
   logger.error(err)

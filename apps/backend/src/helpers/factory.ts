@@ -1,4 +1,4 @@
-import type { HonoEnv } from '~/types'
+import type { HonoEnv } from '#src/types'
 import { createTriggerFactory } from 'hono-adapter-aws-lambda'
 import { createFactory } from 'hono/factory'
 

@@ -1,6 +1,5 @@
 import dynamicImportVars from '@rollup/plugin-dynamic-import-vars'
 import { defineBuildConfig } from 'unbuild'
-import sharedConfig from './shared.config'
 
 export default defineBuildConfig({
   entries: [
@@ -29,5 +28,4 @@ export default defineBuildConfig({
       options.plugins = [options.plugins, dynamicImportVars()]
     },
   },
-  ...sharedConfig,
 })
