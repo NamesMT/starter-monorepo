@@ -1,6 +1,26 @@
 # Changelog
 
 
+## v1.2.1
+
+[compare changes](https://github.com/NamesMT/starter-monorepo/compare/v1.2.0...v1.2.1)
+
+### 🚀 Enhancements
+
+- Add sample route to demo Convex fetching from backend ([dd155a2](https://github.com/NamesMT/starter-monorepo/commit/dd155a2))
+
+### 🩹 Fixes
+
+- Lockfile ([ec2406d](https://github.com/NamesMT/starter-monorepo/commit/ec2406d))
+
+### 🏡 Chore
+
+- Remove lingo patch ([801e0d5](https://github.com/NamesMT/starter-monorepo/commit/801e0d5))
+
+### ❤️ Contributors
+
+- NamesMT ([@NamesMT](https://github.com/NamesMT))
+
 ## v1.2.0
 
 [compare changes](https://github.com/NamesMT/starter-monorepo/compare/v1.1.0...v1.2.0)
