@@ -3,10 +3,38 @@ checksums:
   fdf23e1cc2ec83ec2119d6e6b991ce37:
     hello: f01e599cced8b7d7105329947b5096de
   fa34a32ee742667d36ef7288982efb9c:
-    pages.home.title: 104a3db3b671c04e167eafbe21e57881
-    pages.test.title: 82a46f197779af4dde92e7e5f9336ccf
     language: 277fd1a41cc237a437cd1d5e4a80463b
+    pages.home.apiResponse.empty: 0ae6634426bd0372d82f5bcd0441f67e
+    pages.home.apiResponse.label: be9e665e68a577f856af838006a9fe43
+    pages.home.auth.signInButton: af443132de3ac7a259e74be030196343
+    pages.home.auth.signOutButton: d25b033edb3bda68ed1651b163d46cf5
+    pages.home.auth.status.label: 58fbc25327fff01e308134fc79cd9f59
+    pages.home.auth.status.loading: 43adef6b38947e2741b1b6e0cd53335d
+    pages.home.auth.status.loggedIn: 8083fdbc47baf927d6e0a190e2221e8b
+    pages.home.auth.status.notLoggedIn: bb319f3116b5316a6a1452af9d4e4022
+    pages.home.auth.userInfo.title: bd41c351694de310f4df7acfc4cd18a7
+    pages.home.carousel.cardContent: ae26381cb32e52c9370e0fbd0afa5a6f
+    pages.home.carousel.cardTitle: caf8dbd80e74baa9f9e44ce1d85b024b
+    pages.home.dateDisplay.label: 7730e3d1139a831e126744cea74bad08
+    pages.home.runtimeConfig.backendUrl: 3d4c5c5570a1c9603da2572e2b07f986
+    pages.home.runtimeConfig.frontendUrl: 1a255752840e849b78524bb7d35f4ed5
+    pages.home.section.apiInfo.title: 4c09c336b9adc9352fef063b0183687b
+    pages.home.section.auth.title: 491fbb938cfe44df0438ad3e198d23e6
+    pages.home.section.carousel.title: c5e00bc1a202aa5f3429541ffef0e07a
+    pages.home.section.controls.title: b78956d14b87ee073e4bd7f111db8d2f
+    pages.home.section.gridMaker.title: 55377e71931ef2e0e621967d55328552
+    pages.home.section.sst.title: 3123abc16bac26da37c44ef5ccda2a21
+    pages.home.section.tanstackQuery.description: ae42028e8f7dcbe405b9cda8aedde814
+    pages.home.section.tanstackQuery.title: 6a0acb8cd38349fd65207efd93dadc9e
+    pages.home.tanstackQuery.loading: 82b4ea7ed1439094d7c4be13aaba9a66
+    pages.home.tanstackQuery.staleButton: 2faf7a33dd56f8a104c30ec5d5141edc
+    pages.home.themeSwitcher.label: 21fe00b7a518089576fb83c08631107a
+    pages.home.title: 104a3db3b671c04e167eafbe21e57881
+    pages.test.convex.status.notFound: bf748ab28ff084adb68a5d24bcd95909
+    pages.test.description: 2bb0336cb31d10a1bfb6164e4035207e
+    pages.test.intro: 04c375b5393d5f318fd11c5c372122a9
+    pages.test.section.convex.title: 39fdc104ff14fba826033e998c762a84
+    pages.test.title: 82a46f197779af4dde92e7e5f9336ccf
     welcome: 3180ad6b8de344b781637750259e0f53
-    number-input: ab4080c339b27dbf5775f8a7ec34d666
   bd59d862767f00d421bd4cacc7522c6c:
     hello-from-%2Fx: de51bbd5a66af7e24e90466431fa9006

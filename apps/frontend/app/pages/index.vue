@@ -15,7 +15,6 @@ const computedNextLocale = computed(() => {
   const currentLocaleIndex = locales.value.findIndex(lO => lO.code === locale.value)
   return locales.value[(currentLocaleIndex + 1) % locales.value.length]!.code
 })
-const number = ref()
 
 // API
 const { data: apiResult, error: apiError } = await useLazyAsyncData(
@@ -36,138 +35,167 @@ const { isPending, isError, data, error } = useQuery({
 </script>
 
 <template>
-  <div class="w-full flex flex-col items-center justify-center gap-4 px-4 py-4 text-center">
-    <div class="flex items-end gap-2">
-      <GridMaker
-        :value="[
-          '* *',
-          '***',
-          '* *',
-        ]"
-      />
-      <GridMaker
-        class="[&_.GridMaker\_\_col]:nth-[1]:[&_.GridMaker\_\_row]:rounded-full"
-        :value="[
-          '*',
-          '*',
-          '*',
-          '*',
-        ]"
-      />
-    </div>
-
-    <div class="w-full flex flex-col items-center justify-center gap-2 sm:flex-row sm:gap-4">
-      <div class="flex items-center gap-2">
-        <p>
-          Theme:
-        </p>
-        <ClientOnly>
-          <template #fallback>
-            <Button
-              label="..."
-            />
-          </template>
-
-          <Button
-            :label="colorMode.preference"
-            @pointerdown="colorMode.preference = (colorMode.preference !== 'dark')
-              ? 'dark'
-              : 'light'"
-          />
-        </ClientOnly>
-      </div>
-
-      <div class="flex items-center gap-2">
-        <p>{{ $lmw($t('language'), 8) }}:</p>
-        <Button
-          :label="$lmw(locale.substring(0, 2))"
-          @pointerdown="setLocale(computedNextLocale)"
+  <div class="w-full flex flex-col items-center justify-center gap-6 px-4 py-8 text-center">
+    <!-- GridMaker Section -->
+    <div class="max-w-2xl w-full border rounded-lg p-4 shadow">
+      <h2 class="mb-3 text-xl font-semibold">
+        {{ $t('pages.home.section.gridMaker.title') }}
+      </h2>
+      <div class="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+        <GridMaker
+          :value="[
+            '* *',
+            '***',
+            '* *',
+          ]"
+        />
+        <GridMaker
+          class="[&_.GridMaker\_\_col]:nth-[1]:[&_.GridMaker\_\_row]:rounded-full"
+          :value="[
+            '*',
+            '*',
+            '*',
+            '*',
+          ]"
         />
       </div>
-
-      <div>
-        <span :key="$li18n.renderKey">{{ $lmw(dayjs().format('dddd'), 6) }}</span>
-      </div>
-
-      <InputNumber
-        v-model="number"
-        :placeholder="$lmw($t('number-input'), 18)"
-      />
     </div>
 
-    <div class="max-w-full flex flex-col items-center">
-      <div class="max-w-full overflow-x-auto">
-        <span>Configured</span> <code>frontendUrl</code>: <code>{{ runtimeConfig.public.frontendUrl }}</code>
-      </div>
-      <div class="max-w-full overflow-x-auto">
-        <span>Configured</span> <code>backendUrl</code>: <code>{{ runtimeConfig.public.backendUrl }}</code>
-      </div>
-      <div class="max-w-full overflow-x-auto">
-        <span>API Response from</span> <code>{{ $apiClient.api.dummy.hello.$url() }}</code>:
-      </div>
-      <pre class="max-w-full w-fit overflow-x-auto rounded bg-black p-2 px-4 text-left text-white">{{ apiError || apiResult || 'Empty' }}</pre>
-    </div>
-
-    <div class="max-w-full flex flex-col items-center">
-      <div>Tanstack Query result (fetched client-side and persisted to IndexedDB for 12 hours)</div>
-      <pre class="max-w-full w-fit overflow-x-auto rounded bg-black p-2 px-4 text-left text-white">{{ isPending ? 'Loading...' : isError ? error : data }}</pre>
-      <Button
-        class="mt-2"
-        label="Make stale (refetch)"
-        @pointerdown="queryClient.invalidateQueries({ queryKey: ['hello_test'] })"
-      />
-    </div>
-
-    <div class="max-w-full">
-      <ClientOnly>
-        <template #fallback>
-          <div key="fallback" class="h-12 flex items-center">
-            <p>Auth status: ...</p>
-          </div>
-        </template>
-
-        <div class="h-12 flex items-center justify-center gap-4">
-          <p>Auth status: {{ $auth.loggedIn ? 'Logged in' : 'Not logged in' }}</p>
-          <div class="flex items-center justify-center gap-2">
-            <Button v-if="$auth.loggedIn" label="Sign-out" @click="navigateTo(getSignOutUrl(), { external: true })" />
-            <Button v-else label="Sign-in" @click="navigateTo(getSignInUrl(), { external: true })" />
-          </div>
+    <!-- Controls Section -->
+    <div class="max-w-2xl w-full border rounded-lg p-4 shadow">
+      <h2 class="mb-3 text-xl font-semibold">
+        {{ $t('pages.home.section.controls.title') }}
+      </h2>
+      <div class="flex flex-col items-center justify-center gap-4 sm:flex-row sm:flex-wrap">
+        <div class="flex items-center gap-2">
+          <p>{{ $t('pages.home.themeSwitcher.label') }}:</p>
+          <ClientOnly>
+            <template #fallback>
+              <Button label="..." />
+            </template>
+            <Button
+              :label="colorMode.preference"
+              @pointerdown="colorMode.preference = (colorMode.preference !== 'dark') ? 'dark' : 'light'"
+            />
+          </ClientOnly>
         </div>
 
-        <div v-if="$auth.loggedIn">
-          <div>User information:</div>
-          <pre class="max-w-full overflow-x-auto rounded bg-black p-2 px-4 text-left text-white 2xl:max-w-60vw">{{ $auth }}</pre>
+        <div class="flex items-center gap-2">
+          <p>{{ $t('language') }}:</p>
+          <Button
+            :label="$lmw(locale.substring(0, 2))"
+            @pointerdown="setLocale(computedNextLocale)"
+          />
+        </div>
+
+        <div class="flex items-center gap-2">
+          <p>{{ $t('pages.home.dateDisplay.label') }}:</p>
+          <span :key="$li18n.renderKey" class="font-semibold">{{ $lmw(dayjs().format('dddd'), 6) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- API and Config Info Section -->
+    <div class="max-w-2xl w-full border rounded-lg p-4 text-sm shadow">
+      <h2 class="mb-3 text-xl font-semibold">
+        {{ $t('pages.home.section.apiInfo.title') }}
+      </h2>
+      <div class="flex flex-col items-start gap-2">
+        <div class="max-w-full overflow-x-auto">
+          <span class="font-medium">{{ $t('pages.home.runtimeConfig.frontendUrl') }}:</span> <code class="rounded bg-gray-100 px-1 py-0.5 dark:bg-gray-800">{{ runtimeConfig.public.frontendUrl }}</code>
+        </div>
+        <div class="max-w-full overflow-x-auto">
+          <span class="font-medium">{{ $t('pages.home.runtimeConfig.backendUrl') }}:</span> <code class="rounded bg-gray-100 px-1 py-0.5 dark:bg-gray-800">{{ runtimeConfig.public.backendUrl }}</code>
+        </div>
+        <div class="max-w-full overflow-x-auto">
+          <span class="font-medium">{{ $t('pages.home.apiResponse.label') }}</span> <code class="rounded bg-gray-100 px-1 py-0.5 dark:bg-gray-800">{{ $apiClient.api.dummy.hello.$url() }}</code>:
+        </div>
+        <pre class="max-w-full w-full overflow-x-auto rounded bg-black p-2 px-4 text-left text-xs text-white">{{ apiError || apiResult || $t('pages.home.apiResponse.empty') }}</pre>
+      </div>
+    </div>
+
+    <!-- Tanstack Query Section -->
+    <div class="max-w-2xl w-full border rounded-lg p-4 shadow">
+      <h2 class="mb-1 text-xl font-semibold">
+        {{ $t('pages.home.section.tanstackQuery.title') }}
+      </h2>
+      <p class="mb-2 text-sm text-gray-600 dark:text-gray-400">
+        {{ $t('pages.home.section.tanstackQuery.description') }}
+      </p>
+      <div class="flex flex-col items-center gap-3">
+        <pre class="max-w-full w-full overflow-x-auto rounded bg-black p-2 px-4 text-left text-xs text-white">{{ isPending ? $t('pages.home.tanstackQuery.loading') : isError ? error : data }}</pre>
+        <Button
+          :label="$t('pages.home.tanstackQuery.staleButton')"
+          @pointerdown="queryClient.invalidateQueries({ queryKey: ['hello_test'] })"
+        />
+      </div>
+    </div>
+
+    <!-- Auth Section -->
+    <div class="max-w-2xl w-full border rounded-lg p-4 shadow">
+      <h2 class="mb-3 text-xl font-semibold">
+        {{ $t('pages.home.section.auth.title') }}
+      </h2>
+      <ClientOnly>
+        <template #fallback>
+          <div class="h-12 flex items-center justify-center">
+            <p>{{ $t('pages.home.auth.status.loading') }}</p>
+          </div>
+        </template>
+        <div class="flex flex-col items-center gap-4">
+          <p>{{ $t('pages.home.auth.status.label') }}: {{ $auth.loggedIn ? $t('pages.home.auth.status.loggedIn') : $t('pages.home.auth.status.notLoggedIn') }}</p>
+          <div class="flex items-center justify-center gap-2">
+            <Button v-if="$auth.loggedIn" :label="$t('pages.home.auth.signOutButton')" @click="navigateTo(getSignOutUrl(), { external: true })" />
+            <Button v-else :label="$t('pages.home.auth.signInButton')" @click="navigateTo(getSignInUrl(), { external: true })" />
+          </div>
+          <div v-if="$auth.loggedIn" class="mt-2 w-full text-left">
+            <p class="mb-1 text-sm font-medium">
+              {{ $t('pages.home.auth.userInfo.title') }}:
+            </p>
+            <pre class="max-w-full w-full overflow-x-auto rounded bg-black p-2 px-4 text-left text-xs text-white">{{ $auth }}</pre>
+          </div>
         </div>
       </ClientOnly>
     </div>
 
-    <div class="max-w-full w-full flex justify-center px-12">
-      <Carousel class="relative max-w-xs w-full">
-        <CarouselContent>
-          <!-- You could either explicitly import the shadcn components or use them with 'Shad' auto-import prefix -->
-          <ShadCarouselItem v-for="(_, index) in 5" :key="index">
-            <div class="p-1">
-              <Card>
-                <template #title>
-                  Simple Card #{{ index }}
-                </template>
-                <template #content>
-                  <p class="m-0">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque
-                    quas!
-                  </p>
-                </template>
-              </Card>
-            </div>
-          </ShadCarouselItem>
-        </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
-      </Carousel>
+    <!-- Carousel Section -->
+    <div class="max-w-2xl w-full border rounded-lg p-4 shadow">
+      <h2 class="mb-3 text-xl font-semibold">
+        {{ $t('pages.home.section.carousel.title') }}
+      </h2>
+      <div class="flex justify-center">
+        <Carousel class="relative max-w-xs w-full">
+          <CarouselContent>
+            <ShadCarouselItem v-for="(_, index) in 5" :key="index">
+              <div class="p-1">
+                <!-- PrimeVue Card was originally here and is fine -->
+                <Card class="shadow-md">
+                  <template #title>
+                    {{ $t('pages.home.carousel.cardTitle', { index: index + 1 }) }}
+                  </template>
+                  <template #content>
+                    <p class="m-0 text-sm">
+                      {{ $t('pages.home.carousel.cardContent') }}
+                    </p>
+                  </template>
+                </Card>
+              </div>
+            </ShadCarouselItem>
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
+      </div>
     </div>
 
-    <div>
-      <IsSST />
+    <!-- IsSST Section -->
+    <div class="max-w-2xl w-full border rounded-lg p-4 shadow">
+      <h2 class="mb-3 text-xl font-semibold">
+        {{ $t('pages.home.section.sst.title') }}
+      </h2>
+      <div class="flex justify-center">
+        <IsSST />
+      </div>
     </div>
   </div>
 </template>

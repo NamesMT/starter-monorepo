@@ -1,6 +1,40 @@
 KEY,Description,en,es,fr,ru,vi,zh-CN
-pages.home.title,,Home,Inicio,Accueil,Главная,Trang chủ,首页
-pages.test.title,,Test,Prueba,Test,Тест,Kiểm tra,测试
+components.convexIntegrationTest.addTask.label,,Add task entry (press enter),Añadir tarea (pulsar enter),Ajouter une tâche (appuyer sur Entrée),Добавить задачу (нажмите Enter),Thêm mục công việc (nhấn enter),添加任务条目（按回车键）
+components.convexIntegrationTest.addTask.placeholder,,Enter new task...,Introducir nueva tarea...,Entrez une nouvelle tâche...,Введите новую задачу...,Nhập công việc mới...,输入新任务...
+components.convexIntegrationTest.configuredUrl,,Convex URL,URL de Convex,URL Convex,URL Convex,URL Convex,Convex URL
+components.convexIntegrationTest.tasksList.empty,,No tasks yet.,Aún no hay tareas.,Aucune tâche pour le moment.,Задач пока нет.,Chưa có công việc nào.,暂无任务。
+components.convexIntegrationTest.tasksList.title,,Tasks,Tareas,Tâches,Задачи,Công việc,任务列表
+components.convexIntegrationTest.testBackendButton,,"Test Convex integration with `backend` (fetch tasks)","Probar integración de Convex con `backend` (obtener tareas)","Tester l'intégration de Convex avec `backend` (récupérer les tâches)","Тестировать интеграцию Convex с `backend` (получить задачи)","Kiểm tra tích hợp Convex với `backend` (lấy công việc)","测试Convex与`backend`的集成（获取任务）"
 language,,Language,Idioma,Langue,Язык,Ngôn ngữ,语言
+pages.home.apiResponse.empty,,Empty,Vacío,Vide,Пусто,Trống,空的
+pages.home.apiResponse.label,,API Response from,Respuesta de API de,Réponse API de,Ответ API от,Phản hồi API từ,API响应来自
+pages.home.auth.signInButton,,Sign-in,Iniciar sesión,Connexion,Войти,Đăng nhập,登录
+pages.home.auth.signOutButton,,Sign-out,Cerrar sesión,Déconnexion,Выйти,Đăng xuất,登出
+pages.home.auth.status.label,,Auth status,Estado de autenticación,Statut d'authentification,Статус аутентификации,Trạng thái xác thực,认证状态
+pages.home.auth.status.loading,,Auth status: ...,Estado de autenticación: ...,Statut d'authentification: ...,Статус аутентификации: ...,Trạng thái xác thực: ...,认证状态：...
+pages.home.auth.status.loggedIn,,Logged in,Sesión iniciada,Connecté,Вошли в систему,Đã đăng nhập,已登录
+pages.home.auth.status.notLoggedIn,,Not logged in,Sesión no iniciada,Non connecté,Не вошли в систему,Chưa đăng nhập,未登录
+pages.home.auth.userInfo.title,,User Information,Información del Usuario,Informations Utilisateur,Информация о пользователе,Thông tin người dùng,用户信息
+pages.home.carousel.cardContent,,"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque quas!","Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque quas!","Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque quas!","Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque quas!","Lorem ipsum dolor sit amet, consectetur adipisicing elit. Những phát minh nhưng hậu quả của lỗi từ chối số lượng không xứng đáng với bất kỳ ai đẩy lùi tự do khắc nghiệt tên cao quý của chúng tôi, lỗi tỷ lệ mà hoàn hảo là, ham muốn cũng không!",Lorem ipsum dolor sit amet，consectetur adipisicing elit。Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis，culpa ratione quam perferendis esse，cupiditate neque quas！
+pages.home.carousel.cardTitle,,Simple Card #{index},Tarjeta Simple #{index},Carte Simple #{index},Простая карточка #{index},Thẻ Đơn giản #{index},简单卡片 #{index}
+pages.home.dateDisplay.label,,Today is,Hoy es,Aujourd'hui c'est,Сегодня,Hôm nay là,今天是
+pages.home.runtimeConfig.backendUrl,,Backend URL,URL del Backend,URL Backend,URL Бэкенда,URL Backend,后端URL
+pages.home.runtimeConfig.frontendUrl,,Frontend URL,URL del Frontend,URL Frontend,URL Фронтенда,URL Frontend,前端URL
+pages.home.section.apiInfo.title,,API & Configuration,API y Configuración,API et Configuration,API и Конфигурация,API & Cấu hình,API与配置
+pages.home.section.auth.title,,Authentication,Autenticación,Authentification,Аутентификация,Xác thực,认证
+pages.home.section.carousel.title,,Image Carousel,Carrusel de Imágenes,Carrousel d'Images,Карусель изображений,Băng chuyền hình ảnh,图片轮播
+pages.home.section.controls.title,,Page Controls,Controles de Página,Contrôles de Page,Элементы управления страницей,Điều khiển Trang,页面控件
+pages.home.section.gridMaker.title,,Grid Maker Showcase,Escaparate de Grid Maker,Vitrine Grid Maker,Витрина Grid Maker,Trưng bày Grid Maker,Grid Maker 展示
+pages.home.section.sst.title,,SST Information,Información SST,Informations SST,Информация SST,Thông tin SST,SST 信息
+pages.home.section.tanstackQuery.description,,Fetched client-side and persisted to IndexedDB for 12 hours,Obtenido del lado del cliente y persistido en IndexedDB durante 12 horas,Récupéré côté client et persisté dans IndexedDB pendant 12 heures,Получено на стороне клиента и сохранено в IndexedDB на 12 часов,Lấy từ phía máy khách và lưu trữ vào IndexedDB trong 12 giờ,客户端获取并持久化到IndexedDB 12小时
+pages.home.section.tanstackQuery.title,,Tanstack Query,Tanstack Query,Tanstack Query,Tanstack Query,Tanstack Query,Tanstack Query
+pages.home.tanstackQuery.loading,,Loading...,Cargando...,Chargement...,Загрузка...,Đang tải...,加载中...
+pages.home.tanstackQuery.staleButton,,Make stale (refetch),Marcar como obsoleto (recargar),Rendre obsolète (recharger),Сделать устаревшим (обновить),Đánh dấu là cũ (tải lại),标记为过时 (重新获取)
+pages.home.themeSwitcher.label,,Theme,Tema,Thème,Тема,Chủ đề,主题
+pages.home.title,,Home,Inicio,Accueil,Главная,Trang chủ,首页
+pages.test.convex.status.notFound,,Convex integration: not found,Integración de Convex: no encontrada,Intégration Convex : non trouvée,Интеграция Convex: не найдена,Tích hợp Convex: không tìm thấy,Convex 集成：未找到
+pages.test.description,,A page for testing various components and integrations.,Una página para probar varios componentes e integraciones.,Une page pour tester divers composants et intégrations.,Страница для тестирования различных компонентов и интеграций.,Một trang để thử nghiệm các thành phần và tích hợp khác nhau.,用于测试各种组件和集成的页面。
+pages.test.intro,,This is just a simple page to test stuff.,Esta es solo una página simple para probar cosas.,Ceci est juste une page simple pour tester des choses.,Это просто простая страница для тестирования.,Đây chỉ là một trang đơn giản để thử nghiệm mọi thứ.,这只是一个用于测试的简单页面。
+pages.test.section.convex.title,,Convex Integration Test,Prueba de Integración de Convex,Test d'Intégration Convex,Тест интеграции Convex,Kiểm tra Tích hợp Convex,Convex 集成测试
+pages.test.title,,Test,Prueba,Test,Тест,Kiểm tra,测试
 welcome,,Welcome,Bienvenido,Bienvenue,Добро пожаловать,Chào mừng,欢迎
-number-input,,Number input,Entrada numérica,Saisie numérique,Числовой ввод,Nhập số,数字输入
