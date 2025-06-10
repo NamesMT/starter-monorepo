@@ -1,10 +1,10 @@
 {
   "extends": ["//"],
   "tasks": {
-    "build": {
+    "deploy": {
       "dependsOn": [
+        // Set frontend deploy script to only run after backends are deployed, this make sure we have the (new) backend server for SSG.
         "^build",
-        // Set frontend build to run after backends are deployed, this make sure we have the (new) backend server for SSG
         "backend#deploy",
         "backend-convex#deploy"
       ]

@@ -16,6 +16,7 @@
     "dev:full": "dotenvx run -- turbo run dev",
     "devSST": "dotenvx run -f .env.sst -f .env -- sst dev \"pnpm -F=frontend run dev\"",
     "build": "dotenvx run -- turbo run build",
+    "deploy": "dotenvx run -- turbo run deploy",
     "i18n": "lingo.dev run",
     "prepare": "simple-git-hooks"
   },

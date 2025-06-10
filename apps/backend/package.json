@@ -14,7 +14,8 @@
     "check": "pnpm lint && pnpm test:types && vitest run --coverage",
     "dev": "dotenvx run -f .env.local.ignored -f .env.local -f .env -- tsx watch src/dev.ts",
     "stub": "unbuild --stub",
-    "build": "dotenvx run -f .env.prod.ignored -f .env.prod -f .env -- unbuild"
+    "build": "dotenvx run -f .env.prod.ignored -f .env.prod -f .env -- unbuild",
+    "deploy": "dotenvx run -f .env.prod.ignored -f .env.prod -f .env -- sh scripts/deploy.sh"
   },
   "dependencies": {
     "srvx": "^0.7.5"

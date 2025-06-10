@@ -9,6 +9,7 @@
     "quickcheck": "pnpm run lint && pnpm run test:types",
     "dev": "nuxt dev",
     "build": "nuxt generate",
+    "deploy": "pnpm run build && sh scripts/deploy.sh",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },

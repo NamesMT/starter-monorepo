@@ -70,7 +70,6 @@ So if you use SSR, you could use the official [Nuxt Kinde](https://nuxt.com/modu
 
 #### [`backend-convex`](./apps/backend-convex): a [Convex](https://convex.dev/) app.
   * By default, the Convex app is not enabled in development, to enable it, change the root `dev` script from `dev:noConvex` to `dev:full`.
-  * To deploy with Convex in production, simply run the `deploy` script of `backend-convex` app, then, set your Convex's production url to `NUXT_PUBLIC_CONVEX_URL` env in `frontend`'s `.env.prod` file or CI / build machine env variable.
 
 ### Local packages
 
@@ -105,10 +104,14 @@ To define local development environment variables of each app, either use `git u
 
 ### Deploy
 
-* The repo currently contains some deployment samples:
+* You can add your custom deploy instructions in `deploy` script and `scripts/deploy.sh` in each app, it could be a full script that deploys to a platform, or necessary actions before for some platform integration deploys it, `frontend` will only start [build and deploy after all backends are deployed](./apps/frontend/turbo.json), to have context for SSG.
+* The repo also contains some deployment presets samples:
   + [Action to deploy frontend to GitHub Pages](./.github/workflows/frontend-to-gh-pages.yml)
   + [Wrangler configured to deploy fullstack to Cloudflare](./wrangler.jsonc), just run `npx wrangler deploy` or connect and deploy it through the Cloudflare Dashboard.
+    + Wrangler will deploy `backend` and `frontend` at the same time, which might cause `frontend` to have old context for SSG, you should trigger a redeploy in such case.
   + [Deploy backend to Lambda via SST](./sst.config.ts)
++ Some more deploying notes:
+  + To enable deploy with Convex in production, simply rename `_deploy` script to `deploy` in `backend-convex` app, run the deploy script once manually to get the Convex's production url, set it to `NUXT_PUBLIC_CONVEX_URL` env in `frontend`'s `.env.prod` file or CI / build machine env variable.
 
 ### Notes
 

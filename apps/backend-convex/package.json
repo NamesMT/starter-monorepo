@@ -13,7 +13,7 @@
     "quickcheck": "pnpm run lint && pnpm run test:types",
     "check": "pnpm lint && pnpm test:types && vitest run",
     "dev": "convex dev",
-    "deploy": "convex deploy -y",
+    "_deploy": "convex deploy -y",
     "predev": "convex dev --once"
   },
   "devDependencies": {
