@@ -25,8 +25,8 @@ if (import.meta.client && convexVueContext?.options?.url)
   <div>
     <template v-if="!$init.mounted">
       <NuxtLayout name="loading">
-        <NuxtPage />
-        <!-- <LoadingScreen /> -->
+        <!-- <NuxtPage /> -->
+        <LoadingScreen />
       </NuxtLayout>
     </template>
 
