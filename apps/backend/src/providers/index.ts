@@ -2,6 +2,7 @@ import { env as honoEnv } from 'hono/adapter'
 import { createMiddleware } from 'hono/factory'
 import { runtime } from 'std-env'
 import { initKindeClient } from './auth/kinde-main'
+import { initConvexClient } from './baas/convex-main'
 
 export const nonSharingPlatforms = new Set(['workerd'])
 export const isNonSharingPlatforms = nonSharingPlatforms.has(runtime)
@@ -31,6 +32,7 @@ export const providersInit = createMiddleware(async (c, next) => {
     if (!providersState.initialized) {
       await Promise.all([
         initKindeClient(),
+        initConvexClient(),
       ])
 
       providersState.initialized = true

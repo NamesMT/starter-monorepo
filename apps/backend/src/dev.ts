@@ -1,7 +1,11 @@
 import { localcertKeyPath, localcertPath } from '@local/common/dev/cert'
+import { getConvexEnvs } from 'backend-convex/_util'
 import { serve } from 'srvx'
 import { env } from 'std-env'
 import { app } from './app'
+
+// Try load CONVEX_URL from local dev env
+env.CONVEX_URL ||= (await getConvexEnvs()).CONVEX_URL
 
 // Serve local server
 serve({
