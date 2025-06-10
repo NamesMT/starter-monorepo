@@ -3,6 +3,15 @@ checksums:
   fdf23e1cc2ec83ec2119d6e6b991ce37:
     hello: f01e599cced8b7d7105329947b5096de
   fa34a32ee742667d36ef7288982efb9c:
+    components.convexIntegrationTest.addTask.label: 94bfce6a5916c8955cea8d04ad41c10e
+    components.convexIntegrationTest.addTask.placeholder: cfe9cb319a1f23515f7c2215dba202a3
+    components.convexIntegrationTest.configuredUrl: ca306d17f0a8f6bd7e0b9b2efcf23fe7
+    components.convexIntegrationTest.authInfo: ae504fa548d6625c01f70b259601c382
+    components.convexIntegrationTest.tasksList.empty: 353f149e9225b37a2651116189d0bb78
+    components.convexIntegrationTest.tasksList.title: efde951ded884b7dbf0f81e45d93a8f9
+    components.convexIntegrationTest.testBackendButton.fetchTasks: 9f58d5b60b733446f4620c944400c102
+    components.convexIntegrationTest.testBackendButton.authInfo: 28db481eb12a77d89bf451f64a55c1c2
+    components.loadingScreen.loadingText: 82b4ea7ed1439094d7c4be13aaba9a66
     language: 277fd1a41cc237a437cd1d5e4a80463b
     pages.home.apiResponse.empty: 0ae6634426bd0372d82f5bcd0441f67e
     pages.home.apiResponse.label: be9e665e68a577f856af838006a9fe43

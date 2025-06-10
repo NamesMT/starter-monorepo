@@ -1,4 +1,8 @@
-import type { ClaimTokenType, FlagType } from '@kinde-oss/kinde-typescript-sdk'
+/**
+ * This file contains routes and sample routes for possible APIs usecases with Kinde.
+ */
+
+// import type { ClaimTokenType, FlagType } from '@kinde-oss/kinde-typescript-sdk'
 import { appFactory } from '#src/helpers/factory.js'
 import { getSessionManager } from '#src/helpers/kinde.js'
 import { getKindeClient } from '#src/providers/auth/kinde-main.js'
@@ -7,6 +11,18 @@ import { env } from 'std-env'
 export const authRoutesApp = appFactory.createApp()
   .get('/health', async (c) => {
     return c.text('Good', 200)
+  })
+
+  .get('/authState', async (c) => {
+    const kindeClient = await getKindeClient()
+    const sessionManager = getSessionManager(c)
+
+    const [profile, token] = await Promise.all([
+      kindeClient.getUserProfile(sessionManager).catch(() => null),
+      kindeClient.getToken(sessionManager).catch(() => null),
+    ])
+
+    return c.json({ profile, token })
   })
 
   .get('/login', async (c) => {
@@ -49,92 +65,92 @@ export const authRoutesApp = appFactory.createApp()
     return c.redirect(logoutUrl.toString())
   })
 
-  .get('/isAuth', async (c) => {
-    const kindeClient = await getKindeClient()
+// .get('/isAuth', async (c) => {
+//   const kindeClient = await getKindeClient()
 
-    const isAuthenticated = await kindeClient.isAuthenticated(getSessionManager(c)) // Boolean: true or false
+//   const isAuthenticated = await kindeClient.isAuthenticated(getSessionManager(c)) // Boolean: true or false
 
-    return c.json(isAuthenticated)
-  })
+//   return c.json(isAuthenticated)
+// })
 
-  .get('/profile', async (c) => {
-    const kindeClient = await getKindeClient()
+// .get('/profile', async (c) => {
+//   const kindeClient = await getKindeClient()
 
-    const profile = await kindeClient.getUserProfile(getSessionManager(c))
+//   const profile = await kindeClient.getUserProfile(getSessionManager(c))
 
-    return c.json(profile)
-  })
+//   return c.json(profile)
+// })
 
-  .get('/createOrg', async (c) => {
-    const kindeClient = await getKindeClient()
-    const org_name = c.req.query('org_name')?.toString()
+// .get('/createOrg', async (c) => {
+//   const kindeClient = await getKindeClient()
+//   const org_name = c.req.query('org_name')?.toString()
 
-    const createUrl = await kindeClient.createOrg(getSessionManager(c), { org_name })
+//   const createUrl = await kindeClient.createOrg(getSessionManager(c), { org_name })
 
-    return c.redirect(createUrl.toString())
-  })
+//   return c.redirect(createUrl.toString())
+// })
 
-  .get('/getOrg', async (c) => {
-    const kindeClient = await getKindeClient()
+// .get('/getOrg', async (c) => {
+//   const kindeClient = await getKindeClient()
 
-    const org = await kindeClient.getOrganization(getSessionManager(c))
+//   const org = await kindeClient.getOrganization(getSessionManager(c))
 
-    return c.json(org)
-  })
+//   return c.json(org)
+// })
 
-  .get('/getOrgs', async (c) => {
-    const kindeClient = await getKindeClient()
+// .get('/getOrgs', async (c) => {
+//   const kindeClient = await getKindeClient()
 
-    const orgs = await kindeClient.getUserOrganizations(getSessionManager(c))
+//   const orgs = await kindeClient.getUserOrganizations(getSessionManager(c))
 
-    return c.json(orgs)
-  })
+//   return c.json(orgs)
+// })
 
-  .get('/getPerm/:perm', async (c) => {
-    const kindeClient = await getKindeClient()
+// .get('/getPerm/:perm', async (c) => {
+//   const kindeClient = await getKindeClient()
 
-    const perm = await kindeClient.getPermission(getSessionManager(c), c.req.param('perm'))
+//   const perm = await kindeClient.getPermission(getSessionManager(c), c.req.param('perm'))
 
-    return c.json(perm)
-  })
+//   return c.json(perm)
+// })
 
-  .get('/getPerms', async (c) => {
-    const kindeClient = await getKindeClient()
+// .get('/getPerms', async (c) => {
+//   const kindeClient = await getKindeClient()
 
-    const perms = await kindeClient.getPermissions(getSessionManager(c))
+//   const perms = await kindeClient.getPermissions(getSessionManager(c))
 
-    return c.json(perms)
-  })
+//   return c.json(perms)
+// })
 
-  // Try: /api/auth/getClaim/aud, /api/auth/getClaim/email/id_token
-  .get('/getClaim/:claim', async (c) => {
-    const kindeClient = await getKindeClient()
-    const type = (c.req.query('type') ?? 'access_token') as ClaimTokenType
+// // Try: /api/auth/getClaim/aud, /api/auth/getClaim/email/id_token
+// .get('/getClaim/:claim', async (c) => {
+//   const kindeClient = await getKindeClient()
+//   const type = (c.req.query('type') ?? 'access_token') as ClaimTokenType
 
-    if (!/^(?:access_token|id_token)$/.test(type))
-      return c.text('Bad request: type', 400)
+//   if (!/^(?:access_token|id_token)$/.test(type))
+//     return c.text('Bad request: type', 400)
 
-    const claim = await kindeClient.getClaim(getSessionManager(c), c.req.param('claim'), type)
-    return c.json(claim)
-  })
+//   const claim = await kindeClient.getClaim(getSessionManager(c), c.req.param('claim'), type)
+//   return c.json(claim)
+// })
 
-  .get('/getFlag/:code', async (c) => {
-    const kindeClient = await getKindeClient()
+// .get('/getFlag/:code', async (c) => {
+//   const kindeClient = await getKindeClient()
 
-    const claim = await kindeClient.getFlag(
-      getSessionManager(c),
-      c.req.param('code'),
-      c.req.query('default'),
-      c.req.query('flagType') as keyof FlagType | undefined,
-    )
+//   const claim = await kindeClient.getFlag(
+//     getSessionManager(c),
+//     c.req.param('code'),
+//     c.req.query('default'),
+//     c.req.query('flagType') as keyof FlagType | undefined,
+//   )
 
-    return c.json(claim)
-  })
+//   return c.json(claim)
+// })
 
-  .get('/getToken', async (c) => {
-    const kindeClient = await getKindeClient()
+// .get('/getToken', async (c) => {
+//   const kindeClient = await getKindeClient()
 
-    const accessToken = await kindeClient.getToken(getSessionManager(c))
+//   const accessToken = await kindeClient.getToken(getSessionManager(c))
 
-    return c.text(accessToken)
-  })
+//   return c.text(accessToken)
+// })

@@ -1,9 +1,14 @@
 import type { UserType } from '@kinde-oss/kinde-typescript-sdk'
 import type { Reactive } from 'vue'
 
-export type AuthState = { loggedIn: true, user: UserType } | { loggedIn: false, user: null }
+export type AuthState = (
+  { loggedIn: true, user: UserType, token: string }
+  | { loggedIn: false, user: null, token: null }
+)
 
 // The current plugin targets SSG and CSR, if you use SSR, you need to converts it to useState and useAsyncData for optimized performance
+
+// Note: token is passed down for use 3rd party integrations like Convex, if you only use `frontend` and `backend`, you can remove it to be more secure.
 
 export default defineNuxtPlugin({
   name: 'local-auth',
@@ -18,18 +23,21 @@ export default defineNuxtPlugin({
     const auth = reactive({
       loggedIn: false,
       user: null,
+      token: null,
     }) as Reactive<AuthState>
 
     async function refreshAuth() {
-      const profile = await hcParse(authApi.profile.$get()).catch(() => null)
+      const authState = await hcParse(authApi.authState.$get())
 
-      if (profile) {
+      if (authState?.profile) {
         auth.loggedIn = true
-        auth.user = profile
+        auth.user = authState.profile
+        auth.token = authState.token
       }
       else {
         auth.loggedIn = false
         auth.user = null
+        auth.token = null
       }
 
       // Refresh every 15 minutes

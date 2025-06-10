@@ -6,6 +6,7 @@ const { $apiClient } = useNuxtApp()
 const convexClient = useConvexClient()
 
 const { data: tasks } = useConvexQuery(api.tasks.get)
+const { data: authInfo } = useConvexQuery(api.authInfo.get)
 const { mutate: mutateAddTask } = useConvexMutation(api.tasks.add)
 
 const taskInputRef = ref('')
@@ -15,21 +16,24 @@ async function addTask() {
     .then(() => { taskInputRef.value = '' })
 }
 
-const isFetching = ref(false)
-async function testConvexViaBackendCTA() {
-  isFetching.value = true
+const isFetchingTasks = ref(false)
+async function testConvexViaBackendTasksCTA() {
+  isFetchingTasks.value = true
 
-  await hcParse($apiClient.api.dummy.convex.$get())
+  await hcParse($apiClient.api.dummy.convexTasks.$get())
     .then(r => toast.add({ detail: r.map(t => t.text).join('\n') }))
     .catch(e => toast.add({ severity: 'error', detail: e.message }))
 
-  isFetching.value = false
+  isFetchingTasks.value = false
 }
 </script>
 
 <template>
-  <div class="mb-4 text-xl">
-    {{ $t('components.convexIntegrationTest.configuredUrl') }}: <code class="rounded bg-gray-100 px-1 py-0.5 text-base dark:bg-gray-800">{{ convexClient.client.url }}</code>
+  <div class="mb-4 w-full text-xl">
+    <div>
+      {{ $t('components.convexIntegrationTest.configuredUrl') }}: <code class="rounded bg-gray-100 px-1 py-0.5 text-base dark:bg-gray-800">{{ convexClient.client.url }}</code>
+    </div>
+    <div>{{ $t('components.convexIntegrationTest.authInfo') }}: <pre class="max-w-full w-full overflow-x-auto rounded bg-black p-2 px-4 text-left text-xs text-white">{{ authInfo }}</pre></div>
   </div>
   <div class="max-w-md w-full flex flex-col gap-5">
     <IftaLabel class="w-full">
@@ -38,7 +42,7 @@ async function testConvexViaBackendCTA() {
     </IftaLabel>
   </div>
 
-  <div class="mt-6 max-w-md w-full">
+  <div class="max-w-md w-full">
     <h3 class="mb-2 text-lg font-semibold">
       {{ $t('components.convexIntegrationTest.tasksList.title') }}
     </h3>
@@ -52,5 +56,7 @@ async function testConvexViaBackendCTA() {
     </p>
   </div>
 
-  <Button :loading="isFetching" class="mt-8" :label="$t('components.convexIntegrationTest.testBackendButton')" @pointerdown="testConvexViaBackendCTA()" />
+  <div class="my-8 flex flex-col gap-4">
+    <Button :loading="isFetchingTasks" :label="$t('components.convexIntegrationTest.testBackendButton.fetchTasks')" @pointerdown="testConvexViaBackendTasksCTA()" />
+  </div>
 </template>

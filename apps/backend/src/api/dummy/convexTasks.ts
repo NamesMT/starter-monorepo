@@ -5,11 +5,11 @@ import { api } from 'backend-convex/convex/_generated/api'
 import { describeRoute } from 'hono-openapi'
 import { resolver } from 'hono-openapi/arktype'
 
-export const dummyConvexRouteApp = appFactory.createApp()
+export const dummyConvexTasksRouteApp = appFactory.createApp()
   .get(
     '',
     describeRoute({
-      description: 'Items from `tasks` table',
+      description: 'Get items from `tasks` table',
       responses: {
         200: {
           description: 'The tasks list',
