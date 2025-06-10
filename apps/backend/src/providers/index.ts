@@ -32,7 +32,7 @@ export const providersInit = createMiddleware(async (c, next) => {
     if (!providersState.initialized) {
       await Promise.all([
         initKindeClient(),
-        initConvexClient(),
+        initConvexClient().catch(() => {}),
       ])
 
       providersState.initialized = true

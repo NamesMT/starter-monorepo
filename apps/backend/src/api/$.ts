@@ -1,6 +1,7 @@
 import { appFactory } from '#src/helpers/factory.js'
 import { apiRouteApp } from './$$'
 import { authApp } from './auth/$'
+import { dummyConvexRouteApp } from './dummy/convex'
 import { dummyGreetRouteApp } from './dummy/greet'
 import { dummyHelloRouteApp } from './dummy/hello'
 
@@ -12,6 +13,7 @@ export const apiApp = appFactory.createApp()
   .route('/auth', authApp)
 
   // Some example routes
+  .route('/dummy/convex', dummyConvexRouteApp)
   .route('/dummy/hello', dummyHelloRouteApp)
   .route('/dummy/greet', dummyGreetRouteApp)
 

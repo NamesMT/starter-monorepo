@@ -14,9 +14,7 @@ export const dummyGreetRouteApp = appFactory.createApp()
         200: {
           description: 'Successful response',
           content: {
-            'text/plain': { schema: resolver(
-              type('string'),
-            ) },
+            'text/plain': { schema: resolver(type('string')) },
           },
         },
       },

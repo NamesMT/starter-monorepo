@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { api } from 'backend-convex/convex/_generated/api'
 
+const toast = useToast()
+const { $apiClient } = useNuxtApp()
 const convexClient = useConvexClient()
 
 const { data: tasks } = useConvexQuery(api.tasks.get)
@@ -11,6 +13,12 @@ const taskInputRef = ref('')
 async function addTask() {
   await mutateAddTask({ text: taskInputRef.value })
     .then(() => { taskInputRef.value = '' })
+}
+
+async function fetchConvexViaBackend() {
+  toast.add({
+    detail: (await hcParse($apiClient.api.dummy.convex.$get())).map(t => t.text).join('\n'),
+  })
 }
 </script>
 
@@ -24,10 +32,11 @@ async function addTask() {
       <InputText id="task-input" v-model="taskInputRef" class="w-full" @keydown.enter="addTask()" />
     </IftaLabel>
   </div>
-
   <div>
     <div v-for="task, index of tasks" :key="index">
       {{ task.text }}
     </div>
   </div>
+
+  <Button class="mt-5" label="Test Convex integration with `backend` (fetch tasks)" @pointerdown="fetchConvexViaBackend()" />
 </template>

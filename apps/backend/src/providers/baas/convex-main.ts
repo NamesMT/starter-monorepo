@@ -23,7 +23,7 @@ export async function initConvexClient() {
     logger.warn('Already initialized')
 
   if (!env.CONVEX_URL)
-    return logger.error('CONVEX_URL is not set')
+    throw new Error('CONVEX_URL is not set')
 
   const client = new ConvexHttpClient(env.CONVEX_URL!)
 
