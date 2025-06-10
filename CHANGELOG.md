@@ -1,6 +1,27 @@
 # Changelog
 
 
+## v1.2.0
+
+[compare changes](https://github.com/NamesMT/starter-monorepo/compare/v1.1.0...v1.2.0)
+
+### 🚀 Enhancements
+
+- Dynamic Convex integration 🔥🔥 ([d0e9d08](https://github.com/NamesMT/starter-monorepo/commit/d0e9d08))
+- Convex integration with backend ([028a161](https://github.com/NamesMT/starter-monorepo/commit/028a161))
+
+### 🌊 Types
+
+- **backend:** Fix import shortcut path missing `.js` ([cbaab7e](https://github.com/NamesMT/starter-monorepo/commit/cbaab7e))
+
+### 🏡 Chore
+
+- Improve `build/deploy` dx, turbo pipeline, fix `backend-convex` deploy on frontend build ([6ef6abc](https://github.com/NamesMT/starter-monorepo/commit/6ef6abc))
+
+### ❤️ Contributors
+
+- NamesMT ([@NamesMT](https://github.com/NamesMT))
+
 ## v1.1.0
 
 [compare changes](https://github.com/NamesMT/starter-monorepo/compare/v1.0.0...v1.1.0)
