@@ -5,6 +5,7 @@ components.convexIntegrationTest.configuredUrl,,Convex URL,URL de Convex,URL Con
 components.convexIntegrationTest.tasksList.empty,,No tasks yet.,Aún no hay tareas.,Aucune tâche pour le moment.,Задач пока нет.,Chưa có công việc nào.,暂无任务。
 components.convexIntegrationTest.tasksList.title,,Tasks,Tareas,Tâches,Задачи,Công việc,任务列表
 components.convexIntegrationTest.testBackendButton,,"Test Convex integration with `backend` (fetch tasks)","Probar integración de Convex con `backend` (obtener tareas)","Tester l'intégration de Convex avec `backend` (récupérer les tâches)","Тестировать интеграцию Convex с `backend` (получить задачи)","Kiểm tra tích hợp Convex với `backend` (lấy công việc)","测试Convex与`backend`的集成（获取任务）"
+components.loadingScreen.loadingText,,Loading...,Cargando...,Chargement en cours...,Загрузка...,Đang tải...,加载中...
 language,,Language,Idioma,Langue,Язык,Ngôn ngữ,语言
 pages.home.apiResponse.empty,,Empty,Vacío,Vide,Пусто,Trống,空的
 pages.home.apiResponse.label,,API Response from,Respuesta de API de,Réponse API de,Ответ API от,Phản hồi API từ,API响应来自

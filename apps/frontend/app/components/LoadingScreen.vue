@@ -1,5 +1,33 @@
 <template>
-  <div class="w-full flex items-center justify-center">
-    Loading...
+  <div class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-surface-0 dark:bg-surface-900">
+    <!-- Simple CSS Spinner -->
+    <div class="spinner mb-4" />
+    <p class="text-lg text-primary-500 font-medium dark:text-primary-400">
+      {{ $t('components.loadingScreen.loadingText') }}
+    </p>
   </div>
 </template>
+
+<style scoped>
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border-left-color: hsl(var(--primary-500)); /* Assuming you have a primary color variable */
+  animation: spin 1s ease infinite;
+}
+
+.dark .spinner {
+  border-left-color: hsl(var(--primary-400)); /* Assuming you have a primary color variable for dark mode */
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+</style>
