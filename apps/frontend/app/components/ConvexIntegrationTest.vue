@@ -13,7 +13,12 @@ const taskInputRef = ref('')
 
 async function addTask() {
   await mutateAddTask({ text: taskInputRef.value })
-    .then(() => { taskInputRef.value = '' })
+    .then((r) => {
+      if ('error' in r && r.error)
+        return toast.add({ severity: 'error', detail: r.error.message, life: 10000 })
+
+      taskInputRef.value = ''
+    })
 }
 
 const isFetchingTasks = ref(false)
@@ -21,8 +26,8 @@ async function testConvexViaBackendTasksCTA() {
   isFetchingTasks.value = true
 
   await hcParse($apiClient.api.dummy.convexTasks.$get())
-    .then(r => toast.add({ detail: r.map(t => t.text).join('\n') }))
-    .catch(e => toast.add({ severity: 'error', detail: e.message }))
+    .then(r => toast.add({ detail: r.map(t => t.text).join('\n'), life: 5000 }))
+    .catch(e => toast.add({ severity: 'error', detail: e.message, life: 10000 }))
 
   isFetchingTasks.value = false
 }
@@ -33,7 +38,7 @@ async function testConvexViaBackendTasksCTA() {
     <div>
       {{ $t('components.convexIntegrationTest.configuredUrl') }}: <code class="rounded bg-gray-100 px-1 py-0.5 text-base dark:bg-gray-800">{{ convexClient.client.url }}</code>
     </div>
-    <div>{{ $t('components.convexIntegrationTest.authInfo') }}: <pre class="max-w-full w-full overflow-x-auto rounded bg-black p-2 px-4 text-left text-xs text-white">{{ authInfo }}</pre></div>
+    <div>{{ $t('components.convexIntegrationTest.authInfo') }}: <pre class="max-w-full w-full overflow-x-auto rounded bg-black p-2 px-4 text-left text-xs text-white">{{ authInfo ?? 'Not authenticated' }}</pre></div>
   </div>
   <div class="max-w-md w-full flex flex-col gap-5">
     <IftaLabel class="w-full">

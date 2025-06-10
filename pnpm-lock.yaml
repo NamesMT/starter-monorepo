@@ -151,6 +151,10 @@ importers:
         version: 3.2.2(@types/debug@4.1.12)(@types/node@20.19.0)(jiti@2.4.2)(jsdom@25.0.1)(sass@1.89.1)(terser@5.41.0)(tsx@4.19.4)(yaml@2.8.0)
 
   apps/backend-convex:
+    dependencies:
+      '@convex-dev/rate-limiter':
+        specifier: ^0.2.7
+        version: 0.2.7(convex@1.24.8(react@18.3.1))
     devDependencies:
       '@local/common':
         specifier: workspace:*
@@ -705,6 +709,11 @@ packages:
   '@colors/colors@1.6.0':
     resolution: {integrity: sha512-Ir+AOibqzrIsL6ajt3Rz3LskB7OiMVHqltZmspbW/TJuTVuyOMirVqAkjfY6JISiLHgyNqicAC8AyHHGzNd/dA==}
     engines: {node: '>=0.1.90'}
+
+  '@convex-dev/rate-limiter@0.2.7':
+    resolution: {integrity: sha512-aMF/ggCd88Sw6UaqnSS4DjGXTkIOIpyG0d/CrcwMxEIzlDkwanREfF6idtLiL11S7Ra0GJmxkbb23jRuhLL9mA==}
+    peerDependencies:
+      convex: ~1.16.5 || >=1.17.0 <1.35.0
 
   '@csstools/color-helpers@5.0.2':
     resolution: {integrity: sha512-JqWH1vsgdGcw2RR6VliXXdA0/59LttzlU8UlRT/iUUsEeWfYq8I+K0yhihEUTTHLRm1EXvpsCx3083EU15ecsA==}
@@ -8764,6 +8773,10 @@ snapshots:
       mime: 3.0.0
 
   '@colors/colors@1.6.0': {}
+
+  '@convex-dev/rate-limiter@0.2.7(convex@1.24.8(react@18.3.1))':
+    dependencies:
+      convex: 1.24.8(react@18.3.1)
 
   '@csstools/color-helpers@5.0.2':
     optional: true

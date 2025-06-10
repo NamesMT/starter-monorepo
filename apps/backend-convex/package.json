@@ -16,6 +16,9 @@
     "_deploy": "convex deploy -y",
     "predev": "convex dev --once"
   },
+  "dependencies": {
+    "@convex-dev/rate-limiter": "^0.2.7"
+  },
   "devDependencies": {
     "@local/common": "workspace:*",
     "@local/locales": "workspace:*",
