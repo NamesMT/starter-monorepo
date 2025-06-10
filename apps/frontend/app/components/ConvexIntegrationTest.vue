@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { api } from 'backend-convex/convex/_generated/api'
+import { ConvexError } from 'convex/values'
 
 const toast = useToast()
 const { $apiClient } = useNuxtApp()
@@ -15,7 +16,7 @@ async function addTask() {
   await mutateAddTask({ text: taskInputRef.value })
     .then((r) => {
       if ('error' in r && r.error)
-        return toast.add({ severity: 'error', detail: r.error.message, life: 10000 })
+        return toast.add({ severity: 'error', detail: r.error instanceof ConvexError ? r.error.data.msg : r.error.message, life: 10000 })
 
       taskInputRef.value = ''
     })
@@ -38,7 +39,7 @@ async function testConvexViaBackendTasksCTA() {
     <div>
       {{ $t('components.convexIntegrationTest.configuredUrl') }}: <code class="rounded bg-gray-100 px-1 py-0.5 text-base dark:bg-gray-800">{{ convexClient.client.url }}</code>
     </div>
-    <div>{{ $t('components.convexIntegrationTest.authInfo') }}: <pre class="max-w-full w-full overflow-x-auto rounded bg-black p-2 px-4 text-left text-xs text-white">{{ authInfo ?? 'Not authenticated' }}</pre></div>
+    <div>{{ $t('components.convexIntegrationTest.authenticated') }}: <code class="rounded bg-gray-100 px-1 py-0.5 text-base dark:bg-gray-800">{{ Boolean(authInfo) }}</code></div>
   </div>
   <div class="max-w-md w-full flex flex-col gap-5">
     <IftaLabel class="w-full">
@@ -51,7 +52,7 @@ async function testConvexViaBackendTasksCTA() {
     <h3 class="mb-2 text-lg font-semibold">
       {{ $t('components.convexIntegrationTest.tasksList.title') }}
     </h3>
-    <ul v-if="tasks && tasks.length > 0" class="list-disc rounded-md bg-gray-50 p-3 pl-5 space-y-1 dark:bg-gray-800">
+    <ul v-if="tasks && tasks.length > 0" class="list-disc rounded-md bg-gray-50 p-3 pl-5 text-left space-y-1 dark:bg-gray-800">
       <li v-for="task in tasks" :key="task._id" class="text-sm">
         {{ task.text }}
       </li>

@@ -5,7 +5,7 @@ const crons = cronJobs()
 
 crons.interval(
   'clear tasks table',
-  { minutes: 10 }, // every 10 minutes
+  { hours: 1 },
   internal.tasks.clearAll,
 )
 

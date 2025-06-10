@@ -253,6 +253,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      convex:
+        specifier: ^1.24.8
+        version: 1.24.8(react@18.3.1)
       convex-nuxt:
         specifier: 0.0.7
         version: 0.0.7(patch_hash=5a49714fb8604c183f49f3f0587c4aa16b4a49649f0015873ba11bd0bd6d2641)(convex@1.24.8(react@18.3.1))(magicast@0.3.5)(vue@3.5.16(typescript@5.8.3))

@@ -41,6 +41,7 @@
     "backend-convex": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "convex": "^1.24.8",
     "convex-nuxt": "0.0.7",
     "dayjs": "^1.11.13",
     "destr": "^2.0.5",

@@ -6,7 +6,7 @@ checksums:
     components.convexIntegrationTest.addTask.label: 94bfce6a5916c8955cea8d04ad41c10e
     components.convexIntegrationTest.addTask.placeholder: cfe9cb319a1f23515f7c2215dba202a3
     components.convexIntegrationTest.configuredUrl: ca306d17f0a8f6bd7e0b9b2efcf23fe7
-    components.convexIntegrationTest.authInfo: ae504fa548d6625c01f70b259601c382
+    components.convexIntegrationTest.authenticated: 7aeaface3edc0f5dca2c8ebd6c7e1974
     components.convexIntegrationTest.tasksList.empty: 353f149e9225b37a2651116189d0bb78
     components.convexIntegrationTest.tasksList.title: efde951ded884b7dbf0f81e45d93a8f9
     components.convexIntegrationTest.testBackendButton.fetchTasks: 9f58d5b60b733446f4620c944400c102

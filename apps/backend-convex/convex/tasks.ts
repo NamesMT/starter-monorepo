@@ -1,5 +1,5 @@
 import { MINUTE, RateLimiter } from '@convex-dev/rate-limiter'
-import { v } from 'convex/values'
+import { ConvexError, v } from 'convex/values'
 import { components } from './_generated/api'
 import { internalMutation, mutation, query } from './_generated/server'
 
@@ -21,7 +21,7 @@ export const add = mutation({
   handler: async (ctx, args) => {
     const userIdentity = await ctx.auth.getUserIdentity()
     if (userIdentity === null)
-      throw new Error('Not authenticated')
+      throw new ConvexError({ msg: 'Not authenticated' })
 
     await rateLimiter.limit(ctx, 'addTask', { key: userIdentity.subject, throws: true })
 

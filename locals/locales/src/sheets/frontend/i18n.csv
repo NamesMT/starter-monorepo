@@ -2,7 +2,7 @@ KEY,Description,en,es,fr,ru,vi,zh-CN
 components.convexIntegrationTest.addTask.label,,Add task entry (press enter),Añadir tarea (pulsar enter),Ajouter une tâche (appuyer sur Entrée),Добавить задачу (нажмите Enter),Thêm mục công việc (nhấn enter),添加任务条目（按回车键）
 components.convexIntegrationTest.addTask.placeholder,,Enter new task...,Introducir nueva tarea...,Entrez une nouvelle tâche...,Введите новую задачу...,Nhập công việc mới...,输入新任务...
 components.convexIntegrationTest.configuredUrl,,Convex URL,URL de Convex,URL Convex,URL Convex,URL Convex,Convex URL
-components.convexIntegrationTest.authInfo,,Convex Auth Info,Información de autenticación de Convex,Informations d'authentification Convex,Информация об аутентификации Convex,Thông tin xác thực Convex,Convex 认证信息
+components.convexIntegrationTest.authenticated,,Convex Authenticated,Convex autenticado,Authentifié par Convex,Аутентифицировано через Convex,Đã xác thực Convex,Convex 已认证
 components.convexIntegrationTest.tasksList.empty,,No tasks yet.,Aún no hay tareas.,Aucune tâche pour le moment.,Задач пока нет.,Chưa có công việc nào.,暂无任务。
 components.convexIntegrationTest.tasksList.title,,Tasks,Tareas,Tâches,Задачи,Công việc,任务列表
 components.convexIntegrationTest.testBackendButton.fetchTasks,,Test Convex integration with `backend` (fetch tasks),Probar integración de Convex con `backend` (obtener tareas),Tester l'intégration de Convex avec `backend` (récupérer les tâches),Тестировать интеграцию Convex с `backend` (получить задачи),Kiểm tra tích hợp Convex với `backend` (lấy công việc),测试Convex与`backend`的集成（获取任务）
