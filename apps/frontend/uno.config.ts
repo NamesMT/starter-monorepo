@@ -60,7 +60,7 @@ export default defineConfig({
     },
   },
   shortcuts: [
-    ['bg-mainGradient', 'bg-gradient-to-b from-primary to-pink'],
+    ['bg-mainGradient', 'bg-gradient-to-b from-primary via-primary to-violet-400'],
     ['text-mainGradient', 'bg-mainGradient bg-clip-text text-transparent transition-color duration-200'],
   ],
   rules: [
@@ -116,6 +116,10 @@ export default defineConfig({
           weights: ['100..900'],
           italic: true,
         },
+      },
+      timeouts: {
+        warning: 3000,
+        failure: 10000,
       },
     }),
     presetAnimations(),
