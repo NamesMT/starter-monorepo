@@ -55,7 +55,7 @@ It is recommended to use an AI Agent ([`Roo Code`](https://github.com/RooVetGit/
 So if you use SSR, you could use the official [Nuxt Kinde](https://nuxt.com/modules/kinde) module or implement your own way to manage the session at `apps/backend/src/middlewares/session.ts`.
   - If you have a good session manager implementation, a PR is greatly appreciated!
 
-👌 The repo is always [**TypeScript**](https://www.typescriptlang.org/)-first.
+💯 JS is always [**TypeScript**](https://www.typescriptlang.org/) where possible.
 
 ### Apps and Libraries
 
