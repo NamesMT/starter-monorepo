@@ -41,7 +41,7 @@ const { isPending, isError, data, error } = useQuery({
       <h2 class="mb-3 text-xl font-semibold">
         {{ $t('pages.home.section.gridMaker.title') }}
       </h2>
-      <div class="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+      <div class="flex items-end gap-4 sm:flex-row sm:justify-center">
         <GridMaker
           :value="[
             '* *',
