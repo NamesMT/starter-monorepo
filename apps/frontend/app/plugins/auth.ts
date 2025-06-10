@@ -27,7 +27,7 @@ export default defineNuxtPlugin({
     }) as Reactive<AuthState>
 
     async function refreshAuth() {
-      const authState = await hcParse(authApi.authState.$get())
+      const authState = await hcParse(authApi.authState.$get()).catch(() => null)
 
       if (authState?.profile) {
         auth.loggedIn = true
