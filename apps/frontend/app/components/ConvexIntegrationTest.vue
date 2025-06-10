@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { api } from 'backend-convex/convex/_generated/api'
-import { ConvexError } from 'convex/values'
 
 const toast = useToast()
 const { $apiClient } = useNuxtApp()
@@ -16,7 +15,7 @@ async function addTask() {
   await mutateAddTask({ text: taskInputRef.value })
     .then((r) => {
       if ('error' in r && r.error)
-        return toast.add({ severity: 'error', detail: r.error instanceof ConvexError ? r.error.data.msg : r.error.message, life: 10000 })
+        return toast.add({ severity: 'error', detail: getConvexErrorMessage(r.error), life: 10000 })
 
       taskInputRef.value = ''
     })
