@@ -122,6 +122,9 @@ importers:
       arktype:
         specifier: ^2.1.20
         version: 2.1.20
+      backend-convex:
+        specifier: workspace:*
+        version: link:../backend-convex
       consola:
         specifier: ^3.4.2
         version: 3.4.2
