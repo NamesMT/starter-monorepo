@@ -187,15 +187,5 @@ const { isPending, isError, data, error } = useQuery({
         </Carousel>
       </div>
     </div>
-
-    <!-- IsSST Section -->
-    <div class="max-w-2xl w-full border rounded-lg p-4 shadow">
-      <h2 class="mb-3 text-xl font-semibold">
-        {{ $t('pages.home.section.sst.title') }}
-      </h2>
-      <div class="flex justify-center">
-        <IsSST />
-      </div>
-    </div>
   </div>
 </template>
