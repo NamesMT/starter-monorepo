@@ -30,7 +30,8 @@ if (import.meta.client && convexVueContext?.options?.url) {
   <div>
     <template v-if="!$init.mounted">
       <NuxtLayout name="loading">
-        <!-- <NuxtPage /> -->
+        <!-- `name="loading"` prop is unusable, but Nuxt warns when there's no NuxtPage, so we put this -->
+        <NuxtPage name="$dummy" />
         <LoadingScreen />
       </NuxtLayout>
     </template>

@@ -1,6 +1,5 @@
 <template>
   <div class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-surface-0 dark:bg-surface-900">
-    <!-- Simple CSS Spinner -->
     <div class="spinner mb-4" />
     <p class="text-lg text-primary-500 font-medium dark:text-primary-400">
       {{ $t('components.loadingScreen.loadingText') }}
@@ -14,12 +13,12 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border-left-color: hsl(var(--primary-500)); /* Assuming you have a primary color variable */
+  border-left-color: hsl(var(--primary-500));
   animation: spin 1s ease infinite;
 }
 
 .dark .spinner {
-  border-left-color: hsl(var(--primary-400)); /* Assuming you have a primary color variable for dark mode */
+  border-left-color: hsl(var(--primary-400));
 }
 
 @keyframes spin {
