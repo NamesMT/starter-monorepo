@@ -56,7 +56,6 @@
       "which-typed-array": "npm:@nolyfill/which-typed-array@^1.0.44"
     },
     "patchedDependencies": {
-      "@primevue/nuxt-module": "patches/@primevue__nuxt-module.patch",
       "convex-nuxt": "patches/convex-nuxt.patch"
     }
   },

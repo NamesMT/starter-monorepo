@@ -2,10 +2,11 @@
 </script>
 
 <template>
-  <!-- Register global Primevue components -->
+  <!-- Register global Shadcn components -->
   <div>
-    <Toast />
-    <ConfirmPopup />
+    <ClientOnly>
+      <Toaster />
+    </ClientOnly>
   </div>
   <DevRegister />
 </template>

@@ -1,20 +1,17 @@
-@layer reset, normalize, tailwind-base, primevue, tailwind-utilities;
-
+@layer reset, normalize, tailwind-base, tailwind-utilities;
 @import '@unocss/reset/tailwind.css' layer(reset);
-
 @import './palette.css';
-@import './primevue.css';
 @import './shadcn.css';
 
-
 html {
-  --at-apply: 'bg-gray-300 text-surface-600 transition-background-color duration-500';
+  --at-apply: 'bg-surface-0 text-surface-600 transition-background-color duration-500';
 }
 
 html.dark {
-  --at-apply: 'bg-gray-700 text-surface-200';
+  --at-apply: 'bg-surface-900 text-surface-200';
 }
 
-pre, code {
-  --at-apply: 'font-mono'
+pre,
+code {
+  --at-apply: 'font-mono';
 }

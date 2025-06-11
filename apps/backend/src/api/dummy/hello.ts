@@ -1,10 +1,10 @@
 import { appFactory } from '#src/helpers/factory.js'
-import { getCachedConvexClient } from '#src/providers/baas/convex-main.js'
+import { getConvexClient } from '#src/providers/baas/convex-main.js'
 import { getHelloMessage } from './hello.helper'
 
 export const dummyHelloRouteApp = appFactory.createApp()
   .get('', async (c) => {
-    const convexClient = getCachedConvexClient()
+    const convexClient = await getConvexClient().catch(() => null)
 
-    return c.text(getHelloMessage(`i18n and Hono ${convexClient ? '(+ Convex detected)' : ''}`))
+    return c.text(getHelloMessage(`i18n and Hono${convexClient ? ' (+ Convex detected)' : ''}`))
   })

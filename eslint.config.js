@@ -9,6 +9,7 @@ export default frontendNuxtConfig(await antfu(
     ignores: [
       '.sst',
       '**/convex/_generated/**',
+      '**/lib/shadcn/**',
     ],
   },
   {
@@ -24,6 +25,8 @@ export default frontendNuxtConfig(await antfu(
       'style/max-statements-per-line': ['error', { max: 2 }],
       // Allow top-level await
       'antfu/no-top-level-await': 'off',
+      // Allow banning ts comments with warn
+      'ts/ban-ts-comment': 'warn',
     },
   },
   // Allow trailing space for markdown formatting

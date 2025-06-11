@@ -3,7 +3,6 @@ import { localcertKeyPath, localcertPath } from '@local/common/dev/cert'
 import { getConvexEnvs } from 'backend-convex/_util'
 import { config } from 'dotenv'
 import optimizeExclude from 'vite-plugin-optimize-exclude'
-import { Names } from './app/primevue.config'
 
 if (import.meta.env.NODE_ENV === 'development')
   config({ path: ['.env.local.ignored', '.env.local'] })
@@ -14,7 +13,7 @@ const siteConfig = {
   url: import.meta.env.NUXT_PUBLIC_FRONTEND_URL,
   backend: import.meta.env.NUXT_PUBLIC_BACKEND_URL,
   name: 'starter-monorepo',
-  description: '🔥Hono RPC, Nuxt, SST Ion, Kinde Auth, Tanstack Query, Shadcn, Primevue, UnoCSS',
+  description: 'Monorepo with 🤖 AI initialize and localize | 🔥Hono + OpenAPI & RPC, Nuxt, Convex, SST Ion, Kinde Auth, Tanstack Query, Shadcn, UnoCSS, Spreadsheet I18n, Lingo.dev',
 }
 
 function genFrontendLocale(code: string, languageISO: string, dir?: LocaleObject<string>['dir']): LocaleObject<string> {
@@ -106,7 +105,6 @@ export default defineNuxtConfig({
     'nuxt-svgo',
     'nuxt-llms',
     // 'nuxt-booster',
-    '@primevue/nuxt-module',
     'shadcn-nuxt',
     'convex-nuxt',
   ],
@@ -150,30 +148,13 @@ export default defineNuxtConfig({
   // },
 
   shadcn: {
-    prefix: 'Shad',
-    componentDir: './app/lib/components/ui',
+    prefix: '',
+    componentDir: './app/lib/shadcn/components/ui',
   },
 
   css: [
     '~/assets/css/main.scss',
   ],
-
-  // nuxt-primevue
-  primevue: {
-    components: {
-      exclude: ['Editor', 'Chart', 'Form', 'FormField'], // Workaround until https://github.com/primefaces/primevue/pull/7436
-    },
-    options: {
-      ripple: true,
-      theme: {
-        preset: Names,
-        options: {
-          darkModeSelector: '.dark',
-        },
-      },
-      ptOptions: { mergeProps: true },
-    },
-  },
 
   svgo: {
     autoImportPath: false,

@@ -1,8 +1,10 @@
-import type { UserType } from '@kinde-oss/kinde-typescript-sdk'
+// eslint-disable-next-line ts/ban-ts-comment
+// @ts-ignore TS6305: `backend/src/app` has not been built yet
+import type { UserProfileType } from 'backend/src/types'
 import type { Reactive } from 'vue'
 
 export type AuthState = (
-  { loggedIn: true, user: UserType, token: string }
+  { loggedIn: true, user: UserProfileType, token: string }
   | { loggedIn: false, user: null, token: null }
 )
 

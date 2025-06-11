@@ -14,14 +14,9 @@
   * + [VueUse Motion](https://motion.vueuse.org/)
 * Tanstack Query
   * Default is configured for client-side fetching usage, data is persisted to IndexedDB.
-* PrimeVue * UI library
-* [Shadcn/vue](https://www.shadcn-vue.com/) - Components-based UI library
-  * > [Why two UI libraries?](./two-ui-libraries-explanation.md)
+* [Shadcn/vue](https://www.shadcn-vue.com/) - Components-first UI library
   * Configured for UnoCSS with [hyoban/unocss-preset-shadcn](https://github.com/hyoban/unocss-preset-shadcn).
-  * Share the primary color and can work in parallel with PrimeVue.
-  * Note: `lucide-vue-next` (icon pack of `shadcn-vue`) is not pre-installed, you can opt for one of following:
-    * Install `lucide-vue-next`
-    * Convert usage of `lucide-vue-next` icons to UnoCSS icons
+  * To add components, use `pnpm shad-add <component>`
 * [ColorMode](https://github.com/nuxt-modules/color-mode)
   * Dark and Light mode with auto detection made easy with Nuxt.
 * [NuxtImage](https://image.nuxt.com/)

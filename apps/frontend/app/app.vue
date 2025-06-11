@@ -3,7 +3,7 @@ import type { ConvexVueContext } from 'convex-vue'
 
 defineOgImageComponent('NuxtSeo', {
   title: `Hello! I'm starter-monorepo 👋`,
-  description: 'Hono RPC, Nuxt, SST Ion, Kinde Auth, Tanstack Query, Shadcn, Primevue, UnoCSS',
+  description: 'Monorepo with 🤖 AI initialize and localize | 🔥Hono + OpenAPI & RPC, Nuxt, Convex, SST Ion, Kinde Auth, Tanstack Query, Shadcn, UnoCSS, Spreadsheet I18n, Lingo.dev',
   theme: '#bf83fc',
   colorMode: 'dark',
 })

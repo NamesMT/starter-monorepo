@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import GridMaker from '@local/common-vue/src/components/GridMaker.vue'
-import { Carousel, CarouselContent, CarouselNext, CarouselPrevious } from '@/lib/components/ui/carousel'
 
 definePageMeta({
   title: 'pages.home.title',
@@ -50,8 +49,7 @@ const { isPending, isError, data, error } = useQuery({
           ]"
         />
         <GridMaker
-          class="[&_.GridMaker\_\_col]:nth-[1]:[&_.GridMaker\_\_row]:rounded-full"
-          :value="[
+          class="[&_.GridMaker\_\_col]:nth-[1]:[&_.GridMaker\_\_row]:rounded-full" :value="[
             '*',
             '*',
             '*',
@@ -71,21 +69,19 @@ const { isPending, isError, data, error } = useQuery({
           <p>{{ $t('pages.home.themeSwitcher.label') }}:</p>
           <ClientOnly>
             <template #fallback>
-              <Button label="..." />
+              <Button>...</Button>
             </template>
-            <Button
-              :label="colorMode.preference"
-              @pointerdown="colorMode.preference = (colorMode.preference !== 'dark') ? 'dark' : 'light'"
-            />
+            <Button @pointerdown="colorMode.preference = (colorMode.preference !== 'dark') ? 'dark' : 'light'">
+              {{ colorMode.preference }}
+            </Button>
           </ClientOnly>
         </div>
 
         <div class="flex items-center gap-2">
           <p>{{ $t('language') }}:</p>
-          <Button
-            :label="$lmw(locale.substring(0, 2))"
-            @pointerdown="setLocale(computedNextLocale)"
-          />
+          <Button @pointerdown="setLocale(computedNextLocale)">
+            {{ $lmw(locale.substring(0, 2)) }}
+          </Button>
         </div>
 
         <div class="flex items-center gap-2">
@@ -102,15 +98,22 @@ const { isPending, isError, data, error } = useQuery({
       </h2>
       <div class="flex flex-col items-start gap-2">
         <div class="max-w-full overflow-x-auto">
-          <span class="font-medium">{{ $t('pages.home.runtimeConfig.frontendUrl') }}:</span> <code class="rounded bg-gray-100 px-1 py-0.5 dark:bg-gray-800">{{ runtimeConfig.public.frontendUrl }}</code>
+          <span class="font-medium">{{ $t('pages.home.runtimeConfig.frontendUrl') }}:</span> <code
+            class="rounded bg-gray-100 px-1 py-0.5 dark:bg-gray-800"
+          >{{ runtimeConfig.public.frontendUrl }}</code>
         </div>
         <div class="max-w-full overflow-x-auto">
-          <span class="font-medium">{{ $t('pages.home.runtimeConfig.backendUrl') }}:</span> <code class="rounded bg-gray-100 px-1 py-0.5 dark:bg-gray-800">{{ runtimeConfig.public.backendUrl }}</code>
+          <span class="font-medium">{{ $t('pages.home.runtimeConfig.backendUrl') }}:</span> <code
+            class="rounded bg-gray-100 px-1 py-0.5 dark:bg-gray-800"
+          >{{ runtimeConfig.public.backendUrl }}</code>
         </div>
         <div class="max-w-full overflow-x-auto">
-          <span class="font-medium">{{ $t('pages.home.apiResponse.label') }}</span> <code class="rounded bg-gray-100 px-1 py-0.5 dark:bg-gray-800">{{ $apiClient.api.dummy.hello.$url() }}</code>:
+          <span class="font-medium">{{ $t('pages.home.apiResponse.label') }}</span> <code
+            class="rounded bg-gray-100 px-1 py-0.5 dark:bg-gray-800"
+          >{{ $apiClient.api.dummy.hello.$url() }}</code>:
         </div>
-        <pre class="max-w-full w-full overflow-x-auto rounded bg-black p-2 px-4 text-left text-xs text-white">{{ apiError || apiResult || $t('pages.home.apiResponse.empty') }}</pre>
+        <pre class="max-w-full w-full overflow-x-auto rounded bg-black p-2 px-4 text-left text-xs text-white">{{ apiError
+          || apiResult || $t('pages.home.apiResponse.empty') }}</pre>
       </div>
     </div>
 
@@ -123,11 +126,11 @@ const { isPending, isError, data, error } = useQuery({
         {{ $t('pages.home.section.tanstackQuery.description') }}
       </p>
       <div class="flex flex-col items-center gap-3">
-        <pre class="max-w-full w-full overflow-x-auto rounded bg-black p-2 px-4 text-left text-xs text-white">{{ isPending ? $t('pages.home.tanstackQuery.loading') : isError ? error : data }}</pre>
-        <Button
-          :label="$t('pages.home.tanstackQuery.staleButton')"
-          @pointerdown="queryClient.invalidateQueries({ queryKey: ['hello_test'] })"
-        />
+        <pre class="max-w-full w-full overflow-x-auto rounded bg-black p-2 px-4 text-left text-xs text-white">{{ isPending
+          ? $t('pages.home.tanstackQuery.loading') : isError ? error : data }}</pre>
+        <Button @pointerdown="queryClient.invalidateQueries({ queryKey: ['hello_test'] })">
+          {{ $t('pages.home.tanstackQuery.staleButton') }}
+        </Button>
       </div>
     </div>
 
@@ -143,16 +146,26 @@ const { isPending, isError, data, error } = useQuery({
           </div>
         </template>
         <div class="flex flex-col items-center gap-4">
-          <p>{{ $t('pages.home.auth.status.label') }}: {{ $auth.loggedIn ? $t('pages.home.auth.status.loggedIn') : $t('pages.home.auth.status.notLoggedIn') }}</p>
+          <p>
+            {{ $t('pages.home.auth.status.label') }}: {{ $auth.loggedIn ? $t('pages.home.auth.status.loggedIn')
+              : $t('pages.home.auth.status.notLoggedIn') }}
+          </p>
           <div class="flex items-center justify-center gap-2">
-            <Button v-if="$auth.loggedIn" :label="$t('pages.home.auth.signOutButton')" @click="navigateTo(getSignOutUrl(), { external: true })" />
-            <Button v-else :label="$t('pages.home.auth.signInButton')" @click="navigateTo(getSignInUrl(), { external: true })" />
+            <Button v-if="$auth.loggedIn" @click="navigateTo(getSignOutUrl(), { external: true })">
+              {{
+                $t('pages.home.auth.signOutButton') }}
+            </Button>
+            <Button v-else @click="navigateTo(getSignInUrl(), { external: true })">
+              {{ $t('pages.home.auth.signInButton')
+              }}
+            </Button>
           </div>
           <div v-if="$auth.loggedIn" class="mt-2 w-full text-left">
             <p class="mb-1 text-sm font-medium">
               {{ $t('pages.home.auth.userInfo.title') }}:
             </p>
-            <pre class="max-w-full w-full overflow-x-auto rounded bg-black p-2 px-4 text-left text-xs text-white">{{ $auth }}</pre>
+            <pre class="max-w-full w-full overflow-x-auto rounded bg-black p-2 px-4 text-left text-xs text-white">{{ $auth
+            }}</pre>
           </div>
         </div>
       </ClientOnly>
@@ -166,21 +179,20 @@ const { isPending, isError, data, error } = useQuery({
       <div class="flex justify-center">
         <Carousel class="relative max-w-xs w-full">
           <CarouselContent>
-            <ShadCarouselItem v-for="(_, index) in 5" :key="index">
+            <CarouselItem v-for="(_, index) in 5" :key="index">
               <div class="p-1">
-                <!-- PrimeVue Card was originally here and is fine -->
-                <Card class="shadow-md">
-                  <template #title>
-                    {{ $t('pages.home.carousel.cardTitle', { index: index + 1 }) }}
-                  </template>
-                  <template #content>
+                <Card>
+                  <CardContent class="aspect-square flex flex-col justify-center p-6">
+                    <h4 class="text-4xl font-semibold">
+                      {{ $t('pages.home.carousel.cardTitle', { index: index + 1 }) }}
+                    </h4>
                     <p class="m-0 text-sm">
                       {{ $t('pages.home.carousel.cardContent') }}
                     </p>
-                  </template>
+                  </CardContent>
                 </Card>
               </div>
-            </ShadCarouselItem>
+            </CarouselItem>
           </CarouselContent>
           <CarouselPrevious />
           <CarouselNext />

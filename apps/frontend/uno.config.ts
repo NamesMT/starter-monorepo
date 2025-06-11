@@ -14,7 +14,7 @@ import { presetShadcn } from 'unocss-preset-shadcn'
 import { parseColor } from 'unocss/preset-mini'
 
 const colorsPaletteMap: Record<string, string> = {}
-for (const color of ['primary', 'surface']) {
+for (const color of ['primary', 'secondary', 'surface']) {
   // length 12 = 0-950
   Array.from({ length: 12 }, (_, i) => i).forEach((num) => {
     const key = `${color}-${colorIndexer(num)}`
@@ -38,25 +38,42 @@ export default defineConfig({
       DEFAULT: '3px',
     },
     colors: {
-      // Used by both shadcn and primevue
+      ...colorsPaletteMap,
+      'mono': 'hsl(var(--mono))',
+      'mono-i': 'hsl(var(--mono-i))',
       'primary': {
         DEFAULT: 'hsl(var(--primary))',
         foreground: 'hsl(var(--primary-foreground))',
       },
-      'surface-0': 'hsl(var(--surface-0))',
-
-      'primary-inverse': 'hsl(var(--primary-inverse))',
-      'primary-hover': 'hsl(var(--primary-hover))',
-      'primary-active-color': 'hsl(var(--primary-active-color))',
-
-      'primary-highlight': 'hsl(var(--primary)/var(--primary-highlight-opacity))',
-      'primary-highlight-inverse': 'hsl(var(--primary-highlight-inverse))',
-      'primary-highlight-hover': 'hsl(var(--primary)/var(--primary-highlight-hover-opacity))',
-
-      ...colorsPaletteMap,
-
-      'mono': 'hsl(var(--mono))',
-      'mono-i': 'hsl(var(--mono-i))',
+      'secondary': {
+        DEFAULT: 'hsl(var(--secondary))',
+        foreground: 'hsl(var(--secondary-foreground))',
+      },
+      'destructive': {
+        DEFAULT: 'hsl(var(--destructive))',
+        foreground: 'hsl(var(--destructive-foreground))',
+      },
+      'muted': {
+        DEFAULT: 'hsl(var(--muted))',
+        foreground: 'hsl(var(--muted-foreground))',
+      },
+      'accent': {
+        DEFAULT: 'hsl(var(--accent))',
+        foreground: 'hsl(var(--accent-foreground))',
+      },
+      'popover': {
+        DEFAULT: 'hsl(var(--popover))',
+        foreground: 'hsl(var(--popover-foreground))',
+      },
+      'card': {
+        DEFAULT: 'hsl(var(--card))',
+        foreground: 'hsl(var(--card-foreground))',
+      },
+      'background': 'hsl(var(--background))',
+      'foreground': 'hsl(var(--foreground))',
+      'border': 'hsl(var(--border))',
+      'input': 'hsl(var(--input))',
+      'ring': 'hsl(var(--ring))',
     },
   },
   shortcuts: [
@@ -64,12 +81,11 @@ export default defineConfig({
     ['text-mainGradient', 'bg-mainGradient bg-clip-text text-transparent transition-color duration-200'],
   ],
   rules: [
-    // Declaring css variable with Uno: $mainColor-primary-500
-    [/^\$(\w+)-(.+)$/, ([, name, value], { theme }) => ({
+    // Declaring css variable with theme color support: $mainColor=primary-500
+    // Tip: you can use [--someVariable:var(--primary)] as native supported syntax for other variables
+    [/^\$(\w+)=(.+)$/, ([, name, value], { theme }) => ({
       [`--${name}`]: parseColor(value!, theme)?.color || value,
     })],
-    // Re-declare to fix priority issue with some primevue components
-    ['rounded-none', { 'border-radius': '0px' }],
     // bg dimming
     [/^bg-dim-(\d+)$/, ([, v]) => ({
       'background-image': `linear-gradient(rgba(0, 0, 0, ${+v! / 100}), rgba(0, 0, 0, ${+v! / 100}))`,
@@ -135,7 +151,7 @@ export default defineConfig({
         // Default
         /\.(vue|svelte|[jt]sx|mdx?|astro|elm|php|phtml|html)($|\?)/,
         // shadcn js/ts files
-        'lib/components/ui/**/*.{js,ts}',
+        'lib/shadcn//**/*.{js,ts}',
       ],
     },
   },

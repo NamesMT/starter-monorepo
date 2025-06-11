@@ -1,7 +1,4 @@
-import type {
-  EmblaCarouselType as CarouselApi,
-} from 'embla-carousel'
-import type { CarouselEmits, CarouselProps } from './interface'
+import type { UnwrapRefCarouselApi as CarouselApi, CarouselEmits, CarouselProps } from './interface'
 import { createInjectionState } from '@vueuse/core'
 import emblaCarouselVue from 'embla-carousel-vue'
 import { onMounted, ref } from 'vue'
@@ -24,12 +21,12 @@ const [useProvideCarousel, useInjectCarousel] = createInjectionState(
       emblaApi.value?.scrollNext()
     }
 
-    const canScrollNext = ref(true)
-    const canScrollPrev = ref(true)
+    const canScrollNext = ref(false)
+    const canScrollPrev = ref(false)
 
     function onSelect(api: CarouselApi) {
-      canScrollNext.value = api.canScrollNext()
-      canScrollPrev.value = api.canScrollPrev()
+      canScrollNext.value = api?.canScrollNext() || false
+      canScrollPrev.value = api?.canScrollPrev() || false
     }
 
     onMounted(() => {

@@ -32,7 +32,8 @@ export const providersInit = createMiddleware(async (c, next) => {
     if (!providersState.initialized) {
       await Promise.all([
         initKindeClient(),
-        initConvexClient().catch(() => {}),
+        // WARN: allows Convex to fail initializing, in case template user does not opt-in for Convex, please remove the catch or this whole line depends on your need in production
+        initConvexClient().catch(() => { }),
       ])
 
       providersState.initialized = true

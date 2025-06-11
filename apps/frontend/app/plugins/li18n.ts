@@ -1,5 +1,3 @@
-import { defaultOptions } from 'primevue/config'
-
 export default defineNuxtPlugin({
   name: 'local-li18n',
   parallel: true,
@@ -8,12 +6,6 @@ export default defineNuxtPlugin({
   ],
   async setup() {
     const { $i18n, $init } = useNuxtApp()
-    const primevue = usePrimeVue()
-
-    const baseLocale = {
-      ...defaultOptions.locale!,
-      firstDayOfWeek: 1,
-    }
 
     const li18n = reactive({
       renderKey: 0,
@@ -24,12 +16,6 @@ export default defineNuxtPlugin({
         () => $i18n.locale.value,
         async (locale) => {
           await setDayjsLocale(locale)
-
-          switch (locale) {
-            default:
-              primevue.config.locale = { ...baseLocale }
-              break
-          }
 
           ++li18n.renderKey
         },
