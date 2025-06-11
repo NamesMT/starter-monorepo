@@ -10,6 +10,6 @@ const {
 </script>
 
 <template>
-  <LogoFull v-if="variant === 'full'" />
-  <LogoSimple v-else />
+  <LogoFull v-if="variant === 'full'" class="site-logo site-logo--full" />
+  <LogoSimple v-else class="site-logo site-logo--simple" />
 </template>

@@ -1,14 +1,27 @@
 KEY,Description,en,es,fr,ru,vi,zh-CN
 components.convexIntegrationTest.addTask.label,,Add task entry (press enter),Añadir tarea (pulsar enter),Ajouter une tâche (appuyer sur Entrée),Добавить задачу (нажмите Enter),Thêm mục công việc (nhấn enter),添加任务条目（按回车键）
 components.convexIntegrationTest.addTask.placeholder,,Enter new task...,Introducir nueva tarea...,Entrez une nouvelle tâche...,Введите новую задачу...,Nhập công việc mới...,输入新任务...
-components.convexIntegrationTest.configuredUrl,,Convex URL,URL de Convex,URL Convex,URL Convex,URL Convex,Convex URL
 components.convexIntegrationTest.authenticated,,Convex Authenticated,Convex autenticado,Authentifié par Convex,Аутентифицировано через Convex,Đã xác thực Convex,Convex 已认证
+components.convexIntegrationTest.configuredUrl,,Convex URL,URL de Convex,URL Convex,URL Convex,URL Convex,Convex URL
 components.convexIntegrationTest.tasksList.empty,,No tasks yet.,Aún no hay tareas.,Aucune tâche pour le moment.,Задач пока нет.,Chưa có công việc nào.,暂无任务。
 components.convexIntegrationTest.tasksList.title,,Tasks,Tareas,Tâches,Задачи,Công việc,任务列表
-components.convexIntegrationTest.testBackendButton.fetchTasks,,Test Convex integration with `backend` (fetch tasks),Probar integración de Convex con `backend` (obtener tareas),Tester l'intégration de Convex avec `backend` (récupérer les tâches),Тестировать интеграцию Convex с `backend` (получить задачи),Kiểm tra tích hợp Convex với `backend` (lấy công việc),测试Convex与`backend`的集成（获取任务）
 components.convexIntegrationTest.testBackendButton.authInfo,,Test Convex integration with `backend` (auth info),Probar la integración de Convex con `backend` (información de autenticación),Tester l'intégration Convex avec `backend` (informations d'authentification),Тестирование интеграции Convex с `backend` (информация об авторизации),Kiểm tra tích hợp Convex với `backend` (thông tin xác thực),使用 `backend` 测试 Convex 集成（认证信息）
+components.convexIntegrationTest.testBackendButton.fetchTasks,,Test Convex integration with `backend` (fetch tasks),Probar integración de Convex con `backend` (obtener tareas),Tester l'intégration de Convex avec `backend` (récupérer les tâches),Тестировать интеграцию Convex с `backend` (получить задачи),Kiểm tra tích hợp Convex với `backend` (lấy công việc),测试Convex与`backend`的集成（获取任务）
 components.loadingScreen.loadingText,,Loading...,Cargando...,Chargement en cours...,Загрузка...,Đang tải...,加载中...
+getInputThoughtsPlaceholders.0,,What's on your mind?,¿Qué tienes en mente?,À quoi pensez-vous ?,О чём вы думаете?,Bạn đang nghĩ gì?,你在想什么？
+getInputThoughtsPlaceholders.1,,What's the plan?,¿Cuál es el plan?,Quel est le plan ?,Каков план?,Kế hoạch là gì?,计划是什么？
+getInputThoughtsPlaceholders.2,,What's the goal?,¿Cuál es la meta?,Quel est l'objectif ?,Какова цель?,Mục tiêu là gì?,目标是什么？
+getInputThoughtsPlaceholders.3,,What's the purpose?,¿Cuál es el propósito?,Quel est le but ?,Какова задача?,Mục đích là gì?,目的是什么？
+getInputThoughtsPlaceholders.4,,What's the objective?,¿Cuál es el objetivo?,Quel est l'objectif ?,Какова цель?,Nhiệm vụ là gì?,宗旨是什么？
+getInputThoughtsPlaceholders.5,,What's the mission?,¿Cuál es la misión?,Quelle est la mission ?,Какова миссия?,Sứ mệnh là gì?,任务是什么？
+getInputThoughtsPlaceholders.6,,What's the direction?,¿Cuál es la dirección?,Quelle est la direction ?,Каково направление?,Hướng đi là gì?,方向是什么？
+getInputThoughtsPlaceholders.7,,What's the vision?,¿Cuál es la visión?,Quelle est la vision ?,Каково видение?,Tầm nhìn là gì?,愿景是什么？
+getInputThoughtsPlaceholders.8,,What's the strategy?,¿Cuál es la estrategia?,Quelle est la stratégie ?,Какова стратегия?,Chiến lược là gì?,战略是什么？
 language,,Language,Idioma,Langue,Язык,Ngôn ngữ,语言
+pages.chat.aiLabel,,AI,IA,IA,ИИ,AI,AI
+pages.chat.loginPrompt,,Please login to try this feature,Por favor inicia sesión para probar esta función,Veuillez vous connecter pour essayer cette fonctionnalité,"Пожалуйста, войдите в систему, чтобы попробовать эту функцию",Vui lòng đăng nhập để thử tính năng này,请登录以尝试此功能
+pages.chat.title,,Chat,Chat,Chat,Trò chuyện,Trò chuyện,聊天
+pages.chat.userLabel,,You,Tú,Vous,Вы,Bạn,您
 pages.home.apiResponse.empty,,Empty,Vacío,Vide,Пусто,Trống,空的
 pages.home.apiResponse.label,,API Response from,Respuesta de API de,Réponse API de,Ответ API от,Phản hồi API từ,API响应来自
 pages.home.auth.signInButton,,Sign-in,Iniciar sesión,Connexion,Войти,Đăng nhập,登录

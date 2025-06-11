@@ -10,17 +10,6 @@ const { data: tasks } = useConvexQuery(api.tasks.get)
 const { data: authInfo } = useConvexQuery(api.authInfo.get)
 const { mutate: mutateAddTask } = useConvexMutation(api.tasks.add)
 
-const taskInputPlaceholders = [
-  `What's on your mind?`,
-  `What's the plan?`,
-  `What's the goal?`,
-  `What's the purpose?`,
-  `What's the objective?`,
-  `What's the mission?`,
-  `What's the direction?`,
-  `What's the vision?`,
-  `What's the strategy?`,
-]
 const taskInputRef = ref('')
 async function addTask() {
   await mutateAddTask({ text: taskInputRef.value })
@@ -61,7 +50,7 @@ async function testConvexViaBackendTasksCTA() {
   <div class="max-w-md w-full flex flex-col gap-5">
     <VanishingInput
       v-model="taskInputRef"
-      :placeholders="taskInputPlaceholders"
+      :placeholders="useInputThoughtsPlaceholders().value"
       @submit="addTask()"
     />
   </div>

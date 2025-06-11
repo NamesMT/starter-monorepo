@@ -5,14 +5,27 @@ checksums:
   fa34a32ee742667d36ef7288982efb9c:
     components.convexIntegrationTest.addTask.label: 94bfce6a5916c8955cea8d04ad41c10e
     components.convexIntegrationTest.addTask.placeholder: cfe9cb319a1f23515f7c2215dba202a3
-    components.convexIntegrationTest.configuredUrl: ca306d17f0a8f6bd7e0b9b2efcf23fe7
     components.convexIntegrationTest.authenticated: 7aeaface3edc0f5dca2c8ebd6c7e1974
+    components.convexIntegrationTest.configuredUrl: ca306d17f0a8f6bd7e0b9b2efcf23fe7
     components.convexIntegrationTest.tasksList.empty: 353f149e9225b37a2651116189d0bb78
     components.convexIntegrationTest.tasksList.title: efde951ded884b7dbf0f81e45d93a8f9
-    components.convexIntegrationTest.testBackendButton.fetchTasks: 9f58d5b60b733446f4620c944400c102
     components.convexIntegrationTest.testBackendButton.authInfo: 28db481eb12a77d89bf451f64a55c1c2
+    components.convexIntegrationTest.testBackendButton.fetchTasks: 9f58d5b60b733446f4620c944400c102
     components.loadingScreen.loadingText: 82b4ea7ed1439094d7c4be13aaba9a66
+    getInputThoughtsPlaceholders.0: 76bb282470ef5e533e56fab1d38226cb
+    getInputThoughtsPlaceholders.1: 490d3eb59f03de4bdb84dff80f4ac591
+    getInputThoughtsPlaceholders.2: 6d260c52ad13237ef4f73c2f085d6bff
+    getInputThoughtsPlaceholders.3: 078f9ca0c5860ae581baa101a9110e92
+    getInputThoughtsPlaceholders.4: ce516498523864e270d2ba905354ef64
+    getInputThoughtsPlaceholders.5: 2d021d1fe8df6f4469ab933066cb4aec
+    getInputThoughtsPlaceholders.6: a312e7c903fcb2c11c87c62ee2b6f7c9
+    getInputThoughtsPlaceholders.7: 6fa711b0c72fcb620416a48f0166f432
+    getInputThoughtsPlaceholders.8: 111b81a39018d30e71b7defcf639e2e6
     language: 277fd1a41cc237a437cd1d5e4a80463b
+    pages.chat.aiLabel: b764382ca31f0c1570802ead170ad235
+    pages.chat.loginPrompt: b04016c6bb495df222e7ab52e2061921
+    pages.chat.title: 1171b63c16b3431dca319af1804de2a0
+    pages.chat.userLabel: db2a4a796b70cc1430d1b21f6ffb6dcb
     pages.home.apiResponse.empty: 0ae6634426bd0372d82f5bcd0441f67e
     pages.home.apiResponse.label: be9e665e68a577f856af838006a9fe43
     pages.home.auth.signInButton: af443132de3ac7a259e74be030196343

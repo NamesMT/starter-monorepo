@@ -10,6 +10,8 @@
 
 import type * as authInfo from "../authInfo.js";
 import type * as crons from "../crons.js";
+import type * as http_ai from "../http/ai.js";
+import type * as http from "../http.js";
 import type * as tasks from "../tasks.js";
 
 import type {
@@ -29,6 +31,8 @@ import type {
 declare const fullApi: ApiFromModules<{
   authInfo: typeof authInfo;
   crons: typeof crons;
+  "http/ai": typeof http_ai;
+  http: typeof http;
   tasks: typeof tasks;
 }>;
 declare const fullApiWithMounts: typeof fullApi;

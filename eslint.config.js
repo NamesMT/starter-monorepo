@@ -20,6 +20,13 @@ export default frontendNuxtConfig(await antfu(
     },
   },
   {
+    files: ['apps/backend-convex/convex/**'],
+    rules: {
+      // Disable automatically transform `type` to `interface`, because Hono require the Bindings to be type.
+      'node/prefer-global/process': 'off',
+    },
+  },
+  {
     rules: {
       // Relaxes inline statements a bit
       'style/max-statements-per-line': ['error', { max: 2 }],

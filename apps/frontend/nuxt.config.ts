@@ -4,14 +4,18 @@ import { getConvexEnvs } from 'backend-convex/_util'
 import { config } from 'dotenv'
 import optimizeExclude from 'vite-plugin-optimize-exclude'
 
-if (import.meta.env.NODE_ENV === 'development')
+if (import.meta.env.NODE_ENV === 'development') {
   config({ path: ['.env.local.ignored', '.env.local'] })
-else
+  import.meta.env.NUXT_PUBLIC_CONVEX_URL ||= (await getConvexEnvs()).CONVEX_URL || ''
+}
+else {
   config({ path: ['.env.prod.ignored', '.env.prod'] })
+}
 
 const siteConfig = {
   url: import.meta.env.NUXT_PUBLIC_FRONTEND_URL,
   backend: import.meta.env.NUXT_PUBLIC_BACKEND_URL,
+  convex: import.meta.env.NUXT_PUBLIC_CONVEX_URL,
   name: 'starter-monorepo',
   description: 'Monorepo with 🤖 AI initialize and localize | 🔥Hono + OpenAPI & RPC, Nuxt, Convex, SST Ion, Kinde Auth, Tanstack Query, Shadcn, UnoCSS, Spreadsheet I18n, Lingo.dev',
 }
@@ -25,8 +29,6 @@ function genFrontendLocale(code: string, languageISO: string, dir?: LocaleObject
   }
 }
 
-const convexLocalEnvs = await getConvexEnvs()
-
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   future: {
@@ -36,6 +38,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
 
   experimental: {
+    viewTransition: true,
     watcher: 'parcel',
     componentIslands: true,
   },
@@ -57,10 +60,13 @@ export default defineNuxtConfig({
     public: {
       frontendUrl: siteConfig.url,
       backendUrl: siteConfig.backend,
+      convexUrl: siteConfig.convex,
+      convexApiUrl: siteConfig.convex.replace('.convex.cloud', '.convex.site'),
     },
   },
 
   app: {
+    viewTransition: false,
     head: {
       link: [
         { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' },
@@ -89,6 +95,9 @@ export default defineNuxtConfig({
         'clsx',
         'embla-carousel-vue',
       ],
+      include: [
+        'secure-json-parse',
+      ],
     },
   },
 
@@ -110,7 +119,7 @@ export default defineNuxtConfig({
   ],
 
   convex: {
-    url: import.meta.env.NUXT_PUBLIC_CONVEX_URL || convexLocalEnvs.CONVEX_URL || '',
+    url: siteConfig.convex,
     manualInit: true,
   },
 

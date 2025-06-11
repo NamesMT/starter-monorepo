@@ -15,6 +15,7 @@
     "shad-add": "pnpm dlx shadcn-vue@^1 add"
   },
   "dependencies": {
+    "@ai-sdk/vue": "^1.2.12",
     "embla-carousel": "^8.6.0",
     "embla-carousel-vue": "^8.6.0",
     "lucide-vue-next": "^0.514.0",

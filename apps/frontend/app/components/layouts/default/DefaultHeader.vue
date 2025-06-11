@@ -26,6 +26,13 @@
       >
         <span class="group-hover:text-primary">{{ $t('pages.test.title') }}</span>
       </NuxtLink>
+
+      <NuxtLink
+        to="/chat" class="group flex items-center"
+        active-class="text-accent-foreground font-semibold border-t-2px border-primary bg-gradient-to-b from-primary/20"
+      >
+        <span class="group-hover:text-primary">{{ $t('pages.chat.title') }}</span>
+      </NuxtLink>
     </div>
 
     <div class="col-span-3 flex">
