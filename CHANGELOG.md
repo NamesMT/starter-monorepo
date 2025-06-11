@@ -1,6 +1,58 @@
 # Changelog
 
 
+## v2.0.0
+
+[compare changes](https://github.com/NamesMT/starter-monorepo/compare/v1.2.1...v2.0.0)
+
+### 🚀 Enhancements
+
+- Convex shared auth integration ([c99c00d](https://github.com/NamesMT/starter-monorepo/commit/c99c00d))
+- **convex:** Authenticate and rate limit for `tasks.add` ([3bd9ce7](https://github.com/NamesMT/starter-monorepo/commit/3bd9ce7))
+- Add `getConvexErrorMessage` util ([bfc4675](https://github.com/NamesMT/starter-monorepo/commit/bfc4675))
+
+### 🩹 Fixes
+
+- Build fix due to error fetch ([23f5bd5](https://github.com/NamesMT/starter-monorepo/commit/23f5bd5))
+- Correct `IsSST` rendering ([a6bb874](https://github.com/NamesMT/starter-monorepo/commit/a6bb874))
+
+### 💅 Refactors
+
+- Simplify view-tree ([918b5f7](https://github.com/NamesMT/starter-monorepo/commit/918b5f7))
+- ⚠️  Major repo fixes and cleanup, removed PrimeVue ([daddfa0](https://github.com/NamesMT/starter-monorepo/commit/daddfa0))
+
+### 📖 Documentation
+
+- **README:** Minor ([3fad12b](https://github.com/NamesMT/starter-monorepo/commit/3fad12b))
+
+### 🌊 Types
+
+- Define schema for `tasks` table for full e2e2e type-safety ([01f4213](https://github.com/NamesMT/starter-monorepo/commit/01f4213))
+
+### 🏡 Chore
+
+- Initial `LoadingScreen` ([84996e4](https://github.com/NamesMT/starter-monorepo/commit/84996e4))
+- Reduce console warn due to NuxtPage ([0dc6ecc](https://github.com/NamesMT/starter-monorepo/commit/0dc6ecc))
+- Improve UI/UX regarding Convex test ([2577ea1](https://github.com/NamesMT/starter-monorepo/commit/2577ea1))
+- Wrangler.jsonc ([5f1845a](https://github.com/NamesMT/starter-monorepo/commit/5f1845a))
+- Properly populate tsconfig references ([b47bb42](https://github.com/NamesMT/starter-monorepo/commit/b47bb42))
+
+### 🎨 Styles
+
+- Frontend beautifying - thanks `Roo Code` ([94e1969](https://github.com/NamesMT/starter-monorepo/commit/94e1969))
+- LoadingScreen beautifying - thanks `Roo Code` ([7f06a50](https://github.com/NamesMT/starter-monorepo/commit/7f06a50))
+- Minor fix ([34d9663](https://github.com/NamesMT/starter-monorepo/commit/34d9663))
+- Minor ([6c19dc1](https://github.com/NamesMT/starter-monorepo/commit/6c19dc1))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Major repo fixes and cleanup, removed PrimeVue ([daddfa0](https://github.com/NamesMT/starter-monorepo/commit/daddfa0))
+
+### ❤️ Contributors
+
+- NamesMT ([@NamesMT](https://github.com/NamesMT))
+- Trung Dang <dangquoctrung123@gmail.com>
+
 ## v1.2.1
 
 [compare changes](https://github.com/NamesMT/starter-monorepo/compare/v1.2.0...v1.2.1)
