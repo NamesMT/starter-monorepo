@@ -7,6 +7,8 @@ const head = useLocaleHead({
 const title = computed(() => route.meta.title && t(route.meta.title))
 
 const windowsScroll = useWindowScroll()
+useEventListener('resize', () => { windowsScroll.measure() })
+watch(() => route.name, () => { windowsScroll.measure() })
 </script>
 
 <template>
