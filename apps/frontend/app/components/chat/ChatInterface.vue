@@ -88,7 +88,7 @@ async function handleSubmit({ input, confirmMultiStream = false }: HandleSubmitA
   if (!userInput)
     return
 
-  if (!confirmMultiStream)
+  if (!confirmMultiStream && streamingMessages.value > 0)
     return alertIsStreaming(userInput)
 
   // Optimistically add the messages
