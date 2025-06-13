@@ -99,8 +99,8 @@ To build all apps and packages, run the following command:
 To develop all apps and packages, run the following command:  
 `pnpm run dev`
 
-To define local development environment variables of each app, either use `git update-index --skip-worktree .env.local` and use it directly, or create a copy of or rename `.env.local` to `.env.local.ignored`.
-  - AI Agent will help you creating the `.env.local.ignored` files if you use the AI initialization prompt.
+For local development environment variables / secrets, create a copy of `.env.dev` to `.env.dev.local`.
+  - AI Agent will help you creating the `.env.dev.local` files if you use the AI initialization prompt.
 
 ### Deploy
 

@@ -12,10 +12,10 @@
     "test:types": "tsc --noEmit --skipLibCheck",
     "quickcheck": "pnpm run lint && pnpm run test:types",
     "check": "pnpm lint && pnpm test:types && vitest run --coverage",
-    "dev": "dotenvx run -f .env.local.ignored -f .env.local -f .env -- tsx watch src/dev.ts",
+    "dev": "dotenvx run -f .env.dev.local -f .env.dev -f .env -- tsx watch src/dev.ts",
     "stub": "unbuild --stub",
-    "build": "dotenvx run -f .env.prod.ignored -f .env.prod -f .env -- unbuild",
-    "deploy": "dotenvx run -f .env.prod.ignored -f .env.prod -f .env -- sh scripts/deploy.sh"
+    "build": "dotenvx run -f .env.prod.local -f .env.prod -f .env -- unbuild",
+    "deploy": "dotenvx run -f .env.prod.local -f .env.prod -f .env -- sh scripts/deploy.sh"
   },
   "dependencies": {
     "srvx": "^0.8.0"

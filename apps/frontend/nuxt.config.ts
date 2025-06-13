@@ -5,11 +5,11 @@ import { config } from 'dotenv'
 import optimizeExclude from 'vite-plugin-optimize-exclude'
 
 if (import.meta.env.NODE_ENV === 'development') {
-  config({ path: ['.env.local.ignored', '.env.local'] })
+  config({ path: ['.env.dev.local', '.env.dev'] })
   import.meta.env.NUXT_PUBLIC_CONVEX_URL ||= (await getConvexEnvs()).CONVEX_URL || ''
 }
 else {
-  config({ path: ['.env.prod.ignored', '.env.prod'] })
+  config({ path: ['.env.prod.local', '.env.prod'] })
 }
 
 const siteConfig = {
