@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "pathe": "^2.0.3",
-    "sst": "^3.17.4",
+    "sst": "^3.17.5",
     "std-env": "^3.9.0"
   },
   "devDependencies": {
@@ -31,12 +31,12 @@
     "@namesmt/utils": "^0.5.14",
     "@types/aws-lambda": "^8.10.149",
     "@types/node": "^20.19.0",
-    "@unocss/eslint-plugin": "^66.1.4",
-    "eslint": "^9.28.0",
+    "@unocss/eslint-plugin": "^66.2.0",
+    "eslint": "^9.29.0",
     "frontend": "workspace:*",
     "lint-staged": "^16.1.0",
     "simple-git-hooks": "^2.13.0",
-    "tsx": "^4.19.4",
+    "tsx": "^4.20.3",
     "turbo": "^2.5.4",
     "typescript": "^5.8.3"
   },
