@@ -56,7 +56,8 @@
       "which-typed-array": "npm:@nolyfill/which-typed-array@^1.0.44"
     },
     "patchedDependencies": {
-      "convex-nuxt": "patches/convex-nuxt.patch"
+      "convex-nuxt": "patches/convex-nuxt.patch",
+      "hono-sessions": "patches/hono-sessions.patch"
     }
   },
   "simple-git-hooks": {

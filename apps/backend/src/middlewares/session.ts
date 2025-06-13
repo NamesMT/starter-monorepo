@@ -12,7 +12,8 @@ export async function cookieSession() {
     encryptionKey: 'password_at_least_32_characters!', // Required for CookieStore, recommended for others
     expireAfterSeconds: 3600, // Expire session after 1 hour of inactivity
     cookieOptions: {
-      expires: new Date(Date.now() + (3600 + 1800) * 1000), // Expire cookie after 1 hour 30 minutes of inactivity
+      // @ts-expect-error number assign to Date
+      expires: 3600 + 1800, // Expire cookie after 1 hour 30 minutes of inactivity
       sameSite: 'None', // Setting to None to support usecase of different domains for backend and frontend
       secure: true, // Enforce HTTPS for cookie, required for sameSite: 'None'
       path: '/', // Required for this library to work properly
