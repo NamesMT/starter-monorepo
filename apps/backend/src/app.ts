@@ -19,7 +19,7 @@ export const app = appFactory.createApp()
       return c.text('four-o-four', 404)
 
     if (isWorkerd)
-      return c.env.ASSETS.fetch('/200.html')
+      return c.env.ASSETS.fetch('https://assets.local/200.html')
 
     return c.text('four-o-four', 404)
   })
