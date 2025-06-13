@@ -23,7 +23,7 @@ patchedDependencies:
     hash: 5a49714fb8604c183f49f3f0587c4aa16b4a49649f0015873ba11bd0bd6d2641
     path: patches/convex-nuxt.patch
   hono-sessions:
-    hash: 7c5832f003a48ddfe7be5bef083abdc64fd28c1d7747f0382b01cbfe57fd82f9
+    hash: 0cfebf6fa16a6e2dc4c30359e5b59b75976379f0c8364bcec7c42a8768a6940f
     path: patches/hono-sessions.patch
 
 importers:
@@ -136,7 +136,7 @@ importers:
         version: 0.4.8(@hono/arktype-validator@2.0.1(arktype@2.1.20)(hono@4.7.11))(arktype@2.1.20)(hono@4.7.11)(openapi-types@12.1.3)(zod@3.25.64)
       hono-sessions:
         specifier: ^0.7.2
-        version: 0.7.2(patch_hash=7c5832f003a48ddfe7be5bef083abdc64fd28c1d7747f0382b01cbfe57fd82f9)
+        version: 0.7.2(patch_hash=0cfebf6fa16a6e2dc4c30359e5b59b75976379f0c8364bcec7c42a8768a6940f)
       petite-vue-i18n:
         specifier: ^11.1.5
         version: 11.1.5(vue@3.5.16(typescript@5.8.3))
@@ -14202,7 +14202,7 @@ snapshots:
       hono: 4.7.11
       zod: 3.25.64
 
-  hono-sessions@0.7.2(patch_hash=7c5832f003a48ddfe7be5bef083abdc64fd28c1d7747f0382b01cbfe57fd82f9):
+  hono-sessions@0.7.2(patch_hash=0cfebf6fa16a6e2dc4c30359e5b59b75976379f0c8364bcec7c42a8768a6940f):
     dependencies:
       hono: 4.7.11
       iron-webcrypto: 1.2.1

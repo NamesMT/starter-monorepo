@@ -1,15 +1,14 @@
 diff --git a/esm/src/Middleware.js b/esm/src/Middleware.js
-index 796251bef63cef5148a2ce24c924edc10f6c1dc2..dd969626b3dcd3eb8048a68ea4f279776d11e1f1 100644
+index 796251bef63cef5148a2ce24c924edc10f6c1dc2..65c8fb4661771fcba50079fcb525a328bb5c7cc0 100644
 --- a/esm/src/Middleware.js
 +++ b/esm/src/Middleware.js
-@@ -7,6 +7,10 @@ export function sessionMiddleware(options) {
-     const encryptionKey = options.encryptionKey;
-     const expireAfterSeconds = options.expireAfterSeconds;
-     const cookieOptions = options.cookieOptions;
+@@ -21,6 +21,9 @@ export function sessionMiddleware(options) {
+         }
+     }
+     const middleware = createMiddleware(async (c, next) => {
++        if (typeof cookieOptions.expires === 'number')
++            cookieOptions.expires = new Date(Date.now() + (cookieOptions.expires * 1000))
 +
-+    if (typeof cookieOptions.expires === 'number')
-+        cookieOptions.expires = new Date(Date.now() + (cookieOptions.expires * 1000))
-+
-     const sessionCookieName = options.sessionCookieName || 'session';
-     if (store instanceof CookieStore) {
-         store.sessionCookieName = sessionCookieName;
+         const session = new Session;
+         let sid = '';
+         let session_data;
