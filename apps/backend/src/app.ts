@@ -3,7 +3,7 @@ import { appFactory, triggerFactory } from '#src/helpers/factory.js'
 import { cookieSession } from '#src/middlewares/session.js'
 import { cors } from 'hono/cors'
 import { logger as loggerMiddleware } from 'hono/logger'
-import { env } from 'std-env'
+import { env, isWorkerd } from 'std-env'
 import { apiApp } from './api/$'
 import { logger } from './helpers/logger'
 import { setupOpenAPI } from './openAPI'
@@ -14,7 +14,15 @@ export const app = appFactory.createApp()
   .use(providersInit)
 
   // Register global not found handler
-  .notFound(c => c.text('four-o-four', 404))
+  .notFound((c) => {
+    if (c.req.path.startsWith('/api'))
+      return c.text('four-o-four', 404)
+
+    if (isWorkerd)
+      return c.env.ASSETS.fetch('/200.html')
+
+    return c.text('four-o-four', 404)
+  })
 
   // Register global error handler
   .onError(errorHandler)
