@@ -43,11 +43,9 @@ const threadsPartitioned = useArrayReduce(threads, (a, c) => {
 
 const searchQuery = ref('')
 const filteredThreads = computed(() => {
-  const currentThreads = threadsPartitioned.value[0]
-  if (!searchQuery.value) {
-    return currentThreads
-  }
-  return currentThreads.filter(thread =>
+  if (!searchQuery.value)
+    return threadsPartitioned.value[0]
+  return threadsPartitioned.value[0].filter(thread =>
     thread.title.toLowerCase().includes(searchQuery.value.toLowerCase()),
   )
 })
@@ -111,7 +109,7 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
       <input v-model="searchQuery" type="text" placeholder="Search chats..." class="w-full bg-transparent outline-none">
     </div>
 
-    <div v-if="!threads.length && isLoading" class="py-4 text-center text-gray-500 dark:text-gray-400">
+    <div v-if="!threads?.length && isLoading" class="py-4 text-center text-gray-500 dark:text-gray-400">
       {{ $t('chat.sidebar.threads.loading') }}
     </div>
     <div v-else-if="!threads?.length" class="py-4 text-center text-gray-500 dark:text-gray-400">
