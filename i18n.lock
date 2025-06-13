@@ -58,5 +58,20 @@ checksums:
     pages.test.section.convex.title: 39fdc104ff14fba826033e998c762a84
     pages.test.title: 82a46f197779af4dde92e7e5f9336ccf
     welcome: 3180ad6b8de344b781637750259e0f53
+    chat.sidebar.newChat: 3d7b701878aca8e2dbb7c6732f7f3bee
+    chat.sidebar.threads.loading: c0591fcc6aa3eb6092ab4f4ce577804c
+    chat.sidebar.threads.empty: eaa3199ed3ba5dd2bb3988ea999649e3
+    chat.sidebar.deleteThread.title: 3dea4a78f8c5c2073d8eab4aad3f2015
+    chat.sidebar.deleteThread.description: b0cca6d07bbbd907b4d25dc2a1dbe2e3
+    cancel: 2e2a849c2223911717de8caa2c71bade
+    confirm: 90930b51154032f119fa75c1bd422d8b
+    continue: 3cfba90b4600131e82fc4260c568d044
+    pinned: 9bc428a489e05402739d2a01cfbfa7d6
+    recent: 2cef23d0cf0a6cabe9b8cf749549d6c7
+    chat.multiStreamConfirmDialog.title: 8cb2a1e566120ab9a2519672e4086692
+    chat.multiStreamConfirmDialog.description: b4ee951677f1eca746a93a6073d035e7
+    generating: 8a5d3a7701dc359fc48ee6f8a188e9c9
+    chat.interface.sendToStart: 6ba07995188dc929a2de0e8f0bb4d1ea
+    chat.interface.selectOrStart: 5ae94ab41d0b599f36924f5db15dd16d
   bd59d862767f00d421bd4cacc7522c6c:
     hello-from-%2Fx: de51bbd5a66af7e24e90466431fa9006

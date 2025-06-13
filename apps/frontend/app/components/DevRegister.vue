@@ -9,3 +9,7 @@ if (import.meta.env.DEV) {
   }
 }
 </script>
+
+<template>
+  <div />
+</template>

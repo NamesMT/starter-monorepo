@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <header class="grid grid-cols-12 h-73px items-center border-b bg-surface-100 px-2 transition-background-color xl:gap-10 dark:bg-surface-800 lg:px-8 md:px-6 sm:px-4">
+  <header class="grid grid-cols-12 h-73px items-center border-b bg-surface-100 px-2 transition-background-color view-transition-header xl:gap-10 dark:bg-surface-800 lg:px-8 md:px-6 sm:px-4">
     <div class="col-span-3 h-full flex items-center justify-start gap-2 py-4 text-xl">
       <NuxtLink to="/" class="h-full">
         <Logo class="h-full text-surface-900 dark:text-surface-0" />
@@ -36,9 +36,7 @@
     </div>
 
     <div class="col-span-3 flex">
-      <div class="flex grow items-center justify-end gap-5">
-        <Avatar label="MT" size="large" shape="circle" />
-      </div>
+      <div class="flex grow items-center justify-end gap-5" />
     </div>
   </header>
 </template>

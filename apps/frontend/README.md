@@ -21,6 +21,8 @@
   * Dark and Light mode with auto detection made easy with Nuxt.
 * [NuxtImage](https://image.nuxt.com/)
   * Automatic optimized images for the app, as well as placeholder support.
+* [Nuxt MDC](https://github.com/nuxt-modules/mdc)
+  * @credit [sunshj](https://github.com/sunshj/mdc) for the prose preset
 * [NuxtSVGO](https://github.com/cpsoinos/nuxt-svgo)
   * Support for loading SVGs and optimizing them.
 * [Nuxt Booster](https://basics.github.io/nuxt-booster/)

@@ -23,12 +23,12 @@
       type="text"
       class="relative z-50 size-full rounded-full border-none bg-transparent pl-4 pr-20 text-sm text-black focus:outline-none focus:ring-0 sm:pl-10 sm:text-base dark:text-white"
       :class="{ 'text-transparent dark:text-transparent': animating }"
-      @keydown.enter="handleKeyDown"
+      @enter="handleKeyDown"
     />
 
     <!-- Submit Button -->
     <button
-      :disabled="!vanishingText"
+      :disabled="!vanishingText || props.disabled"
       type="submit"
       class="absolute right-2 top-1/2 z-50 flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-black transition duration-200 disabled:bg-gray-100 dark:bg-zinc-900 dark:disabled:bg-zinc-700"
     >
@@ -76,7 +76,7 @@
       >
         <p
           :key="currentPlaceholder"
-          class="w-[calc(100%-2rem)] truncate pl-4 text-left text-sm font-normal text-neutral-500 sm:pl-10 sm:text-base dark:text-zinc-500"
+          class="w-[calc(100%-2rem)] truncate pl-4 text-left text-sm font-normal text-neutral-500 sm:pl-10 sm:text-base dark:text-zinc-400"
         >
           {{ placeholders[currentPlaceholder] }}
         </p>
@@ -92,6 +92,7 @@ import { templateRef } from '@vueuse/core';
 // Define interfaces for props and data structures
 interface Props {
   placeholders: string[];
+  disabled?: boolean
 }
 
 interface PixelData {

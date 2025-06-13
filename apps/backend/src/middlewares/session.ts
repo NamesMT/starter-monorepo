@@ -10,8 +10,9 @@ export async function cookieSession() {
   return sessionMiddleware({
     store: new CookieStore(),
     encryptionKey: 'password_at_least_32_characters!', // Required for CookieStore, recommended for others
-    expireAfterSeconds: 900, // Expire session after 15 minutes of inactivity
+    expireAfterSeconds: 3600, // Expire session after 1 hour of inactivity
     cookieOptions: {
+      expires: new Date(Date.now() + (3600 + 1800) * 1000), // Expire cookie after 1 hour 30 minutes of inactivity
       sameSite: 'None', // Setting to None to support usecase of different domains for backend and frontend
       secure: true, // Enforce HTTPS for cookie, required for sameSite: 'None'
       path: '/', // Required for this library to work properly

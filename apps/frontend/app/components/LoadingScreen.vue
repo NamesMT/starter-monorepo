@@ -4,7 +4,7 @@ const isDev = import.meta.dev
 
 <template>
   <div class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-surface-0 dark:bg-surface-900">
-    <div class="spinner mb-4" />
+    <div class="spinner mb-4 h-9 w-9" />
     <p class="text-lg text-primary-500 font-medium dark:text-primary-400">
       {{ $t('components.loadingScreen.loadingText') }}
     </p>
@@ -20,27 +20,3 @@ const isDev = import.meta.dev
     </div>
   </div>
 </template>
-
-<style scoped>
-.spinner {
-  border: 4px solid rgba(0, 0, 0, 0.1);
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border-left-color: hsl(var(--primary-500));
-  animation: spin 1s ease infinite;
-}
-
-.dark .spinner {
-  border-left-color: hsl(var(--primary-400));
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-</style>

@@ -3,15 +3,15 @@ import {
   presetAttributify,
   presetIcons,
   presetTypography,
-  presetUno,
   presetWebFonts,
+  presetWind3,
   transformerDirectives,
   transformerVariantGroup,
 } from 'unocss'
 import presetAnimations from 'unocss-preset-animations'
 import { presetShadcn } from 'unocss-preset-shadcn'
-
 import { parseColor } from 'unocss/preset-mini'
+import { codeIconMap } from './app/components/mdc/config'
 
 const colorsPaletteMap: Record<string, string> = {}
 for (const color of ['primary', 'secondary', 'surface']) {
@@ -76,6 +76,9 @@ export default defineConfig({
       'ring': 'hsl(var(--ring))',
     },
   },
+  safelist: [
+    ...Object.values(codeIconMap).map(i => `i-${i}`),
+  ],
   shortcuts: [
     ['bg-mainGradient', 'bg-gradient-to-b from-primary via-primary to-violet-400'],
     ['text-mainGradient', 'bg-mainGradient bg-clip-text text-transparent transition-color duration-200'],
@@ -83,7 +86,7 @@ export default defineConfig({
   rules: [
     // Declaring css variable with theme color support: $mainColor=primary-500
     // Tip: you can use [--someVariable:var(--primary)] as native supported syntax for other variables
-    [/^\$(\w+)=(.+)$/, ([, name, value], { theme }) => ({
+    [/^\$([\w-]+)=(.+)$/, ([, name, value], { theme }) => ({
       [`--${name}`]: parseColor(value!, theme)?.color || value,
     })],
     // bg dimming
@@ -113,7 +116,7 @@ export default defineConfig({
     },
   ],
   presets: [
-    presetUno(),
+    presetWind3(),
     presetAttributify(),
     presetIcons({
       scale: 1.2,

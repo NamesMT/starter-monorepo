@@ -97,6 +97,7 @@ export default defineNuxtConfig({
       ],
       include: [
         'secure-json-parse',
+        'debug',
       ],
     },
   },
@@ -116,7 +117,35 @@ export default defineNuxtConfig({
     // 'nuxt-booster',
     'shadcn-nuxt',
     'convex-nuxt',
+    'lenis/nuxt',
+    '@nuxtjs/mdc',
   ],
+
+  mdc: {
+    highlight: {
+      wrapperStyle: true,
+      noApiRoute: true,
+      langs: [
+        'bash',
+        'batch',
+        'css',
+        'html',
+        'js',
+        'json',
+        'jsx',
+        'md',
+        'mdc',
+        'py',
+        'sass',
+        'terraform',
+        'ts',
+        'tsx',
+        'vue',
+        'yaml',
+      ],
+    },
+    keepComments: true,
+  },
 
   convex: {
     url: siteConfig.convex,

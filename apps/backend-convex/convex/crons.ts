@@ -9,4 +9,16 @@ crons.interval(
   internal.tasks.clearAll,
 )
 
+crons.daily(
+  'clear threads table',
+  { hourUTC: 0, minuteUTC: 0 },
+  internal.threads.clearAll,
+)
+
+crons.daily(
+  'clear messages table',
+  { hourUTC: 0, minuteUTC: 0 },
+  internal.messages.clearAll,
+)
+
 export default crons

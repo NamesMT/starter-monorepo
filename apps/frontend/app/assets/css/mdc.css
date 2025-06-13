@@ -1,0 +1,49 @@
+:root {
+  --mdc-background: hsl(0 0% 100%);
+  --mdc-foreground: hsl(240 10% 3.9%);
+
+  --mdc-muted: hsl(240 4.8% 95.9%);
+  --mdc-muted-foreground: hsl(240 3.8% 46.1%);
+  --mdc-muted-30: hsl(240 4.8% 95.9% / 0.3);
+  --mdc-muted-50: hsl(240 4.8% 95.9% / 0.5);
+  --mdc-muted-80: hsl(240 4.8% 95.9% / 0.8);
+
+  --mdc-border: hsl(240 5.9% 90%);
+
+  --mdc-primary: hsl(240 5.9% 10%);
+  --mdc-primary-foreground: hsl(0 0% 98%);
+
+  --mdc-secondary: hsl(240 4.8% 95.9%);
+  --mdc-secondary-foreground: hsl(240 5.9% 10%);
+
+  --mdc-destructive: hsl(0 84.2% 60.2%);
+  --mdc-destructive-foreground: hsl(0 0% 98%);
+
+  --mdc-active-link: hsl(221, 100%, 55%);
+  --mdc-code-family: Consolas, monospace;
+  --mdc-inline-code: hsl(226, 55%, 45%);
+}
+
+.dark {
+  --mdc-background: hsl(240 10% 3.9%);
+  --mdc-foreground: hsl(0 0% 90%);
+
+  --mdc-muted: hsl(240 3.7% 15.9%);
+  --mdc-muted-foreground: hsl(240 5% 64.9%);
+  --mdc-muted-30: hsl(240 3.7% 15.9% / 0.3);
+  --mdc-muted-50: hsl(240 3.7% 15.9% / 0.5);
+  --mdc-muted-80: hsl(240 3.7% 15.9% / 0.8);
+
+  --mdc-border: hsl(240 3.7% 15.9%);
+
+  --mdc-primary: hsl(0 0% 98%);
+  --mdc-primary-foreground: hsl(240 5.9% 10%);
+
+  --mdc-secondary: hsl(240 3.7% 15.9%);
+  --mdc-secondary-foreground: hsl(0 0% 98%);
+
+  --mdc-destructive: hsl(0 62.8% 30.6%);
+  --mdc-destructive-foreground: hsl(0 0% 98%);
+
+  --mdc-inline-code: hsl(234, 100%, 83%);
+}

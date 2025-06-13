@@ -54,3 +54,24 @@ pages.test.intro,,This is just a simple page to test stuff.,Esta es solo una pá
 pages.test.section.convex.title,,Convex Integration Test,Prueba de Integración de Convex,Test d'Intégration Convex,Тест интеграции Convex,Kiểm tra Tích hợp Convex,Convex 集成测试
 pages.test.title,,Test,Prueba,Test,Тест,Kiểm tra,测试
 welcome,,Welcome,Bienvenido,Bienvenue,Добро пожаловать,Chào mừng,欢迎
+chat.sidebar.newChat,,New Chat,Nuevo chat,Nouvelle conversation,Новый чат,Cuộc trò chuyện mới,新建聊天
+chat.sidebar.threads.loading,,Loading threads...,Cargando conversaciones...,Chargement des conversations...,Загрузка бесед...,Đang tải các cuộc trò chuyện...,正在加载对话...
+chat.sidebar.threads.empty,,No chats yet.,No hay chats todavía.,Pas encore de conversations.,Чатов пока нет.,Chưa có cuộc trò chuyện nào.,尚无聊天记录。
+chat.sidebar.deleteThread.title,,Delete Thread,Eliminar conversación,Supprimer la conversation,Удалить тему,Xóa Chủ Đề,删除话题
+chat.sidebar.deleteThread.description,,"Are you sure you want to delete ""{name}""?
+This action cannot be undone.","¿Estás seguro de que quieres eliminar ""{name}""?
+Esta acción no se puede deshacer.","Êtes-vous sûr de vouloir supprimer ""{name}"" ?
+Cette action ne peut pas être annulée.","Вы уверены, что хотите удалить ""{name}""?
+Это действие нельзя будет отменить.","Bạn có chắc chắn muốn xóa ""{name}"" không?
+Hành động này không thể hoàn tác.","您确定要删除“{name}”吗？
+此操作无法撤销。"
+cancel,,Cancel,Cancelar,Annuler,Отмена,Huỷ Bỏ,取消
+confirm,,Confirm,Confirmar,Confirmer,Подтвердить,Xác nhận,确认
+continue,,Continue,Continuar,Continuer,Продолжить,Tiếp tục,继续
+pinned,,Pinned,Fijados,Épinglé,Закреплено,Đã ghim,已固定
+recent,,Recent,Recientes,Récent,Недавние,Gần đây,最近
+chat.multiStreamConfirmDialog.title,,There are messages still streaming,Hay mensajes que aún se están generando,Des messages sont encore en cours de génération,Сообщения все еще передаются,Vẫn còn tin nhắn đang được tạo,仍有消息正在生成
+chat.multiStreamConfirmDialog.description,,"The model won't be able to pick up the context of messages that are still streaming, do you want to continue?","El modelo no podrá captar el contexto de los mensajes que aún se están generando, ¿deseas continuar?","Le modèle ne pourra pas prendre en compte le contexte des messages encore en cours de génération, voulez-vous continuer ?","Модель не сможет учитывать контекст сообщений, которые все еще передаются. Вы хотите продолжить?","Mô hình sẽ không thể nắm bắt ngữ cảnh của những tin nhắn đang được tạo, bạn có muốn tiếp tục không?",模型无法获取仍在生成的消息的上下文，您确定要继续吗？
+generating,,Generating,Generando,Génération en cours,Генерация,Đang tạo,正在生成
+chat.interface.sendToStart,,Send a message to start chatting.,Envía un mensaje para comenzar a chatear.,Envoyez un message pour commencer la conversation.,"Отправьте сообщение, чтобы начать общение.",Gửi tin nhắn để bắt đầu trò chuyện.,发送消息以开始聊天。
+chat.interface.selectOrStart,,Select a chat or start a new one.,Selecciona un chat o inicia uno nuevo.,Sélectionnez une conversation ou commencez-en une nouvelle.,Выберите чат или начните новый.,Chọn một cuộc trò chuyện hoặc bắt đầu cuộc trò chuyện mới.,选择一个聊天或开始新的聊天。
