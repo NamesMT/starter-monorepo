@@ -148,7 +148,7 @@ async function pollToMessage({ message, resumeStreamId }: PollToMessageArgs) {
     console.log('Poll completed')
   }
 
-  doScrollBottom({ maybe: true })
+  setTimeout(() => { doScrollBottom({ maybe: true }) }, 100)
 }
 
 interface StreamToMessageArgs {
