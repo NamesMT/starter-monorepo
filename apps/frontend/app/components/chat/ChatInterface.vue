@@ -322,10 +322,10 @@ function alertIsStreaming(input: string) {
                     <div>{{ $t('generating') }}</div>
                     <div class="spinner h-5 w-5" />
                   </div>
-                  <MDC v-else :value="m.content" />
+                  <MDCCached v-else :value="m.content" />
                   <div class="hidden first:block">
                     <Skeleton
-                      class="h-5 w-$c-W rounded-full" :style="{
+                      class="h-5 w-$c-W rounded-full bg-muted-foreground" :style="{
                         '--c-W': `${(Math.floor(Math.random() * (300 - 100 + 1)) + 100) * (m.role === 'user' ? 1 : 2)}px`,
                       }"
                     />
