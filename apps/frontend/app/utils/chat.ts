@@ -3,6 +3,16 @@ import type { Doc, Id } from 'backend-convex/convex/_generated/dataModel'
 import type { ConvexClient, ConvexHttpClient } from 'convex/browser'
 import { randomStr } from '@namesmt/utils'
 import { api } from 'backend-convex/convex/_generated/api'
+import { createContext } from 'reka-ui'
+
+export const [useChatContext, provideSidebarContext] = createContext<{
+  insaneUI: Ref<boolean>
+}>('chat page')
+
+export function useThreadIdRef() {
+  // For [...all] routing the value is an array
+  return useRouteParams<string>('all', undefined, { transform: { get: s => Array.isArray(s) ? s[0] : s } })
+}
 
 export interface CreateNewThreadArgs {
   title: string

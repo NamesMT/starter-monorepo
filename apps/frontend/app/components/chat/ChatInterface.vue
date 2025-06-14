@@ -10,28 +10,42 @@ import { VueLenis } from 'lenis/vue'
 import { Skeleton } from '@/lib/shadcn/components/ui/skeleton'
 import { Card, CardContent } from '~/lib/shadcn/components/ui/card'
 import VanishingInput from '~/lib/shadcn/components/ui/vanishing-input/VanishingInput.vue'
+import LiquidGlassDiv from '../LiquidGlassDiv.vue'
 
+const isDev = import.meta.dev
 const { $auth } = useNuxtApp()
 const { convexApiUrl } = useRuntimeConfig().public
 const convex = useConvexClient()
+const chatContext = useChatContext()
 
-// For [...all] routing the value is an array
-const threadIdRef = useRouteParams<string>('all', undefined, { transform: { get: s => Array.isArray(s) ? s[0] : s } })
+// Lenis have bug with useTemplateRef
+const lenisRef = ref<{ $el: HTMLElement, lenis: Lenis }>()
+const { y: scrollY } = useScroll(computed(() => lenisRef.value?.$el))
+const nearTopBottom = computed(() => {
+  const el = lenisRef.value?.$el
+  if (!el)
+    return [null, null]
+
+  const currentScroll = lenisRef.value!.lenis.targetScroll || scrollY.value
+
+  const gapFromTop = currentScroll
+  const gapFromBottom = el.scrollHeight - el.clientHeight - currentScroll
+
+  const nearTop = gapFromTop < 69
+  const nearBottom = gapFromBottom < 69
+  return [nearTop && gapFromTop + 1, nearBottom && gapFromBottom + 1, lenisRef.value!.lenis.targetScroll, scrollY.value]
+})
+
+const threadIdRef = useThreadIdRef()
 
 const cachedThreadsMessages: {
   [threadId: string]: Array<CustomMessage>
 } = {}
-
 const messages = ref<Array<CustomMessage>>([])
 const messagesMapped = computed(() => keyBy(messages.value, 'id'))
 const streamingMessages = ref(0)
-
-const chatInput = ref('')
-
 const isFetching = ref(false)
-
-// Lenis have bug with useTemplateRef
-const lenisRef = ref<{ $el: HTMLElement, lenis: Lenis }>()
+const chatInput = ref('')
 
 // Fetch messages and resume streams
 const { ignoreUpdates: ignorePathUpdate } = watchIgnorable(
@@ -73,7 +87,7 @@ const { ignoreUpdates: ignorePathUpdate } = watchIgnorable(
         }
       }
 
-      doScrollBottom({ forceTries: 3 })
+      nextTick(() => doScrollBottom({ tries: 6 }))
     }
   },
   { immediate: true },
@@ -107,7 +121,7 @@ async function handleSubmit({ input, confirmMultiStream = false }: HandleSubmitA
 
   chatInput.value = ''
 
-  nextTick(() => { doScrollBottom() })
+  nextTick(() => { doScrollBottom({ tries: 2 }) })
 
   // Create new thread
   if (!threadIdRef.value) {
@@ -177,8 +191,7 @@ async function pollToMessage({ message, resumeStreamId, threadId = threadIdRef.v
     console.log('Poll completed')
   }
 
-  if (isNearBottom())
-    setTimeout(() => { doScrollBottom({ forceTries: 1 }) }, 100)
+  nextTick(() => { doScrollBottom({ maybe: true }) })
 }
 
 interface StreamToMessageArgs {
@@ -266,8 +279,7 @@ async function streamToMessage({ message, content, resumeStreamId }: StreamToMes
       if (state.content)
         message.content += state.content
 
-      if (isNearBottom())
-        setTimeout(() => { doScrollBottom({ forceTries: 1 }) }, 100)
+      nextTick(() => { doScrollBottom({ maybe: true }) })
     }
 
     message.isStreaming = false
@@ -283,21 +295,24 @@ async function streamToMessage({ message, content, resumeStreamId }: StreamToMes
   console.log('Stream completed')
 }
 
-function doScrollBottom({ smooth = true, maybe = false, forceTries = 0, lastScrollTop = 0 } = {}) {
+function doScrollBottom({ smooth = true, maybe = false, tries = 0, lastScrollTop = 0 } = {}) {
   if (!lenisRef.value)
     return
 
   const l = lenisRef.value
   const scrollHeight = l.$el.scrollHeight
 
-  if (l.$el.scrollTop < lastScrollTop)
-    forceTries = 0
+  // Allow user to try escape the tries
+  if (tries && (l.$el.scrollTop < lastScrollTop))
+    tries = 0
 
-  if (!forceTries && maybe && !isNearBottom())
+  if (maybe && l.lenis.direction !== 1)
     return
 
-  if (scrollHeight !== l.lenis.limit + l.$el.clientHeight)
+  if (scrollHeight !== l.lenis.limit + l.$el.clientHeight) {
     l.lenis.resize()
+    ++tries
+  }
 
   smooth
     ? l.lenis.scrollTo(scrollHeight)
@@ -305,21 +320,11 @@ function doScrollBottom({ smooth = true, maybe = false, forceTries = 0, lastScro
 
   lastScrollTop = l.$el.scrollTop
 
-  if (forceTries) {
-    countdown(200, () => {
-      sleep(0).then(() => doScrollBottom({ smooth, maybe, forceTries: forceTries - 1, lastScrollTop }))
+  if (tries > 1) {
+    countdown(250, () => {
+      sleep(0).then(() => doScrollBottom({ smooth, maybe, tries: tries - 1, lastScrollTop }))
     }, { key: 'dSB', replace: true })
   }
-}
-
-function isNearBottom() {
-  if (!lenisRef.value)
-    return
-
-  const l = lenisRef.value
-  const scrollHeight = l.$el.scrollHeight
-
-  return (l.$el.scrollTop + l.$el.clientHeight) > (scrollHeight - 69)
 }
 
 const multiStreamConfirmDialogOpen = ref(false)
@@ -334,15 +339,16 @@ function alertIsStreaming(input: string) {
   <div class="relative flex flex-col">
     <VueLenis ref="lenisRef" class="h-screen overflow-y-scroll px-4">
       <div class="mx-auto h-full max-w-full lg:max-w-4xl">
+        <FlickeringGrid
+          v-if="chatContext.insaneUI.value"
+          class="absolute inset-0 z-0 place-content-center" :square-size="10" :grid-gap="5"
+          color="#60A5FA" :max-opacity="0.5" :flicker-chance="0.1"
+        />
+
         <div
           v-show="!(isFetching && !messages.length)"
-          class="pointer-events-none absolute left-0 h-screen w-full place-content-center overflow-hidden"
+          class="pointer-events-none absolute left-0 z-0 h-screen w-full place-content-center overflow-hidden"
         >
-          <FlickeringGrid
-            v-if="false" class="absolute inset-0 z-0 place-content-center" :square-size="4" :grid-gap="6"
-            color="#60A5FA" :max-opacity="0.5" :flicker-chance="0.1" :width="2000" :height="2000"
-          />
-
           <div
             v-if="!messages.length"
             class="relative z-2 whitespace-pre-wrap px-2 text-center text-4xl text-gray-400 font-medium tracking-tighter dark:text-gray-500 dark:text-white"
@@ -353,40 +359,54 @@ function alertIsStreaming(input: string) {
           </div>
         </div>
 
-        <div v-if="messages.length" class="z-2 space-y-4">
+        <div v-if="messages.length" class="relative z-2 space-y-4">
           <div class="pt-6" />
 
           <div
             v-for="m of messages" :key="m.id" class="flex"
             :class="m.role === 'user' ? 'justify-end' : 'justify-start'"
           >
-            <Card
-              class="bg-transparent shadow-md"
+            <component
+              :is="chatContext.insaneUI.value ? LiquidGlassDiv : 'div'"
+              class="rounded-$radius $c-radius=$radius"
               :class="[
-                m.role === 'user' ? 'border-secondary-200' : 'border-primary-200',
-                m.role === 'user' ? 'max-w-80% md:max-w-2xl' : 'max-w-full md:max-w-3xl',
+                m.role === 'user'
+                  ? 'bg-secondary-100 dark:bg-secondary-950'
+                  : 'bg-primary-100 dark:bg-primary-950',
+                chatContext.insaneUI.value
+                  ? 'bg-opacity-50!'
+                  : 'bg-opacity-5!',
               ]"
             >
-              <!-- <CardHeader class="px-4 py-2">
-                <CardTitle class="text-sm font-semibold">
-                  {{ m.role === 'user' ? $t('pages.chat.userLabel') : $t('pages.chat.aiLabel') }}
-                </CardTitle>
-              </CardHeader> -->
-              <CardContent class="px-4 py-3">
-                <div v-if="m.isStreaming && !m.content" class="flex gap-2">
-                  <div>{{ $t('generating') }}</div>
-                  <div class="spinner h-5 w-5" />
-                </div>
-                <MDC v-else :value="m.content" />
-                <div class="hidden first:block">
-                  <Skeleton
-                    class="h-5 w-$c-W rounded-full bg-muted-foreground" :style="{
-                      '--c-W': `${(Math.floor(Math.random() * (300 - 100 + 1)) + 100) * (m.role === 'user' ? 1 : 2)}px`,
-                    }"
-                  />
-                </div>
-              </CardContent>
-            </Card>
+              <Card
+                class="bg-transparent shadow-md"
+                :class="[
+                  m.role === 'user'
+                    ? 'border-secondary-200 max-w-80% md:max-w-2xl'
+                    : 'border-primary-200 max-w-full md:max-w-3xl',
+                ]"
+              >
+                <!-- <CardHeader class="px-4 py-2">
+                  <CardTitle class="text-sm font-semibold">
+                    {{ m.role === 'user' ? $t('pages.chat.userLabel') : $t('pages.chat.aiLabel') }}
+                  </CardTitle>
+                </CardHeader> -->
+                <CardContent class="min-w-25 px-4 py-3 [&_.prose-hr]:(border-accent-foreground!)">
+                  <div v-if="m.isStreaming && !m.content" class="my-4 flex gap-2">
+                    <div>{{ $t('generating') }}</div>
+                    <div class="spinner h-5 w-5" />
+                  </div>
+                  <MDC v-else :value="m.content" />
+                  <div class="my-4 hidden first:block">
+                    <Skeleton
+                      class="h-5 w-$c-W rounded-full bg-muted-foreground" :style="{
+                        '--c-W': `${(Math.floor(Math.random() * (300 - 100 + 1)) + 100) * (m.role === 'user' ? 1 : 2)}px`,
+                      }"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            </component>
           </div>
 
           <div class="pb-40" />
@@ -394,7 +414,18 @@ function alertIsStreaming(input: string) {
       </div>
     </VueLenis>
 
-    <LiquidGlassDiv class="bottom-0 left-0 max-w-full w-full border-t border-secondary p-4 $c-radius=0px absolute!">
+    <LiquidGlassDiv class="bottom-0 left-0 z-3 max-w-full w-full border-t border-secondary p-4 $c-radius=0px absolute!">
+      <div v-if="isDev" class="absolute bottom-100%">
+        {{ nearTopBottom }}
+      </div>
+      <div class="absolute bottom-100% right-6 mb-2 flex flex-col gap-2">
+        <Button variant="outline" size="icon" class="rounded-xl p-1 opacity-100 transition-opacity duration-500" :class="nearTopBottom[0] && 'invisible opacity-0'" @click="lenisRef!.lenis.scrollTo('top')">
+          <div class="i-hugeicons:circle-arrow-up-03 h-full w-full" />
+        </Button>
+        <Button variant="outline" size="icon" class="rounded-xl p-1 opacity-100 transition-opacity duration-500" :class="nearTopBottom[1] && 'invisible opacity-0'" @click="lenisRef!.lenis.scrollTo('bottom')">
+          <div class="i-hugeicons:circle-arrow-down-03 h-full w-full" />
+        </Button>
+      </div>
       <div>
         <div class="mx-auto max-w-lg flex flex-col gap-3">
           <VanishingInput

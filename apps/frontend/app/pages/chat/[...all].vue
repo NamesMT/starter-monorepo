@@ -4,6 +4,10 @@ import { SidebarProvider } from '@/lib/shadcn/components/ui/sidebar'
 definePageMeta({
   layout: 'basic',
 })
+
+provideSidebarContext({
+  insaneUI: useLocalState('chat/insaneUI', () => false),
+})
 </script>
 
 <template>

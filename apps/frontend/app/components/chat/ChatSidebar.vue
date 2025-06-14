@@ -27,9 +27,9 @@ import { Button } from '~/lib/shadcn/components/ui/button'
 const { $auth, $init } = useNuxtApp()
 const colorMode = useColorMode()
 const convex = useConvexClient()
+const chatContext = useChatContext()
 
-// For [...all] routing the value is an array
-const threadIdRef = useRouteParams<string>('all', undefined, { transform: { get: s => Array.isArray(s) ? s[0] : s } })
+const threadIdRef = useThreadIdRef()
 
 // Load local threads
 const { data: threads } = useIDBKeyval<Doc<'threads'>[]>('threads', [])
@@ -152,7 +152,7 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
         </Button>
       </div>
     </SidebarHeader>
-    <SidebarContent>
+    <SidebarContent class="p-2">
       <SidebarGroup v-if="!threads?.length">
         <div class="py-4 text-center text-gray-500 dark:text-gray-400">
           {{ isFetching
@@ -198,7 +198,7 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
                   {{ thread.title }}
                 </div>
                 <LiquidGlassDiv
-                  class="right-0 top-0 h-full flex translate-x-[calc(100%+1rem)] items-center px-2 transition-transform will-change-transform $c-radius=6px absolute! group-hover/thread:translate-x-0"
+                  class="right-0 top-0 h-full flex translate-x-[calc(100%+1rem)] items-center gap-1 px-2 pr-1 transition-transform will-change-transform $c-radius=6px absolute! group-hover/thread:translate-x-0"
                   @click.stop.prevent
                 >
                   <Button
@@ -233,6 +233,38 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
         </SidebarGroup>
       </template>
     </SidebarContent>
-    <SidebarFooter />
+    <SidebarFooter>
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <DropdownMenu>
+            <DropdownMenuTrigger as-child>
+              <SidebarMenuButton class="h-auto flex items-center justify-between">
+                <div class="h-9 flex items-center gap-2 text-sm leading-tight">
+                  <template v-if="$auth.loggedIn">
+                    <img :src="$auth.user.picture" class="aspect-1 h-full rounded-md">
+                    <div class="truncate">
+                      <p>{{ $auth.user.name }}</p>
+                      <p class="truncate text-xs">
+                        {{ $auth.user.email }}
+                      </p>
+                    </div>
+                  </template>
+                </div>
+                <div class="i-hugeicons:dashboard-square-setting size-5 shrink-0" />
+              </SidebarMenuButton>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              side="top"
+              class="w-[--reka-popper-anchor-width]"
+            >
+              <DropdownMenuItem class="justify-between" @click="chatContext.insaneUI.value = !chatContext.insaneUI.value">
+                <div>{{ 'InsaneUI' }}</div>
+                <div :class="chatContext.insaneUI.value ? ' i-hugeicons:crazy' : ' i-hugeicons:confused'" />
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    </SidebarFooter>
   </Sidebar>
 </template>
