@@ -3,8 +3,8 @@
   "style": "default",
   "typescript": true,
   "tailwind": {
-    "config": "DUMMY.config.js",
-    "css": "DUMMY.css",
+    "config": "uno.config.ts",
+    "css": "app/assets/css/shadcn.css",
     "baseColor": "slate",
     "cssVariables": true
   },

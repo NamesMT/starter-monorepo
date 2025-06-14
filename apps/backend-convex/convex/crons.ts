@@ -21,4 +21,10 @@ crons.daily(
   internal.messages.clearAll,
 )
 
+crons.interval(
+  'resolve stuck stream messages',
+  { hours: 1 },
+  internal.messages.resolveStuckStreamMessages,
+)
+
 export default crons

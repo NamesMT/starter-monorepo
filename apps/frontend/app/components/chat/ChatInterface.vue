@@ -2,7 +2,7 @@
 <script setup lang="ts">
 import type { Doc, Id } from 'backend-convex/convex/_generated/dataModel'
 import type Lenis from 'lenis'
-import { keyBy, sleep, uniquePromise } from '@namesmt/utils'
+import { keyBy, randomStr, sleep, uniquePromise } from '@namesmt/utils'
 import { api } from 'backend-convex/convex/_generated/api'
 import { useConvexClient } from 'convex-vue'
 import { countdown } from 'kontroll'
@@ -111,7 +111,11 @@ async function handleSubmit({ input, confirmMultiStream = false }: HandleSubmitA
 
   // Create new thread
   if (!threadIdRef.value) {
-    const newThread = await createNewThread(convex, { title: userInput })
+    const newThread = await createNewThread(convex, {
+      title: userInput,
+      // Set lockerKey to maintain permission if user is anonymous
+      lockerKey: $auth.loggedIn ? undefined : randomStr(32),
+    })
     ignorePathUpdate(() => { threadIdRef.value = newThread })
   }
 
@@ -281,9 +285,9 @@ function alertIsStreaming(input: string) {
 </script>
 
 <template>
-  <div class="relative h-full flex flex-col">
+  <div class="relative flex flex-col">
     <VueLenis ref="lenisRef" class="h-screen overflow-y-scroll px-4">
-      <div class="mx-auto h-full max-w-4xl">
+      <div class="mx-auto h-full max-w-full lg:max-w-4xl">
         <div
           v-show="!(isFetching && !messages.length)"
           class="pointer-events-none absolute left-0 h-screen w-full place-content-center overflow-hidden"
@@ -295,7 +299,7 @@ function alertIsStreaming(input: string) {
 
           <div
             v-if="!messages.length"
-            class="relative z-2 whitespace-pre-wrap text-center text-5xl text-gray-400 font-medium tracking-tighter dark:text-gray-500 dark:text-white"
+            class="relative z-2 whitespace-pre-wrap px-2 text-center text-5xl text-gray-400 font-medium tracking-tighter dark:text-gray-500 dark:text-white"
           >
             <p>
               {{ threadIdRef ? $t('chat.interface.sendToStart') : $t('chat.interface.selectOrStart') }}

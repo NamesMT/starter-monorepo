@@ -98,6 +98,8 @@ export default defineNuxtConfig({
       include: [
         'secure-json-parse',
         'debug',
+        'shiki',
+        'remark-emoji',
       ],
     },
   },

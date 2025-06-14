@@ -1,4 +1,4 @@
-@layer reset, normalize, tailwind-base, tailwind-utilities;
+@layer reset, normalize, tailwind-base, base, tailwind-utilities, utilities;
 @import '@unocss/reset/tailwind.css' layer(reset);
 @import './palette.css';
 @import './shadcn.css';

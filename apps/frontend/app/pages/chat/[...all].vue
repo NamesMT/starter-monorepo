@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { SidebarProvider } from '@/lib/shadcn/components/ui/sidebar'
+
 definePageMeta({
   layout: 'basic',
 })
@@ -12,13 +14,10 @@ const { $auth } = useNuxtApp()
       {{ $t('pages.chat.loginPrompt') }}
     </div>
 
-    <div v-else class="w-full flex flex-row-reverse items-center">
-      <div class="h-screen w-full overflow-y-auto">
-        <ChatInterface />
-      </div>
-      <div class="relative z-5 h-screen max-w-76 min-w-64 w-1/6 max-md:(absolute left-0 translate-x-0 -translate-x-100%)">
-        <ChatSidebar class="absolute left-0 top-0 h-full w-full" />
-      </div>
-    </div>
+    <SidebarProvider v-else>
+      <ChatSidebar />
+      <ChatInterface class="h-full w-full" />
+      <ChatFloatingMenu class="absolute left-2 top-2 z-10" />
+    </SidebarProvider>
   </div>
 </template>
