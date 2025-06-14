@@ -2,6 +2,7 @@ import type { LocaleObject } from '@nuxtjs/i18n'
 import { localcertKeyPath, localcertPath } from '@local/common/dev/cert'
 import { getConvexEnvs } from 'backend-convex/_util'
 import { config } from 'dotenv'
+import { type BundledLanguage, bundledLanguagesInfo } from 'shiki/bundle/full'
 import optimizeExclude from 'vite-plugin-optimize-exclude'
 
 if (import.meta.env.NODE_ENV === 'development') {
@@ -126,25 +127,8 @@ export default defineNuxtConfig({
   mdc: {
     highlight: {
       wrapperStyle: true,
-      noApiRoute: true,
-      langs: [
-        'bash',
-        'batch',
-        'css',
-        'html',
-        'js',
-        'json',
-        'jsx',
-        'md',
-        'mdc',
-        'py',
-        'sass',
-        'terraform',
-        'ts',
-        'tsx',
-        'vue',
-        'yaml',
-      ],
+      // noApiRoute: true,
+      langs: bundledLanguagesInfo.map(l => l.id) as BundledLanguage[],
     },
     keepComments: true,
   },
