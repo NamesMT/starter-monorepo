@@ -127,7 +127,7 @@ export default defineNuxtConfig({
   mdc: {
     highlight: {
       wrapperStyle: true,
-      // noApiRoute: true,
+      noApiRoute: true,
       langs: bundledLanguagesInfo.map(l => l.id) as BundledLanguage[],
     },
     keepComments: true,

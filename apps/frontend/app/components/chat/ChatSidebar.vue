@@ -176,7 +176,7 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
                 :to="`/chat/${thread._id}`"
                 class="group/thread relative block overflow-hidden rounded-md p-2 px-3 [&.router-link-exact-active]:bg-primary/10 hover:bg-primary/20"
               >
-                <div>
+                <div class="line-clamp-1">
                   {{ thread.title }}
                 </div>
                 <LiquidGlassDiv

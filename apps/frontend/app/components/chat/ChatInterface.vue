@@ -2,7 +2,7 @@
 <script setup lang="ts">
 import type { Doc, Id } from 'backend-convex/convex/_generated/dataModel'
 import type Lenis from 'lenis'
-import { keyBy, randomStr, sleep, uniquePromise } from '@namesmt/utils'
+import { keyBy, sleep, uniquePromise } from '@namesmt/utils'
 import { api } from 'backend-convex/convex/_generated/api'
 import { useConvexClient } from 'convex-vue'
 import { countdown } from 'kontroll'
@@ -107,16 +107,20 @@ async function handleSubmit({ input, confirmMultiStream = false }: HandleSubmitA
 
   chatInput.value = ''
 
-  doScrollBottom()
+  nextTick(() => { doScrollBottom() })
 
   // Create new thread
   if (!threadIdRef.value) {
+    // Set lockerKey to maintain permission if user is anonymous
+    const lockerKey = $auth.loggedIn ? undefined : getRandomLockerKey()
     const newThread = await createNewThread(convex, {
       title: userInput,
-      // Set lockerKey to maintain permission if user is anonymous
-      lockerKey: $auth.loggedIn ? undefined : randomStr(32),
+      lockerKey,
     })
     ignorePathUpdate(() => { threadIdRef.value = newThread })
+
+    // Asynchronously generates a new initial thread title
+    generateThreadTitle(convex, { threadId: newThread, lockerKey })
   }
 
   await streamToMessage({ message: messages.value[messages.value.length - 1]!, content: userInput })
@@ -137,8 +141,14 @@ async function resumeStreamProcess(streamSessionId: string, messageId: string) {
 interface PollToMessageArgs {
   message: CustomMessage
   resumeStreamId: string
+  threadId?: string
 }
-async function pollToMessage({ message, resumeStreamId }: PollToMessageArgs) {
+async function pollToMessage({ message, resumeStreamId, threadId = threadIdRef.value }: PollToMessageArgs) {
+  if (threadId && threadId !== threadIdRef.value) {
+    console.warn('User changed thread, poll stopped.')
+    return
+  }
+
   const messageId = message.id as Id<'messages'>
 
   const messageFromConvex = await convex.query(api.messages.get, { messageId: messageId as Id<'messages'> })
@@ -146,7 +156,7 @@ async function pollToMessage({ message, resumeStreamId }: PollToMessageArgs) {
 
   if (message.isStreaming) {
     sleep(400)
-      .then(() => { pollToMessage({ message, resumeStreamId }) })
+      .then(() => { pollToMessage({ message, resumeStreamId, threadId }) })
   }
   else {
     console.log('Poll completed')
@@ -164,6 +174,8 @@ async function streamToMessage({ message, content, resumeStreamId }: StreamToMes
   try {
     ++streamingMessages.value
 
+    const currentThreadId = threadIdRef.value
+    const abortController = new AbortController()
     const response = await fetch(`${convexApiUrl}/api/ai/chat/stream`, {
       method: 'POST',
       headers: {
@@ -171,7 +183,7 @@ async function streamToMessage({ message, content, resumeStreamId }: StreamToMes
         'Authorization': `Bearer ${$auth.token}`,
       },
       body: JSON.stringify({
-        threadId: threadIdRef.value,
+        threadId: currentThreadId,
         provider: 'openrouter',
         model: 'deepseek/deepseek-chat:free',
         apiKey: 'dummy',
@@ -179,6 +191,7 @@ async function streamToMessage({ message, content, resumeStreamId }: StreamToMes
         resumeStreamId,
         // lockerKey: undefined,
       }),
+      signal: abortController.signal,
     })
 
     if (!response.ok) {
@@ -196,6 +209,12 @@ async function streamToMessage({ message, content, resumeStreamId }: StreamToMes
     message.isStreaming = true
 
     while (true) {
+      if (currentThreadId !== threadIdRef.value) {
+        console.warn('User changed thread, stopping stream...')
+        abortController.abort()
+        break
+      }
+
       const { done, value } = await reader.read()
       if (done)
         break
@@ -299,7 +318,7 @@ function alertIsStreaming(input: string) {
 
           <div
             v-if="!messages.length"
-            class="relative z-2 whitespace-pre-wrap px-2 text-center text-5xl text-gray-400 font-medium tracking-tighter dark:text-gray-500 dark:text-white"
+            class="relative z-2 whitespace-pre-wrap px-2 text-center text-4xl text-gray-400 font-medium tracking-tighter dark:text-gray-500 dark:text-white"
           >
             <p>
               {{ threadIdRef ? $t('chat.interface.sendToStart') : $t('chat.interface.selectOrStart') }}
