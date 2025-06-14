@@ -311,7 +311,7 @@ function isNearBottom() {
   const l = lenisRef.value
   const scrollHeight = l.$el.scrollHeight
 
-  return (l.$el.scrollTop + l.$el.clientHeight) > (scrollHeight - 345)
+  return (l.$el.scrollTop + l.$el.clientHeight) > (scrollHeight - 69)
 }
 
 const multiStreamConfirmDialogOpen = ref(false)
