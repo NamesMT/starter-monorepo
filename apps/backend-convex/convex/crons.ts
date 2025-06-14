@@ -23,7 +23,7 @@ crons.daily(
 
 crons.interval(
   'resolve stuck stream messages',
-  { hours: 1 },
+  { minutes: 10 },
   internal.messages.resolveStuckStreamMessages,
 )
 

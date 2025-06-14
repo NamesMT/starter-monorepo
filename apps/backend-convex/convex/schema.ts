@@ -29,6 +29,7 @@ const aiChatTables = {
   })
     .index('by_thread', ['threadId'])
     .index('by_thread_and_timestamp', ['threadId', 'timestamp'])
+    .index('by_timestamp', ['timestamp'])
     .index('by_stream_id', ['streamId']),
 }
 
