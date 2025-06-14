@@ -26,21 +26,23 @@ if (import.meta.client && convexVueContext?.options?.url) {
 </script>
 
 <template>
-  <div>
-    <template v-if="!$init.mounted">
-      <NuxtLayout name="basic">
-        <!-- `name="loading"` prop is unusable, but Nuxt warns when there's no NuxtPage, so we put this -->
-        <NuxtPage name="$dummy" />
-        <LoadingScreen />
-      </NuxtLayout>
-    </template>
+  <TooltipProvider :delay-duration="500">
+    <div>
+      <template v-if="!$init.mounted">
+        <NuxtLayout name="basic">
+          <!-- `name="loading"` prop is unusable, but Nuxt warns when there's no NuxtPage, so we put this -->
+          <NuxtPage name="$dummy" />
+          <LoadingScreen />
+        </NuxtLayout>
+      </template>
 
-    <template v-else>
-      <GlobalRegister />
+      <template v-else>
+        <GlobalRegister />
 
-      <NuxtLayout>
-        <NuxtPage :page-key="(route) => route.name as string" />
-      </NuxtLayout>
-    </template>
-  </div>
+        <NuxtLayout>
+          <NuxtPage :page-key="(route) => route.name as string" />
+        </NuxtLayout>
+      </template>
+    </div>
+  </TooltipProvider>
 </template>

@@ -75,3 +75,6 @@ chat.multiStreamConfirmDialog.description,,"The model won't be able to pick up t
 generating,,Generating,Generando,Génération en cours,Генерация,Đang tạo,正在生成
 chat.interface.sendToStart,,Send a message to start chatting.,Envía un mensaje para comenzar a chatear.,Envoyez un message pour commencer la conversation.,"Отправьте сообщение, чтобы начать общение.",Gửi tin nhắn để bắt đầu trò chuyện.,发送消息以开始聊天。
 chat.interface.selectOrStart,,Select a chat or start a new one.,Selecciona un chat o inicia uno nuevo.,Sélectionnez une conversation ou commencez-en une nouvelle.,Выберите чат или начните новый.,Chọn một cuộc trò chuyện hoặc bắt đầu cuộc trò chuyện mới.,选择一个聊天或开始新的聊天。
+guest,,Guest,Invitado,Invité,Гость,Khách,访客
+loginToEnjoyMore,,Login to enjoy more!,¡Inicia sesión para disfrutar más!,Connectez-vous pour en profiter davantage !,"Войдите, чтобы получить больше возможностей!",Đăng nhập để trải nghiệm nhiều hơn!,登录以享受更多功能！
+chat.toast.threadRemovedExternal,,The chat has been removed by the owner.,El chat ha sido eliminado por el propietario.,Le chat a été supprimé par le propriétaire.,Чат был удален владельцем.,聊天已被所有者删除。,该聊天已被所有者移除。

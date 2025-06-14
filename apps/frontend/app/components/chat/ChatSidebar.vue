@@ -16,6 +16,11 @@ import {
   AlertDialogTrigger,
 } from '@/lib/shadcn/components/ui/alert-dialog'
 import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from '@/lib/shadcn/components/ui/avatar'
+import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
@@ -194,9 +199,20 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
                 :to="`/chat/${thread._id}`"
                 class="group/thread relative block overflow-hidden rounded-md p-2 px-3 [&.router-link-exact-active]:bg-primary/10 hover:bg-primary/20"
               >
-                <div class="line-clamp-1">
-                  {{ thread.title }}
-                </div>
+                <!-- Delay already set on provider but seems bugged -->
+                <Tooltip :delay-duration="500">
+                  <TooltipTrigger as-child>
+                    <div class="line-clamp-1">
+                      {{ thread.title }}
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" :side-offset="6" class="border-none p-0 light:bg-gray-100">
+                    <div class="px-3 py-1 light:bg-primary-50/20">
+                      <p>{{ thread.title }}</p>
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+
                 <LiquidGlassDiv
                   class="right-0 top-0 h-full flex translate-x-[calc(100%+1rem)] items-center gap-1 px-2 pr-1 transition-transform will-change-transform $c-radius=6px absolute! group-hover/thread:translate-x-0"
                   @click.stop.prevent
@@ -238,14 +254,28 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
         <SidebarMenuItem>
           <DropdownMenu>
             <DropdownMenuTrigger as-child>
-              <SidebarMenuButton class="h-auto flex items-center justify-between">
-                <div class="h-9 flex items-center gap-2 text-sm leading-tight">
+              <SidebarMenuButton class="h-auto w-full flex items-center justify-between">
+                <div class="h-9 flex items-center gap-2 truncate text-sm leading-tight">
                   <template v-if="$auth.loggedIn">
-                    <img :src="$auth.user.picture" class="aspect-1 h-full rounded-md">
+                    <Avatar shape="square" size="sm" class="size-9" alt="User avatar">
+                      <AvatarImage :src="$auth.user.picture" alt="Avatar image" />
+                      <AvatarFallback>👤</AvatarFallback>
+                    </Avatar>
                     <div class="truncate">
                       <p>{{ $auth.user.name }}</p>
                       <p class="truncate text-xs">
                         {{ $auth.user.email }}
+                      </p>
+                    </div>
+                  </template>
+                  <template v-else>
+                    <Avatar shape="square" size="sm" class="size-9" alt="Guest placeholder avatar">
+                      <AvatarFallback>🍳</AvatarFallback>
+                    </Avatar>
+                    <div class="truncate">
+                      <p>{{ $t('guest') }}</p>
+                      <p class="truncate text-xs">
+                        {{ $t('loginToEnjoyMore') }}
                       </p>
                     </div>
                   </template>
@@ -259,7 +289,7 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
             >
               <DropdownMenuItem class="justify-between" @click="chatContext.insaneUI.value = !chatContext.insaneUI.value">
                 <div>{{ 'InsaneUI' }}</div>
-                <div :class="chatContext.insaneUI.value ? ' i-hugeicons:crazy' : ' i-hugeicons:confused'" />
+                <div :class="chatContext.insaneUI.value ? ' i-hugeicons:crazy bg-mainGradient' : ' i-hugeicons:confused'" />
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

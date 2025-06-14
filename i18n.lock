@@ -73,5 +73,8 @@ checksums:
     generating: 8a5d3a7701dc359fc48ee6f8a188e9c9
     chat.interface.sendToStart: 6ba07995188dc929a2de0e8f0bb4d1ea
     chat.interface.selectOrStart: 5ae94ab41d0b599f36924f5db15dd16d
+    guest: 2aec6d6ebe0d9a1db0a5c8cd5a98b8c3
+    loginToEnjoyMore: 047389679c35d5ff4ab81e5f65e303ec
+    chat.toast.threadRemovedExternal: db7f0c7a17abd8f2fa3bdf24f0e81377
   bd59d862767f00d421bd4cacc7522c6c:
     hello-from-%2Fx: de51bbd5a66af7e24e90466431fa9006
