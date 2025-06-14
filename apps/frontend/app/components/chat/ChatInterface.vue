@@ -325,7 +325,7 @@ function alertIsStreaming(input: string) {
                   <div>{{ $t('generating') }}</div>
                   <div class="spinner h-5 w-5" />
                 </div>
-                <MDCCached v-else :value="m.content" />
+                <MDC v-else :value="m.content" />
                 <div class="hidden first:block">
                   <Skeleton
                     class="h-5 w-$c-W rounded-full bg-muted-foreground" :style="{
