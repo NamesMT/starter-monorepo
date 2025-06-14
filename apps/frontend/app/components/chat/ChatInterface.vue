@@ -5,7 +5,7 @@ import type Lenis from 'lenis'
 import { keyBy, sleep, uniquePromise } from '@namesmt/utils'
 import { api } from 'backend-convex/convex/_generated/api'
 import { useConvexClient } from 'convex-vue'
-import { countdown } from 'kontroll'
+import { countdown, getInstance, throttle } from 'kontroll'
 import { VueLenis } from 'lenis/vue'
 import { Skeleton } from '@/lib/shadcn/components/ui/skeleton'
 import { Card, CardContent } from '~/lib/shadcn/components/ui/card'
@@ -127,13 +127,21 @@ async function handleSubmit({ input, confirmMultiStream = false }: HandleSubmitA
     generateThreadTitle(convex, { threadId: newThreadId, lockerKey })
   }
 
-  await streamToMessage({ message: messages.value[messages.value.length - 1]!, content: userInput })
+  const targetMessage = messages.value[messages.value.length - 1]!
+  throttle(
+    1,
+    async () => await streamToMessage({ message: targetMessage, content: userInput }),
+    { key: `messageStream-${targetMessage.id}` },
+  )
 }
 
 async function resumeStreamProcess(streamSessionId: string, messageId: string) {
   const message = messagesMapped.value[messageId]
   if (!message)
     return console.warn('Trying to resume stream for message that does not exist:', messageId)
+
+  if (getInstance(threadIdRef.value))
+    return console.warn('Trying to resume stream for message that is currently streaming:', messageId)
 
   // Currently we doesn't support SSE resume yet
   // await streamToMessage({ message, resumeStreamId: streamSessionId })

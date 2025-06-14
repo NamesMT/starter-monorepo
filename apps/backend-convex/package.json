@@ -32,7 +32,7 @@
     "@local/tsconfig": "workspace:*",
     "@namesmt/utils": "^0.5.14",
     "convex": "^1.24.8",
-    "kontroll": "^1.0.5",
+    "kontroll": "^1.1.0",
     "vitest": "^3.2.3"
   }
 }

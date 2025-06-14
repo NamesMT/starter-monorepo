@@ -53,7 +53,7 @@
     "h3-proxy": "^1.13.0",
     "hono": "^4.7.11",
     "idb-keyval": "^6.2.2",
-    "kontroll": "^1.0.5",
+    "kontroll": "^1.1.0",
     "nuxt": "^4.0.0-alpha.2",
     "nuxt-booster": "^3.2.9",
     "nuxt-llms": "^0.1.3",
