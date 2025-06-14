@@ -334,10 +334,10 @@ function alertIsStreaming(input: string) {
             :class="m.role === 'user' ? 'justify-end' : 'justify-start'"
           >
             <Card
-              class="bg-transparent shadow-md md:max-w-2xl"
+              class="bg-transparent shadow-md"
               :class="[
                 m.role === 'user' ? 'border-secondary-200' : 'border-primary-200',
-                m.role === 'user' ? 'max-w-80%' : 'max-w-full',
+                m.role === 'user' ? 'max-w-80% md:max-w-2xl' : 'max-w-full md:max-w-3xl',
               ]"
             >
               <!-- <CardHeader class="px-4 py-2">
