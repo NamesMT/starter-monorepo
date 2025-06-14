@@ -78,11 +78,13 @@ aiApp
         lockerKey,
       } = c.req.valid('json')
 
-      const userIdentity = await c.env.auth.getUserIdentity()
-      if (userIdentity === null)
+      // getUserIdentity on HTTP Action will throw if not authenticated 🤦‍♂️
+      const userIdentity = await c.env.auth.getUserIdentity().catch(() => null)
+
+      if (userIdentity === null && !lockerKey)
         throw new ConvexError({ msg: 'Not authenticated' })
 
-      await rateLimiter.limit(c.env, 'aiChat', { key: userIdentity.subject, throws: true })
+      await rateLimiter.limit(c.env, 'aiChat', { key: userIdentity?.subject ?? lockerKey, throws: true })
 
       const _providerSdk = (() => {
         switch (provider) {
@@ -126,7 +128,7 @@ aiApp
         // If finishOnly is true, just mark as finished and return
         if (finishOnly) {
           await c.env.runMutation(internal.messages.finishStreaming, { streamId })
-          await c.env.runMutation(internal.threads.updateThreadInfo, { threadId, lastMessageAt: Date.now(), lockerKey })
+          await c.env.runMutation(internal.threads.updateThreadInfo, { threadId, lastMessageAt: Date.now() })
           c.text('OK')
         }
       }
@@ -232,7 +234,7 @@ aiApp
 
             // Finish streaming
             await c.env.runMutation(internal.messages.finishStreaming, { streamId })
-            await c.env.runMutation(internal.threads.updateThreadInfo, { threadId, lastMessageAt: Date.now(), lockerKey })
+            await c.env.runMutation(internal.threads.updateThreadInfo, { threadId, lastMessageAt: Date.now() })
 
             // // Generate new thread title
             // await c.env.runAction(api.threads.generateThreadTitle, { threadId, lockerKey, apiKey })

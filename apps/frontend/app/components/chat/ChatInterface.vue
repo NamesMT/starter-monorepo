@@ -46,7 +46,7 @@ const { ignoreUpdates: ignorePathUpdate } = watchIgnorable(
 
     if (threadId) {
       isFetching.value = true
-      await convex.query(api.messages.list, { threadId: threadId as Doc<'threads'>['_id'] })
+      await convex.query(api.messages.list, { threadId: threadId as Doc<'threads'>['_id'], lockerKey: getLockerKey(threadId) })
         .then((existingMessages) => {
           if (threadIdRef.value === threadId) {
             messages.value = existingMessages.map(customMessageTransform)
@@ -113,14 +113,18 @@ async function handleSubmit({ input, confirmMultiStream = false }: HandleSubmitA
   if (!threadIdRef.value) {
     // Set lockerKey to maintain permission if user is anonymous
     const lockerKey = $auth.loggedIn ? undefined : getRandomLockerKey()
-    const newThread = await createNewThread(convex, {
+    const newThreadId = await createNewThread(convex, {
       title: userInput,
       lockerKey,
     })
-    ignorePathUpdate(() => { threadIdRef.value = newThread })
+    ignorePathUpdate(() => { threadIdRef.value = newThreadId })
+
+    // Store lockerKey locally
+    if (lockerKey)
+      setLockerKey(newThreadId, lockerKey)
 
     // Asynchronously generates a new initial thread title
-    generateThreadTitle(convex, { threadId: newThread, lockerKey })
+    generateThreadTitle(convex, { threadId: newThreadId, lockerKey })
   }
 
   await streamToMessage({ message: messages.value[messages.value.length - 1]!, content: userInput })
@@ -151,7 +155,10 @@ async function pollToMessage({ message, resumeStreamId, threadId = threadIdRef.v
 
   const messageId = message.id as Id<'messages'>
 
-  const messageFromConvex = await convex.query(api.messages.get, { messageId: messageId as Id<'messages'> })
+  const messageFromConvex = await convex.query(api.messages.get, {
+    messageId: messageId as Id<'messages'>,
+    lockerKey: getLockerKey(threadId),
+  })
   Object.assign(message, customMessageTransform(messageFromConvex))
 
   if (message.isStreaming) {
@@ -162,7 +169,8 @@ async function pollToMessage({ message, resumeStreamId, threadId = threadIdRef.v
     console.log('Poll completed')
   }
 
-  setTimeout(() => { doScrollBottom({ maybe: true }) }, 100)
+  if (isNearBottom())
+    setTimeout(() => { doScrollBottom({ forceTries: 1 }) }, 100)
 }
 
 interface StreamToMessageArgs {
@@ -189,7 +197,7 @@ async function streamToMessage({ message, content, resumeStreamId }: StreamToMes
         apiKey: 'dummy',
         content,
         resumeStreamId,
-        // lockerKey: undefined,
+        lockerKey: getLockerKey(currentThreadId),
       }),
       signal: abortController.signal,
     })
@@ -250,7 +258,8 @@ async function streamToMessage({ message, content, resumeStreamId }: StreamToMes
       if (state.content)
         message.content += state.content
 
-      setTimeout(() => { doScrollBottom({ maybe: true }) }, 100)
+      if (isNearBottom())
+        setTimeout(() => { doScrollBottom({ forceTries: 1 }) }, 100)
     }
 
     message.isStreaming = false
@@ -276,9 +285,7 @@ function doScrollBottom({ smooth = true, maybe = false, forceTries = 0, lastScro
   if (l.$el.scrollTop < lastScrollTop)
     forceTries = 0
 
-  lastScrollTop = l.$el.scrollTop
-
-  if (!forceTries && maybe && ((l.$el.scrollTop + l.$el.clientHeight) < (scrollHeight - 456)))
+  if (!forceTries && maybe && !isNearBottom())
     return
 
   if (scrollHeight !== l.lenis.limit + l.$el.clientHeight)
@@ -288,11 +295,23 @@ function doScrollBottom({ smooth = true, maybe = false, forceTries = 0, lastScro
     ? l.lenis.scrollTo(scrollHeight)
     : l.$el.scrollTop = scrollHeight
 
+  lastScrollTop = l.$el.scrollTop
+
   if (forceTries) {
     countdown(200, () => {
       sleep(0).then(() => doScrollBottom({ smooth, maybe, forceTries: forceTries - 1, lastScrollTop }))
     }, { key: 'dSB', replace: true })
   }
+}
+
+function isNearBottom() {
+  if (!lenisRef.value)
+    return
+
+  const l = lenisRef.value
+  const scrollHeight = l.$el.scrollHeight
+
+  return (l.$el.scrollTop + l.$el.clientHeight) > (scrollHeight - 345)
 }
 
 const multiStreamConfirmDialogOpen = ref(false)

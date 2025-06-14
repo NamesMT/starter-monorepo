@@ -9,6 +9,7 @@ import { ConvexError, v } from 'convex/values'
 import { api, internal } from './_generated/api'
 import { action, internalMutation, mutation, query } from './_generated/server'
 
+// TODO: maybe allow threads sharing of a whole account or remove userId arg
 export const list = query({
   args: {
     userId: v.optional(v.string()),
@@ -27,7 +28,21 @@ export const list = query({
       .query('threads')
       .withIndex('by_last_message', q => q)
       .order('desc')
-      .take(50)
+      .collect()
+  },
+})
+
+export const listBySessionId = query({
+  args: {
+    sessionId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query('threads')
+      .withIndex('by_session_id', q => q.eq('sessionId', args.sessionId))
+      .order('desc')
+      .collect()
+      .then(threads => threads.map(t => ({ ...t, lockerKey: undefined })))
   },
 })
 
@@ -50,12 +65,12 @@ export const get = query({
 export const create = mutation({
   args: {
     title: v.string(),
-    initSessionId: v.string(),
+    sessionId: v.string(),
     lockerKey: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     return await ctx.db.insert('threads', {
-      initSessionId: args.initSessionId,
+      sessionId: args.sessionId,
       title: args.title,
       lastMessageAt: Date.now(),
       lockerKey: args.lockerKey,
@@ -67,13 +82,18 @@ export const create = mutation({
 export const del = mutation({
   args: {
     threadId: v.id('threads'),
+    lockerKey: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const thread = await ctx.db.get(args.threadId)
     if (!thread)
       throw new ConvexError('Thread not found')
 
-    await assertThreadAccess(ctx, { thread })
+    // Only allow thread to be deleted via lockerKey if its anonymous
+    if (thread.userId && args.lockerKey)
+      throw new ConvexError(`"lockerKey" is not allowed to use to delete a thread that is assigned to a user`)
+
+    await assertThreadAccess(ctx, { thread, lockerKey: args.lockerKey })
 
     await ctx.db.delete(args.threadId)
   },
@@ -94,7 +114,7 @@ export const generateThreadTitle = action({
     const { text } = await generateText({
       model: openrouter('qwen/qwen3-8b:free'),
       system: `You are a helpful assistant, generating concise, informative, and clear titles for a given context, keep the generated title under 40 characters, do not use any quotes and markdown syntax.`,
-      prompt: `Generate a new title for this thread, here is the previous info: \n${[
+      prompt: `Generate a new title for this thread, infer the language from the info's detail, here is the structured previous info: \n${[
         `Title: "${thread.title}"`,
         ...(messages.length
           ? [`Messages:\n${await simpleMessagesToString(messages.map(m => ({
@@ -109,7 +129,6 @@ export const generateThreadTitle = action({
     await ctx.runMutation(internal.threads.updateThreadInfo, {
       title: text.trim(),
       threadId: args.threadId,
-      lockerKey: args.lockerKey,
     })
   },
 })
@@ -119,14 +138,11 @@ export const updateThreadInfo = internalMutation({
     threadId: v.id('threads'),
     title: v.optional(v.string()),
     lastMessageAt: v.optional(v.number()),
-    lockerKey: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const thread = await ctx.db.get(args.threadId)
     if (!thread)
       throw new Error('Thread not found')
-
-    await assertThreadAccess(ctx, { thread, lockerKey: args.lockerKey })
 
     await ctx.db.patch(args.threadId, {
       ...clearUndefined({
@@ -147,11 +163,14 @@ export async function assertThreadAccess(ctx: GenericCtx, { thread, lockerKey, u
   if (lockerKey && thread.lockerKey === lockerKey) {
     ;
   }
-  // Check permission other means
+  // Check permission by other means (JWT)
   else {
     userIdentity ??= await ctx.auth.getUserIdentity()
-    if (!userIdentity || (thread.userId !== userIdentity.subject))
+    if (!userIdentity || (thread.userId !== userIdentity.subject)) {
+      if (lockerKey)
+        console.error(`"lockerKey" available but incorrect`)
       throw new ConvexError('You are not authorized to view this thread')
+    }
   }
 }
 

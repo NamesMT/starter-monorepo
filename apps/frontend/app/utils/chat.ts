@@ -12,18 +12,28 @@ export async function createNewThread(convex: ConvexClient | ConvexHttpClient, {
   title,
   lockerKey,
 }: CreateNewThreadArgs) {
+  const { $init } = useNuxtApp()
+
   const newThreadId = await convex.mutation(api.threads.create, {
     title,
-    initSessionId: `session_${Date.now()}`,
+    sessionId: $init.sessionId,
     lockerKey,
   })
 
   return newThreadId
 }
 
-export async function deleteThread(convex: ConvexClient | ConvexHttpClient, threadId: Id<'threads'>) {
+export interface DeleteThreadArgs {
+  threadId: Id<'threads'>
+  lockerKey?: string
+}
+export async function deleteThread(convex: ConvexClient | ConvexHttpClient, {
+  threadId,
+  lockerKey,
+}: DeleteThreadArgs) {
   await convex.mutation(api.threads.del, {
     threadId,
+    lockerKey,
   })
 }
 
@@ -70,5 +80,5 @@ export function setLockerKey(kid: string, lockerKey: string) {
 }
 
 export function getLockerKey(kid: string) {
-  return localStorage.getItem(`locker_${kid}`)
+  return localStorage.getItem(`locker_${kid}`) ?? undefined
 }

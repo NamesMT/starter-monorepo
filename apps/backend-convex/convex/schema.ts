@@ -9,12 +9,15 @@ const tasksTables = {
 
 const aiChatTables = {
   threads: defineTable({
-    initSessionId: v.string(), // TODO: Ability to view all threads created in the same use session using this id.
+    // The initial session ID of the user that created the thread, warning: also used as "password" to list threads for now.
+    sessionId: v.string(),
     title: v.string(),
     lastMessageAt: v.number(),
     userId: v.optional(v.string()),
     lockerKey: v.optional(v.string()),
   })
+    .index('by_user_id', ['userId'])
+    .index('by_session_id', ['sessionId'])
     .index('by_last_message', ['lastMessageAt']),
 
   messages: defineTable({

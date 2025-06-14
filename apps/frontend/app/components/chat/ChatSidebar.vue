@@ -24,7 +24,7 @@ import {
 } from '@/lib/shadcn/components/ui/sidebar'
 import { Button } from '~/lib/shadcn/components/ui/button'
 
-const { $auth } = useNuxtApp()
+const { $auth, $init } = useNuxtApp()
 const colorMode = useColorMode()
 const convex = useConvexClient()
 
@@ -40,10 +40,11 @@ const isFetching = ref(false)
 if ($auth.loggedIn) {
   const { data: threadsFromConvex, isLoading: fetchingFromConvex } = useConvexQuery(api.threads.list)
   watch(threadsFromConvex, (tFC) => {
-    // Must reconstruct tFC or else it cant be cloned to IDB after modifications
-    const newArr: typeof tFC = JSON.parse(JSON.stringify(tFC))
     // Keep threads that are not assigned to any users
-    threads.value = [...newArr, ...threads.value.filter(t => !t.userId)]
+    // Must reconstruct array or else it cant be cloned to IDB.
+    threads.value = JSON.parse(JSON.stringify(
+      [...tFC, ...threads.value.filter(t => !t.userId)],
+    ))
   })
   watch(fetchingFromConvex, (fFC) => {
     isFetching.value = fFC
@@ -52,6 +53,23 @@ if ($auth.loggedIn) {
   // Migrate anonymous threads to user account
   watch(threads, () => {
     // TODO
+  })
+}
+// For anonymous users, subscribe to threads via sessionId
+else {
+  const { data: threadsFromConvex, isLoading: fetchingFromConvex } = useConvexQuery(api.threads.listBySessionId, { sessionId: $init.sessionId })
+  watch(threadsFromConvex, (tFC) => {
+    // Keep threads from other sessionIds, that are not assigned to any users
+    // Must reconstruct array or else it cant be cloned to IDB.
+    threads.value = JSON.parse(JSON.stringify(
+      [
+        ...tFC.map(t => ({ ...t, lockerKey: getLockerKey(t._id) })),
+        ...threads.value.filter(t => !t.userId && t.sessionId !== $init.sessionId),
+      ],
+    ))
+  })
+  watch(fetchingFromConvex, (fFC) => {
+    isFetching.value = fFC
   })
 }
 
@@ -92,7 +110,7 @@ function unpinThread(thread: Doc<'threads'>) {
 
 async function _deleteThread(thread: Doc<'threads'>) {
   threads.value.splice(threads.value.indexOf(thread), 1)
-  await deleteThread(convex, thread._id)
+  await deleteThread(convex, { threadId: thread._id, lockerKey: $auth.loggedIn ? undefined : thread.lockerKey })
 }
 
 const [DefineDeleteBtn, ReuseDeleteBtn] = createReusableTemplate<{ thread: Doc<'threads'> }>()
@@ -147,7 +165,7 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
         <div class="hidden">
           <DefineDeleteBtn v-slot="{ thread }">
             <AlertDialog>
-              <AlertDialogTrigger as-child>
+              <AlertDialogTrigger v-show="!thread.userId || (thread.userId === $auth?.user?.sub)" as-child>
                 <Button tabindex="-1" variant="ghost" size="icon" class="size-7 transition-none" @pointerdown.stop.prevent>
                   <div class="i-hugeicons:delete-put-back" />
                 </Button>
