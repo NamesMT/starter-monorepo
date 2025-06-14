@@ -310,29 +310,27 @@ function alertIsStreaming(input: string) {
             v-for="m of messages" :key="m.id" class="flex"
             :class="m.role === 'user' ? 'justify-end' : 'justify-start'"
           >
-            <div class="border-primary-200">
-              <Card class="max-w-2xl border-primary-200 bg-transparent shadow-md">
-                <!-- <CardHeader class="px-4 py-2">
-                  <CardTitle class="text-sm font-semibold">
-                    {{ m.role === 'user' ? $t('pages.chat.userLabel') : $t('pages.chat.aiLabel') }}
-                  </CardTitle>
-                </CardHeader> -->
-                <CardContent class="px-4 py-3">
-                  <div v-if="m.isStreaming && !m.content" class="flex gap-2">
-                    <div>{{ $t('generating') }}</div>
-                    <div class="spinner h-5 w-5" />
-                  </div>
-                  <MDCCached v-else :value="m.content" />
-                  <div class="hidden first:block">
-                    <Skeleton
-                      class="h-5 w-$c-W rounded-full bg-muted-foreground" :style="{
-                        '--c-W': `${(Math.floor(Math.random() * (300 - 100 + 1)) + 100) * (m.role === 'user' ? 1 : 2)}px`,
-                      }"
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+            <Card class="max-w-2xl border-primary-200 bg-transparent shadow-md">
+              <!-- <CardHeader class="px-4 py-2">
+                <CardTitle class="text-sm font-semibold">
+                  {{ m.role === 'user' ? $t('pages.chat.userLabel') : $t('pages.chat.aiLabel') }}
+                </CardTitle>
+              </CardHeader> -->
+              <CardContent class="px-4 py-3">
+                <div v-if="m.isStreaming && !m.content" class="flex gap-2">
+                  <div>{{ $t('generating') }}</div>
+                  <div class="spinner h-5 w-5" />
+                </div>
+                <MDCCached v-else :value="m.content" />
+                <div class="hidden first:block">
+                  <Skeleton
+                    class="h-5 w-$c-W rounded-full bg-muted-foreground" :style="{
+                      '--c-W': `${(Math.floor(Math.random() * (300 - 100 + 1)) + 100) * (m.role === 'user' ? 1 : 2)}px`,
+                    }"
+                  />
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
           <div class="pb-40" />
