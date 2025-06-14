@@ -255,7 +255,7 @@ function doScrollBottom({ smooth = true, maybe = false, forceTries = 0, lastScro
 
   lastScrollTop = l.$el.scrollTop
 
-  if (!forceTries && maybe && ((l.$el.scrollTop + l.$el.clientHeight) < (scrollHeight - 567)))
+  if (!forceTries && maybe && ((l.$el.scrollTop + l.$el.clientHeight) < (scrollHeight - 456)))
     return
 
   if (scrollHeight !== l.lenis.limit + l.$el.clientHeight)
