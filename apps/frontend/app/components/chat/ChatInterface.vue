@@ -170,7 +170,7 @@ async function pollToMessage({ message, resumeStreamId, threadId = threadIdRef.v
   Object.assign(message, customMessageTransform(messageFromConvex))
 
   if (message.isStreaming) {
-    sleep(400)
+    sleep(500)
       .then(() => { pollToMessage({ message, resumeStreamId, threadId }) })
   }
   else {

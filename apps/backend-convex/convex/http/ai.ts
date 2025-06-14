@@ -213,7 +213,7 @@ aiApp
 
                 pendingSave = true
                 throttle(
-                  1000,
+                  500,
                   async () => {
                     await c.env.runMutation(api.messages.updateStreamingMessage, {
                       messageId: streamingMessageId,
