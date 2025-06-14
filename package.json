@@ -34,7 +34,7 @@
     "@unocss/eslint-plugin": "^66.2.0",
     "eslint": "^9.29.0",
     "frontend": "workspace:*",
-    "lint-staged": "^16.1.0",
+    "lint-staged": "^16.1.1",
     "simple-git-hooks": "^2.13.0",
     "tsx": "^4.20.3",
     "turbo": "^2.5.4",
@@ -42,8 +42,8 @@
   },
   "pnpm": {
     "overrides": {
-      "@nuxt/kit": "4.0.0-alpha.1",
-      "@nuxt/schema": "4.0.0-alpha.1",
+      "@nuxt/kit": "^4.0.0-alpha.2",
+      "@nuxt/schema": "^4.0.0-alpha.2",
       "convex-vue": "npm:@namesmt/convex-vue@^0.1.1",
       "is-arguments": "npm:@nolyfill/is-arguments@^1.0.44",
       "is-core-module": "npm:@nolyfill/is-core-module@^1.0.39",

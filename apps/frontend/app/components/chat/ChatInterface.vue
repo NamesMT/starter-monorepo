@@ -310,7 +310,7 @@ function alertIsStreaming(input: string) {
             v-for="m of messages" :key="m.id" class="flex"
             :class="m.role === 'user' ? 'justify-end' : 'justify-start'"
           >
-            <Card class="max-w-2xl border-primary-200 bg-transparent shadow-md">
+            <Card class="max-w-full border-primary-200 bg-transparent shadow-md md:max-w-2xl">
               <!-- <CardHeader class="px-4 py-2">
                 <CardTitle class="text-sm font-semibold">
                   {{ m.role === 'user' ? $t('pages.chat.userLabel') : $t('pages.chat.aiLabel') }}

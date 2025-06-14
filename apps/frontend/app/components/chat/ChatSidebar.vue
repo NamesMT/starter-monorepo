@@ -17,21 +17,36 @@ import {
 } from '@/lib/shadcn/components/ui/alert-dialog'
 import { Button } from '~/lib/shadcn/components/ui/button'
 
+const { $auth } = useNuxtApp()
 const colorMode = useColorMode()
 const convex = useConvexClient()
 
 // For [...all] routing the value is an array
 const threadIdRef = useRouteParams<string>('all', undefined, { transform: { get: s => Array.isArray(s) ? s[0] : s } })
 
-// Load cached threads and subscribe to Convex for sync
+// Load local threads
 const { data: threads } = useIDBKeyval<Doc<'threads'>[]>('threads', [])
 const { data: pinnedThreadIds } = useIDBKeyval<string[]>('pinnedThreadIds', [])
-const { data: threadsFromConvex, isLoading } = useConvexQuery(
-  api.threads.list,
-)
-watch(threadsFromConvex, () => {
-  threads.value = threadsFromConvex.value
-})
+const isFetching = ref(false)
+
+// Subscribe to Convex to sync threads
+if ($auth.loggedIn) {
+  const { data: threadsFromConvex, isLoading: fetchingFromConvex } = useConvexQuery(api.threads.list)
+  watch(threadsFromConvex, (tFC) => {
+    // Must reconstruct tFC or else it cant be cloned to IDB after modifications
+    const newArr: typeof tFC = JSON.parse(JSON.stringify(tFC))
+    // Keep threads that are not assigned to any users
+    threads.value = [...newArr, ...threads.value.filter(t => !t.userId)]
+  })
+  watch(fetchingFromConvex, (fFC) => {
+    isFetching.value = fFC
+  })
+
+  // Migrate anonymous threads to user account
+  watch(threads, () => {
+    // TODO
+  })
+}
 
 // Fuck TS in these situations
 // [other, pinned]
@@ -109,7 +124,7 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
       <input v-model="searchQuery" type="text" placeholder="Search chats..." class="w-full bg-transparent outline-none">
     </div>
 
-    <div v-if="!threads?.length && isLoading" class="py-4 text-center text-gray-500 dark:text-gray-400">
+    <div v-if="!threads?.length && isFetching" class="py-4 text-center text-gray-500 dark:text-gray-400">
       {{ $t('chat.sidebar.threads.loading') }}
     </div>
     <div v-else-if="!threads?.length" class="py-4 text-center text-gray-500 dark:text-gray-400">
@@ -144,10 +159,10 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
 
         <DefineThreadLiItem v-slot="{ thread, pinned }">
           <li>
+            <!-- Using [&.active] instead of :active-class because of reactivity bug -->
             <NuxtLink
               :to="`/chat/${thread._id}`"
-              class="group/thread relative block overflow-hidden rounded-md p-2 px-3 hover:bg-primary/20"
-              active-class="bg-primary/10"
+              class="group/thread relative block overflow-hidden rounded-md p-2 px-3 [&.router-link-exact-active]:bg-primary/10 hover:bg-primary/20"
             >
               <div>
                 {{ thread.title }}
