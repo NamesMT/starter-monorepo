@@ -38,7 +38,7 @@ const isFetching = ref(false)
 
 // Subscribe to Convex to sync threads
 if ($auth.loggedIn) {
-  const { data: threadsFromConvex, isLoading: fetchingFromConvex } = useConvexQuery(api.threads.list)
+  const { data: threadsFromConvex, isLoading: fetchingFromConvex } = useConvexQuery(api.threads.listByUser)
   watch(threadsFromConvex, (tFC) => {
     // Keep threads that are not assigned to any users
     // Must reconstruct array or else it cant be cloned to IDB.

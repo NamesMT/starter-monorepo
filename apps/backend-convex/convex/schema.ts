@@ -17,6 +17,7 @@ const aiChatTables = {
     lockerKey: v.optional(v.string()),
   })
     .index('by_user_id', ['userId'])
+    .index('by_user_id_and_last_message', ['userId', 'lastMessageAt'])
     .index('by_session_id', ['sessionId'])
     .index('by_last_message', ['lastMessageAt']),
 

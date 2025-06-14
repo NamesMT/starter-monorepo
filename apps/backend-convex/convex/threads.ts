@@ -10,7 +10,7 @@ import { api, internal } from './_generated/api'
 import { action, internalMutation, mutation, query } from './_generated/server'
 
 // TODO: maybe allow threads sharing of a whole account or remove userId arg
-export const list = query({
+export const listByUser = query({
   args: {
     userId: v.optional(v.string()),
   },
@@ -26,7 +26,7 @@ export const list = query({
 
     return await ctx.db
       .query('threads')
-      .withIndex('by_last_message', q => q)
+      .withIndex('by_user_id_and_last_message', q => q.eq('userId', userId ?? userIdentity?.subject))
       .order('desc')
       .collect()
   },
