@@ -5,3 +5,9 @@ export async function simpleMessagesToString(messages: {
 }[]) {
   return messages.map(m => `@-- Message ID: ${m.id}\nRole: ${m.role}\nContent:\n${m.content}`).join('\n--@\n')
 }
+
+export interface AgentObject {
+  provider: string
+  model: string
+  apiKey?: string
+}

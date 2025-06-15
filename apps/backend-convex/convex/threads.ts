@@ -1,7 +1,7 @@
 import type { UserIdentity } from 'convex/server'
 import type { Doc } from './_generated/dataModel'
 import type { GenericCtx } from './_generated/server'
-import { simpleMessagesToString } from '@local/common/src/utils/aisdk'
+import { simpleMessagesToString } from '@local/common/src/aisdk'
 import { clearUndefined } from '@namesmt/utils'
 import { openrouter } from '@openrouter/ai-sdk-provider'
 import { generateText } from 'ai'

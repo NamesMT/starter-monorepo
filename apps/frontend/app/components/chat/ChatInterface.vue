@@ -3,15 +3,22 @@
 import type { Doc, Id } from 'backend-convex/convex/_generated/dataModel'
 import type Lenis from 'lenis'
 import { keyBy, sleep, uniquePromise } from '@namesmt/utils'
+import { sample } from '@namesmt/utils'
 import { api } from 'backend-convex/convex/_generated/api'
 import { useConvexClient } from 'convex-vue'
 import { countdown, debounce, getInstance, throttle } from 'kontroll'
 import { VueLenis } from 'lenis/vue'
 import { Split } from 'lucide-vue-next'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/lib/shadcn/components/ui/dropdown-menu'
 import { Skeleton } from '@/lib/shadcn/components/ui/skeleton'
 import { Card, CardContent } from '~/lib/shadcn/components/ui/card'
 import { useToast } from '~/lib/shadcn/components/ui/toast'
-import VanishingInput from '~/lib/shadcn/components/ui/vanishing-input/VanishingInput.vue'
 import LiquidGlassDiv from '../LiquidGlassDiv.vue'
 
 const isDev = import.meta.dev
@@ -50,7 +57,8 @@ const messages = ref<Array<CustomMessage>>([])
 const messagesKeyed = computed(() => keyBy(messages.value, 'id'))
 const streamingMessages = ref(0)
 const isFetching = ref(false)
-const chatInput = ref('')
+const { textarea: chatTextarea, input: chatInput } = useTextareaAutosize()
+const chatPlaceholder = computedWithControl(chatContext.interfaceSRK, () => `${t('chat.typeYourMessageHere')}\n${sample(useInputThoughtsPlaceholders().value, 1)[0]}`)
 
 // Fetch messages as needed and resume streams
 const { ignoreUpdates: ignorePathUpdate } = watchIgnorable(
@@ -147,7 +155,7 @@ async function handleSubmit({ input, confirmMultiStream = false }: HandleSubmitA
   }
 
   if (!confirmMultiStream && streamingMessages.value > 0)
-    return alertIsStreaming(userInput)
+    return alertIsStreaming()
 
   // Optimistically add the messages
   messages.value.push({
@@ -159,6 +167,7 @@ async function handleSubmit({ input, confirmMultiStream = false }: HandleSubmitA
   messages.value.push({
     id: `assistant-${Date.now()}`,
     role: 'assistant',
+    model: chatContext.activeAgent.value.model,
     content: '',
     isStreaming: true,
     streamId: undefined,
@@ -254,9 +263,7 @@ async function streamToMessage({ message, content, resumeStreamId }: StreamToMes
     const currentThreadId = threadIdRef.value
     const { response, abortController } = await postChatStream({
       threadId: currentThreadId as Id<'threads'>,
-      provider: 'openrouter',
-      model: 'deepseek/deepseek-chat:free',
-      apiKey: 'dummy',
+      ...chatContext.activeAgent.value,
       content,
       resumeStreamId,
     })
@@ -391,9 +398,7 @@ function doScrollBottom({ smooth = true, maybe = false, tries = 0, lastScrollTop
 }
 
 const multiStreamConfirmDialogOpen = ref(false)
-let savedChatInput = ''
-function alertIsStreaming(input: string) {
-  savedChatInput = input
+function alertIsStreaming() {
   multiStreamConfirmDialogOpen.value = true
 }
 </script>
@@ -415,7 +420,7 @@ function alertIsStreaming(input: string) {
             v-if="!messages.length"
             :key="chatContext.interfaceSRK.value"
             v-motion-pop-visible-once
-            class="relative z-2 mx-auto w-fit whitespace-pre-wrap p-4 text-center text-4xl font-medium tracking-tighter"
+            class="relative z-2 mx-auto w-fit whitespace-pre-wrap px-10 py-6 text-center text-4xl font-medium tracking-tighter"
           >
             <p>
               {{ threadIdRef ? $t('chat.interface.sendToStart') : $t('chat.interface.selectOrStart') }}
@@ -477,7 +482,7 @@ function alertIsStreaming(input: string) {
             </div>
 
             <div
-              v-if="m.role !== 'user'"
+              v-else
               class="absolute bottom-2 left-2 flex gap-1 opacity-0 transition-opacity group-hover/message:opacity-100"
             >
               <Tooltip :delay-duration="500">
@@ -503,6 +508,9 @@ function alertIsStreaming(input: string) {
                   <p>{{ $t('chat.message.branch') }}</p>
                 </TooltipContent>
               </Tooltip>
+              <div class="ml-4 text-xs">
+                {{ m.model }}
+              </div>
             </div>
           </div>
 
@@ -519,10 +527,11 @@ function alertIsStreaming(input: string) {
       </div>
     </VueLenis>
 
-    <LiquidGlassDiv class="bottom-0 left-0 z-3 max-w-full w-full border-t border-secondary p-4 $c-radius=0px absolute!">
+    <LiquidGlassDiv class="bottom-0 left-0 z-3 max-w-full w-full border-t border-secondary $c-radius=0px absolute!">
       <div v-if="isDev" class="absolute bottom-100%">
         {{ nearTopBottom }}
       </div>
+
       <div class="absolute bottom-100% right-6 mb-2 flex flex-col gap-2">
         <Button
           variant="outline" size="icon" class="rounded-xl p-1 opacity-100 transition-opacity duration-500"
@@ -537,13 +546,47 @@ function alertIsStreaming(input: string) {
           <div class="i-hugeicons:circle-arrow-down-03 h-full w-full" />
         </Button>
       </div>
+
       <div>
-        <div class="mx-auto max-w-lg flex flex-col gap-3">
-          <VanishingInput
-            v-model="chatInput" :placeholders="useInputThoughtsPlaceholders().value"
-            @submit="(input) => handleSubmit({ input })"
+        <form class="mx-auto max-w-2xl flex flex-col gap-2 border-x-6px border-rose/80 bg-rose/20 p-3 pb-2 text-secondary-950 backdrop-blur-sm dark:text-secondary-50" @submit.prevent>
+          <textarea
+            ref="chatTextarea"
+            :key="chatContext.interfaceSRK.value"
+            v-model="chatInput"
+            :placeholder="chatPlaceholder"
+            class="min-h-12 resize-none bg-transparent outline-none placeholder-secondary-700/60 dark:placeholder-secondary-300/60"
+            @keydown.enter.exact.prevent="handleSubmit({ input: chatInput })"
           />
-        </div>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <DropdownMenu>
+                <DropdownMenuTrigger as-child>
+                  <Button variant="ghost" size="sm" class="h-fit w-fit flex items-center gap-1 px-2 py-1 -ml-1.5 hover:bg-accent/30">
+                    <div>{{ displayActiveAgent(chatContext.activeAgent.value) }}</div>
+                    <div class="i-hugeicons:arrow-up-01" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>{{ $t('chat.provider.hosted') }}</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    v-for="[model] of Object.entries(chatContext.hostedProvider.models).filter((([m, v]) => v.enabled))"
+                    :key="model"
+                    @click="chatContext.agentsSetting.value.selectedAgent = `hosted/${model}`"
+                  >
+                    {{ model }}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            <Button
+              variant="default"
+              class="i-hugeicons:login-square-01 enabled:(bg-mainGradient) disabled:bg-surface-500"
+              :disabled="!chatInput"
+              @click="handleSubmit({ input: chatInput })"
+            />
+          </div>
+        </form>
       </div>
     </LiquidGlassDiv>
 
@@ -568,7 +611,6 @@ function alertIsStreaming(input: string) {
     <!-- Multi Stream Confirm Dialog -->
     <AlertDialog
       v-model:open="multiStreamConfirmDialogOpen"
-      @update:open="(o) => { if (!o) chatInput = savedChatInput }"
     >
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -579,7 +621,7 @@ function alertIsStreaming(input: string) {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>{{ $t('cancel') }}</AlertDialogCancel>
-          <AlertDialogAction @click="handleSubmit({ input: savedChatInput, confirmMultiStream: true })">
+          <AlertDialogAction @click="handleSubmit({ input: chatInput, confirmMultiStream: true })">
             {{ $t('continue') }}
           </AlertDialogAction>
         </AlertDialogFooter>

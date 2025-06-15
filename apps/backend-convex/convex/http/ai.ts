@@ -4,7 +4,7 @@ import type { ActionCtx } from '../_generated/server'
 import { createOpenAI } from '@ai-sdk/openai'
 import RateLimiter, { MINUTE } from '@convex-dev/rate-limiter'
 import { zValidator } from '@hono/zod-validator'
-import { randomStr, sample, sleep } from '@namesmt/utils'
+import { randomStr, sleep } from '@namesmt/utils'
 import { createOpenRouter } from '@openrouter/ai-sdk-provider'
 import { streamText } from 'ai'
 import { ConvexError } from 'convex/values'
@@ -12,20 +12,9 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { throttle } from 'kontroll'
 import { z } from 'zod'
+import { getAgentModel } from '../../utils/agent'
 import { buildAiSdkMessage } from '../../utils/message'
 import { api, components, internal } from '../_generated/api'
-
-const orModels = process.env.AI_MODELS_LIST?.split(',') ?? ['qwen/qwen3-32b:free']
-const openrouter = createOpenRouter({
-  apiKey: process.env.OPENROUTER_API_KEY,
-})
-
-const aiMessagesSchema = z.array(
-  z.object({
-    role: z.enum(['user', 'assistant']),
-    content: z.string(),
-  }),
-)
 
 const rateLimiter = new RateLimiter(components.rateLimiter, {
   aiChat: { kind: 'token bucket', rate: 10, period: MINUTE, capacity: 3 },
@@ -34,31 +23,13 @@ const rateLimiter = new RateLimiter(components.rateLimiter, {
 export const aiApp: HonoWithConvex<ActionCtx> = new Hono()
 aiApp
   .use(cors())
-  // Old endpoint for minimal testing, should use `/chat/stream` in consumer side
-  .post('/chat', zValidator('json', z.object({ messages: aiMessagesSchema })), async (c) => {
-    const userIdentity = await c.env.auth.getUserIdentity()
-    if (userIdentity === null)
-      throw new ConvexError({ msg: 'Not authenticated' })
-
-    await rateLimiter.limit(c.env, 'aiChat', { key: userIdentity.subject, throws: true })
-
-    const { messages } = c.req.valid('json')
-
-    const result = streamText({
-      model: openrouter(sample(orModels, 1)[0]),
-      messages,
-      system: 'Return response in markdown format, remember to response cleanly with linebreaks instead of endless paragraphs.',
-    })
-
-    return result.toDataStreamResponse()
-  })
   .post(
     '/chat/stream',
     zValidator('json', z.object({
       threadId: z.string(),
       provider: z.string(),
       model: z.string(),
-      apiKey: z.string(),
+      apiKey: z.optional(z.string()),
       content: z.optional(z.string()),
       context: z.optional(z.object({
         from: z.optional(z.string()),
@@ -174,18 +145,46 @@ aiApp
       // Get conversation history
       const messages = await c.env.runQuery(api.messages.listByThread, { threadId, lockerKey })
 
-      // Prepare messages for AI API (exclude the streaming messages)
+      // Prepare messages for AI API
       const messagesContext = messages
-        .filter(msg => !msg.isStreaming)
+        .filter(msg => msg._id !== streamingMessageId)
         .map(buildAiSdkMessage)
+
+      let aiResponse = existingMessage ? existingMessage.content : ''
+
+      let pendingSave = false
+      function doSave() {
+        pendingSave = true
+        throttle(
+          500,
+          async () => {
+            await c.env.runMutation(internal.messages.updateStreamingMessage, {
+              messageId: streamingMessageId,
+              content: aiResponse,
+              isStreaming: true,
+              lockerKey,
+            }).finally(() => {
+              pendingSave = false
+            })
+          },
+          { trailing: true },
+        )
+      }
+
+      async function waitForSave() {
+        if (pendingSave)
+          await sleep(1000)
+        if (pendingSave)
+          await sleep(5000)
+        if (pendingSave)
+          console.error('Save was stuck')
+      }
 
       // Create streaming response
       const encoder = new TextEncoder()
       const stream = new ReadableStream({
         async start(controller) {
           try {
-            let aiResponse = existingMessage ? existingMessage.content : ''
-
             // Send session ID first
             controller.enqueue(encoder.encode(`o: ${JSON.stringify({
               messageId: streamingMessageId,
@@ -201,45 +200,27 @@ aiApp
               })}\n`))
             }
 
-            // Call AI provider
-
-            // Using hosted provider and model for now, switch to user configured BYOK when UI is ready for it
-            const providerStream = streamText({
-              model: openrouter(sample(orModels, 1)[0]),
+            const aiStream = streamText({
+              model: getAgentModel({ provider, model, apiKey }),
+              system: 'You are inside a chat room of multiple users and multiple agents, each message have an auto-added `System Context` block, which contains important information of each message, for example: which agent, which user sent which message,..., You can use it for context.\nIMPORTANT: NEVER add / include the `System Context` block in your response yourself, it will be automatically added later.',
               messages: messagesContext,
-              onError: (e) => {
-                throw e.error
+              onError: (ev) => {
+                console.error(ev.error)
+                throw ev.error
               },
             })
 
-            let pendingSave = false
-            for await (const textDelta of providerStream.textStream) {
+            for await (const textDelta of aiStream.textStream) {
               if (textDelta) {
                 aiResponse += textDelta
                 controller.enqueue(encoder.encode(`t: ${textDelta}`))
 
-                pendingSave = true
-                throttle(
-                  500,
-                  async () => {
-                    await c.env.runMutation(internal.messages.updateStreamingMessage, {
-                      messageId: streamingMessageId,
-                      content: aiResponse,
-                      isStreaming: true,
-                      lockerKey,
-                    }).finally(() => {
-                      pendingSave = false
-                    })
-                  },
-                  { trailing: true },
-                )
+                doSave()
               }
             }
-            // eslint-disable-next-line no-unmodified-loop-condition
-            while (pendingSave)
-              await sleep(1000)
 
             // Finish streaming
+            await waitForSave()
             await c.env.runMutation(internal.messages.finishStreaming, { streamId })
             await c.env.runMutation(internal.threads.updateThreadInfo, { threadId, timestamp: Date.now() })
 
@@ -250,7 +231,12 @@ aiApp
             controller.close()
           }
           catch (error: any) {
-            // Mark streaming as finished on error
+            console.error(error)
+
+            aiResponse += `\n\nError encountered, stream stopped`
+
+            doSave()
+            await waitForSave()
             await c.env.runMutation(internal.messages.finishStreaming, { streamId })
 
             controller.enqueue(encoder.encode(`o: ${JSON.stringify({ error: error.message })}\n`))

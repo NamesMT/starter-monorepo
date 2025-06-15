@@ -14,18 +14,21 @@ export function buildAiSdkMessage(message: Doc<'messages'>): BuiltMessage {
     case 'assistant':
       return {
         role: 'assistant',
-        content: message.content,
+        content: buildAssistantMessageContent(message),
       }
     default:
       throw new Error(`Unknown message role: ${message.role}`)
   }
 }
 
-export function buildUserMessageContent({ content, context }: Pick<Doc<'messages'>, 'content' | 'context'>) {
+export function buildUserMessageContent({ content, context }: Pick<
+  Doc<'messages'>,
+'content' | 'context'
+>) {
   let builtContent = ''
 
   if (context && Object.keys(context)) {
-    builtContent += `@--System Context Start@\n`
+    builtContent += `### System context start\n`
 
     if (context.from)
       builtContent += `From: "${context.from}"\n`
@@ -33,8 +36,27 @@ export function buildUserMessageContent({ content, context }: Pick<Doc<'messages
     if (context.uid)
       builtContent += `UID: "${context.uid}"\n`
 
-    builtContent += `@System Context End--@\n\n`
+    builtContent += `### System context end\n---\n\n`
   }
+
+  builtContent += content
+
+  return builtContent
+}
+
+export function buildAssistantMessageContent({ content, model, provider, isStreaming }: Pick<
+  Doc<'messages'>,
+'content' | 'model' | 'provider' | 'isStreaming'
+>) {
+  let builtContent = ''
+
+  builtContent += `### System context start\n`
+  builtContent += `From: "${provider}/${model}"\n`
+
+  if (isStreaming)
+    builtContent += `This message is still streaming, content is not finalized\n`
+
+  builtContent += `### System context end\n---\n\n`
 
   builtContent += content
 

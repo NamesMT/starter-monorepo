@@ -15,7 +15,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
       return console.error('Locker key already exists, add `&force=true` to overwrite')
 
     const convex = useConvexClient()
-    const { data: threads, isFinished } = useIDBKeyval<Doc<'threads'>[]>('threads', [])
+    const { data: threads, isFinished } = useIDBKeyval<Doc<'threads'>[]>('chat/threads', [])
     const thread = await convex.query(api.threads.get, { threadId, lockerKey })
 
     await until(isFinished).toBeTruthy()

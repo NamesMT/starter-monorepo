@@ -42,7 +42,7 @@ const threadIdRef = useThreadIdRef()
 
 const threads = chatContext.threads
 const threadsKeyed = computed(() => keyBy(threads.value, '_id'))
-const { data: pinnedThreadIds } = useIDBKeyval<string[]>('pinnedThreadIds', [])
+const { data: pinnedThreadIds } = useIDBKeyval<string[]>('chat/pinnedThreadIds', [])
 const isFetching = ref(false)
 
 // Subscribe to Convex to sync threads
@@ -176,7 +176,10 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
         <NuxtLink
           :to="{ name: 'chat-all' }"
           exact-active-class="[&>*]:(bg-accent/80! hover:bg-accent/100! active:bg-accent/60!)"
-          @pointerdown="navigateTo(`/chat/`); ++chatContext.interfaceSRK.value; sidebarContext.setOpenMobile(false)"
+          @pointerdown="
+            ++chatContext.interfaceSRK.value;
+            (sidebarContext.isMobile.value && (sidebarContext.setOpenMobile(false), navigateTo(`/chat`)))
+          "
         >
           <Button class="w-full" variant="outline" size="sm">
             {{ $t('chat.sidebar.newChat') }}
@@ -372,10 +375,12 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
                 <div>InsaneUI</div>
                 <div :class="chatContext.insaneUI.value ? ' i-hugeicons:crazy bg-mainGradient' : ' i-hugeicons:confused'" />
               </DropdownMenuItem>
-              <DropdownMenuItem class="justify-between">
-                <div>Settings</div>
-                <div class="i-hugeicons:settings-01" />
-              </DropdownMenuItem>
+              <GeneralSettingsSheet>
+                <DropdownMenuItem class="justify-between" @select.prevent>
+                  <div>Settings</div>
+                  <div class="i-hugeicons:settings-01" />
+                </DropdownMenuItem>
+              </GeneralSettingsSheet>
             </DropdownMenuContent>
           </DropdownMenu>
         </SidebarMenuItem>

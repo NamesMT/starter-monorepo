@@ -8,11 +8,20 @@ definePageMeta({
   middleware: ['accept-shared-thread'],
 })
 
+// Load all async data
+const { data: threads, isFinished: threadsLoaded } = useIDBKeyval<Doc<'threads'>[]>('chat/threads', [])
+const { data: agentsSetting, isFinished: agentsSettingLoaded } = useIDBKeyval<AgentsSetting>('chat/agentsSetting', {
+  providers: {
+  },
+  selectedAgent: 'hosted/qwen3-32b',
+})
+
+await until(computed(() =>
+  threadsLoaded.value && agentsSettingLoaded.value,
+)).toBeTruthy({ timeout: 60000, throwOnTimeout: true })
+
+// ## Threads
 const threadIdRef = useThreadIdRef()
-
-// Load local threads
-const { data: threads } = useIDBKeyval<Doc<'threads'>[]>('threads', [])
-
 const activeThread = computed<Doc<'threads'> | undefined>(() => {
   if (!threadIdRef.value)
     return undefined
@@ -23,11 +32,41 @@ useHead({
   title: computed(() => activeThread.value?.title ?? '> New Chat'),
 })
 
-provideSidebarContext({
-  insaneUI: useLocalState('chat/insaneUI', () => false),
+// ## Agents
+// TODO: load from backend
+const hostedProvider: HostedProvider = {
+  enabled: true,
+  models: {
+    'qwen3-32b': {
+      enabled: true,
+    },
+    'deepseek-v3': {
+      enabled: true,
+    },
+  },
+  default: 'qwen3-32b',
+}
+
+const activeAgent = computed(() => {
+  let [provider, model] = agentsSetting.value.selectedAgent?.split('/') as
+    [keyof typeof agentsSetting.value.providers | 'hosted', string]
+
+  if (!provider || !model || (provider !== 'hosted' && !agentsSetting.value.providers[provider]))
+    [provider, model] = ['hosted', hostedProvider.default!]
+
+  return { provider, model, apiKey: agentsSetting.value.providers[provider]?.apiKey }
+})
+
+provideChatContext({
   threads,
-  interfaceSRK: ref(0),
   activeThread,
+
+  hostedProvider,
+  agentsSetting,
+  activeAgent,
+
+  insaneUI: useLocalState('chat/insaneUI', () => false),
+  interfaceSRK: ref(0),
 })
 </script>
 
