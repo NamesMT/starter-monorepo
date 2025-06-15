@@ -5,7 +5,7 @@ import type Lenis from 'lenis'
 import { keyBy, sleep, uniquePromise } from '@namesmt/utils'
 import { api } from 'backend-convex/convex/_generated/api'
 import { useConvexClient } from 'convex-vue'
-import { countdown, getInstance, throttle } from 'kontroll'
+import { countdown, debounce, getInstance, throttle } from 'kontroll'
 import { VueLenis } from 'lenis/vue'
 import { Split } from 'lucide-vue-next'
 import { Skeleton } from '@/lib/shadcn/components/ui/skeleton'
@@ -117,7 +117,7 @@ watchImmediate(threadIdRef, (threadId) => {
     { threadId: threadId as Id<'threads'>, lockerKey: getLockerKey(threadId) },
     (count) => {
       if (count > messages.value.length)
-        ++fetchKey.value
+        debounce(100, () => { ++fetchKey.value })
     },
   )
   watchOnce(threadIdRef, () => {
