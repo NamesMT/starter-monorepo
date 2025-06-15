@@ -52,7 +52,10 @@ if ($auth.loggedIn) {
     // Keep threads that are not assigned to any users
     // Must reconstruct array or else it cant be cloned to IDB.
     threads.value = JSON.parse(JSON.stringify(
-      [...tFC, ...threads.value.filter(t => !t.userId)],
+      [
+        ...threads.value.filter(t => !t.userId),
+        ...tFC,
+      ].sort((a, b) => b.timestamp - a.timestamp),
     ))
   })
   watch(fetchingFromConvex, (fFC) => {
@@ -72,9 +75,9 @@ else {
     // Must reconstruct array or else it cant be cloned to IDB.
     threads.value = JSON.parse(JSON.stringify(
       [
-        ...tFC.map(t => ({ ...t, lockerKey: getLockerKey(t._id) })),
         ...threads.value.filter(t => !t.userId && t.sessionId !== $init.sessionId),
-      ],
+        ...tFC.map(t => ({ ...t, lockerKey: getLockerKey(t._id) })),
+      ].sort((a, b) => b.timestamp - a.timestamp),
     ))
   })
   watch(fetchingFromConvex, (fFC) => {
