@@ -139,7 +139,7 @@ export const branchThreadFromMessage = mutation({
       })
     }))
 
-    await messagesInThreadCounter.inc(ctx, thread._id)
+    await messagesInThreadCounter.add(ctx, thread._id, messages.length)
 
     return newThreadId
   },
