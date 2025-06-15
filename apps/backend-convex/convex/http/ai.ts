@@ -149,7 +149,7 @@ aiApp
           threadId,
           role: 'user',
           content,
-          context: { ...context, uid: userIdentity?.subject ?? 'UNKNOWN' },
+          context: { ...context, uid: userIdentity?.subject ?? 'N/A' },
           provider,
           model,
           lockerKey,

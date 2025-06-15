@@ -25,7 +25,7 @@ export function buildUserMessageContent({ content, context }: Pick<Doc<'messages
   let builtContent = ''
 
   if (context && Object.keys(context)) {
-    builtContent += `@--System context start@\n`
+    builtContent += `@--System Context Start@\n`
 
     if (context.from)
       builtContent += `From: "${context.from}"\n`
@@ -33,7 +33,7 @@ export function buildUserMessageContent({ content, context }: Pick<Doc<'messages
     if (context.uid)
       builtContent += `UID: "${context.uid}"\n`
 
-    builtContent += `@System context end--@\n\n`
+    builtContent += `@System Context End--@\n\n`
   }
 
   builtContent += content
