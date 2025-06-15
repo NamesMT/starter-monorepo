@@ -508,9 +508,10 @@ function alertIsStreaming(input: string) {
 
           <IUIMaybeGlassCard
             v-if="isThreadFrozen"
-            class="mx-auto w-fit border p-2 px-8 font-medium tracking-wide"
+            class="mx-auto w-fit flex items-center gap-1 border p-2 px-7 text-lg font-medium tracking-wide"
           >
-            {{ $t('chat.thread.frozenWithDescription') }}
+            <div class="i-hugeicons:snow text-primary" />
+            <div>{{ $t('chat.thread.frozenWithDescription') }}</div>
           </IUIMaybeGlassCard>
 
           <div class="pb-40" />
