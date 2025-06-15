@@ -118,6 +118,47 @@ export async function threadSetLockerKey(convex: ConvexClient | ConvexHttpClient
   })
 }
 
+export function getUserName() {
+  const { $auth } = useNuxtApp()
+
+  return localStorage.getItem('chat/user-nickname') || $auth?.user?.name || 'Anonymous'
+}
+
+export interface PostChatStreamArgs {
+  threadId: Id<'threads'>
+  provider: string
+  model: string
+  apiKey: string
+  content?: string
+  resumeStreamId?: string
+  finishOnly?: boolean
+  abortController?: AbortController
+}
+export async function postChatStream(args: PostChatStreamArgs) {
+  const {
+    abortController = new AbortController(),
+  } = args
+
+  const { convexApiUrl } = useRuntimeConfig().public
+  const { $auth } = useNuxtApp()
+
+  const response = await fetch(`${convexApiUrl}/api/ai/chat/stream`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${$auth.token}`,
+    },
+    body: JSON.stringify({
+      ...args,
+      context: { from: getUserName() },
+      lockerKey: getLockerKey(args.threadId),
+    }),
+    signal: abortController.signal,
+  })
+
+  return { response, abortController }
+}
+
 export interface CustomMessage extends Doc<'messages'> {
   id: string
 }

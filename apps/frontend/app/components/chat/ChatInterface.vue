@@ -16,7 +16,6 @@ import LiquidGlassDiv from '../LiquidGlassDiv.vue'
 
 const isDev = import.meta.dev
 const { $auth } = useNuxtApp()
-const { convexApiUrl } = useRuntimeConfig().public
 const convex = useConvexClient()
 const chatContext = useChatContext()
 const { toast } = useToast()
@@ -155,6 +154,7 @@ async function handleSubmit({ input, confirmMultiStream = false }: HandleSubmitA
     id: `user-${Date.now()}`,
     role: 'user',
     content: userInput,
+    context: { from: getUserName() },
   } as any as CustomMessage)
   messages.value.push({
     id: `assistant-${Date.now()}`,
@@ -252,23 +252,13 @@ async function streamToMessage({ message, content, resumeStreamId }: StreamToMes
     ++streamingMessages.value
 
     const currentThreadId = threadIdRef.value
-    const abortController = new AbortController()
-    const response = await fetch(`${convexApiUrl}/api/ai/chat/stream`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${$auth.token}`,
-      },
-      body: JSON.stringify({
-        threadId: currentThreadId,
-        provider: 'openrouter',
-        model: 'deepseek/deepseek-chat:free',
-        apiKey: 'dummy',
-        content,
-        resumeStreamId,
-        lockerKey: getLockerKey(currentThreadId),
-      }),
-      signal: abortController.signal,
+    const { response, abortController } = await postChatStream({
+      threadId: currentThreadId as Id<'threads'>,
+      provider: 'openrouter',
+      model: 'deepseek/deepseek-chat:free',
+      apiKey: 'dummy',
+      content,
+      resumeStreamId,
     })
 
     if (!response.ok) {
@@ -476,6 +466,15 @@ function alertIsStreaming(input: string) {
                 </CardContent>
               </Card>
             </component>
+
+            <div
+              v-if="m.role === 'user'"
+              class="absolute right-2 top-100% flex gap-1 opacity-0 transition-opacity group-hover/message:opacity-100"
+            >
+              <div v-if="m.context?.from" class="text-xs">
+                {{ m.context.from }}
+              </div>
+            </div>
 
             <div
               v-if="m.role !== 'user'"

@@ -12,6 +12,7 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { throttle } from 'kontroll'
 import { z } from 'zod'
+import { buildAiSdkMessage } from '../../utils/message'
 import { api, components, internal } from '../_generated/api'
 
 const orModels = process.env.AI_MODELS_LIST?.split(',') ?? ['qwen/qwen3-32b:free']
@@ -59,6 +60,9 @@ aiApp
       model: z.string(),
       apiKey: z.string(),
       content: z.optional(z.string()),
+      context: z.optional(z.object({
+        from: z.optional(z.string()),
+      })),
       resumeStreamId: z.optional(z.string()),
       finishOnly: z.optional(z.boolean()),
       lockerKey: z.optional(z.string()),
@@ -73,6 +77,7 @@ aiApp
         model,
         apiKey,
         content,
+        context = {},
         resumeStreamId,
         finishOnly,
         lockerKey,
@@ -140,17 +145,18 @@ aiApp
         streamId = `${Date.now()}_${randomStr(10)}`
 
         // Add user message to thread
-        await c.env.runMutation(api.messages.add, {
+        await c.env.runMutation(internal.messages.add, {
           threadId,
           role: 'user',
           content,
+          context: { ...context, uid: userIdentity?.subject ?? 'UNKNOWN' },
           provider,
           model,
           lockerKey,
         })
 
-        // Create initial streaming message
-        streamingMessageId = await c.env.runMutation(api.messages.add, {
+        // Add assistant message to thread (initial streaming)
+        streamingMessageId = await c.env.runMutation(internal.messages.add, {
           threadId,
           role: 'assistant',
           content: '',
@@ -171,10 +177,7 @@ aiApp
       // Prepare messages for AI API (exclude the streaming messages)
       const messagesContext = messages
         .filter(msg => !msg.isStreaming)
-        .map(msg => ({
-          role: msg.role,
-          content: msg.content,
-        }))
+        .map(buildAiSdkMessage)
 
       // Create streaming response
       const encoder = new TextEncoder()
@@ -219,7 +222,7 @@ aiApp
                 throttle(
                   500,
                   async () => {
-                    await c.env.runMutation(api.messages.updateStreamingMessage, {
+                    await c.env.runMutation(internal.messages.updateStreamingMessage, {
                       messageId: streamingMessageId,
                       content: aiResponse,
                       isStreaming: true,

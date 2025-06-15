@@ -29,6 +29,10 @@ const aiChatTables = {
     role: v.union(v.literal('user'), v.literal('assistant')),
     timestamp: v.number(),
     content: v.string(),
+    context: v.optional(v.object({
+      from: v.optional(v.string()),
+      uid: v.optional(v.string()),
+    })),
     streamId: v.optional(v.string()),
     isStreaming: v.optional(v.boolean()),
     provider: v.string(),

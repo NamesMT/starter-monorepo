@@ -1,7 +1,7 @@
 import { objectPick } from '@namesmt/utils'
 import { ConvexError, v } from 'convex/values'
 import { messagesInThreadCounter } from './_counters'
-import { internalMutation, internalQuery, mutation, query } from './_generated/server'
+import { internalMutation, internalQuery, query } from './_generated/server'
 import { assertThreadAccess } from './threads'
 
 export const listByThread = query({
@@ -61,11 +61,15 @@ export const get = query({
   },
 })
 
-export const add = mutation({
+export const add = internalMutation({
   args: {
     threadId: v.id('threads'),
     role: v.union(v.literal('user'), v.literal('assistant')),
     content: v.string(),
+    context: v.optional(v.object({
+      from: v.optional(v.string()),
+      uid: v.optional(v.string()),
+    })),
     isStreaming: v.optional(v.boolean()),
     streamId: v.optional(v.string()),
     provider: v.string(),
@@ -82,13 +86,13 @@ export const add = mutation({
     await messagesInThreadCounter.inc(ctx, args.threadId)
 
     return await ctx.db.insert('messages', {
-      ...objectPick(args, ['threadId', 'role', 'content', 'isStreaming', 'streamId', 'provider', 'model']),
+      ...objectPick(args, ['threadId', 'role', 'content', 'context', 'isStreaming', 'streamId', 'provider', 'model']),
       timestamp: Date.now(),
     })
   },
 })
 
-export const updateStreamingMessage = mutation({
+export const updateStreamingMessage = internalMutation({
   args: {
     messageId: v.id('messages'),
     content: v.string(),
@@ -147,6 +151,7 @@ export const finishStreaming = internalMutation({
       return
 
     await ctx.db.patch(message._id, {
+      streamId: undefined,
       isStreaming: false,
     })
   },
