@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import type { Doc } from 'backend-convex/convex/_generated/dataModel'
+import { keyBy } from '@namesmt/utils'
 import { useIDBKeyval } from '@vueuse/integrations/useIDBKeyval'
 import { api } from 'backend-convex/convex/_generated/api'
 import { useConvexQuery } from 'convex-vue'
+import { Split } from 'lucide-vue-next'
 import { computed, ref } from 'vue'
 import {
   AlertDialog,
@@ -39,6 +41,7 @@ const sidebarContext = useSidebar()
 const threadIdRef = useThreadIdRef()
 
 const threads = chatContext.threads
+const threadsKeyed = computed(() => keyBy(threads.value, '_id'))
 const { data: pinnedThreadIds } = useIDBKeyval<string[]>('pinnedThreadIds', [])
 const isFetching = ref(false)
 
@@ -211,9 +214,25 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
               <!-- Using [&.active] instead of :active-class because of reactivity bug -->
               <NuxtLink
                 :to="`/chat/${thread._id}`"
-                class="group/thread relative block overflow-hidden rounded-md p-2 px-3 [&.router-link-exact-active]:bg-primary/10 hover:bg-primary/20"
+                class="group/thread relative block flex items-center overflow-hidden rounded-md p-2 px-3 [&.router-link-exact-active]:bg-primary/10 hover:bg-primary/20"
                 @pointerdown="sidebarContext.setOpenMobile(false)"
               >
+                <Tooltip v-if="thread.parentThread" :delay-duration="500">
+                  <TooltipTrigger as-child>
+                    <NuxtLink
+                      :to="`/chat/${thread.parentThread}`"
+                      class="mr-2 size-4"
+                    >
+                      <Button variant="link" size="icon" class="size-full text-current opacity-40 transition-opacity hover:(text-primary opacity-100)">
+                        <Split />
+                      </Button>
+                    </NuxtLink>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" :side-offset="6">
+                    <p>{{ $t('chat.thread.branchedFrom', { title: threadsKeyed[thread.parentThread]?.title }) }}</p>
+                  </TooltipContent>
+                </Tooltip>
+
                 <Tooltip :delay-duration="500">
                   <TooltipTrigger as-child>
                     <div class="line-clamp-1">

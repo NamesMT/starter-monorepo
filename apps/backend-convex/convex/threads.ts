@@ -127,6 +127,7 @@ export const branchThreadFromMessage = mutation({
       timestamp: Date.now(),
       lockerKey: args.lockerKey,
       userId: userIdentity?.subject,
+      parentThread: thread._id,
     })
 
     await Promise.all(messages.map(async (m) => {

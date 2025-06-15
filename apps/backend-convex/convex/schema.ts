@@ -16,6 +16,7 @@ const aiChatTables = {
     userId: v.optional(v.string()),
     lockerKey: v.optional(v.string()),
     branchedFrom: v.optional(v.id('messages')),
+    parentThread: v.optional(v.id('threads')),
   })
     .index('by_user_id', ['userId'])
     .index('by_user_id_and_timestamp', ['userId', 'timestamp'])

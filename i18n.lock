@@ -82,5 +82,6 @@ checksums:
     chat.message.copy: 4de06ccf7d0ea910de03abfa965a61af
     chat.message.branch: 8ee786a7be37ef90ade2cd00741f8dd0
     chat.toast.threadBranched: edc2466649225081b38d4c6fe1dd27cf
+    chat.thread.branchedFrom: 9235ad091f1d3b7f65a33b2e906674ad
   bd59d862767f00d421bd4cacc7522c6c:
     hello-from-%2Fx: de51bbd5a66af7e24e90466431fa9006

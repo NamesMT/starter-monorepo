@@ -84,3 +84,4 @@ chat.thread.delete,,Delete Thread,Eliminar conversación,Supprimer la conversati
 chat.message.copy,,Copy message,Copiar mensaje,Copier le message,Копировать сообщение,Sao chép tin nhắn,复制消息
 chat.message.branch,,Branch off,Crear ramificación,Créer une branche,Создать ветку,Tạo nhánh,分支话题
 chat.toast.threadBranched,,The thread has been branched off.,La conversación ha sido ramificada.,La conversation a été ramifiée.,Тема была выделена в отдельную ветку.,Chủ đề đã được tạo nhánh.,话题已被分支。
+chat.thread.branchedFrom,,Branched from {title},Ramificado desde {title},Dérivé de {title},Ответвлено от {title},Được tạo nhánh từ {title},分支自 {title}
