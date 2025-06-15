@@ -379,18 +379,20 @@ function alertIsStreaming(input: string) {
 
         <div
           v-show="!(isFetching && !messages.length)"
-          :key="chatContext.interfaceSRK.value"
-          v-motion-pop-visible-once
-          class="pointer-events-none absolute left-0 z-0 h-screen w-full place-content-center overflow-hidden transition-height"
+          class="absolute left-0 z-0 h-screen w-full place-content-center overflow-hidden transition-height"
         >
-          <div
+          <component
+            :is="chatContext.insaneUI.value ? LiquidGlassDiv : 'div'"
             v-if="!messages.length"
-            class="relative z-2 whitespace-pre-wrap px-2 text-center text-4xl text-gray-400 font-medium tracking-tighter dark:text-gray-500 dark:text-white"
+            :key="chatContext.interfaceSRK.value"
+            v-motion-pop-visible-once
+            class="relative z-2 mx-auto w-fit whitespace-pre-wrap rounded-$radius p-4 text-center text-4xl font-medium tracking-tighter $c-radius=$radius"
+            :class="chatContext.insaneUI.value ? 'text-shadow-md bg-secondary/20 text-primary-950 dark:(bg-primary/20 text-secondary-50)' : 'text-gray-500 dark:text-gray-400'"
           >
             <p>
               {{ threadIdRef ? $t('chat.interface.sendToStart') : $t('chat.interface.selectOrStart') }}
             </p>
-          </div>
+          </component>
         </div>
 
         <div v-if="messages.length" class="relative z-2 space-y-4">
