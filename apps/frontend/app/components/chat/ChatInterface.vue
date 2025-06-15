@@ -111,6 +111,9 @@ const { ignoreUpdates: ignorePathUpdate } = watchIgnorable(
 
 // Subscribe to a counter to check for messages from other concurrent sessions
 watchImmediate(threadIdRef, (threadId) => {
+  if (!threadId)
+    return
+
   console.log(`Subscribing to messages count of: ${threadId}`)
   const { unsubscribe } = convex.onUpdate(
     api.messages.countByThread,
