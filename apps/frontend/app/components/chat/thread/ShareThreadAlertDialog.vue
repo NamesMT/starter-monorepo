@@ -41,16 +41,16 @@ const { $auth } = useNuxtApp()
           <p class="whitespace-pre-line text-center">
             {{ tipOnly
               ? $t('tip.holdShift')
-              : `${$t('chat.thread.delete')}\n${$t('tip.holdShift')}` }}
+              : `${$t('chat.thread.share')}\n${$t('tip.holdShift')}` }}
           </p>
         </TooltipContent>
       </AlertDialogTrigger>
     </Tooltip>
     <AlertDialogContent>
       <AlertDialogHeader>
-        <AlertDialogTitle>{{ $t('chat.alert.deleteThread.title') }}</AlertDialogTitle>
+        <AlertDialogTitle>{{ $t('chat.alert.shareThread.title') }}</AlertDialogTitle>
         <AlertDialogDescription class="whitespace-pre-line">
-          {{ $t('chat.alert.deleteThread.description', { name: thread.title }) }}
+          {{ $t('chat.alert.shareThread.description', { name: thread.title }) }}
         </AlertDialogDescription>
       </AlertDialogHeader>
       <AlertDialogFooter>

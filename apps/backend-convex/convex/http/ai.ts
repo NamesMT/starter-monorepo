@@ -238,7 +238,7 @@ aiApp
             await c.env.runMutation(internal.threads.updateThreadInfo, { threadId, timestamp: Date.now() })
 
             // // Generate new thread title
-            // await c.env.runAction(api.threads.generateThreadTitle, { threadId, lockerKey, apiKey })
+            // await c.env.runAction(api.threads.generateTitle, { threadId, lockerKey, apiKey })
 
             controller.enqueue(encoder.encode(`o: ${JSON.stringify({ done: true })}\n`))
             controller.close()

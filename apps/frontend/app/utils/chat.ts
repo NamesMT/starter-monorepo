@@ -98,9 +98,23 @@ export async function generateThreadTitle(convex: ConvexClient | ConvexHttpClien
   threadId,
   lockerKey,
 }: GenerateThreadTitleArgs) {
-  await convex.action(api.threads.generateThreadTitle, {
+  await convex.action(api.threads.generateTitle, {
     threadId,
     lockerKey,
+  })
+}
+
+export interface ThreadSetLockerKeyArgs {
+  threadId: Id<'threads'>
+  newLockerKey: string
+}
+export async function threadSetLockerKey(convex: ConvexClient | ConvexHttpClient, {
+  threadId,
+  newLockerKey,
+}: ThreadSetLockerKeyArgs) {
+  await convex.mutation(api.threads.setLockerKey, {
+    threadId,
+    newLockerKey,
   })
 }
 

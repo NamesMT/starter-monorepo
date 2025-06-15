@@ -57,8 +57,8 @@ welcome,,Welcome,Bienvenido,Bienvenue,Добро пожаловать,Chào mừ
 chat.sidebar.newChat,,New Chat,Nuevo chat,Nouvelle conversation,Новый чат,Cuộc trò chuyện mới,新建聊天
 chat.sidebar.threads.loading,,Loading threads...,Cargando conversaciones...,Chargement des conversations...,Загрузка бесед...,Đang tải các cuộc trò chuyện...,正在加载对话...
 chat.sidebar.threads.empty,,No chats yet.,No hay chats todavía.,Pas encore de conversations.,Чатов пока нет.,Chưa có cuộc trò chuyện nào.,尚无聊天记录。
-chat.sidebar.deleteThread.title,,Delete Thread,Eliminar conversación,Supprimer la conversation,Удалить тему,Xóa Chủ Đề,删除话题
-chat.sidebar.deleteThread.description,,"Are you sure you want to delete ""{name}""?
+chat.alert.deleteThread.title,,Delete Thread,Eliminar conversación,Supprimer la conversation,Удалить тему,Xóa Chủ Đề,删除话题
+chat.alert.deleteThread.description,,"Are you sure you want to delete ""{name}""?
 This action cannot be undone.","¿Estás seguro de que quieres eliminar ""{name}""?
 Esta acción no se puede deshacer.","Êtes-vous sûr de vouloir supprimer ""{name}"" ?
 Cette action ne peut pas être annulée.","Вы уверены, что хотите удалить ""{name}""?
@@ -89,4 +89,14 @@ chat.thread.frozen,,Thread is frozen,El hilo está congelado,La discussion est g
 chat.thread.freeze,,Freeze thread,Congelar hilo,Geler la discussion,Заморозить тему,Đóng băng chủ đề,冻结线程
 chat.thread.unfreeze,,Unfreeze thread,Descongelar hilo,Dégeler la discussion,Разморозить тему,Giải băng chủ đề,解冻线程
 tip.holdShift,,"Hold ""Shift"" to skip confirmation","Mantén presionado ""Shift"" para omitir la confirmación","Maintenez ""Maj"" pour ignorer la confirmation","Удерживайте ""Shift"", чтобы пропустить подтверждение","Giữ phím ""Shift"" để bỏ qua xác nhận","按住 ""Shift"" 跳过确认"
-chat.thread.frozenWithDescription,,"Thread is frozen, new messages will create a new branch","El hilo está congelado, los nuevos mensajes crearán una nueva rama","La discussion est gelée, les nouveaux messages créeront une nouvelle branche","Тема заморожена, новые сообщения создадут новую ветку","Cuộc trò chuyện đã bị đóng băng, tin nhắn mới sẽ tạo một nhánh mới",线程已冻结，新消息将创建一个新分支
+chat.thread.frozenWithDescription,,"Thread is frozen, new messages will create a new branch","El hilo está congelado, los nuevos mensajes crearán una nueva rama","La discussion est gelée, les nouveaux messages créeront une nouvelle branche","Тема заморожена, новые сообщения создадут новую ветку","Chủ đề đã bị đóng băng, tin nhắn mới sẽ tạo một nhánh mới",线程已冻结，新消息将创建一个新分支
+chat.thread.share,,Share thread,Compartir hilo,Partager la discussion,Поделиться дискуссией,Chia sẻ chủ đề,共享线程
+chat.alert.shareThread.title,,Share Thread,Compartir hilo,Partager la discussion,Поделиться дискуссией,Chia sẻ chủ đề,共享线程
+chat.alert.shareThread.description,,"Are you sure you want to share ""{name}""?
+The recipient will have full access to the history and future of the thread.","¿Estás seguro de que quieres compartir ""{name}""?
+El destinatario tendrá acceso completo al historial y futuro de la conversación.","Êtes-vous sûr de vouloir partager ""{name}"" ?
+Le destinataire aura un accès complet à l'historique et au futur de la conversation.","Вы уверены, что хотите поделиться ""{name}""?
+Получатель получит полный доступ к истории и будущему этой ветки.","Bạn có chắc chắn muốn chia sẻ ""{name}""?
+Người nhận sẽ có toàn quyền truy cập vào lịch sử và tương lai của cuộc trò chuyện.","您确定要分享“{name}”吗？
+接收者将可以完全访问该线程的历史记录和未来内容。"
+chat.toast.threadShareLinkCopied,,The thread access link has been copied to your clipboard.,El enlace de acceso a la conversación ha sido copiado a tu portapapeles.,Le lien d'accès à la conversation a été copié dans votre presse-papiers.,Ссылка для доступа к ветке скопирована в ваш буфер обмена.,Đường dẫn truy cập cuộc trò chuyện đã được sao chép vào bảng tạm của bạn.,线程访问链接已复制到您的剪贴板。

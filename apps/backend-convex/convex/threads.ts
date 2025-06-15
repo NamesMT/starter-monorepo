@@ -182,7 +182,7 @@ export const unfreeze = mutation({
 })
 
 // Todo: maybe rate limit
-export const generateThreadTitle = action({
+export const generateTitle = action({
   args: {
     threadId: v.id('threads'),
     lockerKey: v.optional(v.string()),
@@ -211,6 +211,24 @@ export const generateThreadTitle = action({
     await ctx.runMutation(internal.threads.updateThreadInfo, {
       title: text.trim(),
       threadId: args.threadId,
+    })
+  },
+})
+
+export const setLockerKey = mutation({
+  args: {
+    threadId: v.id('threads'),
+    newLockerKey: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const thread = await ctx.db.get(args.threadId)
+    if (!thread)
+      throw new Error('Thread not found')
+
+    await assertThreadAccess(ctx, { thread })
+
+    await ctx.db.patch(args.threadId, {
+      lockerKey: args.newLockerKey,
     })
   },
 })

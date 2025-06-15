@@ -27,12 +27,16 @@ import {
   useSidebar,
 } from '@/lib/shadcn/components/ui/sidebar'
 import { Button } from '~/lib/shadcn/components/ui/button'
+import { useToast } from '~/lib/shadcn/components/ui/toast'
 
 const { $auth, $init } = useNuxtApp()
 const colorMode = useColorMode()
 const convex = useConvexClient()
 const chatContext = useChatContext()
 const sidebarContext = useSidebar()
+const { toast } = useToast()
+const { t } = useI18n()
+const { copy } = useClipboard({ legacy: true })
 
 const threadIdRef = useThreadIdRef()
 
@@ -114,6 +118,19 @@ async function _deleteThread(thread: Doc<'threads'>) {
 
   threads.value.splice(threads.value.indexOf(thread), 1)
   await deleteThread(convex, { threadId: thread._id, lockerKey: $auth.loggedIn ? undefined : thread.lockerKey })
+}
+
+async function _shareThread(thread: Doc<'threads'>) {
+  let lockerKey = thread.lockerKey
+  if (!lockerKey) {
+    const newLockerKey = getRandomLockerKey()
+    await threadSetLockerKey(convex, { threadId: thread._id, newLockerKey })
+    setLockerKey(thread._id, newLockerKey)
+    lockerKey = newLockerKey
+  }
+
+  await copy(`${window.location.origin}/chat/${thread._id}?lockerKey=${lockerKey}`)
+  toast({ description: t('chat.toast.threadShareLinkCopied') })
 }
 
 const [DefineDeleteBtn, ReuseDeleteBtn] = createReusableTemplate<{ thread: Doc<'threads'> }>()
@@ -267,6 +284,11 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
                   >
                     {{ thread.frozen ? $t('chat.thread.unfreeze') : $t('chat.thread.freeze') }}
                   </ContextMenuItem>
+                  <ContextMenuItem @select.prevent>
+                    <ShareThreadAlertDialog :thread :callback="() => { _shareThread(thread) }" :tip-only="true">
+                      <p>{{ $t('chat.thread.share') }}</p>
+                    </ShareThreadAlertDialog>
+                  </ContextMenuItem>
                 </ContextMenuContent>
               </ContextMenu>
             </li>
@@ -333,6 +355,10 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
               <DropdownMenuItem class="justify-between" @click="chatContext.insaneUI.value = !chatContext.insaneUI.value">
                 <div>InsaneUI</div>
                 <div :class="chatContext.insaneUI.value ? ' i-hugeicons:crazy bg-mainGradient' : ' i-hugeicons:confused'" />
+              </DropdownMenuItem>
+              <DropdownMenuItem class="justify-between">
+                <div>Settings</div>
+                <div class="i-hugeicons:settings-01" />
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

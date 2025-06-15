@@ -61,8 +61,8 @@ checksums:
     chat.sidebar.newChat: 3d7b701878aca8e2dbb7c6732f7f3bee
     chat.sidebar.threads.loading: c0591fcc6aa3eb6092ab4f4ce577804c
     chat.sidebar.threads.empty: eaa3199ed3ba5dd2bb3988ea999649e3
-    chat.sidebar.deleteThread.title: 3dea4a78f8c5c2073d8eab4aad3f2015
-    chat.sidebar.deleteThread.description: b0cca6d07bbbd907b4d25dc2a1dbe2e3
+    chat.alert.deleteThread.title: 3dea4a78f8c5c2073d8eab4aad3f2015
+    chat.alert.deleteThread.description: b0cca6d07bbbd907b4d25dc2a1dbe2e3
     cancel: 2e2a849c2223911717de8caa2c71bade
     confirm: 90930b51154032f119fa75c1bd422d8b
     continue: 3cfba90b4600131e82fc4260c568d044
@@ -88,5 +88,9 @@ checksums:
     chat.thread.unfreeze: 0fcaf656c357870fb42132f7342aa23a
     tip.holdShift: 895a995e323b21fd1de51496a994103d
     chat.thread.frozenWithDescription: 5cf38e514472bed10297a7936924737f
+    chat.thread.share: 3a257c0d42ffa5ed6eddfc71e46db6c0
+    chat.alert.shareThread.title: e00e8208d2dd52a00a4cbccdc57199e3
+    chat.alert.shareThread.description: e8eeee4bd83372c3a997a593a585f077
+    chat.toast.threadShareLinkCopied: 301236632c59a15e329f433e7b4a3706
   bd59d862767f00d421bd4cacc7522c6c:
     hello-from-%2Fx: de51bbd5a66af7e24e90466431fa9006
