@@ -142,6 +142,42 @@ export const branchThreadFromMessage = mutation({
   },
 })
 
+export const freeze = mutation({
+  args: {
+    threadId: v.id('threads'),
+    lockerKey: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const thread = await ctx.db.get(args.threadId)
+    if (!thread)
+      throw new ConvexError('Thread not found')
+
+    await assertThreadAccess(ctx, { thread, lockerKey: args.lockerKey })
+
+    await ctx.db.patch(args.threadId, {
+      frozen: true,
+    })
+  },
+})
+
+export const unfreeze = mutation({
+  args: {
+    threadId: v.id('threads'),
+    lockerKey: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const thread = await ctx.db.get(args.threadId)
+    if (!thread)
+      throw new ConvexError('Thread not found')
+
+    await assertThreadAccess(ctx, { thread, lockerKey: args.lockerKey })
+
+    await ctx.db.patch(args.threadId, {
+      frozen: false,
+    })
+  },
+})
+
 // Todo: maybe rate limit
 export const generateThreadTitle = action({
   args: {

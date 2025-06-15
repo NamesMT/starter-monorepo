@@ -7,13 +7,26 @@ definePageMeta({
   layout: 'basic',
 })
 
+const threadIdRef = useThreadIdRef()
+
 // Load local threads
 const { data: threads } = useIDBKeyval<Doc<'threads'>[]>('threads', [])
+
+const activeThread = computed<Doc<'threads'> | undefined>(() => {
+  if (!threadIdRef.value)
+    return undefined
+
+  return threads.value.find(thread => thread._id === threadIdRef.value)
+})
+useHead({
+  title: computed(() => activeThread.value?.title ?? '> New Chat'),
+})
 
 provideSidebarContext({
   insaneUI: useLocalState('chat/insaneUI', () => false),
   threads,
   interfaceSRK: ref(0),
+  activeThread,
 })
 </script>
 

@@ -77,6 +77,14 @@ export default defineNuxtConfig({
     },
   },
 
+  // TODO: investigate why this is not working, prob Nuxt 4 alpha bug.
+  // imports: {
+  //   dirs: [
+  //     '~/composables/**',
+  //     '~/utils/**',
+  //   ],
+  // },
+
   components: [
     {
       path: '~/components',
@@ -211,4 +219,5 @@ export default defineNuxtConfig({
   sourcemap: {
     server: false,
   },
+  compatibilityDate: '2025-06-15',
 })

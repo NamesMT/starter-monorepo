@@ -15,7 +15,7 @@ import VanishingInput from '~/lib/shadcn/components/ui/vanishing-input/Vanishing
 import LiquidGlassDiv from '../LiquidGlassDiv.vue'
 
 const isDev = import.meta.dev
-const { $auth, $init } = useNuxtApp()
+const { $auth } = useNuxtApp()
 const { convexApiUrl } = useRuntimeConfig().public
 const convex = useConvexClient()
 const chatContext = useChatContext()
@@ -41,6 +41,7 @@ const nearTopBottom = computed(() => {
 })
 
 const threadIdRef = useThreadIdRef()
+const isThreadFrozen = computed(() => chatContext.activeThread.value?.frozen)
 
 const cachedThreadsMessages: {
   [threadId: string]: Array<CustomMessage>
@@ -116,6 +117,15 @@ async function handleSubmit({ input, confirmMultiStream = false }: HandleSubmitA
   const userInput = input.trim()
   if (!userInput)
     return
+
+  if (isThreadFrozen.value) {
+    const lastMessage = messages.value[messages.value.length - 1]
+    if (!lastMessage)
+      throw new Error(`Can't branch off empty thread`)
+
+    return await _branchThreadFromMessage({ messageId: lastMessage._id, lockerKey: getLockerKey(lastMessage.threadId) })
+      .then(() => { sleep(500).then(() => handleSubmit({ input })) })
+  }
 
   if (!confirmMultiStream && streamingMessages.value > 0)
     return alertIsStreaming(userInput)
@@ -311,14 +321,17 @@ async function streamToMessage({ message, content, resumeStreamId }: StreamToMes
   console.log('Stream completed')
 }
 
-async function _branchThreadFromMessage({ messageId, sessionId, lockerKey }: BranchThreadFromMessageArgs) {
+async function _branchThreadFromMessage({ messageId, lockerKey }: BranchThreadFromMessageArgs) {
+  if (streamingMessages.value > 0)
+    throw new Error('Can not branch while streaming')
+
   const messagesLte = messages.value.slice(0, messages.value.findIndex(m => m._id === messageId) + 1)
 
   cachedThreadsMessages[threadIdRef.value] = messages.value
 
   messages.value = messagesLte
 
-  await branchThreadFromMessage(convex, { messageId, sessionId, lockerKey })
+  await branchThreadFromMessage(convex, { messageId, lockerKey })
     .then((threadId) => {
       ignorePathUpdate(() => { threadIdRef.value = threadId })
       if (lockerKey)
@@ -381,18 +394,16 @@ function alertIsStreaming(input: string) {
           v-show="!(isFetching && !messages.length)"
           class="absolute left-0 z-0 h-screen w-full place-content-center overflow-hidden transition-height"
         >
-          <component
-            :is="chatContext.insaneUI.value ? LiquidGlassDiv : 'div'"
+          <IUIMaybeGlassCard
             v-if="!messages.length"
             :key="chatContext.interfaceSRK.value"
             v-motion-pop-visible-once
-            class="relative z-2 mx-auto w-fit whitespace-pre-wrap rounded-$radius p-4 text-center text-4xl font-medium tracking-tighter $c-radius=$radius"
-            :class="chatContext.insaneUI.value ? 'text-shadow-md bg-secondary/20 text-primary-950 dark:(bg-primary/20 text-secondary-50)' : 'text-gray-500 dark:text-gray-400'"
+            class="relative z-2 mx-auto w-fit whitespace-pre-wrap p-4 text-center text-4xl font-medium tracking-tighter"
           >
             <p>
               {{ threadIdRef ? $t('chat.interface.sendToStart') : $t('chat.interface.selectOrStart') }}
             </p>
-          </component>
+          </IUIMaybeGlassCard>
         </div>
 
         <div v-if="messages.length" class="relative z-2 space-y-4">
@@ -456,7 +467,6 @@ function alertIsStreaming(input: string) {
                   <Button
                     variant="ghost" size="icon" class="size-7" @click="_branchThreadFromMessage({
                       messageId: m._id,
-                      sessionId: $init.sessionId,
                       lockerKey: getLockerKey(m.threadId),
                     })"
                   >
@@ -469,6 +479,13 @@ function alertIsStreaming(input: string) {
               </Tooltip>
             </div>
           </div>
+
+          <IUIMaybeGlassCard
+            v-if="isThreadFrozen"
+            class="mx-auto w-fit border p-2 px-8 font-medium tracking-wide"
+          >
+            {{ $t('chat.thread.frozenWithDescription') }}
+          </IUIMaybeGlassCard>
 
           <div class="pb-40" />
         </div>

@@ -10,6 +10,7 @@ export const [useChatContext, provideSidebarContext] = createContext<{
   threads: Ref<Doc<'threads'>[]>
   // Interface soft render key
   interfaceSRK: Ref<number>
+  activeThread: ComputedRef<Doc<'threads'> | undefined>
 }>('chat page')
 
 export function useThreadIdRef() {
@@ -19,7 +20,7 @@ export function useThreadIdRef() {
 
 export interface BranchThreadFromMessageArgs {
   messageId: Id<'messages'>
-  sessionId: string
+  sessionId?: string
   lockerKey?: string
 }
 export async function branchThreadFromMessage(convex: ConvexClient | ConvexHttpClient, {
@@ -27,9 +28,11 @@ export async function branchThreadFromMessage(convex: ConvexClient | ConvexHttpC
   sessionId,
   lockerKey,
 }: BranchThreadFromMessageArgs) {
+  const { $init } = useNuxtApp()
+
   return await convex.mutation(api.threads.branchThreadFromMessage, {
     messageId,
-    sessionId,
+    sessionId: sessionId ?? $init.sessionId,
     lockerKey,
   })
 }
@@ -60,6 +63,28 @@ export async function deleteThread(convex: ConvexClient | ConvexHttpClient, {
   lockerKey,
 }: DeleteThreadArgs) {
   await convex.mutation(api.threads.del, {
+    threadId,
+    lockerKey,
+  })
+}
+
+export interface FreezeThreadArgs {
+  threadId: Id<'threads'>
+  lockerKey?: string
+}
+export async function freezeThread(convex: ConvexClient | ConvexHttpClient, { threadId, lockerKey }: FreezeThreadArgs) {
+  return await convex.mutation(api.threads.freeze, {
+    threadId,
+    lockerKey,
+  })
+}
+
+export interface UnfreezeThreadArgs {
+  threadId: Id<'threads'>
+  lockerKey?: string
+}
+export async function unfreezeThread(convex: ConvexClient | ConvexHttpClient, { threadId, lockerKey }: UnfreezeThreadArgs) {
+  return await convex.mutation(api.threads.unfreeze, {
     threadId,
     lockerKey,
   })

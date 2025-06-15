@@ -83,5 +83,10 @@ checksums:
     chat.message.branch: 8ee786a7be37ef90ade2cd00741f8dd0
     chat.toast.threadBranched: edc2466649225081b38d4c6fe1dd27cf
     chat.thread.branchedFrom: 9235ad091f1d3b7f65a33b2e906674ad
+    chat.thread.frozen: 69fa1ed78bb636c218ec3d95eae69bca
+    chat.thread.freeze: b90fc4e37a58e2f60fbc9a25945b2138
+    chat.thread.unfreeze: 0fcaf656c357870fb42132f7342aa23a
+    tip.holdShift: 895a995e323b21fd1de51496a994103d
+    chat.thread.frozenWithDescription: 5cf38e514472bed10297a7936924737f
   bd59d862767f00d421bd4cacc7522c6c:
     hello-from-%2Fx: de51bbd5a66af7e24e90466431fa9006
