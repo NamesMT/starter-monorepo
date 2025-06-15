@@ -352,7 +352,9 @@ function doScrollBottom({ smooth = true, maybe = false, tries = 0, lastScrollTop
   if (tries && (l.$el.scrollTop < lastScrollTop))
     tries = 0
 
-  if (maybe && l.lenis.direction !== 1)
+  if (!maybe)
+    l.lenis.direction = 1
+  else if (l.lenis.direction !== 1)
     return
 
   if (scrollHeight !== l.lenis.limit + l.$el.clientHeight) {
