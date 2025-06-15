@@ -7,11 +7,29 @@ import { createContext } from 'reka-ui'
 
 export const [useChatContext, provideSidebarContext] = createContext<{
   insaneUI: Ref<boolean>
+  threads: Ref<Doc<'threads'>[]>
 }>('chat page')
 
 export function useThreadIdRef() {
   // For [...all] routing the value is an array
   return useRouteParams<string>('all', undefined, { transform: { get: s => Array.isArray(s) ? s[0] : s } })
+}
+
+export interface BranchThreadFromMessageArgs {
+  messageId: Id<'messages'>
+  sessionId: string
+  lockerKey?: string
+}
+export async function branchThreadFromMessage(convex: ConvexClient | ConvexHttpClient, {
+  messageId,
+  sessionId,
+  lockerKey,
+}: BranchThreadFromMessageArgs) {
+  return await convex.mutation(api.threads.branchThreadFromMessage, {
+    messageId,
+    sessionId,
+    lockerKey,
+  })
 }
 
 export interface CreateNewThreadArgs {
@@ -24,13 +42,11 @@ export async function createNewThread(convex: ConvexClient | ConvexHttpClient, {
 }: CreateNewThreadArgs) {
   const { $init } = useNuxtApp()
 
-  const newThreadId = await convex.mutation(api.threads.create, {
+  return await convex.mutation(api.threads.create, {
     title,
     sessionId: $init.sessionId,
     lockerKey,
   })
-
-  return newThreadId
 }
 
 export interface DeleteThreadArgs {
@@ -61,23 +77,16 @@ export async function generateThreadTitle(convex: ConvexClient | ConvexHttpClien
   })
 }
 
-export interface CustomMessage {
+export interface CustomMessage extends Doc<'messages'> {
   id: string
-  role: 'user' | 'assistant'
-  content: string
-  isStreaming?: boolean
-  streamId?: string
 }
 // Extending from AI SDK causes lag and infinite deep, using this to check compatibility instead
 export type _AISDKMessageCompatCheck = CustomMessage & Message
 
 export function customMessageTransform(message: Doc<'messages'>): CustomMessage {
   return {
+    ...message,
     id: message._id,
-    role: message.role,
-    content: message.content,
-    isStreaming: message.isStreaming,
-    streamId: message.streamId,
   }
 }
 

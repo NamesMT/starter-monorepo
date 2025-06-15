@@ -76,5 +76,11 @@ checksums:
     guest: 2aec6d6ebe0d9a1db0a5c8cd5a98b8c3
     loginToEnjoyMore: 047389679c35d5ff4ab81e5f65e303ec
     chat.toast.threadRemovedExternal: db7f0c7a17abd8f2fa3bdf24f0e81377
+    chat.thread.pin: 8f1062e24a5a0f9fdfce1a070e8ab476
+    chat.thread.unpin: 9f3e0c1a25452b171dfffee566e11d49
+    chat.thread.delete: 3dea4a78f8c5c2073d8eab4aad3f2015
+    chat.message.copy: 4de06ccf7d0ea910de03abfa965a61af
+    chat.message.branch: 8ee786a7be37ef90ade2cd00741f8dd0
+    chat.toast.threadBranched: edc2466649225081b38d4c6fe1dd27cf
   bd59d862767f00d421bd4cacc7522c6c:
     hello-from-%2Fx: de51bbd5a66af7e24e90466431fa9006

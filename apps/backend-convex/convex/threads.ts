@@ -26,7 +26,7 @@ export const listByUser = query({
 
     return await ctx.db
       .query('threads')
-      .withIndex('by_user_id_and_last_message', q => q.eq('userId', userId ?? userIdentity?.subject))
+      .withIndex('by_user_id_and_timestamp', q => q.eq('userId', userId ?? userIdentity?.subject))
       .order('desc')
       .collect()
   },
@@ -72,7 +72,7 @@ export const create = mutation({
     return await ctx.db.insert('threads', {
       sessionId: args.sessionId,
       title: args.title,
-      lastMessageAt: Date.now(),
+      timestamp: Date.now(),
       lockerKey: args.lockerKey,
       userId: (await ctx.auth.getUserIdentity())?.subject,
     })
@@ -96,6 +96,48 @@ export const del = mutation({
     await assertThreadAccess(ctx, { thread, lockerKey: args.lockerKey })
 
     await ctx.db.delete(args.threadId)
+  },
+})
+
+export const branchThreadFromMessage = mutation({
+  args: {
+    messageId: v.id('messages'),
+    sessionId: v.string(),
+    lockerKey: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const message = await ctx.db.get(args.messageId)
+    if (!message)
+      throw new ConvexError('Message not found')
+
+    const thread = await ctx.db.get(message.threadId)
+    if (!thread)
+      throw new ConvexError('Thread not found')
+
+    const userIdentity = await ctx.auth.getUserIdentity()
+    await assertThreadAccess(ctx, { thread, lockerKey: args.lockerKey, userIdentity })
+
+    const messages = await ctx.db.query('messages')
+      .withIndex('by_thread_and_timestamp', q => q.eq('threadId', thread._id).lte('timestamp', message.timestamp))
+      .collect()
+
+    const newThreadId = await ctx.db.insert('threads', {
+      sessionId: args.sessionId,
+      title: thread.title,
+      timestamp: Date.now(),
+      lockerKey: args.lockerKey,
+      userId: userIdentity?.subject,
+    })
+
+    await Promise.all(messages.map(async (m) => {
+      await ctx.db.insert('messages', {
+        ...{ ...m, _id: undefined, _creationTime: undefined },
+        isStreaming: false,
+        threadId: newThreadId,
+      })
+    }))
+
+    return newThreadId
   },
 })
 
@@ -137,7 +179,7 @@ export const updateThreadInfo = internalMutation({
   args: {
     threadId: v.id('threads'),
     title: v.optional(v.string()),
-    lastMessageAt: v.optional(v.number()),
+    timestamp: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const thread = await ctx.db.get(args.threadId)
@@ -147,7 +189,7 @@ export const updateThreadInfo = internalMutation({
     await ctx.db.patch(args.threadId, {
       ...clearUndefined({
         title: args.title,
-        lastMessageAt: args.lastMessageAt,
+        timestamp: args.timestamp,
       }),
     })
   },

@@ -128,7 +128,7 @@ aiApp
         // If finishOnly is true, just mark as finished and return
         if (finishOnly) {
           await c.env.runMutation(internal.messages.finishStreaming, { streamId })
-          await c.env.runMutation(internal.threads.updateThreadInfo, { threadId, lastMessageAt: Date.now() })
+          await c.env.runMutation(internal.threads.updateThreadInfo, { threadId, timestamp: Date.now() })
           c.text('OK')
         }
       }
@@ -182,6 +182,7 @@ aiApp
 
             // Send session ID first
             controller.enqueue(encoder.encode(`o: ${JSON.stringify({
+              messageId: streamingMessageId,
               sessionId: streamId,
               resuming: !!existingMessage,
             })}\n`))
@@ -234,7 +235,7 @@ aiApp
 
             // Finish streaming
             await c.env.runMutation(internal.messages.finishStreaming, { streamId })
-            await c.env.runMutation(internal.threads.updateThreadInfo, { threadId, lastMessageAt: Date.now() })
+            await c.env.runMutation(internal.threads.updateThreadInfo, { threadId, timestamp: Date.now() })
 
             // // Generate new thread title
             // await c.env.runAction(api.threads.generateThreadTitle, { threadId, lockerKey, apiKey })

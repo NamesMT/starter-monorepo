@@ -78,3 +78,9 @@ chat.interface.selectOrStart,,Select a chat or start a new one.,Selecciona un ch
 guest,,Guest,Invitado,Invité,Гость,Khách,访客
 loginToEnjoyMore,,Login to enjoy more!,¡Inicia sesión para disfrutar más!,Connectez-vous pour en profiter davantage !,"Войдите, чтобы получить больше возможностей!",Đăng nhập để trải nghiệm nhiều hơn!,登录以享受更多功能！
 chat.toast.threadRemovedExternal,,The chat has been removed by the owner.,El chat ha sido eliminado por el propietario.,Le chat a été supprimé par le propriétaire.,Чат был удален владельцем.,聊天已被所有者删除。,该聊天已被所有者移除。
+chat.thread.pin,,Pin Thread,Fijar conversación,Épingler la conversation,Закрепить тему,Ghim chủ đề,置顶话题
+chat.thread.unpin,,Unpin Thread,Desfijar conversación,Désépingler la conversation,Открепить тему,Bỏ ghim chủ đề,取消置顶话题
+chat.thread.delete,,Delete Thread,Eliminar conversación,Supprimer la conversation,Удалить тему,Xóa chủ đề,删除话题
+chat.message.copy,,Copy message,Copiar mensaje,Copier le message,Копировать сообщение,Sao chép tin nhắn,复制消息
+chat.message.branch,,Branch off,Crear ramificación,Créer une branche,Создать ветку,Tạo nhánh,分支话题
+chat.toast.threadBranched,,The thread has been branched off.,La conversación ha sido ramificada.,La conversation a été ramifiée.,Тема была выделена в отдельную ветку.,Chủ đề đã được tạo nhánh.,话题已被分支。

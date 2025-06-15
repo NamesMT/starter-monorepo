@@ -12,14 +12,15 @@ const aiChatTables = {
     // The initial session ID of the user that created the thread, warning: also used as "password" to list threads for now.
     sessionId: v.string(),
     title: v.string(),
-    lastMessageAt: v.number(),
+    timestamp: v.number(),
     userId: v.optional(v.string()),
     lockerKey: v.optional(v.string()),
+    branchedFrom: v.optional(v.id('messages')),
   })
     .index('by_user_id', ['userId'])
-    .index('by_user_id_and_last_message', ['userId', 'lastMessageAt'])
+    .index('by_user_id_and_timestamp', ['userId', 'timestamp'])
     .index('by_session_id', ['sessionId'])
-    .index('by_last_message', ['lastMessageAt']),
+    .index('by_timestamp', ['timestamp']),
 
   messages: defineTable({
     threadId: v.id('threads'),

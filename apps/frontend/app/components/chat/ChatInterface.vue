@@ -1,14 +1,16 @@
 <!-- eslint-disable no-console -->
 <script setup lang="ts">
-import type { Doc, Id } from 'backend-convex/convex/_generated/dataModel'
+import type { Doc } from 'backend-convex/convex/_generated/dataModel'
 import type Lenis from 'lenis'
 import { keyBy, sleep, uniquePromise } from '@namesmt/utils'
 import { api } from 'backend-convex/convex/_generated/api'
 import { useConvexClient } from 'convex-vue'
 import { countdown, getInstance, throttle } from 'kontroll'
 import { VueLenis } from 'lenis/vue'
+import { Split } from 'lucide-vue-next'
 import { Skeleton } from '@/lib/shadcn/components/ui/skeleton'
 import { Card, CardContent } from '~/lib/shadcn/components/ui/card'
+import { useToast } from '~/lib/shadcn/components/ui/toast'
 import VanishingInput from '~/lib/shadcn/components/ui/vanishing-input/VanishingInput.vue'
 import LiquidGlassDiv from '../LiquidGlassDiv.vue'
 
@@ -17,6 +19,8 @@ const { $auth } = useNuxtApp()
 const { convexApiUrl } = useRuntimeConfig().public
 const convex = useConvexClient()
 const chatContext = useChatContext()
+const { toast } = useToast()
+const { t } = useI18n()
 
 // Lenis have bug with useTemplateRef
 const lenisRef = ref<{ $el: HTMLElement, lenis: Lenis }>()
@@ -69,6 +73,17 @@ const { ignoreUpdates: ignorePathUpdate } = watchIgnorable(
         .catch((e) => {
           console.error('Failed to fetch messages:', e)
           messages.value = []
+
+          // If the owner have deleted the thread, remove it locally
+          // (or the demo crons cleaned it)
+          console.log({ a: getConvexErrorMessage(e), e })
+          if (getConvexErrorMessage(e) === 'Thread not found') {
+            toast({ variant: 'destructive', description: t('chat.toast.threadRemovedExternal') })
+
+            const foundAt = chatContext.threads.value.findIndex(t => t._id === threadId)
+            if (foundAt !== -1)
+              chatContext.threads.value.splice(foundAt, 1)
+          }
         })
         .finally(() => {
           if (threadIdRef.value === threadId)
@@ -110,14 +125,14 @@ async function handleSubmit({ input, confirmMultiStream = false }: HandleSubmitA
     id: `user-${Date.now()}`,
     role: 'user',
     content: userInput,
-  })
+  } as any as CustomMessage)
   messages.value.push({
     id: `assistant-${Date.now()}`,
     role: 'assistant',
     content: '',
     isStreaming: true,
     streamId: undefined,
-  })
+  } as any as CustomMessage)
 
   chatInput.value = ''
 
@@ -175,10 +190,8 @@ async function pollToMessage({ message, resumeStreamId, threadId = threadIdRef.v
     return
   }
 
-  const messageId = message.id as Id<'messages'>
-
   const messageFromConvex = await convex.query(api.messages.get, {
-    messageId: messageId as Id<'messages'>,
+    messageId: message._id,
     lockerKey: getLockerKey(threadId),
   })
   Object.assign(message, customMessageTransform(messageFromConvex))
@@ -268,13 +281,16 @@ async function streamToMessage({ message, content, resumeStreamId }: StreamToMes
             Object.assign(state, JSON.parse(part))
             break
         }
+
+        if (state.messageId)
+          message._id = state.messageId
+
+        if (state.sessionId)
+          message.streamId = state.sessionId
+
+        if (state.error)
+          message.content += `\nError: ${state.error}`
       }
-
-      if (state.sessionId)
-        message.streamId = state.sessionId
-
-      if (state.error)
-        message.content += `\nError: ${state.error}`
 
       if (state.content)
         message.content += state.content
@@ -293,6 +309,23 @@ async function streamToMessage({ message, content, resumeStreamId }: StreamToMes
   }
 
   console.log('Stream completed')
+}
+
+async function _branchThreadFromMessage({ messageId, sessionId, lockerKey }: BranchThreadFromMessageArgs) {
+  const messagesLte = messages.value.slice(0, messages.value.findIndex(m => m._id === messageId) + 1)
+
+  cachedThreadsMessages[threadIdRef.value] = messages.value
+
+  messages.value = messagesLte
+
+  await branchThreadFromMessage(convex, { messageId, sessionId, lockerKey })
+    .then((threadId) => {
+      ignorePathUpdate(() => { threadIdRef.value = threadId })
+      if (lockerKey)
+        setLockerKey(threadId, lockerKey)
+
+      toast({ description: t('chat.toast.threadBranched') })
+    })
 }
 
 function doScrollBottom({ smooth = true, maybe = false, tries = 0, lastScrollTop = 0 } = {}) {
@@ -340,9 +373,8 @@ function alertIsStreaming(input: string) {
     <VueLenis ref="lenisRef" class="h-screen overflow-y-scroll px-4">
       <div class="mx-auto h-full max-w-full lg:max-w-4xl">
         <FlickeringGrid
-          v-if="chatContext.insaneUI.value"
-          class="absolute inset-0 z-0 place-content-center" :square-size="10" :grid-gap="5"
-          color="#60A5FA" :max-opacity="0.5" :flicker-chance="0.1"
+          v-if="chatContext.insaneUI.value" class="absolute inset-0 z-0 place-content-center"
+          :square-size="10" :grid-gap="5" color="#60A5FA" :max-opacity="0.5" :flicker-chance="0.1"
         />
 
         <div
@@ -363,24 +395,22 @@ function alertIsStreaming(input: string) {
           <div class="pt-6" />
 
           <div
-            v-for="m of messages" :key="m.id" class="flex"
-            :class="m.role === 'user' ? 'justify-end' : 'justify-start'"
+            v-for="m of messages" :key="m.id" class="group/message relative flex"
+            :class="m.role === 'user' ? 'justify-end' : 'justify-start pb-10'"
           >
             <component
               :is="chatContext.insaneUI.value ? LiquidGlassDiv : 'div'"
-              class="rounded-$radius $c-radius=$radius"
-              :class="[
+              class="rounded-$radius $c-radius=$radius" :class="[
                 m.role === 'user'
                   ? 'bg-secondary-100 dark:bg-secondary-950'
                   : 'bg-primary-100 dark:bg-primary-950',
                 chatContext.insaneUI.value
                   ? 'bg-opacity-50!'
                   : 'bg-opacity-5!',
-              ]"
+              ]" tabindex="0"
             >
               <Card
-                class="bg-transparent shadow-md"
-                :class="[
+                class="bg-transparent shadow-md" :class="[
                   m.role === 'user'
                     ? 'border-secondary-200 max-w-80% md:max-w-2xl'
                     : 'border-primary-200 max-w-full md:max-w-3xl',
@@ -391,13 +421,13 @@ function alertIsStreaming(input: string) {
                     {{ m.role === 'user' ? $t('pages.chat.userLabel') : $t('pages.chat.aiLabel') }}
                   </CardTitle>
                 </CardHeader> -->
-                <CardContent class="min-w-25 px-4 py-3 [&_.prose-hr]:(border-accent-foreground!)">
-                  <div v-if="m.isStreaming && !m.content" class="my-4 flex gap-2">
+                <CardContent class="px-4 py-3 [&_.prose-hr]:(border-accent-foreground!)">
+                  <div v-if="m.isStreaming && !m.content" class="flex gap-2">
                     <div>{{ $t('generating') }}</div>
                     <div class="spinner h-5 w-5" />
                   </div>
-                  <MDC v-else :value="m.content" />
-                  <div class="my-4 hidden first:block">
+                  <MDC v-else :value="m.content" class="only-child:[&>.prose-p]:my-0" />
+                  <div class="hidden first:block">
                     <Skeleton
                       class="h-5 w-$c-W rounded-full bg-muted-foreground" :style="{
                         '--c-W': `${(Math.floor(Math.random() * (300 - 100 + 1)) + 100) * (m.role === 'user' ? 1 : 2)}px`,
@@ -407,6 +437,36 @@ function alertIsStreaming(input: string) {
                 </CardContent>
               </Card>
             </component>
+
+            <div
+              v-if="m.role !== 'user'"
+              class="absolute bottom-2 left-2 flex gap-1 opacity-0 transition-opacity group-hover/message:opacity-100"
+            >
+              <Tooltip :delay-duration="500">
+                <TooltipTrigger as-child>
+                  <CodeCopy :code="m.content" class="hover:text-accent-foreground hover:bg-accent!" />
+                </TooltipTrigger>
+                <TooltipContent side="bottom" :side-offset="6">
+                  <p>{{ $t('chat.message.copy') }}</p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip :delay-duration="500">
+                <TooltipTrigger as-child>
+                  <Button
+                    variant="ghost" size="icon" class="size-7" @click="_branchThreadFromMessage({
+                      messageId: m._id,
+                      sessionId: $init.sessionId,
+                      lockerKey: getLockerKey(m.threadId),
+                    })"
+                  >
+                    <Split />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" :side-offset="6">
+                  <p>{{ $t('chat.message.branch') }}</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
           </div>
 
           <div class="pb-40" />
@@ -419,10 +479,16 @@ function alertIsStreaming(input: string) {
         {{ nearTopBottom }}
       </div>
       <div class="absolute bottom-100% right-6 mb-2 flex flex-col gap-2">
-        <Button variant="outline" size="icon" class="rounded-xl p-1 opacity-100 transition-opacity duration-500" :class="nearTopBottom[0] && 'invisible opacity-0'" @click="lenisRef!.lenis.scrollTo('top')">
+        <Button
+          variant="outline" size="icon" class="rounded-xl p-1 opacity-100 transition-opacity duration-500"
+          :class="nearTopBottom[0] && 'invisible opacity-0'" @click="lenisRef!.lenis.scrollTo('top')"
+        >
           <div class="i-hugeicons:circle-arrow-up-03 h-full w-full" />
         </Button>
-        <Button variant="outline" size="icon" class="rounded-xl p-1 opacity-100 transition-opacity duration-500" :class="nearTopBottom[1] && 'invisible opacity-0'" @click="lenisRef!.lenis.scrollTo('bottom')">
+        <Button
+          variant="outline" size="icon" class="rounded-xl p-1 opacity-100 transition-opacity duration-500"
+          :class="nearTopBottom[1] && 'invisible opacity-0'" @click="lenisRef!.lenis.scrollTo('bottom')"
+        >
           <div class="i-hugeicons:circle-arrow-down-03 h-full w-full" />
         </Button>
       </div>
@@ -437,7 +503,10 @@ function alertIsStreaming(input: string) {
     </LiquidGlassDiv>
 
     <!-- Multi Stream Confirm Dialog -->
-    <AlertDialog v-model:open="multiStreamConfirmDialogOpen" @update:open="(o) => { if (!o) chatInput = savedChatInput }">
+    <AlertDialog
+      v-model:open="multiStreamConfirmDialogOpen"
+      @update:open="(o) => { if (!o) chatInput = savedChatInput }"
+    >
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{{ $t('chat.multiStreamConfirmDialog.title') }}</AlertDialogTitle>

@@ -36,8 +36,7 @@ const chatContext = useChatContext()
 
 const threadIdRef = useThreadIdRef()
 
-// Load local threads
-const { data: threads } = useIDBKeyval<Doc<'threads'>[]>('threads', [])
+const threads = chatContext.threads
 const { data: pinnedThreadIds } = useIDBKeyval<string[]>('pinnedThreadIds', [])
 const isFetching = ref(false)
 
@@ -107,10 +106,12 @@ useHead({
 
 function pinThread(thread: Doc<'threads'>) {
   pinnedThreadIds.value.push(thread._id)
+  nextTick(() => { document.getElementById(`li_thread_${thread._id}`)?.scrollIntoView({ behavior: 'smooth' }) })
 }
 
 function unpinThread(thread: Doc<'threads'>) {
   pinnedThreadIds.value.splice(pinnedThreadIds.value.indexOf(thread._id), 1)
+  nextTick(() => { document.getElementById(`li_thread_${thread._id}`)?.scrollIntoView({ behavior: 'smooth' }) })
 }
 
 async function _deleteThread(thread: Doc<'threads'>) {
@@ -170,11 +171,18 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
         <div class="hidden">
           <DefineDeleteBtn v-slot="{ thread }">
             <AlertDialog>
-              <AlertDialogTrigger v-show="!thread.userId || (thread.userId === $auth?.user?.sub)" as-child>
-                <Button tabindex="-1" variant="ghost" size="icon" class="size-7 transition-none" @pointerdown.stop.prevent>
-                  <div class="i-hugeicons:delete-put-back" />
-                </Button>
-              </AlertDialogTrigger>
+              <Tooltip :delay-duration="500">
+                <AlertDialogTrigger v-show="!thread.userId || (thread.userId === $auth?.user?.sub)" as-child>
+                  <TooltipTrigger as-child>
+                    <Button tabindex="-1" variant="ghost" size="icon" class="size-7 transition-none" @pointerdown.stop.prevent @click.shift.stop.prevent="_deleteThread(thread)">
+                      <div class="i-hugeicons:cancel-01" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" :side-offset="6">
+                    <p>{{ $t('chat.thread.delete') }}</p>
+                  </TooltipContent>
+                </AlertDialogTrigger>
+              </Tooltip>
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>{{ $t('chat.sidebar.deleteThread.title') }}</AlertDialogTitle>
@@ -193,23 +201,20 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
           </DefineDeleteBtn>
 
           <DefineThreadLiItem v-slot="{ thread, pinned }">
-            <li>
+            <li :id="`li_thread_${thread._id}`">
               <!-- Using [&.active] instead of :active-class because of reactivity bug -->
               <NuxtLink
                 :to="`/chat/${thread._id}`"
                 class="group/thread relative block overflow-hidden rounded-md p-2 px-3 [&.router-link-exact-active]:bg-primary/10 hover:bg-primary/20"
               >
-                <!-- Delay already set on provider but seems bugged -->
                 <Tooltip :delay-duration="500">
                   <TooltipTrigger as-child>
                     <div class="line-clamp-1">
                       {{ thread.title }}
                     </div>
                   </TooltipTrigger>
-                  <TooltipContent side="bottom" :side-offset="6" class="border-none p-0 light:bg-gray-100">
-                    <div class="px-3 py-1 light:bg-primary-50/20">
-                      <p>{{ thread.title }}</p>
-                    </div>
+                  <TooltipContent side="bottom" :side-offset="6">
+                    <p>{{ thread.title }}</p>
                   </TooltipContent>
                 </Tooltip>
 
@@ -217,12 +222,20 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
                   class="right-0 top-0 h-full flex translate-x-[calc(100%+1rem)] items-center gap-1 px-2 pr-1 transition-transform will-change-transform $c-radius=6px absolute! group-hover/thread:translate-x-0"
                   @click.stop.prevent
                 >
-                  <Button
-                    tabindex="-1" variant="ghost" size="icon" class="size-7 transition-none hover:bg-surface-200/20!"
-                    @pointerdown.stop.prevent @click="pinned ? unpinThread(thread) : pinThread(thread)"
-                  >
-                    <div :class="[pinned ? 'i-hugeicons:pin-off' : 'i-hugeicons:pin']" />
-                  </Button>
+                  <Tooltip :delay-duration="500">
+                    <TooltipTrigger as-child>
+                      <Button
+                        tabindex="-1" variant="ghost" size="icon" class="size-7 transition-none hover:bg-surface-200/20!"
+                        @pointerdown.stop.prevent @click.stop.prevent="pinned ? unpinThread(thread) : pinThread(thread)"
+                      >
+                        <div :class="[pinned ? 'i-hugeicons:pin-off' : 'i-hugeicons:pin']" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom" :side-offset="6">
+                      <p>{{ pinned ? $t('chat.thread.unpin') : $t('chat.thread.pin') }}</p>
+                    </TooltipContent>
+                  </Tooltip>
+
                   <ReuseDeleteBtn :thread />
                 </LiquidGlassDiv>
               </NuxtLink>

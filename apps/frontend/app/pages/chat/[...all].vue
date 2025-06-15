@@ -1,12 +1,18 @@
 <script setup lang="ts">
+import type { Doc } from 'backend-convex/convex/_generated/dataModel'
+import { useIDBKeyval } from '@vueuse/integrations/useIDBKeyval'
 import { SidebarProvider } from '@/lib/shadcn/components/ui/sidebar'
 
 definePageMeta({
   layout: 'basic',
 })
 
+// Load local threads
+const { data: threads } = useIDBKeyval<Doc<'threads'>[]>('threads', [])
+
 provideSidebarContext({
   insaneUI: useLocalState('chat/insaneUI', () => false),
+  threads,
 })
 </script>
 
