@@ -5,7 +5,7 @@ import { SidebarProvider } from '@/lib/shadcn/components/ui/sidebar'
 
 definePageMeta({
   layout: 'basic',
-  middleware: ['accept-locker-key'],
+  middleware: ['accept-shared-thread'],
 })
 
 const threadIdRef = useThreadIdRef()

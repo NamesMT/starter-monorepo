@@ -13,6 +13,7 @@ export default defineNuxtPlugin({
       mounted: false,
       sessionId: `session_${Date.now()}_${randomStr(8)}`,
     })
+
     return {
       provide: {
         init: state,

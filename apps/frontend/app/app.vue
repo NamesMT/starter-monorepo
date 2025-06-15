@@ -1,28 +1,15 @@
 <script setup lang="ts">
-import type { ConvexVueContext } from 'convex-vue'
-
 defineOgImageComponent('Frame', {
   title: `Hello! I'm starter-monorepo 👋`,
   description: 'Monorepo with 🤖 AI initialize and localize | 🔥Hono + OpenAPI & RPC, Nuxt, Convex, SST Ion, Kinde Auth, Tanstack Query, Shadcn, UnoCSS, Spreadsheet I18n, Lingo.dev',
   colorMode: 'dark',
 })
 
-const { $init, $auth } = useNuxtApp()
+const { $init } = useNuxtApp()
 onMounted(async () => {
   await nextTick()
   $init.mounted = true
 })
-
-// Init convex client if url configured
-const convexVueContext = inject<ConvexVueContext>('convex-vue')
-// Don't init if on server, see https://github.com/chris-visser/convex-vue/issues/6
-if (import.meta.client && convexVueContext?.options?.url) {
-  convexVueContext.initClient(convexVueContext.options)
-  // Also set auth hook for the client
-  convexVueContext.clientRef.value?.setAuth(async () => {
-    return $auth.token
-  })
-}
 </script>
 
 <template>
