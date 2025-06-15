@@ -4,7 +4,7 @@
     --foreground: var(--surface-900);
 
     --muted: var(--surface-100);
-    --muted-foreground: var(--surface-400);
+    --muted-foreground: var(--surface-700);
 
     --popover: var(--surface-0);
     --popover-foreground: var(--surface-900);
