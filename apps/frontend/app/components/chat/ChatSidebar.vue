@@ -133,6 +133,22 @@ async function _shareThread(thread: Doc<'threads'>) {
   toast({ description: t('chat.toast.threadShareLinkCopied') })
 }
 
+async function _freezeThread(thread: Doc<'threads'>) {
+  const prevVal = thread.frozen
+  thread.frozen = true
+
+  await freezeThread(convex, { threadId: thread._id, lockerKey: thread.lockerKey })
+    .catch(() => { thread.frozen = prevVal })
+}
+
+async function _unfreezeThread(thread: Doc<'threads'>) {
+  const prevVal = thread.frozen
+  thread.frozen = undefined
+
+  await unfreezeThread(convex, { threadId: thread._id, lockerKey: thread.lockerKey })
+    .catch(() => { thread.frozen = prevVal })
+}
+
 const [DefineDeleteBtn, ReuseDeleteBtn] = createReusableTemplate<{ thread: Doc<'threads'> }>()
 const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread: Doc<'threads'>, pinned?: boolean }>()
 </script>
@@ -279,8 +295,8 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
                   </ContextMenuItem>
                   <ContextMenuItem
                     @click="thread.frozen
-                      ? unfreezeThread(convex, { threadId: thread._id, lockerKey: thread.lockerKey })
-                      : freezeThread(convex, { threadId: thread._id, lockerKey: thread.lockerKey })"
+                      ? _unfreezeThread(thread)
+                      : _freezeThread(thread)"
                   >
                     {{ thread.frozen ? $t('chat.thread.unfreeze') : $t('chat.thread.freeze') }}
                   </ContextMenuItem>

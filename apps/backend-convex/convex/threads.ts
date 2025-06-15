@@ -176,7 +176,7 @@ export const unfreeze = mutation({
     await assertThreadAccess(ctx, { thread, lockerKey: args.lockerKey })
 
     await ctx.db.patch(args.threadId, {
-      frozen: false,
+      frozen: undefined,
     })
   },
 })
