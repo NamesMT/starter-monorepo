@@ -143,7 +143,7 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
         <NuxtLink
           :to="{ name: 'chat-all' }"
           exact-active-class="[&>*]:(bg-accent/80! hover:bg-accent/100! active:bg-accent/60!)"
-          @pointerdown="++chatContext.interfaceSRK.value; sidebarContext.setOpenMobile(false)"
+          @pointerdown="navigateTo(`/chat/`); ++chatContext.interfaceSRK.value; sidebarContext.setOpenMobile(false)"
         >
           <Button class="w-full" variant="outline" size="sm">
             {{ $t('chat.sidebar.newChat') }}
@@ -186,7 +186,7 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
                   <NuxtLink
                     :to="`/chat/${thread._id}`"
                     class="group/thread relative block flex items-center gap-2 overflow-hidden rounded-md p-2 px-3 text-sm [&.router-link-exact-active]:bg-primary/10 hover:bg-primary/20"
-                    @pointerdown="sidebarContext.setOpenMobile(false)"
+                    @pointerdown="navigateTo(`/chat/${thread._id}`); sidebarContext.setOpenMobile(false)"
                   >
                     <div class="h-4 flex items-center gap-1">
                       <Tooltip v-if="thread.parentThread" :delay-duration="500">

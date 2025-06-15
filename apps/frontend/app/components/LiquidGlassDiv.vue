@@ -28,7 +28,6 @@
   position: relative;
   border-radius: var(--c-radius);
   isolation: isolate;
-  touch-action: none;
   box-shadow: 0px 6px var(--outer-shadow-blur) rgba(0, 0, 0, 0.2);
 }
 

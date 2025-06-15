@@ -40,7 +40,7 @@ if (import.meta.client && convexVueContext?.options?.url) {
         <GlobalRegister />
 
         <NuxtLayout>
-          <NuxtPage :page-key="(route) => route.name as string" />
+          <NuxtPage :page-key="(route) => (route.name as string)" />
         </NuxtLayout>
       </template>
     </div>

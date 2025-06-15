@@ -30,13 +30,13 @@ const nearTopBottom = computed(() => {
   if (!el)
     return [null, null]
 
-  const currentScroll = lenisRef.value!.lenis.targetScroll || scrollY.value
+  const currentScroll = Math.ceil(lenisRef.value!.lenis.targetScroll || scrollY.value)
 
   const gapFromTop = currentScroll
   const gapFromBottom = el.scrollHeight - el.clientHeight - currentScroll
 
-  const nearTop = gapFromTop < 69
-  const nearBottom = gapFromBottom < 69
+  const nearTop = gapFromTop < 369
+  const nearBottom = gapFromBottom < 369
   return [nearTop && gapFromTop + 1, nearBottom && gapFromBottom + 1, lenisRef.value!.lenis.targetScroll, scrollY.value]
 })
 
@@ -398,7 +398,7 @@ function alertIsStreaming(input: string) {
         />
 
         <div
-          v-show="!(isFetching && !messages.length)"
+          v-show="!messages.length && !isFetching"
           class="absolute left-0 z-0 h-screen w-full place-content-center overflow-hidden transition-height"
         >
           <IUIMaybeGlassCard
