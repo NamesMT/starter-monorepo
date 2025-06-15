@@ -158,6 +158,9 @@ importers:
       '@convex-dev/rate-limiter':
         specifier: ^0.2.7
         version: 0.2.7(convex@1.24.8(react@19.1.0))
+      '@convex-dev/sharded-counter':
+        specifier: ^0.1.8
+        version: 0.1.8(convex@1.24.8(react@19.1.0))
       '@hono/zod-validator':
         specifier: ^0.7.0
         version: 0.7.0(hono@4.7.11)(zod@3.25.64)
@@ -783,6 +786,11 @@ packages:
 
   '@convex-dev/rate-limiter@0.2.7':
     resolution: {integrity: sha512-aMF/ggCd88Sw6UaqnSS4DjGXTkIOIpyG0d/CrcwMxEIzlDkwanREfF6idtLiL11S7Ra0GJmxkbb23jRuhLL9mA==}
+    peerDependencies:
+      convex: ~1.16.5 || >=1.17.0 <1.35.0
+
+  '@convex-dev/sharded-counter@0.1.8':
+    resolution: {integrity: sha512-kcv9BAvqrtBAvtzBsqLVz5Elzf0xe7sio3QX5eXvk+ZVIJb+rIeF9h4ZI6qH2RuW/qQvwY5stNZghDbGzLIvDw==}
     peerDependencies:
       convex: ~1.16.5 || >=1.17.0 <1.35.0
 
@@ -9097,6 +9105,10 @@ snapshots:
   '@colors/colors@1.6.0': {}
 
   '@convex-dev/rate-limiter@0.2.7(convex@1.24.8(react@19.1.0))':
+    dependencies:
+      convex: 1.24.8(react@19.1.0)
+
+  '@convex-dev/sharded-counter@0.1.8(convex@1.24.8(react@19.1.0))':
     dependencies:
       convex: 1.24.8(react@19.1.0)
 

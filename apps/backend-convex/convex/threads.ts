@@ -6,6 +6,7 @@ import { clearUndefined } from '@namesmt/utils'
 import { openrouter } from '@openrouter/ai-sdk-provider'
 import { generateText } from 'ai'
 import { ConvexError, v } from 'convex/values'
+import { messagesInThreadCounter } from './_counters'
 import { api, internal } from './_generated/api'
 import { action, internalMutation, mutation, query } from './_generated/server'
 
@@ -138,6 +139,8 @@ export const branchThreadFromMessage = mutation({
       })
     }))
 
+    await messagesInThreadCounter.inc(ctx, thread._id)
+
     return newThreadId
   },
 })
@@ -188,7 +191,7 @@ export const generateThreadTitle = action({
   handler: async (ctx, args) => {
     const thread = await ctx.runQuery(api.threads.get, { threadId: args.threadId, lockerKey: args.lockerKey })
 
-    const messages = await ctx.runQuery(api.messages.list, { threadId: args.threadId, lockerKey: args.lockerKey })
+    const messages = await ctx.runQuery(api.messages.listByThread, { threadId: args.threadId, lockerKey: args.lockerKey })
 
     const { text } = await generateText({
       model: openrouter('qwen/qwen3-8b:free'),

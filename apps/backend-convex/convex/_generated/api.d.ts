@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as _counters from "../_counters.js";
 import type * as authInfo from "../authInfo.js";
 import type * as crons from "../crons.js";
 import type * as http_ai from "../http/ai.js";
@@ -31,6 +32,7 @@ import type {
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  _counters: typeof _counters;
   authInfo: typeof authInfo;
   crons: typeof crons;
   "http/ai": typeof http_ai;
@@ -193,6 +195,30 @@ export declare const components: {
         { key?: string; name: string },
         null
       >;
+    };
+  };
+  shardedCounter: {
+    public: {
+      add: FunctionReference<
+        "mutation",
+        "internal",
+        { count: number; name: string; shard?: number; shards?: number },
+        number
+      >;
+      count: FunctionReference<"query", "internal", { name: string }, number>;
+      estimateCount: FunctionReference<
+        "query",
+        "internal",
+        { name: string; readFromShards?: number; shards?: number },
+        any
+      >;
+      rebalance: FunctionReference<
+        "mutation",
+        "internal",
+        { name: string; shards?: number },
+        any
+      >;
+      reset: FunctionReference<"mutation", "internal", { name: string }, any>;
     };
   };
 };

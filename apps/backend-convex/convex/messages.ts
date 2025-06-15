@@ -1,9 +1,10 @@
 import { objectPick } from '@namesmt/utils'
 import { ConvexError, v } from 'convex/values'
+import { messagesInThreadCounter } from './_counters'
 import { internalMutation, internalQuery, mutation, query } from './_generated/server'
 import { assertThreadAccess } from './threads'
 
-export const list = query({
+export const listByThread = query({
   args: {
     threadId: v.id('threads'),
     lockerKey: v.optional(v.string()),
@@ -21,6 +22,22 @@ export const list = query({
         q.eq('threadId', args.threadId))
       .order('asc')
       .collect()
+  },
+})
+
+export const countByThread = query({
+  args: {
+    threadId: v.id('threads'),
+    lockerKey: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const thread = await ctx.db.get(args.threadId)
+    if (!thread)
+      throw new ConvexError('Thread not found')
+
+    await assertThreadAccess(ctx, { thread, lockerKey: args.lockerKey })
+
+    return await messagesInThreadCounter.count(ctx, args.threadId)
   },
 })
 
@@ -61,6 +78,8 @@ export const add = mutation({
       throw new ConvexError('Thread not found')
 
     await assertThreadAccess(ctx, { thread, lockerKey: args.lockerKey })
+
+    await messagesInThreadCounter.inc(ctx, args.threadId)
 
     return await ctx.db.insert('messages', {
       ...objectPick(args, ['threadId', 'role', 'content', 'isStreaming', 'streamId', 'provider', 'model']),

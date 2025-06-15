@@ -42,6 +42,7 @@ const nearTopBottom = computed(() => {
 
 const threadIdRef = useThreadIdRef()
 const isThreadFrozen = computed(() => chatContext.activeThread.value?.frozen)
+const fetchKey = ref(0)
 
 const cachedThreadsMessages: {
   [threadId: string]: Array<CustomMessage>
@@ -52,10 +53,10 @@ const streamingMessages = ref(0)
 const isFetching = ref(false)
 const chatInput = ref('')
 
-// Fetch messages and resume streams
+// Fetch messages as needed and resume streams
 const { ignoreUpdates: ignorePathUpdate } = watchIgnorable(
-  threadIdRef,
-  async (threadId, oldThreadId) => {
+  [threadIdRef, fetchKey],
+  async ([threadId], [oldThreadId]) => {
     if (oldThreadId)
       cachedThreadsMessages[oldThreadId] = messages.value
 
@@ -65,7 +66,7 @@ const { ignoreUpdates: ignorePathUpdate } = watchIgnorable(
 
     if (threadId) {
       isFetching.value = true
-      await convex.query(api.messages.list, { threadId: threadId as Doc<'threads'>['_id'], lockerKey: getLockerKey(threadId) })
+      await convex.query(api.messages.listByThread, { threadId: threadId as Doc<'threads'>['_id'], lockerKey: getLockerKey(threadId) })
         .then((existingMessages) => {
           if (threadIdRef.value === threadId) {
             messages.value = existingMessages.map(customMessageTransform)
@@ -77,7 +78,6 @@ const { ignoreUpdates: ignorePathUpdate } = watchIgnorable(
 
           // If the owner have deleted the thread, remove it locally
           // (or the demo crons cleaned it)
-          console.log({ a: getConvexErrorMessage(e), e })
           if (getConvexErrorMessage(e) === 'Thread not found') {
             toast({ variant: 'destructive', description: t('chat.toast.threadRemovedExternal') })
 
@@ -108,6 +108,23 @@ const { ignoreUpdates: ignorePathUpdate } = watchIgnorable(
   },
   { immediate: true },
 )
+
+// Subscribe to a counter to check for messages from other concurrent sessions
+watchImmediate(threadIdRef, (threadId) => {
+  console.log(`Subscribing to messages count of: ${threadId}`)
+  const { unsubscribe } = convex.onUpdate(
+    api.messages.countByThread,
+    { threadId: threadId as Id<'threads'>, lockerKey: getLockerKey(threadId) },
+    (count) => {
+      if (count > messages.value.length)
+        ++fetchKey.value
+    },
+  )
+  watchOnce(threadIdRef, () => {
+    unsubscribe()
+    console.log(`Unsubscribed from ${threadId}`)
+  })
+})
 
 interface HandleSubmitArgs {
   input: string

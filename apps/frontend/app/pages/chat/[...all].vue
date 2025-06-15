@@ -37,7 +37,7 @@ provideSidebarContext({
     </div> -->
 
     <SidebarProvider>
-      <ChatSidebar />
+      <ChatSidebar class="z-5" />
       <ChatInterface class="h-full w-full" />
       <ChatFloatingMenu class="absolute left-2 top-2 z-10" />
     </SidebarProvider>

@@ -163,7 +163,7 @@ aiApp
       }
 
       // Get conversation history
-      const messages = await c.env.runQuery(api.messages.list, { threadId, lockerKey })
+      const messages = await c.env.runQuery(api.messages.listByThread, { threadId, lockerKey })
 
       // Prepare messages for AI API (exclude the streaming messages)
       const messagesContext = messages
