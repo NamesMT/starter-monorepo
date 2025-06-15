@@ -1,6 +1,6 @@
 <!-- eslint-disable no-console -->
 <script setup lang="ts">
-import type { Doc } from 'backend-convex/convex/_generated/dataModel'
+import type { Doc, Id } from 'backend-convex/convex/_generated/dataModel'
 import type Lenis from 'lenis'
 import { keyBy, sleep, uniquePromise } from '@namesmt/utils'
 import { api } from 'backend-convex/convex/_generated/api'
@@ -47,7 +47,7 @@ const cachedThreadsMessages: {
   [threadId: string]: Array<CustomMessage>
 } = {}
 const messages = ref<Array<CustomMessage>>([])
-const messagesMapped = computed(() => keyBy(messages.value, 'id'))
+const messagesKeyed = computed(() => keyBy(messages.value, 'id'))
 const streamingMessages = ref(0)
 const isFetching = ref(false)
 const chatInput = ref('')
@@ -144,6 +144,8 @@ async function handleSubmit({ input, confirmMultiStream = false }: HandleSubmitA
     streamId: undefined,
   } as any as CustomMessage)
 
+  // For some reason creating object reference first does not work, so we push and then get last message
+  const targetMessage = messages.value[messages.value.length - 1]!
   chatInput.value = ''
 
   nextTick(() => { doScrollBottom({ tries: 2 }) })
@@ -166,7 +168,10 @@ async function handleSubmit({ input, confirmMultiStream = false }: HandleSubmitA
     generateThreadTitle(convex, { threadId: newThreadId, lockerKey })
   }
 
-  const targetMessage = messages.value[messages.value.length - 1]!
+  await until(threadIdRef).toBeTruthy({ timeout: 5000, throwOnTimeout: true })
+
+  targetMessage.threadId = threadIdRef.value as Id<'threads'>
+
   throttle(
     1,
     async () => await streamToMessage({ message: targetMessage, content: userInput }),
@@ -175,7 +180,7 @@ async function handleSubmit({ input, confirmMultiStream = false }: HandleSubmitA
 }
 
 async function resumeStreamProcess(streamSessionId: string, messageId: string) {
-  const message = messagesMapped.value[messageId]
+  const message = messagesKeyed.value[messageId]
   if (!message)
     return console.warn('Trying to resume stream for message that does not exist:', messageId)
 
@@ -464,7 +469,7 @@ function alertIsStreaming(input: string) {
                   <p>{{ $t('chat.message.copy') }}</p>
                 </TooltipContent>
               </Tooltip>
-              <Tooltip :delay-duration="500">
+              <Tooltip v-show="m.isStreaming === false" :delay-duration="500">
                 <TooltipTrigger as-child>
                   <Button
                     variant="ghost" size="icon" class="size-7" @click="_branchThreadFromMessage({
