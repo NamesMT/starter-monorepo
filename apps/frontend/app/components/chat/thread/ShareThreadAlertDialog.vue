@@ -28,13 +28,14 @@ const {
 }>()
 
 const { $auth } = useNuxtApp()
+const open = ref(false)
 </script>
 
 <template>
-  <AlertDialog>
+  <AlertDialog v-model:open="open">
     <Tooltip :delay-duration="500">
       <AlertDialogTrigger v-show="!thread.userId || (thread.userId === $auth?.user?.sub)" as-child>
-        <TooltipTrigger as-child @pointerdown.stop.prevent @click.shift.stop.prevent="callback()">
+        <TooltipTrigger as-child @pointerdown.stop.prevent @click.shift.stop.prevent="open = false; callback()">
           <slot />
         </TooltipTrigger>
         <TooltipContent side="bottom" :side-offset="6">
