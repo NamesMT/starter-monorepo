@@ -8,6 +8,8 @@ import { createContext } from 'reka-ui'
 export const [useChatContext, provideSidebarContext] = createContext<{
   insaneUI: Ref<boolean>
   threads: Ref<Doc<'threads'>[]>
+  // Interface soft render key
+  interfaceSRK: Ref<number>
 }>('chat page')
 
 export function useThreadIdRef() {

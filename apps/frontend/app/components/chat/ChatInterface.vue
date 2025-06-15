@@ -15,7 +15,7 @@ import VanishingInput from '~/lib/shadcn/components/ui/vanishing-input/Vanishing
 import LiquidGlassDiv from '../LiquidGlassDiv.vue'
 
 const isDev = import.meta.dev
-const { $auth } = useNuxtApp()
+const { $auth, $init } = useNuxtApp()
 const { convexApiUrl } = useRuntimeConfig().public
 const convex = useConvexClient()
 const chatContext = useChatContext()
@@ -379,7 +379,9 @@ function alertIsStreaming(input: string) {
 
         <div
           v-show="!(isFetching && !messages.length)"
-          class="pointer-events-none absolute left-0 z-0 h-screen w-full place-content-center overflow-hidden"
+          :key="chatContext.interfaceSRK.value"
+          v-motion-pop-visible-once
+          class="pointer-events-none absolute left-0 z-0 h-screen w-full place-content-center overflow-hidden transition-height"
         >
           <div
             v-if="!messages.length"
@@ -400,21 +402,18 @@ function alertIsStreaming(input: string) {
           >
             <component
               :is="chatContext.insaneUI.value ? LiquidGlassDiv : 'div'"
-              class="rounded-$radius $c-radius=$radius" :class="[
+              class="border rounded-$radius $c-radius=$radius"
+              :class="[
                 m.role === 'user'
-                  ? 'bg-secondary-100 dark:bg-secondary-950'
-                  : 'bg-primary-100 dark:bg-primary-950',
+                  ? 'bg-secondary-100 dark:bg-secondary-950 border-secondary-200 max-w-80% md:max-w-2xl'
+                  : 'bg-primary-100 dark:bg-primary-950 border-primary-200 max-w-full md:max-w-3xl',
                 chatContext.insaneUI.value
                   ? 'bg-opacity-50!'
                   : 'bg-opacity-5!',
               ]" tabindex="0"
             >
               <Card
-                class="bg-transparent shadow-md" :class="[
-                  m.role === 'user'
-                    ? 'border-secondary-200 max-w-80% md:max-w-2xl'
-                    : 'border-primary-200 max-w-full md:max-w-3xl',
-                ]"
+                class="bg-transparent shadow-md"
               >
                 <!-- <CardHeader class="px-4 py-2">
                   <CardTitle class="text-sm font-semibold">
@@ -501,6 +500,24 @@ function alertIsStreaming(input: string) {
         </div>
       </div>
     </LiquidGlassDiv>
+
+    <!--  -->
+    <div class="absolute right-3 top-3 hidden items-center lg:flex">
+      <Tooltip :delay-duration="500">
+        <TooltipTrigger as-child>
+          <Button
+            variant="ghost" size="icon"
+            class="size-7"
+            @click="chatContext.insaneUI.value = !chatContext.insaneUI.value"
+          >
+            <div :class="chatContext.insaneUI.value ? ' i-hugeicons:crazy bg-mainGradient' : ' i-hugeicons:confused'" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="bottom" :side-offset="6">
+          <p>InsaneUI</p>
+        </TooltipContent>
+      </Tooltip>
+    </div>
 
     <!-- Multi Stream Confirm Dialog -->
     <AlertDialog

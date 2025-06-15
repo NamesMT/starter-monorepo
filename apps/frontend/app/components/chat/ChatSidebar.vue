@@ -26,6 +26,7 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarHeader,
+  useSidebar,
 } from '@/lib/shadcn/components/ui/sidebar'
 import { Button } from '~/lib/shadcn/components/ui/button'
 
@@ -33,6 +34,7 @@ const { $auth, $init } = useNuxtApp()
 const colorMode = useColorMode()
 const convex = useConvexClient()
 const chatContext = useChatContext()
+const sidebarContext = useSidebar()
 
 const threadIdRef = useThreadIdRef()
 
@@ -125,7 +127,7 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
 
 <template>
   <Sidebar>
-    <SidebarHeader class="p-4">
+    <SidebarHeader class="px-4 py-2">
       <div class="absolute right-3 top-3">
         <Button
           variant="ghost" size="icon"
@@ -143,7 +145,11 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
       </div>
 
       <div>
-        <NuxtLink :to="{ name: 'chat-all' }" exact-active-class="[&>*]:(bg-accent/80! hover:bg-accent/100!)">
+        <NuxtLink
+          :to="{ name: 'chat-all' }"
+          exact-active-class="[&>*]:(bg-accent/80! hover:bg-accent/100! active:bg-accent/60!)"
+          @pointerdown="++chatContext.interfaceSRK.value; sidebarContext.setOpenMobile(false)"
+        >
           <Button class="w-full" variant="outline" size="sm">
             {{ $t('chat.sidebar.newChat') }}
           </Button>
@@ -206,6 +212,7 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
               <NuxtLink
                 :to="`/chat/${thread._id}`"
                 class="group/thread relative block overflow-hidden rounded-md p-2 px-3 [&.router-link-exact-active]:bg-primary/10 hover:bg-primary/20"
+                @pointerdown="sidebarContext.setOpenMobile(false)"
               >
                 <Tooltip :delay-duration="500">
                   <TooltipTrigger as-child>
@@ -301,7 +308,7 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
               class="w-[--reka-popper-anchor-width]"
             >
               <DropdownMenuItem class="justify-between" @click="chatContext.insaneUI.value = !chatContext.insaneUI.value">
-                <div>{{ 'InsaneUI' }}</div>
+                <div>InsaneUI</div>
                 <div :class="chatContext.insaneUI.value ? ' i-hugeicons:crazy bg-mainGradient' : ' i-hugeicons:confused'" />
               </DropdownMenuItem>
             </DropdownMenuContent>
