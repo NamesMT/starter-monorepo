@@ -13,11 +13,12 @@ const { data: threads } = useIDBKeyval<Doc<'threads'>[]>('threads', [])
 provideSidebarContext({
   insaneUI: useLocalState('chat/insaneUI', () => false),
   threads,
+  interfaceSRK: ref(0),
 })
 </script>
 
 <template>
-  <div class="w-full flex items-center justify-center">
+  <div class="w-full flex items-center justify-center transition-height">
     <!-- <div v-if="!$auth.loggedIn" class="h-full w-full flex items-center justify-center text-xl">
       {{ $t('pages.chat.loginPrompt') }}
     </div> -->
