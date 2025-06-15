@@ -99,7 +99,7 @@ aiApp
 
       // Cast type and runQuery to check for permission
       const threadId = _threadId as Id<'threads'>
-      const _thread = await c.env.runQuery(api.threads.get, { threadId, lockerKey })
+      const thread = await c.env.runQuery(api.threads.get, { threadId, lockerKey })
 
       let streamId: string
       let streamingMessageId: Id<'messages'>
@@ -133,6 +133,9 @@ aiApp
         }
       }
       else if (content) {
+        if (thread.frozen)
+          throw new ConvexError(`Can't send new messages to frozen thread`)
+
         // Create new streaming session
         streamId = `${Date.now()}_${randomStr(10)}`
 
