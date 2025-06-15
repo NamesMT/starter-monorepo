@@ -39,7 +39,6 @@
     "test:types": {},
     "quickcheck": {},
     "dev": {
-      "dependsOn": ["^dev:prepare", "dev:prepare"],
       "cache": false,
       "persistent": true
     },
