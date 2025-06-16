@@ -40,6 +40,10 @@ chat.provider.hosted,,Hosted,Alojado (H),Hébergé,Управляемый (H),Đ
 chat.provider.openai,,OpenAI,OpenAI,OpenAI,OpenAI,OpenAI,OpenAI
 chat.provider.openrouter,,OpenRouter,OpenRouter,OpenRouter,OpenRouter,OpenRouter,OpenRouter
 chat.settings.general.title,,General Settings,Configuración general,Paramètres généraux,Общие настройки,Cài đặt chung,常规设置
+chat.settings.providers.title,,Providers Settings,Configuración de proveedores,Paramètres des fournisseurs,Настройки провайдеров,Cài đặt nhà cung cấp,服务提供商设置
+chat.settings.providerDialog.description,,"Changes are automatically saved, just close!","Los cambios se guardan automáticamente, ¡solo cierra!","Les modifications sont automatiquement enregistrées, il suffit de fermer !","Изменения сохраняются автоматически, просто закройте!","Các thay đổi được tự động lưu, chỉ cần đóng lại!",更改会自动保存，直接关闭即可！
+chat.settings.providerDialog.form.apiKey,,API Key,Clave API,Clé API,Ключ API,Khóa API,API 密钥
+chat.settings.providerDialog.form.models,,Models,Modelos,Modèles,Модели,Các mô hình,模型
 chat.sidebar.newChat,,New Chat,Nuevo chat,Nouvelle conversation,Новый чат,Cuộc trò chuyện mới,新建聊天
 chat.sidebar.threads.empty,,No chats yet.,No hay chats todavía.,Pas encore de conversations.,Чатов пока нет.,Chưa có cuộc trò chuyện nào.,尚无聊天记录。
 chat.sidebar.threads.loading,,Loading threads...,Cargando conversaciones...,Chargement des conversations...,Загрузка бесед...,Đang tải các cuộc trò chuyện...,正在加载对话...
@@ -68,6 +72,7 @@ components.convexIntegrationTest.testBackendButton.fetchTasks,,Test Convex integ
 components.loadingScreen.loadingText,,Loading...,Cargando...,Chargement en cours...,Загрузка...,Đang tải...,加载中...
 confirm,,Confirm,Confirmar,Confirmer,Подтвердить,Xác nhận,确认
 continue,,Continue,Continuar,Continuer,Продолжить,Tiếp tục,继续
+form.tagsInput.placeholder,,Type and press enter to add...,Escribe y presiona enter para añadir...,Tapez et appuyez sur entrée pour ajouter...,"Введите текст и нажмите Enter, чтобы добавить...",Nhập và nhấn enter để thêm...,输入后按回车键添加...
 generating,,Generating,Generando,Génération en cours,Генерация,Đang tạo,正在生成
 getInputThoughtsPlaceholders.0,,What's on your mind? 🤔,¿Qué tienes en mente? 🤔,Qu'avez-vous à l'esprit ? 🤔,О чём вы думаете? 🤔,Bạn đang nghĩ gì? 🤔,你在想什么？🤔
 getInputThoughtsPlaceholders.1,,Let me help you create a plan. 📃,Déjame ayudarte a crear un plan. 📃,Laissez-moi vous aider à créer un plan. 📃,Давайте я помогу вам составить план. 📃,Hãy để tôi giúp bạn tạo một kế hoạch. 📃,让我帮你制定一个计划吧。📃

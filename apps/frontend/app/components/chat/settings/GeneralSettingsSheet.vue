@@ -8,14 +8,31 @@ import {
 } from '@/lib/shadcn/components/ui/sheet'
 import Input from '~/lib/shadcn/components/ui/input/Input.vue'
 import { useSidebar } from '~/lib/shadcn/components/ui/sidebar'
+import Switch from '~/lib/shadcn/components/ui/switch/Switch.vue'
 
 const { $auth } = useNuxtApp()
 const sidebarContext = useSidebar()
+const { agentsSetting } = useChatContext()
 const { locale, locales, setLocale } = useI18n()
 const computedNextLocale = computed(() => {
   const currentLocaleIndex = locales.value.findIndex(lO => lO.code === locale.value)
   return locales.value[(currentLocaleIndex + 1) % locales.value.length]!.code
 })
+
+// Providers that are supported through `Common` interface
+const supportedProvidersCommon = ['openrouter', 'openai'] as const
+
+// Bootstraping object data for the supported providers
+for (const provider of supportedProvidersCommon) {
+  if (!agentsSetting.value.providers[provider]) {
+    agentsSetting.value.providers[provider] = {
+      enabled: false,
+      apiKey: '',
+      models: {
+      },
+    }
+  }
+}
 
 const nicknameRef = useChatNickname()
 </script>
@@ -70,11 +87,34 @@ const nicknameRef = useChatNickname()
         <hr>
 
         <div>
-          <!-- <SheetHeader>
+          <SheetHeader class="mb-4">
             <SheetTitle class="text-base">
-              {{ $t('chat.settings.general.title') }}
+              {{ $t('chat.settings.providers.title') }}
             </SheetTitle>
-          </SheetHeader> -->
+          </SheetHeader>
+
+          <div
+            v-for="[provider, setting] of supportedProvidersCommon.map((p) => [p, agentsSetting.providers[p]!] as const)"
+            :key="provider"
+            class="flex items-center justify-between gap-2"
+          >
+            <div class="shrink-0">
+              {{ $t(`chat.provider.${provider}`) }}
+            </div>
+
+            <div class="flex items-center gap-2">
+              <Switch v-model="setting.enabled" :disabled="!Object.keys(setting.models).length">
+                <template #thumb>
+                  <div class="i-hugeicons:zap" />
+                </template>
+              </Switch>
+              <ProviderSettingsDialog :name="provider" :settings="setting">
+                <Button variant="ghost" size="icon" class="group hover:bg-muted">
+                  <div class="i-hugeicons:configuration-01 size-6 group-hover:bg-mainGradient" />
+                </Button>
+              </ProviderSettingsDialog>
+            </div>
+          </div>
         </div>
       </div>
     </SheetContent>

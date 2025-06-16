@@ -1,5 +1,9 @@
 <script setup lang="ts">
 const chatContext = useChatContext()
+const enabledProviders = computed(() =>
+  Object.entries(chatContext.agentsSetting.value.providers).filter(([_, v]) => v.enabled),
+)
+
 const activeAgentDisplay = computed(() => displayActiveAgent(chatContext.activeAgent.value))
 </script>
 
@@ -8,7 +12,7 @@ const activeAgentDisplay = computed(() => displayActiveAgent(chatContext.activeA
     <Tooltip :delay-duration="500">
       <TooltipTrigger as-child>
         <DropdownMenuTrigger as-child>
-          <Button variant="ghost" size="sm" class="h-fit w-40 flex items-center justify-between gap-1 border-x border-primary border-opacity-80 px-2 py-1 -ml-1.5 light:border-primary-600 hover:bg-accent/30">
+          <Button variant="ghost" size="sm" class="h-fit w-40 flex items-center justify-between gap-1 border-x-3px border-primary border-opacity-80 px-2 py-1 -ml-1.5 light:border-primary-600 hover:bg-accent/30">
             <div class="truncate">
               {{ activeAgentDisplay }}
             </div>
@@ -25,6 +29,18 @@ const activeAgentDisplay = computed(() => displayActiveAgent(chatContext.activeA
           >
             {{ model }}
           </DropdownMenuItem>
+          <template v-for="[provider, providerSettings] of enabledProviders" :key="provider">
+            <DropdownMenuSeparator />
+            <DropdownMenuLabel>{{ $t(`chat.provider.${provider}`) }}</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              v-for="[model] of Object.entries(providerSettings.models).filter((([_m, v]) => v.enabled))"
+              :key="model"
+              @click="chatContext.agentsSetting.value.selectedAgent = `${provider}/${model}`"
+            >
+              {{ model }}
+            </DropdownMenuItem>
+          </template>
         </DropdownMenuContent>
       </TooltipTrigger>
       <TooltipContent side="bottom" :side-offset="6">

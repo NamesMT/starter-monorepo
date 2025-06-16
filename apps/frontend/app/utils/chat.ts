@@ -10,6 +10,7 @@ export interface AgentsSetting {
      */
     hosted?: CommonProviderAgentsSetting
     openrouter?: CommonProviderAgentsSetting
+    openai?: CommonProviderAgentsSetting
   }
   /**
    * A special string in format of `provider/model`, `model` could be empty

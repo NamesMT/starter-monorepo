@@ -20,6 +20,10 @@ checksums:
     chat.provider.openai: 386a12cfe55562a8e181c9bfcac6b156
     chat.provider.openrouter: 6b69e3f00f088bceefec2df193999b61
     chat.settings.general.title: 651afaa0d070ecc9a98b70581e25872f
+    chat.settings.providers.title: 885363f661b972c99ee993471ffd3668
+    chat.settings.providerDialog.description: 714bdd74c5dfa51ebdeed2a0bc6c7644
+    chat.settings.providerDialog.form.apiKey: ce825fec5b3e1f8e27c45b1a63619985
+    chat.settings.providerDialog.form.models: d7687c91fa3ba81da866dee3becc5b5b
     chat.sidebar.newChat: 3d7b701878aca8e2dbb7c6732f7f3bee
     chat.sidebar.threads.empty: eaa3199ed3ba5dd2bb3988ea999649e3
     chat.sidebar.threads.loading: c0591fcc6aa3eb6092ab4f4ce577804c
@@ -48,6 +52,7 @@ checksums:
     components.loadingScreen.loadingText: 82b4ea7ed1439094d7c4be13aaba9a66
     confirm: 90930b51154032f119fa75c1bd422d8b
     continue: 3cfba90b4600131e82fc4260c568d044
+    form.tagsInput.placeholder: 133977f95325b7984689150a67113f25
     generating: 8a5d3a7701dc359fc48ee6f8a188e9c9
     getInputThoughtsPlaceholders.0: b238f585f7d4fd6212af6337eee21835
     getInputThoughtsPlaceholders.1: ff2ecc81d355fd46ca2826361c5c712e
