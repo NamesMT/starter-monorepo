@@ -36,7 +36,13 @@ export const del = mutation({
 
     await assertThreadAccess(ctx, { thread, lockerKey: args.lockerKey })
 
+    const messages = await ctx.db.query('messages')
+      // Use this index because its likely to be cached
+      .withIndex('by_thread_and_timestamp', q => q.eq('threadId', args.threadId))
+      .collect()
+
     await ctx.db.delete(args.threadId)
+    await Promise.all(messages.map(message => ctx.db.delete(message._id)))
   },
 })
 
