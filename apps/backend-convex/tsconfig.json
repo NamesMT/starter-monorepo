@@ -6,6 +6,10 @@
       "vitest"
     ]
   },
-  "include": ["./convex/**/*", "./utils/**/*"],
+  "include": [
+    "./convex/**/*",
+    "./functions/**/*",
+    "./utils/**/*"
+  ],
   "exclude": ["./convex/_generated"]
 }
