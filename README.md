@@ -13,6 +13,8 @@
   * [Overview](#overview)
   * [What's inside?](#whats-inside)
     * [Overview of the tech](#overview-of-the-tech)
+    * [Highlight Features / Components](#highlight-features--components)
+      * [AI / LLM Chat](#ai--llm-chat)
     * [Apps and Libraries](#apps-and-libraries)
       * [`frontend`: a Nuxt app, compatible with v4 structure.](#frontend-a-nuxt-app-compatible-with-v4-structure)
       * [`backend`: a Hono🔥 app.](#backend-a-hono-app)
@@ -31,6 +33,10 @@
 ## Overview
 
 This is a base monorepo starter template to kick-start your beautifully organized project, whether its a fullstack project, monorepo of multiple libraries and applications, or even just one API server and its related infrastructure deployment and utilities.
+
+Out-of-the-box with the included apps, we have a fullstack project: with a `frontend` Nuxt 4 app, a main `backend` using Hono, and a `backend-convex` Convex app.
+  * General APIs, such as authentication, are handled by the main `backend`, which is designed to be serverless-compatible and can be deployed anywhere, allowing for the best possible latency, performance, and cost, according to your needs.
+  * `backend-convex` is a modular, add-in `backend`, utilized to power components like `AI Chat`.
 
 It is recommended to use an AI Agent ([`Roo Code`](https://github.com/RooVetGit/Roo-Code) recommended) to help you setup the monorepo according to your needs, see [Utilities](#utilities)
 
@@ -56,6 +62,29 @@ So if you use SSR, you could use the official [Nuxt Kinde](https://nuxt.com/modu
   - If you have a good session manager implementation, a PR is greatly appreciated!
 
 💯 JS is always [**TypeScript**](https://www.typescriptlang.org/) where possible.
+
+### Highlight Features / Components
+
+#### AI / LLM Chat
+
+> Work started in 2025-06-12 for [**T3 Chat Cloneathon**](https://cloneathon.t3.chat/) competition, with no prior AI SDK and chat streams experience, but I think I did an amazing job 🫡!
+
+A super efficient and powerful LLM Chat system, featuring:
+  * Business-ready, support `hosted` provider that you can control the billing of.
+  * Supports other add-in **BYOK** providers, like `OpenAI`, `OpenRouter`,...
+  * Seamless authentication integration with the main `backend`.
+  * Beautiful syntax highlighting. 🌈
+  * Thread branching, freezing, and sharing.
+  * Real-time, multi-agents, multi-users support ¹.
+    * Invite your families and friends, and play with the Agents together in real-time.
+    * Or maybe invite your colleagues, and brainstorm with the help of AI together.
+  * Resumable and multi-streams ¹.
+    * Ask follow-up questions while the previous isn't done, the model is able to pick up what's available currently. 🍳🍳
+  * Easy and private: anonymous, guest usage supported.
+  * Mobile-friendly.
+  * Fully internalized, with AI-powered translations and smooth switching between languages.
+
+`*1`: currently the "stream" received when resuming or for other real-time users in the same thread is implemented via a custom polling mechanism, and not SSE. it is intentionally chosed to be this way for more minimal infrastructure setup and wider hosting support, so smaller user groups can host their own version easily, it is still very performant and efficient.
 
 ### Apps and Libraries
 
