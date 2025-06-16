@@ -1,5 +1,4 @@
 KEY,Description,en,es,fr,ru,vi,zh-CN
-
 cancel,,Cancel,Cancelar,Annuler,Отмена,Huỷ Bỏ,取消
 chat.alert.deleteThread.description,,"Are you sure you want to delete ""{name}""?
 This action cannot be undone.","¿Estás seguro de que quieres eliminar ""{name}""?
@@ -27,12 +26,12 @@ chat.provider.google,,Google,Google,Google,Google,Google,Google
 chat.provider.hosted,,Hosted,Alojado (H),Hébergé,Управляемый (H),Được cung cấp (H),托管 (H)
 chat.provider.openai,,OpenAI,OpenAI,OpenAI,OpenAI,OpenAI,OpenAI
 chat.provider.openrouter,,OpenRouter,OpenRouter,OpenRouter,OpenRouter,OpenRouter,OpenRouter
-chat.settings.general.title,,General Settings,,,,Cài đặt chung,
+chat.settings.general.title,,General Settings,Configuración general,Paramètres généraux,Общие настройки,Cài đặt chung,常规设置
 chat.sidebar.newChat,,New Chat,Nuevo chat,Nouvelle conversation,Новый чат,Cuộc trò chuyện mới,新建聊天
 chat.sidebar.threads.empty,,No chats yet.,No hay chats todavía.,Pas encore de conversations.,Чатов пока нет.,Chưa có cuộc trò chuyện nào.,尚无聊天记录。
 chat.sidebar.threads.loading,,Loading threads...,Cargando conversaciones...,Chargement des conversations...,Загрузка бесед...,Đang tải các cuộc trò chuyện...,正在加载对话...
 chat.thread.branchedFrom,,Branched from {title},Ramificado desde {title},Dérivé de {title},Ответвлено от {title},Được tạo nhánh từ {title},分支自 {title}
-components.convexIntegrationTest.addTask.label,,Delete Thread,Eliminar conversación,Supprimer la conversation,Удалить тему,Xóa chủ đề,删除话题
+components.convexIntegrationTest.addTask.label,,Delete Thread,Añadir tarea (pulsar enter),Ajouter une tâche (appuyer sur Entrée),Добавить задачу (нажмите Enter),Xóa chủ đề,添加任务条目（按回车键）
 chat.thread.freeze,,Freeze thread,Congelar hilo,Geler la discussion,Заморозить тему,Đóng băng chủ đề,冻结线程
 chat.thread.frozen,,Thread is frozen,El hilo está congelado,La discussion est gelée,Тема заморожена,Chủ đề đã được đóng băng,线程已冻结
 chat.thread.frozenWithDescription,,"Thread is frozen, new messages will create a new branch","El hilo está congelado, los nuevos mensajes crearán una nueva rama","La discussion est gelée, les nouveaux messages créeront une nouvelle branche","Тема заморожена, новые сообщения создадут новую ветку","Chủ đề đã bị đóng băng, tin nhắn mới sẽ tạo một nhánh mới",线程已冻结，新消息将创建一个新分支
@@ -105,6 +104,7 @@ pages.test.section.convex.title,,Convex Integration Test,Prueba de Integración 
 pages.test.title,,Test,Prueba,Test,Тест,Kiểm tra,测试
 pinned,,Pinned,Fijados,Épinglé,Закреплено,Đã ghim,已固定
 recent,,Recent,Recientes,Récent,Недавние,Gần đây,最近
-settings,,Settings,,,,Cài đặt
+settings,,Settings,Configuración,Paramètres,Настройки,Cài đặt,设置
 tip.holdShift,,"Hold ""Shift"" to skip confirmation","Mantén presionado ""Shift"" para omitir la confirmación","Maintenez ""Maj"" pour ignorer la confirmation","Удерживайте ""Shift"", чтобы пропустить подтверждение","Giữ phím ""Shift"" để bỏ qua xác nhận","按住 ""Shift"" 跳过确认"
 welcome,,Welcome,Bienvenido,Bienvenue,Добро пожаловать,Chào mừng,欢迎
+nickname,,Nickname,Apodo,Pseudo,Никнейм,Biệt danh,昵称

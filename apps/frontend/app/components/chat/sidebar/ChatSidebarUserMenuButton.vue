@@ -1,5 +1,7 @@
 <script setup lang="ts">
 const { $auth } = useNuxtApp()
+
+const nicknameRef = useChatNickname()
 </script>
 
 <template>
@@ -11,7 +13,7 @@ const { $auth } = useNuxtApp()
           <AvatarFallback>👤</AvatarFallback>
         </Avatar>
         <div class="truncate">
-          <p>{{ $auth.user.name }}</p>
+          <p>{{ $auth.user.name }} <span class="text-xs">({{ nicknameRef || getChatFallbackNickname() }})</span></p>
           <p class="truncate text-xs">
             {{ $auth.user.email }}
           </p>
@@ -22,7 +24,7 @@ const { $auth } = useNuxtApp()
           <AvatarFallback>🍳</AvatarFallback>
         </Avatar>
         <div class="truncate">
-          <p>{{ $t('guest') }}</p>
+          <p>{{ $t('guest') }} <span class="text-xs">({{ nicknameRef || getChatFallbackNickname() }})</span></p>
           <p class="truncate text-xs">
             {{ $t('loginToEnjoyMore') }}
           </p>

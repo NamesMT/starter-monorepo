@@ -40,7 +40,7 @@ function handleSubmit({ confirmMultiStream = false }) {
 <template>
   <LiquidGlassDiv class="bottom-0 left-0 z-3 max-w-full w-full border-t border-secondary $c-radius=0px absolute!">
     <div v-if="isDev" class="absolute bottom-100%">
-      {{ props.nearTopBottom }}
+      <!-- {{ props.nearTopBottom }} -->
     </div>
 
     <div class="absolute bottom-100% right-6 mb-2 flex flex-col gap-2">

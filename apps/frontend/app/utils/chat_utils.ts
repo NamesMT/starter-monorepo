@@ -12,15 +12,19 @@ export function getLockerKey(kid: string) {
   return localStorage.getItem(`locker_${kid}`) ?? undefined
 }
 
+export function useChatNickname() {
+  return useLocalState<string>(`chat/user-nickname`, () => '')
+}
+
 export function getChatNickname() {
   const { $auth } = useNuxtApp()
 
-  return localStorage.getItem('chat/user-nickname') || $auth?.user?.name || 'Anonymous'
+  const lSNickname = localStorage.getItem('chat/user-nickname')
+
+  return lSNickname ? JSON.parse(lSNickname) : $auth?.user?.name || 'Anonymous'
 }
 
-export function setChatNickname(nickname: string | undefined) {
-  if (nickname === undefined)
-    localStorage.removeItem('chat/user-nickname')
-  else
-    localStorage.setItem('chat/user-nickname', nickname)
+export function getChatFallbackNickname() {
+  const { $auth } = useNuxtApp()
+  return $auth?.user?.name || 'Anonymous'
 }

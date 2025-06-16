@@ -3,7 +3,38 @@ checksums:
   fdf23e1cc2ec83ec2119d6e6b991ce37:
     hello: f01e599cced8b7d7105329947b5096de
   fa34a32ee742667d36ef7288982efb9c:
+    cancel: 2e2a849c2223911717de8caa2c71bade
+    chat.alert.deleteThread.description: b0cca6d07bbbd907b4d25dc2a1dbe2e3
+    chat.alert.deleteThread.title: 3dea4a78f8c5c2073d8eab4aad3f2015
+    chat.alert.shareThread.description: e8eeee4bd83372c3a997a593a585f077
+    chat.alert.shareThread.title: e00e8208d2dd52a00a4cbccdc57199e3
+    chat.interface.selectOrStart: 5ae94ab41d0b599f36924f5db15dd16d
+    chat.interface.sendToStart: 6ba07995188dc929a2de0e8f0bb4d1ea
+    chat.message.branch: 8ee786a7be37ef90ade2cd00741f8dd0
+    chat.message.copy: 4de06ccf7d0ea910de03abfa965a61af
+    chat.multiStreamConfirmDialog.description: 8eabadec77370a396bfd91ec2baddf48
+    chat.multiStreamConfirmDialog.title: 8cb2a1e566120ab9a2519672e4086692
+    chat.provider.google: 6cc462fb53d90d404f48d5a6695c1de1
+    chat.provider.hosted: 582f9507edebe074a4e28c50934142c1
+    chat.provider.openai: 386a12cfe55562a8e181c9bfcac6b156
+    chat.provider.openrouter: 6b69e3f00f088bceefec2df193999b61
+    chat.settings.general.title: 651afaa0d070ecc9a98b70581e25872f
+    chat.sidebar.newChat: 3d7b701878aca8e2dbb7c6732f7f3bee
+    chat.sidebar.threads.empty: eaa3199ed3ba5dd2bb3988ea999649e3
+    chat.sidebar.threads.loading: c0591fcc6aa3eb6092ab4f4ce577804c
+    chat.thread.branchedFrom: 9235ad091f1d3b7f65a33b2e906674ad
     components.convexIntegrationTest.addTask.label: 94bfce6a5916c8955cea8d04ad41c10e
+    chat.thread.freeze: b90fc4e37a58e2f60fbc9a25945b2138
+    chat.thread.frozen: 69fa1ed78bb636c218ec3d95eae69bca
+    chat.thread.frozenWithDescription: 5cf38e514472bed10297a7936924737f
+    chat.thread.pin: 8f1062e24a5a0f9fdfce1a070e8ab476
+    chat.thread.share: 3a257c0d42ffa5ed6eddfc71e46db6c0
+    chat.thread.unfreeze: 0fcaf656c357870fb42132f7342aa23a
+    chat.thread.unpin: 9f3e0c1a25452b171dfffee566e11d49
+    chat.toast.threadBranched: edc2466649225081b38d4c6fe1dd27cf
+    chat.toast.threadRemovedExternal: db7f0c7a17abd8f2fa3bdf24f0e81377
+    chat.toast.threadShareLinkCopied: 301236632c59a15e329f433e7b4a3706
+    chat.typeYourMessageHere: 592c39355ee2ce96113655e58b1e65c9
     components.convexIntegrationTest.addTask.placeholder: cfe9cb319a1f23515f7c2215dba202a3
     components.convexIntegrationTest.authenticated: 7aeaface3edc0f5dca2c8ebd6c7e1974
     components.convexIntegrationTest.configuredUrl: ca306d17f0a8f6bd7e0b9b2efcf23fe7
@@ -12,6 +43,9 @@ checksums:
     components.convexIntegrationTest.testBackendButton.authInfo: 28db481eb12a77d89bf451f64a55c1c2
     components.convexIntegrationTest.testBackendButton.fetchTasks: 9f58d5b60b733446f4620c944400c102
     components.loadingScreen.loadingText: 82b4ea7ed1439094d7c4be13aaba9a66
+    confirm: 90930b51154032f119fa75c1bd422d8b
+    continue: 3cfba90b4600131e82fc4260c568d044
+    generating: 8a5d3a7701dc359fc48ee6f8a188e9c9
     getInputThoughtsPlaceholders.0: b238f585f7d4fd6212af6337eee21835
     getInputThoughtsPlaceholders.1: ff2ecc81d355fd46ca2826361c5c712e
     getInputThoughtsPlaceholders.2: d7b2928edf739f28537a3265dc77cd07
@@ -21,7 +55,9 @@ checksums:
     getInputThoughtsPlaceholders.6: 4f71356cca1a4d9b7c444dd216c5f81a
     getInputThoughtsPlaceholders.7: 615c6d538cc820ceb555c3112590e182
     getInputThoughtsPlaceholders.8: 25c12561f1c70b7b47c00628edbec9aa
+    guest: 2aec6d6ebe0d9a1db0a5c8cd5a98b8c3
     language: 277fd1a41cc237a437cd1d5e4a80463b
+    loginToEnjoyMore: 047389679c35d5ff4ab81e5f65e303ec
     pages.chat.aiLabel: b764382ca31f0c1570802ead170ad235
     pages.chat.loginPrompt: b04016c6bb495df222e7ab52e2061921
     pages.chat.title: 1171b63c16b3431dca319af1804de2a0
@@ -57,45 +93,11 @@ checksums:
     pages.test.intro: 04c375b5393d5f318fd11c5c372122a9
     pages.test.section.convex.title: 39fdc104ff14fba826033e998c762a84
     pages.test.title: 82a46f197779af4dde92e7e5f9336ccf
-    welcome: 3180ad6b8de344b781637750259e0f53
-    chat.sidebar.newChat: 3d7b701878aca8e2dbb7c6732f7f3bee
-    chat.sidebar.threads.loading: c0591fcc6aa3eb6092ab4f4ce577804c
-    chat.sidebar.threads.empty: eaa3199ed3ba5dd2bb3988ea999649e3
-    chat.alert.deleteThread.title: 3dea4a78f8c5c2073d8eab4aad3f2015
-    chat.alert.deleteThread.description: b0cca6d07bbbd907b4d25dc2a1dbe2e3
-    cancel: 2e2a849c2223911717de8caa2c71bade
-    confirm: 90930b51154032f119fa75c1bd422d8b
-    continue: 3cfba90b4600131e82fc4260c568d044
     pinned: 9bc428a489e05402739d2a01cfbfa7d6
     recent: 2cef23d0cf0a6cabe9b8cf749549d6c7
-    chat.multiStreamConfirmDialog.title: 8cb2a1e566120ab9a2519672e4086692
-    chat.multiStreamConfirmDialog.description: 8eabadec77370a396bfd91ec2baddf48
-    generating: 8a5d3a7701dc359fc48ee6f8a188e9c9
-    chat.interface.sendToStart: 6ba07995188dc929a2de0e8f0bb4d1ea
-    chat.interface.selectOrStart: 5ae94ab41d0b599f36924f5db15dd16d
-    guest: 2aec6d6ebe0d9a1db0a5c8cd5a98b8c3
-    loginToEnjoyMore: 047389679c35d5ff4ab81e5f65e303ec
-    chat.toast.threadRemovedExternal: db7f0c7a17abd8f2fa3bdf24f0e81377
-    chat.thread.pin: 8f1062e24a5a0f9fdfce1a070e8ab476
-    chat.thread.unpin: 9f3e0c1a25452b171dfffee566e11d49
-    chat.thread.delete: 3dea4a78f8c5c2073d8eab4aad3f2015
-    chat.message.copy: 4de06ccf7d0ea910de03abfa965a61af
-    chat.message.branch: 8ee786a7be37ef90ade2cd00741f8dd0
-    chat.toast.threadBranched: edc2466649225081b38d4c6fe1dd27cf
-    chat.thread.branchedFrom: 9235ad091f1d3b7f65a33b2e906674ad
-    chat.thread.frozen: 69fa1ed78bb636c218ec3d95eae69bca
-    chat.thread.freeze: b90fc4e37a58e2f60fbc9a25945b2138
-    chat.thread.unfreeze: 0fcaf656c357870fb42132f7342aa23a
+    settings: 8df6777277469c1fd88cc18dde2f1cc3
     tip.holdShift: 895a995e323b21fd1de51496a994103d
-    chat.thread.frozenWithDescription: 5cf38e514472bed10297a7936924737f
-    chat.thread.share: 3a257c0d42ffa5ed6eddfc71e46db6c0
-    chat.alert.shareThread.title: e00e8208d2dd52a00a4cbccdc57199e3
-    chat.alert.shareThread.description: e8eeee4bd83372c3a997a593a585f077
-    chat.toast.threadShareLinkCopied: 301236632c59a15e329f433e7b4a3706
-    chat.typeYourMessageHere: 592c39355ee2ce96113655e58b1e65c9
-    chat.provider.hosted: 582f9507edebe074a4e28c50934142c1
-    chat.provider.openrouter: 6b69e3f00f088bceefec2df193999b61
-    chat.provider.openai: 386a12cfe55562a8e181c9bfcac6b156
-    chat.provider.google: 6cc462fb53d90d404f48d5a6695c1de1
+    welcome: 3180ad6b8de344b781637750259e0f53
+    nickname: e15cefebe5e78fba87e455bf246cee89
   bd59d862767f00d421bd4cacc7522c6c:
     hello-from-%2Fx: de51bbd5a66af7e24e90466431fa9006
