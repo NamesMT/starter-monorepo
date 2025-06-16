@@ -62,17 +62,6 @@ aiApp
 
       await rateLimiter.limit(c.env, 'aiChat', { key: userIdentity?.subject ?? lockerKey, throws: true })
 
-      const _providerSdk = (() => {
-        switch (provider) {
-          case 'openai':
-            return createOpenAI({ apiKey })
-          case 'openrouter':
-            return createOpenRouter({ apiKey })
-          default:
-            return undefined
-        }
-      })()
-
       // Cast type and runQuery to check for permission
       const threadId = _threadId as Id<'threads'>
       const thread = await c.env.runQuery(api.threads.get, { threadId, lockerKey })
