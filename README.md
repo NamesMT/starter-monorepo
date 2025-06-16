@@ -69,7 +69,7 @@ So if you use SSR, you could use the official [Nuxt Kinde](https://nuxt.com/modu
 
 > Work started in 2025-06-12 for [**T3 Chat Cloneathon**](https://cloneathon.t3.chat/) competition, with no prior AI SDK and chat streams experience, but I think I did an amazing job 🫡!
 
-A super efficient and powerful LLM Chat system, featuring:
+A super efficient and powerful, yet friendly LLM Chat system, featuring:
   * Business-ready, support `hosted` provider that you can control the billing of.
   * Supports other add-in **BYOK** providers, like `OpenAI`, `OpenRouter`,...
   * Seamless authentication integration with the main `backend`.
@@ -77,12 +77,14 @@ A super efficient and powerful LLM Chat system, featuring:
   * Thread branching, freezing, and sharing.
   * Real-time, multi-agents, multi-users support ¹.
     * Invite your families and friends, and play with the Agents together in real-time.
-    * Or maybe invite your colleagues, and brainstorm with the help of AI together.
+    * Or maybe invite your colleagues, and brainstorm together with the help and power of AI.
   * Resumable and multi-streams ¹.
     * Ask follow-up questions while the previous isn't done, the model is able to pick up what's available currently. 🍳🍳
   * Easy and private: anonymous, guest usage supported.
   * Mobile-friendly.
   * Fully internalized, with AI-powered translations and smooth switching between languages.
+  * Designed to be scalable
+    * > Things are isolated and common interfaces are defined and utilized where possible, there's no tightly coupled-hacks that prevents future scaling, things just works, elegantly.
 
 `*1`: currently the "stream" received when resuming or for other real-time users in the same thread is implemented via a custom polling mechanism, and not SSE. it is intentionally chosed to be this way for more minimal infrastructure setup and wider hosting support, so smaller user groups can host their own version easily, it is still very performant and efficient.
 
