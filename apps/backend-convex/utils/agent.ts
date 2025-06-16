@@ -14,6 +14,12 @@ export function getAgentModel({ provider, model, apiKey }: AgentObject): Languag
     if (model === 'deepseek-v3')
       model = 'deepseek/deepseek-chat-v3-0324:free'
 
+    if (model === 'devstral-small-2505')
+      model = 'mistralai/devstral-small:free'
+
+    if (model === 'llama-4-scout')
+      model = 'meta-llama/llama-4-scout:free'
+
     return openrouter(model)
   }
   else {

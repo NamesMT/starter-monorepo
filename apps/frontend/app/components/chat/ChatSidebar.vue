@@ -1,17 +1,9 @@
 <script setup lang="ts">
 import type { Doc } from 'backend-convex/convex/_generated/dataModel'
-import { keyBy } from '@namesmt/utils'
-import { useIDBKeyval } from '@vueuse/integrations/useIDBKeyval'
 import { api } from 'backend-convex/convex/_generated/api'
 import { useConvexQuery } from 'convex-vue'
-import { Split } from 'lucide-vue-next'
 import { computed, ref } from 'vue'
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '@/lib/shadcn/components/ui/avatar'
 import {
   ContextMenu,
   ContextMenuContent,
@@ -41,8 +33,7 @@ const { copy } = useClipboard({ legacy: true })
 const threadIdRef = useThreadIdRef()
 
 const threads = chatContext.threads
-const threadsKeyed = computed(() => keyBy(threads.value, '_id'))
-const { data: pinnedThreadIds } = useIDBKeyval<string[]>('chat/pinnedThreadIds', [])
+const pinnedThreadIds = chatContext.pinnedThreadIds
 const isFetching = ref(false)
 
 // Subscribe to Convex to sync threads
@@ -93,12 +84,12 @@ const threadsPartitioned = useArrayReduce(threads, (a, c) => {
   return [a[0].concat(c), a[1]] as [Doc<'threads'>[], Doc<'threads'>[]]
 }, [[], []] as [Doc<'threads'>[], Doc<'threads'>[]])
 
-const searchQuery = ref('')
+const searchInput = ref('')
 const filteredThreads = computed(() => {
-  if (!searchQuery.value)
+  if (!searchInput.value)
     return threadsPartitioned.value[0]
   return threadsPartitioned.value[0].filter(thread =>
-    thread.title.toLowerCase().includes(searchQuery.value.toLowerCase()),
+    thread.title.toLowerCase().includes(searchInput.value.toLowerCase()),
   )
 })
 
@@ -187,13 +178,7 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
         </NuxtLink>
       </div>
 
-      <div class="flex items-center gap-2 border-b px-2 py-1">
-        <div class="i-hugeicons:bubble-chat-search shrink-0" />
-        <input v-model="searchQuery" type="text" placeholder="Search chats..." class="w-full bg-transparent outline-none">
-        <Button v-show="searchQuery" class="size-6 shrink-0" variant="ghost" size="icon" @click="searchQuery = ''">
-          <div class="i-hugeicons:cancel-01" />
-        </Button>
-      </div>
+      <ChatSidebarHeaderSearch v-model="searchInput" />
     </SidebarHeader>
     <SidebarContent class="p-2">
       <SidebarGroup v-if="!threads?.length">
@@ -204,7 +189,7 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
         </div>
       </SidebarGroup>
       <template v-else>
-        <!-- Define reusable items -->
+        <!-- Define some locally reusable items -->
         <div class="hidden">
           <DefineDeleteBtn v-slot="{ thread }">
             <DeleteThreadAlertDialog :thread :callback="() => { _deleteThread(thread) }">
@@ -225,31 +210,8 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
                     @pointerdown="navigateTo(`/chat/${thread._id}`); sidebarContext.setOpenMobile(false)"
                   >
                     <div class="h-4 flex items-center gap-1">
-                      <Tooltip v-if="thread.parentThread" :delay-duration="500">
-                        <TooltipTrigger as-child>
-                          <NuxtLink
-                            :to="`/chat/${thread.parentThread}`"
-                            class="size-4"
-                          >
-                            <Button variant="link" size="icon" class="size-4 text-current opacity-40 transition-opacity hover:(text-primary opacity-100)">
-                              <Split />
-                            </Button>
-                          </NuxtLink>
-                        </TooltipTrigger>
-                        <TooltipContent side="bottom" :side-offset="6">
-                          <p>{{ $t('chat.thread.branchedFrom', { title: threadsKeyed[thread.parentThread]?.title }) }}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                      <Tooltip v-if="thread.frozen" :delay-duration="500">
-                        <TooltipTrigger as-child>
-                          <Button variant="link" size="icon" class="size-4 text-current opacity-40 transition-color hover:(text-primary opacity-100)">
-                            <div class="i-hugeicons:snow" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent side="bottom" :side-offset="6">
-                          <p>{{ $t('chat.thread.frozen') }}</p>
-                        </TooltipContent>
-                      </Tooltip>
+                      <BranchIconButton v-if="thread.parentThread" :thread />
+                      <FrozenIconButton v-if="thread.frozen" :thread />
                     </div>
 
                     <Tooltip :delay-duration="500">
@@ -338,34 +300,7 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
         <SidebarMenuItem>
           <DropdownMenu>
             <DropdownMenuTrigger as-child>
-              <SidebarMenuButton class="h-auto w-full flex items-center justify-between">
-                <div class="h-9 flex items-center gap-2 truncate text-sm leading-tight">
-                  <template v-if="$auth.loggedIn">
-                    <Avatar shape="square" size="sm" class="size-9" alt="User avatar">
-                      <AvatarImage :src="$auth.user.picture" alt="Avatar image" />
-                      <AvatarFallback>👤</AvatarFallback>
-                    </Avatar>
-                    <div class="truncate">
-                      <p>{{ $auth.user.name }}</p>
-                      <p class="truncate text-xs">
-                        {{ $auth.user.email }}
-                      </p>
-                    </div>
-                  </template>
-                  <template v-else>
-                    <Avatar shape="square" size="sm" class="size-9" alt="Guest placeholder avatar">
-                      <AvatarFallback>🍳</AvatarFallback>
-                    </Avatar>
-                    <div class="truncate">
-                      <p>{{ $t('guest') }}</p>
-                      <p class="truncate text-xs">
-                        {{ $t('loginToEnjoyMore') }}
-                      </p>
-                    </div>
-                  </template>
-                </div>
-                <div class="i-hugeicons:dashboard-square-setting size-5 shrink-0" />
-              </SidebarMenuButton>
+              <ChatSidebarUserMenuButton />
             </DropdownMenuTrigger>
             <DropdownMenuContent
               side="top"

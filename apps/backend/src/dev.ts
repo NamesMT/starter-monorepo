@@ -1,5 +1,5 @@
 import { localcertKeyPath, localcertPath } from '@local/common/dev/cert'
-import { getConvexEnvs } from 'backend-convex/_util'
+import { getConvexEnvs } from 'backend-convex/dev'
 import { serve } from 'srvx'
 import { env } from 'std-env'
 import { app } from './app'

@@ -1,6 +1,6 @@
 import type { LocaleObject } from '@nuxtjs/i18n'
 import { localcertKeyPath, localcertPath } from '@local/common/dev/cert'
-import { getConvexEnvs } from 'backend-convex/_util'
+import { getConvexEnvs } from 'backend-convex/dev'
 import { config } from 'dotenv'
 import { type BundledLanguage, bundledLanguagesInfo } from 'shiki/bundle/full'
 import optimizeExclude from 'vite-plugin-optimize-exclude'

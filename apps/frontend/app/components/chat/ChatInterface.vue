@@ -3,25 +3,12 @@
 import type { Doc, Id } from 'backend-convex/convex/_generated/dataModel'
 import type Lenis from 'lenis'
 import { keyBy, sleep, uniquePromise } from '@namesmt/utils'
-import { sample } from '@namesmt/utils'
 import { api } from 'backend-convex/convex/_generated/api'
 import { useConvexClient } from 'convex-vue'
 import { countdown, debounce, getInstance, throttle } from 'kontroll'
 import { VueLenis } from 'lenis/vue'
-import { Split } from 'lucide-vue-next'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/lib/shadcn/components/ui/dropdown-menu'
-import { Skeleton } from '@/lib/shadcn/components/ui/skeleton'
-import { Card, CardContent } from '~/lib/shadcn/components/ui/card'
 import { useToast } from '~/lib/shadcn/components/ui/toast'
-import LiquidGlassDiv from '../LiquidGlassDiv.vue'
 
-const isDev = import.meta.dev
 const { $auth } = useNuxtApp()
 const convex = useConvexClient()
 const chatContext = useChatContext()
@@ -33,17 +20,18 @@ const lenisRef = ref<{ $el: HTMLElement, lenis: Lenis }>()
 const { y: scrollY } = useScroll(computed(() => lenisRef.value?.$el))
 const nearTopBottom = computed(() => {
   const el = lenisRef.value?.$el
-  if (!el)
+  const lenis = lenisRef.value?.lenis
+  if (!el || !lenis)
     return [null, null]
 
-  const currentScroll = Math.ceil(lenisRef.value!.lenis.targetScroll || scrollY.value)
+  const currentScroll = Math.ceil(lenis.targetScroll || scrollY.value)
 
   const gapFromTop = currentScroll
   const gapFromBottom = el.scrollHeight - el.clientHeight - currentScroll
 
   const nearTop = gapFromTop < 369
   const nearBottom = gapFromBottom < 369
-  return [nearTop && gapFromTop + 1, nearBottom && gapFromBottom + 1, lenisRef.value!.lenis.targetScroll, scrollY.value]
+  return [nearTop && gapFromTop + 1, nearBottom && gapFromBottom + 1, lenis.targetScroll, scrollY.value]
 })
 
 const threadIdRef = useThreadIdRef()
@@ -57,8 +45,7 @@ const messages = ref<Array<CustomMessage>>([])
 const messagesKeyed = computed(() => keyBy(messages.value, 'id'))
 const streamingMessages = ref(0)
 const isFetching = ref(false)
-const { textarea: chatTextarea, input: chatInput } = useTextareaAutosize()
-const chatPlaceholder = computedWithControl(chatContext.interfaceSRK, () => `${t('chat.typeYourMessageHere')}\n${sample(useInputThoughtsPlaceholders().value, 1)[0]}`)
+const chatInput = ref('')
 
 // Fetch messages as needed and resume streams
 const { ignoreUpdates: ignorePathUpdate } = watchIgnorable(
@@ -116,12 +103,12 @@ const { ignoreUpdates: ignorePathUpdate } = watchIgnorable(
   { immediate: true },
 )
 
-// Subscribe to a counter to check for messages from other concurrent sessions
+// Efficient concurrent syncing support using counter Query.
 watchImmediate(threadIdRef, (threadId) => {
   if (!threadId)
     return
 
-  console.log(`Subscribing to messages count of: ${threadId}`)
+  console.log(`Subscribing to: ${threadId}`)
   const { unsubscribe } = convex.onUpdate(
     api.messages.countByThread,
     { threadId: threadId as Id<'threads'>, lockerKey: getLockerKey(threadId) },
@@ -132,15 +119,14 @@ watchImmediate(threadIdRef, (threadId) => {
   )
   watchOnce(threadIdRef, () => {
     unsubscribe()
-    console.log(`Unsubscribed from ${threadId}`)
+    console.log(`Unsubscribed from: ${threadId}`)
   })
 })
 
 interface HandleSubmitArgs {
   input: string
-  confirmMultiStream?: boolean
 }
-async function handleSubmit({ input, confirmMultiStream = false }: HandleSubmitArgs) {
+async function handleSubmit({ input }: HandleSubmitArgs) {
   const userInput = input.trim()
   if (!userInput)
     return
@@ -154,15 +140,12 @@ async function handleSubmit({ input, confirmMultiStream = false }: HandleSubmitA
       .then(() => { sleep(500).then(() => handleSubmit({ input })) })
   }
 
-  if (!confirmMultiStream && streamingMessages.value > 0)
-    return alertIsStreaming()
-
   // Optimistically add the messages
   messages.value.push({
     id: `user-${Date.now()}`,
     role: 'user',
     content: userInput,
-    context: { from: getUserName() },
+    context: { from: getChatNickname() },
   } as any as CustomMessage)
   messages.value.push({
     id: `assistant-${Date.now()}`,
@@ -201,9 +184,10 @@ async function handleSubmit({ input, confirmMultiStream = false }: HandleSubmitA
 
   targetMessage.threadId = threadIdRef.value as Id<'threads'>
 
+  // Wraps in a kontroller to make sure there is only one stream on the same message
   throttle(
     1,
-    async () => await streamToMessage({ message: targetMessage, content: userInput }),
+    () => streamToMessage({ message: targetMessage, content: userInput }),
     { key: `messageStream-${targetMessage.id}` },
   )
 }
@@ -241,8 +225,12 @@ async function pollToMessage({ message, resumeStreamId, threadId = threadIdRef.v
   Object.assign(message, customMessageTransform(messageFromConvex))
 
   if (message.isStreaming) {
-    sleep(500)
-      .then(() => { pollToMessage({ message, resumeStreamId, threadId }) })
+    // Wraps in a kontroller to make sure there is only one stream on the same message
+    countdown(
+      500,
+      () => pollToMessage({ message, resumeStreamId, threadId }),
+      { key: `messageStream-${message.id}` },
+    )
   }
   else {
     console.log('Poll completed')
@@ -396,123 +384,24 @@ function doScrollBottom({ smooth = true, maybe = false, tries = 0, lastScrollTop
     }, { key: 'dSB', replace: true })
   }
 }
-
-const multiStreamConfirmDialogOpen = ref(false)
-function alertIsStreaming() {
-  multiStreamConfirmDialogOpen.value = true
-}
 </script>
 
 <template>
   <div class="relative flex flex-col">
     <VueLenis ref="lenisRef" class="h-screen overflow-y-scroll px-4">
+      <ChatInterfaceBackground v-bind="{ messages, isFetching }" />
       <div class="mx-auto h-full max-w-full lg:max-w-4xl">
-        <FlickeringGrid
-          v-if="chatContext.insaneUI.value" class="absolute inset-0 z-0 place-content-center"
-          :square-size="10" :grid-gap="5" color="#60A5FA" :max-opacity="0.5" :flicker-chance="0.1"
-        />
-
-        <div
-          v-show="!messages.length && !isFetching"
-          class="absolute left-0 z-0 h-screen w-full place-content-center overflow-hidden transition-height"
-        >
-          <IUIMaybeGlassCard
-            v-if="!messages.length"
-            :key="chatContext.interfaceSRK.value"
-            v-motion-pop-visible-once
-            class="relative z-2 mx-auto w-fit whitespace-pre-wrap px-10 py-6 text-center text-4xl font-medium tracking-tighter"
-          >
-            <p>
-              {{ threadIdRef ? $t('chat.interface.sendToStart') : $t('chat.interface.selectOrStart') }}
-            </p>
-          </IUIMaybeGlassCard>
-        </div>
-
         <div v-if="messages.length" class="relative z-2 space-y-4">
           <div class="pt-6" />
 
-          <div
-            v-for="m of messages" :key="m.id" class="group/message relative flex"
-            :class="m.role === 'user' ? 'justify-end' : 'justify-start pb-10'"
-          >
-            <component
-              :is="chatContext.insaneUI.value ? LiquidGlassDiv : 'div'"
-              class="border rounded-$radius $c-radius=$radius"
-              :class="[
-                m.role === 'user'
-                  ? 'bg-secondary-100 dark:bg-secondary-950 border-secondary-200 max-w-80% md:max-w-2xl'
-                  : 'bg-primary-100 dark:bg-primary-950 border-primary-200 max-w-full md:max-w-3xl',
-                chatContext.insaneUI.value
-                  ? 'bg-opacity-50!'
-                  : 'bg-opacity-5!',
-              ]" tabindex="0"
-            >
-              <Card
-                class="bg-transparent shadow-md"
-              >
-                <!-- <CardHeader class="px-4 py-2">
-                  <CardTitle class="text-sm font-semibold">
-                    {{ m.role === 'user' ? $t('pages.chat.userLabel') : $t('pages.chat.aiLabel') }}
-                  </CardTitle>
-                </CardHeader> -->
-                <CardContent class="px-4 py-3 [&_.prose-hr]:(border-accent-foreground!)">
-                  <div v-if="m.isStreaming && !m.content" class="flex gap-2">
-                    <div>{{ $t('generating') }}</div>
-                    <div class="spinner h-5 w-5" />
-                  </div>
-                  <MDC v-else :value="m.content" class="only-child:[&>.prose-p]:my-0" />
-                  <div class="hidden first:block">
-                    <Skeleton
-                      class="h-5 w-$c-W rounded-full bg-muted-foreground" :style="{
-                        '--c-W': `${(Math.floor(Math.random() * (300 - 100 + 1)) + 100) * (m.role === 'user' ? 1 : 2)}px`,
-                      }"
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            </component>
-
-            <div
-              v-if="m.role === 'user'"
-              class="absolute right-2 top-100% flex gap-1 opacity-0 transition-opacity group-hover/message:opacity-100"
-            >
-              <div v-if="m.context?.from" class="text-xs">
-                {{ m.context.from }}
-              </div>
-            </div>
-
-            <div
-              v-else
-              class="absolute bottom-2 left-2 flex gap-1 opacity-0 transition-opacity group-hover/message:opacity-100"
-            >
-              <Tooltip :delay-duration="500">
-                <TooltipTrigger as-child>
-                  <CodeCopy :code="m.content" class="hover:text-accent-foreground hover:bg-accent!" />
-                </TooltipTrigger>
-                <TooltipContent side="bottom" :side-offset="6">
-                  <p>{{ $t('chat.message.copy') }}</p>
-                </TooltipContent>
-              </Tooltip>
-              <Tooltip v-show="m.isStreaming === false" :delay-duration="500">
-                <TooltipTrigger as-child>
-                  <Button
-                    variant="ghost" size="icon" class="size-7" @click="_branchThreadFromMessage({
-                      messageId: m._id,
-                      lockerKey: getLockerKey(m.threadId),
-                    })"
-                  >
-                    <Split />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" :side-offset="6">
-                  <p>{{ $t('chat.message.branch') }}</p>
-                </TooltipContent>
-              </Tooltip>
-              <div class="ml-4 text-xs">
-                {{ m.model }}
-              </div>
-            </div>
-          </div>
+          <ChatMessageCard
+            v-for="message of messages" :key="message.id"
+            :message
+            @branch-off-clicked="_branchThreadFromMessage({
+              messageId: message._id,
+              lockerKey: getLockerKey(message.threadId),
+            })"
+          />
 
           <IUIMaybeGlassCard
             v-if="isThreadFrozen"
@@ -527,105 +416,12 @@ function alertIsStreaming() {
       </div>
     </VueLenis>
 
-    <LiquidGlassDiv class="bottom-0 left-0 z-3 max-w-full w-full border-t border-secondary $c-radius=0px absolute!">
-      <div v-if="isDev" class="absolute bottom-100%">
-        {{ nearTopBottom }}
-      </div>
+    <PrompterArea
+      v-bind="{ nearTopBottom, lenisRef, streamingMessages }"
+      v-model:chat-input="chatInput"
+      @submit="(input) => handleSubmit({ input })"
+    />
 
-      <div class="absolute bottom-100% right-6 mb-2 flex flex-col gap-2">
-        <Button
-          variant="outline" size="icon" class="rounded-xl p-1 opacity-100 transition-opacity duration-500"
-          :class="nearTopBottom[0] && 'invisible opacity-0'" @click="lenisRef!.lenis.scrollTo('top')"
-        >
-          <div class="i-hugeicons:circle-arrow-up-03 h-full w-full" />
-        </Button>
-        <Button
-          variant="outline" size="icon" class="rounded-xl p-1 opacity-100 transition-opacity duration-500"
-          :class="nearTopBottom[1] && 'invisible opacity-0'" @click="lenisRef!.lenis.scrollTo('bottom')"
-        >
-          <div class="i-hugeicons:circle-arrow-down-03 h-full w-full" />
-        </Button>
-      </div>
-
-      <div>
-        <form class="mx-auto max-w-2xl flex flex-col gap-2 border-x-6px border-rose/80 bg-rose/20 p-3 pb-2 text-secondary-950 backdrop-blur-sm dark:text-secondary-50" @submit.prevent>
-          <textarea
-            ref="chatTextarea"
-            :key="chatContext.interfaceSRK.value"
-            v-model="chatInput"
-            :placeholder="chatPlaceholder"
-            class="min-h-12 resize-none bg-transparent outline-none placeholder-secondary-700/60 dark:placeholder-secondary-300/60"
-            @keydown.enter.exact.prevent="handleSubmit({ input: chatInput })"
-          />
-          <div class="flex items-center justify-between">
-            <div class="flex items-center">
-              <DropdownMenu>
-                <DropdownMenuTrigger as-child>
-                  <Button variant="ghost" size="sm" class="h-fit w-fit flex items-center gap-1 px-2 py-1 -ml-1.5 hover:bg-accent/30">
-                    <div>{{ displayActiveAgent(chatContext.activeAgent.value) }}</div>
-                    <div class="i-hugeicons:arrow-up-01" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuLabel>{{ $t('chat.provider.hosted') }}</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    v-for="[model] of Object.entries(chatContext.hostedProvider.models).filter((([m, v]) => v.enabled))"
-                    :key="model"
-                    @click="chatContext.agentsSetting.value.selectedAgent = `hosted/${model}`"
-                  >
-                    {{ model }}
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-            <Button
-              variant="default"
-              class="i-hugeicons:login-square-01 enabled:(bg-mainGradient) disabled:bg-surface-500"
-              :disabled="!chatInput"
-              @click="handleSubmit({ input: chatInput })"
-            />
-          </div>
-        </form>
-      </div>
-    </LiquidGlassDiv>
-
-    <!--  -->
-    <div class="absolute right-3 top-3 hidden items-center lg:flex">
-      <Tooltip :delay-duration="500">
-        <TooltipTrigger as-child>
-          <Button
-            variant="ghost" size="icon"
-            class="size-7"
-            @click="chatContext.insaneUI.value = !chatContext.insaneUI.value"
-          >
-            <div :class="chatContext.insaneUI.value ? ' i-hugeicons:crazy bg-mainGradient' : ' i-hugeicons:confused'" />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent side="bottom" :side-offset="6">
-          <p>InsaneUI</p>
-        </TooltipContent>
-      </Tooltip>
-    </div>
-
-    <!-- Multi Stream Confirm Dialog -->
-    <AlertDialog
-      v-model:open="multiStreamConfirmDialogOpen"
-    >
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>{{ $t('chat.multiStreamConfirmDialog.title') }}</AlertDialogTitle>
-          <AlertDialogDescription>
-            {{ $t('chat.multiStreamConfirmDialog.description') }}
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>{{ $t('cancel') }}</AlertDialogCancel>
-          <AlertDialogAction @click="handleSubmit({ input: chatInput, confirmMultiStream: true })">
-            {{ $t('continue') }}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <TopRightQuickSnacks />
   </div>
 </template>

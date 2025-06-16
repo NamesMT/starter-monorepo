@@ -50,7 +50,7 @@ async function testConvexViaBackendTasksCTA() {
   <div class="max-w-md w-full flex flex-col gap-5">
     <VanishingInput
       v-model="taskInputRef"
-      :placeholders="useInputThoughtsPlaceholders().value"
+      :placeholders="getThoughtPlaceholders()"
       @submit="addTask()"
     />
   </div>

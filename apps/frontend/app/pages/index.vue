@@ -80,13 +80,13 @@ const { isPending, isError, data, error } = useQuery({
         <div class="flex items-center gap-2">
           <p>{{ $t('language') }}:</p>
           <Button @pointerdown="setLocale(computedNextLocale)">
-            {{ $lmw(locale.substring(0, 2)) }}
+            {{ locale.substring(0, 2) }}
           </Button>
         </div>
 
         <div class="flex items-center gap-2">
           <p>{{ $t('pages.home.dateDisplay.label') }}:</p>
-          <span :key="$li18n.renderKey" class="font-semibold">{{ $lmw(dayjs().format('dddd'), 6) }}</span>
+          <span :key="$li18n.renderKey" class="font-semibold">{{ dayjs().format('dddd') }}</span>
         </div>
       </div>
     </div>

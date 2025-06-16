@@ -7,7 +7,6 @@ import { randomStr } from '@namesmt/utils'
 export default defineNuxtPlugin({
   enforce: 'pre',
   name: 'local-init',
-  parallel: true,
   async setup() {
     const state = reactive({
       mounted: false,

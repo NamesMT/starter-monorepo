@@ -1,7 +1,9 @@
-export function useInputThoughtsPlaceholders() {
+import { sample } from '@namesmt/utils'
+
+export function getThoughtPlaceholders() {
   const { $i18n } = useNuxtApp()
 
-  return computed(() => [
+  return [
     $i18n.t('getInputThoughtsPlaceholders.0'),
     $i18n.t('getInputThoughtsPlaceholders.1'),
     $i18n.t('getInputThoughtsPlaceholders.2'),
@@ -11,5 +13,9 @@ export function useInputThoughtsPlaceholders() {
     $i18n.t('getInputThoughtsPlaceholders.6'),
     $i18n.t('getInputThoughtsPlaceholders.7'),
     $i18n.t('getInputThoughtsPlaceholders.8'),
-  ])
+  ]
+}
+
+export function getRandomThoughtPlaceholder() {
+  return sample(getThoughtPlaceholders(), 1)[0]
 }

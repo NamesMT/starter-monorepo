@@ -69,7 +69,7 @@ checksums:
     pinned: 9bc428a489e05402739d2a01cfbfa7d6
     recent: 2cef23d0cf0a6cabe9b8cf749549d6c7
     chat.multiStreamConfirmDialog.title: 8cb2a1e566120ab9a2519672e4086692
-    chat.multiStreamConfirmDialog.description: b4ee951677f1eca746a93a6073d035e7
+    chat.multiStreamConfirmDialog.description: 8eabadec77370a396bfd91ec2baddf48
     generating: 8a5d3a7701dc359fc48ee6f8a188e9c9
     chat.interface.sendToStart: 6ba07995188dc929a2de0e8f0bb4d1ea
     chat.interface.selectOrStart: 5ae94ab41d0b599f36924f5db15dd16d
