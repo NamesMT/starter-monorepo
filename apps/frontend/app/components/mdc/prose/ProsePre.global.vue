@@ -52,14 +52,14 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div :data-header="props.showHeader" class="prose-pre-card">
+  <div :data-header="props.showHeader" class="group/pre-card prose-pre-card">
     <div v-if="props.showHeader && props.filename" name="header">
       <div v-if="icon" :class="`i-${icon}`" />
       <span> {{ props.filename }}</span>
-      <CodeCopy :code="props.code" name="copy-btn" />
+      <CodeCopy :code="props.code" class="opacity-0 group-hover/pre-card:opacity-100" name="copy-btn" />
     </div>
 
-    <span v-if="!props.filename" name="absolute-copy-btn"><CodeCopy :code="props.code" /></span>
+    <span v-if="!props.filename" name="absolute-copy-btn"><CodeCopy :code="props.code" class="opacity-0 group-hover/pre-card:opacity-100" /></span>
 
     <span v-if="!props.filename && !isSingleLine" name="absolute-language">
       {{ props.language }}

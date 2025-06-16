@@ -40,7 +40,7 @@ function label(props: SlotVNodeProps) {
 </script>
 
 <template>
-  <div class="code-group-card">
+  <div class="code-group-card group/code-group">
     <div class="code-group">
       <div class="code-group-tabs">
         <div name="files">
@@ -57,7 +57,7 @@ function label(props: SlotVNodeProps) {
             {{ label(slot.props!) }}
           </div>
         </div>
-        <CodeCopy v-if="code" :code name="copy-btn" />
+        <CodeCopy v-if="code" class="opacity-0 group-hover/code-group:opacity-100" :code name="copy-btn" />
       </div>
     </div>
 
