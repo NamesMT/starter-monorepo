@@ -77,7 +77,7 @@ chat.interface.sendToStart,,Send a message to start chatting.,Envía un mensaje 
 chat.interface.selectOrStart,,Select a chat or start a new one.,Selecciona un chat o inicia uno nuevo.,Sélectionnez une conversation ou commencez-en une nouvelle.,Выберите чат или начните новый.,Chọn một cuộc trò chuyện hoặc bắt đầu cuộc trò chuyện mới.,选择一个聊天或开始新的聊天。
 guest,,Guest,Invitado,Invité,Гость,Khách,访客
 loginToEnjoyMore,,Login to enjoy more!,¡Inicia sesión para disfrutar más!,Connectez-vous pour en profiter davantage !,"Войдите, чтобы получить больше возможностей!",Đăng nhập để trải nghiệm nhiều hơn!,登录以享受更多功能！
-chat.toast.threadRemovedExternal,,The chat has been removed by the owner.,El chat ha sido eliminado por el propietario.,Le chat a été supprimé par le propriétaire.,Чат был удален владельцем.,聊天已被所有者删除。,该聊天已被所有者移除。
+chat.toast.threadRemovedExternal,,The chat has been removed by the owner.,El chat ha sido eliminado por el propietario.,Le chat a été supprimé par le propriétaire.,Чат был удален владельцем.,Cuộc trò chuyện đã bị xóa bởi chủ sở hữu.,此聊天已被所有者移除。
 chat.thread.pin,,Pin Thread,Fijar conversación,Épingler la conversation,Закрепить тему,Ghim chủ đề,置顶话题
 chat.thread.unpin,,Unpin Thread,Desfijar conversación,Désépingler la conversation,Открепить тему,Bỏ ghim chủ đề,取消置顶话题
 chat.thread.delete,,Delete Thread,Eliminar conversación,Supprimer la conversation,Удалить тему,Xóa chủ đề,删除话题

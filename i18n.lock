@@ -93,5 +93,9 @@ checksums:
     chat.alert.shareThread.description: e8eeee4bd83372c3a997a593a585f077
     chat.toast.threadShareLinkCopied: 301236632c59a15e329f433e7b4a3706
     chat.typeYourMessageHere: 592c39355ee2ce96113655e58b1e65c9
+    chat.provider.hosted: 582f9507edebe074a4e28c50934142c1
+    chat.provider.openrouter: 6b69e3f00f088bceefec2df193999b61
+    chat.provider.openai: 386a12cfe55562a8e181c9bfcac6b156
+    chat.provider.google: 6cc462fb53d90d404f48d5a6695c1de1
   bd59d862767f00d421bd4cacc7522c6c:
     hello-from-%2Fx: de51bbd5a66af7e24e90466431fa9006
