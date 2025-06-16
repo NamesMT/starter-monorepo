@@ -24,6 +24,7 @@
     "@openrouter/ai-sdk-provider": "^0.7.2",
     "ai": "^4.3.16",
     "convex-helpers": "^0.1.94",
+    "destr": "^2.0.5",
     "hono": "^4.7.11",
     "zod": "^3.25.64"
   },

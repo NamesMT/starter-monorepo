@@ -1,8 +1,3 @@
-import { ConvexError } from 'convex/values'
+import { getErrorMessage } from 'backend-convex/utils/error'
 
-export function getConvexErrorMessage(error: Error | null) {
-  if (error instanceof ConvexError)
-    return error.data.msg ?? error.data.message ?? error.data.kind ?? error.data ?? error.name
-
-  return error?.message ?? error
-}
+export { getErrorMessage as getConvexErrorMessage }

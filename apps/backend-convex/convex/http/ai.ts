@@ -11,6 +11,7 @@ import { cors } from 'hono/cors'
 import { throttle } from 'kontroll'
 import { z } from 'zod'
 import { getAgentModel } from '../../utils/agent'
+import { getErrorMessage, normalizePossibleSDKError } from '../../utils/error'
 import { buildAiSdkMessage, buildSystemPrompt } from '../../utils/message'
 import { api, components, internal } from '../_generated/api'
 
@@ -191,10 +192,7 @@ aiApp
               model: getAgentModel({ provider, model, apiKey }),
               system: buildSystemPrompt({ provider, model }),
               messages: messagesContext,
-              onError: (ev) => {
-                console.error(ev.error)
-                throw ev.error
-              },
+              onError: (ev) => { throw ev.error },
             })
 
             for await (const textDelta of aiStream.textStream) {
@@ -217,16 +215,18 @@ aiApp
             controller.enqueue(encoder.encode(`o: ${JSON.stringify({ done: true })}\n`))
             controller.close()
           }
-          catch (error: any) {
+          catch (err: any) {
+            const error = normalizePossibleSDKError(err)
+            const errorMessage = getErrorMessage(error) ?? ''
             console.error(error)
 
-            aiResponse += `\n\nError encountered, stream stopped`
+            aiResponse += `\n\nError encountered, stream stopped: ${error?.name ? `[${error.name}]: ` : ''}${errorMessage}`
 
             doSave()
             await waitForSave()
             await c.env.runMutation(internal.messages.finishStreaming, { streamId })
 
-            controller.enqueue(encoder.encode(`o: ${JSON.stringify({ error: error.message })}\n`))
+            controller.enqueue(encoder.encode(`o: ${JSON.stringify({ error: `\`\`\`\n${errorMessage}\n\`\`\`` })}\n`))
             controller.close()
           }
         },
