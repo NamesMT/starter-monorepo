@@ -9,12 +9,25 @@ Hành động này không thể hoàn tác.","您确定要删除“{name}”吗�
 此操作无法撤销。"
 chat.alert.deleteThread.title,,Delete Thread,Eliminar conversación,Supprimer la conversation,Удалить тему,Xóa Chủ Đề,删除话题
 chat.alert.shareThread.description,,"Are you sure you want to share ""{name}""?
-The recipient will have full access to the history and future of the thread.","¿Estás seguro de que quieres compartir ""{name}""?
-El destinatario tendrá acceso completo al historial y futuro de la conversación.","Êtes-vous sûr de vouloir partager ""{name}"" ?
-Le destinataire aura un accès complet à l'historique et au futur de la conversation.","Вы уверены, что хотите поделиться ""{name}""?
-Получатель получит полный доступ к истории и будущему этой ветки.","Bạn có chắc chắn muốn chia sẻ ""{name}""?
-Người nhận sẽ có toàn quyền truy cập vào lịch sử và tương lai của cuộc trò chuyện.","您确定要分享“{name}”吗？
-接收者将可以完全访问该线程的历史记录和未来内容。"
+The recipient will have full access including deleting and viewing the history and future of the thread.","¿Estás seguro de que quieres compartir ""{name}""?
+El destinatario tendrá acceso completo, incluyendo la posibilidad de eliminar y ver el historial y futuro del hilo.","Êtes-vous sûr de vouloir partager ""{name}"" ?
+Le destinataire aura un accès complet, y compris la possibilité de supprimer et de consulter l'historique et les futures conversations du fil.","Вы уверены, что хотите поделиться ""{name}""?
+Получатель получит полный доступ, включая возможность удаления, просмотра истории и будущего этой темы.","Bạn có chắc chắn muốn chia sẻ ""{name}""?
+Người nhận sẽ có toàn quyền truy cập bao gồm xóa và xem lịch sử cũng như tương lai của cuộc trò chuyện.","您确定要分享“{name}”吗？
+接收者将拥有完全的访问权限，包括删除以及查看该线程的历史和未来内容。"
+chat.alert.shareThread.descriptionDanger,,"Are you sure you want to share ""{name}""?
+The recipient will have full access including deleting and viewing the history and future of the thread.
+The thread currently are also not assigned to any user account, its ownership will be transferred to the first user account that joins the thread.","¿Estás seguro de que quieres compartir ""{name}""?
+El destinatario tendrá acceso completo, incluyendo la posibilidad de eliminar y ver el historial y futuro del hilo.
+Actualmente, el hilo no está asignado a ninguna cuenta de usuario, su propiedad se transferirá a la primera cuenta de usuario que se una al hilo.","Êtes-vous sûr de vouloir partager ""{name}"" ?
+Le destinataire aura un accès complet, y compris la possibilité de supprimer et de consulter l'historique et les futures conversations du fil.
+Actuellement, ce fil n'est associé à aucun compte utilisateur, sa propriété sera transférée au premier compte utilisateur qui rejoindra le fil.","Вы уверены, что хотите поделиться ""{name}""?
+Получатель получит полный доступ, включая возможность удаления, просмотра истории и будущего этой темы.
+В настоящее время эта тема также не привязана ни к одной учетной записи пользователя, и её владение будет передано первой учетной записи пользователя, которая присоединится к теме.","Bạn có chắc chắn muốn chia sẻ ""{name}""?
+Người nhận sẽ có toàn quyền truy cập bao gồm xóa và xem lịch sử cũng như tương lai của cuộc trò chuyện.
+Hiện tại cuộc trò chuyện này chưa được gán cho bất kỳ tài khoản người dùng nào, quyền sở hữu sẽ được chuyển cho tài khoản người dùng đầu tiên tham gia vào cuộc trò chuyện.","您确定要分享“{name}”吗？
+接收者将拥有完全的访问权限，包括删除以及查看该线程的历史和未来内容。
+目前该线程未分配给任何用户账户，其所有权将转移给第一个加入该线程的用户账户。"
 chat.alert.shareThread.title,,Share Thread,Compartir hilo,Partager la discussion,Поделиться дискуссией,Chia sẻ chủ đề,共享线程
 chat.interface.selectOrStart,,Select a chat or start a new one.,Selecciona un chat o inicia uno nuevo.,Sélectionnez une conversation ou commencez-en une nouvelle.,Выберите чат или начните новый.,Chọn một cuộc trò chuyện hoặc bắt đầu cuộc trò chuyện mới.,选择一个聊天或开始新的聊天。
 chat.interface.sendToStart,,Send a message to start chatting.,Envía un mensaje para comenzar a chatear.,Envoyez un message pour commencer la conversation.,"Отправьте сообщение, чтобы начать общение.",Gửi tin nhắn để bắt đầu trò chuyện.,发送消息以开始聊天。
@@ -40,7 +53,8 @@ chat.thread.share,,Share thread,Compartir hilo,Partager la discussion,Подел
 chat.thread.unfreeze,,Unfreeze thread,Descongelar hilo,Dégeler la discussion,Разморозить тему,Giải băng chủ đề,解冻线程
 chat.thread.unpin,,Unpin Thread,Desfijar conversación,Désépingler la conversation,Открепить тему,Bỏ ghim chủ đề,取消置顶话题
 chat.toast.threadBranched,,The thread has been branched off.,La conversación ha sido ramificada.,La conversation a été ramifiée.,Тема была выделена в отдельную ветку.,Chủ đề đã được tạo nhánh.,话题已被分支。
-chat.toast.threadRemovedExternal,,The chat has been removed by the owner.,El chat ha sido eliminado por el propietario.,Le chat a été supprimé par le propriétaire.,Чат был удален владельцем.,Cuộc trò chuyện đã bị xóa bởi chủ sở hữu.,此聊天已被所有者移除。
+chat.toast.threadRemovedExternal,,The chat has been removed by the owner.,El chat ha sido eliminado por el propietario.,Le chat a été supprimé par le propriétaire.,Чат был удалён владельцем.,Cuộc trò chuyện đã bị xóa bởi chủ sở hữu.,此聊天已被所有者移除。
+chat.toast.threadNameRemovedExternal,,"Thread ""{name}"" has been removed by the owner.","El hilo ""{name}"" ha sido eliminado por el propietario.","La discussion ""{name}"" a été supprimée par le propriétaire.","Тема ""{name}"" была удалена владельцем.","Cuộc trò chuyện ""{name}"" đã bị xóa bởi chủ sở hữu.",主题“{name}”已被所有者移除。
 chat.toast.threadShareLinkCopied,,The thread access link has been copied to your clipboard.,El enlace de acceso a la conversación ha sido copiado a tu portapapeles.,Le lien d'accès à la conversation a été copié dans votre presse-papiers.,Ссылка для доступа к ветке скопирована в ваш буфер обмена.,Đường dẫn truy cập cuộc trò chuyện đã được sao chép vào bảng tạm của bạn.,线程访问链接已复制到您的剪贴板。
 chat.typeYourMessageHere,,Type your message here...,Escribe tu mensaje aquí...,Tapez votre message ici...,Введите ваше сообщение здесь...,Nhập tin nhắn của bạn tại đây...,在这里输入你的消息...
 components.convexIntegrationTest.addTask.label,,Add task entry (press enter),Añadir tarea (pulsar enter),Ajouter une tâche (appuyer sur Entrée),Добавить задачу (нажмите Enter),Thêm mục công việc (nhấn enter),添加任务条目（按回车键）

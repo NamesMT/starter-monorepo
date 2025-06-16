@@ -6,7 +6,8 @@ checksums:
     cancel: 2e2a849c2223911717de8caa2c71bade
     chat.alert.deleteThread.description: b0cca6d07bbbd907b4d25dc2a1dbe2e3
     chat.alert.deleteThread.title: 3dea4a78f8c5c2073d8eab4aad3f2015
-    chat.alert.shareThread.description: e8eeee4bd83372c3a997a593a585f077
+    chat.alert.shareThread.description: 38470c662f7c91952c7190a873d200ac
+    chat.alert.shareThread.descriptionDanger: 85dad0b017b628e0c2e29abb45e3d5fa
     chat.alert.shareThread.title: e00e8208d2dd52a00a4cbccdc57199e3
     chat.interface.selectOrStart: 5ae94ab41d0b599f36924f5db15dd16d
     chat.interface.sendToStart: 6ba07995188dc929a2de0e8f0bb4d1ea
@@ -23,7 +24,7 @@ checksums:
     chat.sidebar.threads.empty: eaa3199ed3ba5dd2bb3988ea999649e3
     chat.sidebar.threads.loading: c0591fcc6aa3eb6092ab4f4ce577804c
     chat.thread.branchedFrom: 9235ad091f1d3b7f65a33b2e906674ad
-    components.convexIntegrationTest.addTask.label: 94bfce6a5916c8955cea8d04ad41c10e
+    chat.thread.delete: 3dea4a78f8c5c2073d8eab4aad3f2015
     chat.thread.freeze: b90fc4e37a58e2f60fbc9a25945b2138
     chat.thread.frozen: 69fa1ed78bb636c218ec3d95eae69bca
     chat.thread.frozenWithDescription: 5cf38e514472bed10297a7936924737f
@@ -33,8 +34,10 @@ checksums:
     chat.thread.unpin: 9f3e0c1a25452b171dfffee566e11d49
     chat.toast.threadBranched: edc2466649225081b38d4c6fe1dd27cf
     chat.toast.threadRemovedExternal: db7f0c7a17abd8f2fa3bdf24f0e81377
+    chat.toast.threadNameRemovedExternal: 4a962f76e9e63e9c764659f88661058c
     chat.toast.threadShareLinkCopied: 301236632c59a15e329f433e7b4a3706
     chat.typeYourMessageHere: 592c39355ee2ce96113655e58b1e65c9
+    components.convexIntegrationTest.addTask.label: 94bfce6a5916c8955cea8d04ad41c10e
     components.convexIntegrationTest.addTask.placeholder: cfe9cb319a1f23515f7c2215dba202a3
     components.convexIntegrationTest.authenticated: 7aeaface3edc0f5dca2c8ebd6c7e1974
     components.convexIntegrationTest.configuredUrl: ca306d17f0a8f6bd7e0b9b2efcf23fe7

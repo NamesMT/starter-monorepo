@@ -127,6 +127,30 @@ export const unfreeze = mutation({
   },
 })
 
+export const migrateToUser = mutation({
+  args: {
+    threadId: v.id('threads'),
+    lockerKey: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const userIdentity = await ctx.auth.getUserIdentity()
+    if (!userIdentity)
+      throw new ConvexError('Not authenticated')
+
+    const thread = await ctx.db.get(args.threadId)
+    if (!thread)
+      throw new ConvexError('Thread not found')
+    if (thread.userId)
+      throw new ConvexError('Thread already have an owner')
+
+    await assertThreadAccess(ctx, { thread, lockerKey: args.lockerKey })
+
+    await ctx.db.patch(args.threadId, {
+      userId: userIdentity.subject,
+    })
+  },
+})
+
 export const setLockerKey = mutation({
   args: {
     threadId: v.id('threads'),

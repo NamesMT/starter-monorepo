@@ -54,8 +54,18 @@ if ($auth.loggedIn) {
   })
 
   // Migrate anonymous threads to user account
-  watch(threads, () => {
-    // TODO
+  until(fetchingFromConvex).not.toBeTruthy({ timeout: 5000 }).then(() => {
+    for (const thread of threads.value) {
+      if (thread && !thread.userId) {
+        // eslint-disable-next-line no-console
+        console.info(`Migrating thread: ${thread._id} to user account`)
+        thread.userId = $auth.user.sub
+        migrateThreadToUser(convex, { threadId: thread._id, lockerKey: getLockerKey(thread._id) })
+          .catch(async () => {
+            await refreshThread(convex, { threadId: thread._id, chatContext })
+          })
+      }
+    }
   })
 }
 // For anonymous users, subscribe to threads via sessionId
@@ -149,8 +159,7 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
     <SidebarHeader class="px-4 py-2">
       <div class="absolute right-3 top-3">
         <Button
-          variant="ghost" size="icon"
-          class="size-7"
+          variant="ghost" size="icon" class="size-7"
           @click="colorMode.preference = (colorMode.preference === 'dark') ? 'light' : 'dark'"
         >
           <div>{{ colorMode.preference === 'dark' ? '🌙' : '🌞' }}</div>

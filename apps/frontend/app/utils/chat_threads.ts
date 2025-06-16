@@ -2,6 +2,28 @@ import type { Id } from 'backend-convex/convex/_generated/dataModel'
 import type { ConvexClient, ConvexHttpClient } from 'convex/browser'
 import { api } from 'backend-convex/convex/_generated/api'
 
+export interface refreshThreadArgs {
+  threadId: Id<'threads'>
+  chatContext: ChatContext
+}
+export async function refreshThread(convex: ConvexClient | ConvexHttpClient, { threadId, chatContext }: refreshThreadArgs) {
+  await convex.query(api.threads.get, { threadId, lockerKey: getLockerKey(threadId) })
+    .then((res) => {
+      const foundLocallyAt = chatContext.threads.value.findIndex(t => t._id === threadId)
+      if (foundLocallyAt !== -1)
+        Object.assign(chatContext.threads.value[foundLocallyAt]!, convex.query(api.threads.get, { threadId, lockerKey: getLockerKey(threadId) }))
+      else
+        chatContext.threads.value.push(res)
+    })
+    .catch((e) => {
+      if (getConvexErrorMessage(e) === 'Thread not found') {
+        const foundLocallyAt = chatContext.threads.value.findIndex(t => t._id === threadId)
+        if (foundLocallyAt !== -1)
+          chatContext.threads.value.splice(foundLocallyAt, 1)
+      }
+    })
+}
+
 export interface BranchThreadFromMessageArgs {
   messageId: Id<'messages'>
   sessionId?: string
@@ -69,6 +91,17 @@ export interface UnfreezeThreadArgs {
 }
 export async function unfreezeThread(convex: ConvexClient | ConvexHttpClient, { threadId, lockerKey }: UnfreezeThreadArgs) {
   return await convex.mutation(api.threads.unfreeze, {
+    threadId,
+    lockerKey,
+  })
+}
+
+export interface MigrateThreadToUserArgs {
+  threadId: Id<'threads'>
+  lockerKey?: string
+}
+export async function migrateThreadToUser(convex: ConvexClient | ConvexHttpClient, { threadId, lockerKey }: MigrateThreadToUserArgs) {
+  return await convex.mutation(api.threads.migrateToUser, {
     threadId,
     lockerKey,
   })

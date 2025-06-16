@@ -51,7 +51,11 @@ const open = ref(false)
       <AlertDialogHeader>
         <AlertDialogTitle>{{ $t('chat.alert.shareThread.title') }}</AlertDialogTitle>
         <AlertDialogDescription class="whitespace-pre-line">
-          {{ $t('chat.alert.shareThread.description', { name: thread.title }) }}
+          {{
+            !thread.userId
+              ? $t('chat.alert.shareThread.descriptionDanger', { name: thread.title })
+              : $t('chat.alert.shareThread.description', { name: thread.title })
+          }}
         </AlertDialogDescription>
       </AlertDialogHeader>
       <AlertDialogFooter>

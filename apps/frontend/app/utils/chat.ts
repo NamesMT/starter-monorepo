@@ -43,7 +43,7 @@ export interface HostedProvider {
   default: string
 }
 
-export const [useChatContext, provideChatContext] = createContext<{
+export interface ChatContext {
   threads: Ref<Doc<'threads'>[]>
   threadsKeyed: ComputedRef<Record<Doc<'threads'>['_id'], Doc<'threads'>>>
   pinnedThreadIds: Ref<string[]>
@@ -59,7 +59,8 @@ export const [useChatContext, provideChatContext] = createContext<{
   insaneUI: Ref<boolean>
   // Interface soft render key
   interfaceSRK: Ref<number>
-}>('chat page')
+}
+export const [useChatContext, provideChatContext] = createContext<ChatContext>('chat page')
 
 export function displayActiveAgent(agent: AgentObject) {
   if (agent.provider === 'hosted')
