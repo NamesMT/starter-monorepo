@@ -1,4 +1,49 @@
 KEY,Description,en,es,fr,ru,vi,zh-CN
+
+cancel,,Cancel,Cancelar,Annuler,Отмена,Huỷ Bỏ,取消
+chat.alert.deleteThread.description,,"Are you sure you want to delete ""{name}""?
+This action cannot be undone.","¿Estás seguro de que quieres eliminar ""{name}""?
+Esta acción no se puede deshacer.","Êtes-vous sûr de vouloir supprimer ""{name}"" ?
+Cette action ne peut pas être annulée.","Вы уверены, что хотите удалить ""{name}""?
+Это действие нельзя будет отменить.","Bạn có chắc chắn muốn xóa ""{name}"" không?
+Hành động này không thể hoàn tác.","您确定要删除“{name}”吗？
+此操作无法撤销。"
+chat.alert.deleteThread.title,,Delete Thread,Eliminar conversación,Supprimer la conversation,Удалить тему,Xóa Chủ Đề,删除话题
+chat.alert.shareThread.description,,"Are you sure you want to share ""{name}""?
+The recipient will have full access to the history and future of the thread.","¿Estás seguro de que quieres compartir ""{name}""?
+El destinatario tendrá acceso completo al historial y futuro de la conversación.","Êtes-vous sûr de vouloir partager ""{name}"" ?
+Le destinataire aura un accès complet à l'historique et au futur de la conversation.","Вы уверены, что хотите поделиться ""{name}""?
+Получатель получит полный доступ к истории и будущему этой ветки.","Bạn có chắc chắn muốn chia sẻ ""{name}""?
+Người nhận sẽ có toàn quyền truy cập vào lịch sử và tương lai của cuộc trò chuyện.","您确定要分享“{name}”吗？
+接收者将可以完全访问该线程的历史记录和未来内容。"
+chat.alert.shareThread.title,,Share Thread,Compartir hilo,Partager la discussion,Поделиться дискуссией,Chia sẻ chủ đề,共享线程
+chat.interface.selectOrStart,,Select a chat or start a new one.,Selecciona un chat o inicia uno nuevo.,Sélectionnez une conversation ou commencez-en une nouvelle.,Выберите чат или начните новый.,Chọn một cuộc trò chuyện hoặc bắt đầu cuộc trò chuyện mới.,选择一个聊天或开始新的聊天。
+chat.interface.sendToStart,,Send a message to start chatting.,Envía un mensaje para comenzar a chatear.,Envoyez un message pour commencer la conversation.,"Отправьте сообщение, чтобы начать общение.",Gửi tin nhắn để bắt đầu trò chuyện.,发送消息以开始聊天。
+chat.message.branch,,Branch off,Crear ramificación,Créer une branche,Создать ветку,Tạo nhánh,分支话题
+chat.message.copy,,Copy message,Copiar mensaje,Copier le message,Копировать сообщение,Sao chép tin nhắn,复制消息
+chat.multiStreamConfirmDialog.description,,"Sending follow-up messages about in-streaming messages can cause the model to be confused, continue?","Enviar mensajes de seguimiento sobre mensajes en transmisión puede confundir al modelo, ¿continuar?","L'envoi de messages de suivi concernant des messages en cours de diffusion peut perturber le modèle, continuer ?",Отправка последующих сообщений о сообщениях в потоке может вызвать путаницу у модели. Продолжить?,"Việc gửi tin nhắn tiếp theo về các tin nhắn đang trong quá trình phát có thể khiến mô hình bị nhầm lẫn, bạn có muốn tiếp tục không?",发送关于正在流式传输消息的后续消息可能会导致模型混淆，是否继续？
+chat.multiStreamConfirmDialog.title,,There are messages still streaming,Hay mensajes que aún se están generando,Des messages sont encore en cours de génération,Сообщения все еще передаются,Vẫn còn tin nhắn đang được tạo,仍有消息正在生成
+chat.provider.google,,Google,Google,Google,Google,Google,Google
+chat.provider.hosted,,Hosted,Alojado (H),Hébergé,Управляемый (H),Được cung cấp (H),托管 (H)
+chat.provider.openai,,OpenAI,OpenAI,OpenAI,OpenAI,OpenAI,OpenAI
+chat.provider.openrouter,,OpenRouter,OpenRouter,OpenRouter,OpenRouter,OpenRouter,OpenRouter
+chat.settings.general.title,,General Settings,,,,Cài đặt chung,
+chat.sidebar.newChat,,New Chat,Nuevo chat,Nouvelle conversation,Новый чат,Cuộc trò chuyện mới,新建聊天
+chat.sidebar.threads.empty,,No chats yet.,No hay chats todavía.,Pas encore de conversations.,Чатов пока нет.,Chưa có cuộc trò chuyện nào.,尚无聊天记录。
+chat.sidebar.threads.loading,,Loading threads...,Cargando conversaciones...,Chargement des conversations...,Загрузка бесед...,Đang tải các cuộc trò chuyện...,正在加载对话...
+chat.thread.branchedFrom,,Branched from {title},Ramificado desde {title},Dérivé de {title},Ответвлено от {title},Được tạo nhánh từ {title},分支自 {title}
+components.convexIntegrationTest.addTask.label,,Delete Thread,Eliminar conversación,Supprimer la conversation,Удалить тему,Xóa chủ đề,删除话题
+chat.thread.freeze,,Freeze thread,Congelar hilo,Geler la discussion,Заморозить тему,Đóng băng chủ đề,冻结线程
+chat.thread.frozen,,Thread is frozen,El hilo está congelado,La discussion est gelée,Тема заморожена,Chủ đề đã được đóng băng,线程已冻结
+chat.thread.frozenWithDescription,,"Thread is frozen, new messages will create a new branch","El hilo está congelado, los nuevos mensajes crearán una nueva rama","La discussion est gelée, les nouveaux messages créeront une nouvelle branche","Тема заморожена, новые сообщения создадут новую ветку","Chủ đề đã bị đóng băng, tin nhắn mới sẽ tạo một nhánh mới",线程已冻结，新消息将创建一个新分支
+chat.thread.pin,,Pin Thread,Fijar conversación,Épingler la conversation,Закрепить тему,Ghim chủ đề,置顶话题
+chat.thread.share,,Share thread,Compartir hilo,Partager la discussion,Поделиться дискуссией,Chia sẻ chủ đề,共享线程
+chat.thread.unfreeze,,Unfreeze thread,Descongelar hilo,Dégeler la discussion,Разморозить тему,Giải băng chủ đề,解冻线程
+chat.thread.unpin,,Unpin Thread,Desfijar conversación,Désépingler la conversation,Открепить тему,Bỏ ghim chủ đề,取消置顶话题
+chat.toast.threadBranched,,The thread has been branched off.,La conversación ha sido ramificada.,La conversation a été ramifiée.,Тема была выделена в отдельную ветку.,Chủ đề đã được tạo nhánh.,话题已被分支。
+chat.toast.threadRemovedExternal,,The chat has been removed by the owner.,El chat ha sido eliminado por el propietario.,Le chat a été supprimé par le propriétaire.,Чат был удален владельцем.,Cuộc trò chuyện đã bị xóa bởi chủ sở hữu.,此聊天已被所有者移除。
+chat.toast.threadShareLinkCopied,,The thread access link has been copied to your clipboard.,El enlace de acceso a la conversación ha sido copiado a tu portapapeles.,Le lien d'accès à la conversation a été copié dans votre presse-papiers.,Ссылка для доступа к ветке скопирована в ваш буфер обмена.,Đường dẫn truy cập cuộc trò chuyện đã được sao chép vào bảng tạm của bạn.,线程访问链接已复制到您的剪贴板。
+chat.typeYourMessageHere,,Type your message here...,Escribe tu mensaje aquí...,Tapez votre message ici...,Введите ваше сообщение здесь...,Nhập tin nhắn của bạn tại đây...,在这里输入你的消息...
 components.convexIntegrationTest.addTask.label,,Add task entry (press enter),Añadir tarea (pulsar enter),Ajouter une tâche (appuyer sur Entrée),Добавить задачу (нажмите Enter),Thêm mục công việc (nhấn enter),添加任务条目（按回车键）
 components.convexIntegrationTest.addTask.placeholder,,Enter new task...,Introducir nueva tarea...,Entrez une nouvelle tâche...,Введите новую задачу...,Nhập công việc mới...,输入新任务...
 components.convexIntegrationTest.authenticated,,Convex Authenticated,Convex autenticado,Authentifié par Convex,Аутентифицировано через Convex,Đã xác thực Convex,Convex 已认证
@@ -8,6 +53,9 @@ components.convexIntegrationTest.tasksList.title,,Tasks,Tareas,Tâches,Зада�
 components.convexIntegrationTest.testBackendButton.authInfo,,Test Convex integration with `backend` (auth info),Probar la integración de Convex con `backend` (información de autenticación),Tester l'intégration Convex avec `backend` (informations d'authentification),Тестирование интеграции Convex с `backend` (информация об авторизации),Kiểm tra tích hợp Convex với `backend` (thông tin xác thực),使用 `backend` 测试 Convex 集成（认证信息）
 components.convexIntegrationTest.testBackendButton.fetchTasks,,Test Convex integration with `backend` (fetch tasks),Probar integración de Convex con `backend` (obtener tareas),Tester l'intégration de Convex avec `backend` (récupérer les tâches),Тестировать интеграцию Convex с `backend` (получить задачи),Kiểm tra tích hợp Convex với `backend` (lấy công việc),测试Convex与`backend`的集成（获取任务）
 components.loadingScreen.loadingText,,Loading...,Cargando...,Chargement en cours...,Загрузка...,Đang tải...,加载中...
+confirm,,Confirm,Confirmar,Confirmer,Подтвердить,Xác nhận,确认
+continue,,Continue,Continuar,Continuer,Продолжить,Tiếp tục,继续
+generating,,Generating,Generando,Génération en cours,Генерация,Đang tạo,正在生成
 getInputThoughtsPlaceholders.0,,What's on your mind? 🤔,¿Qué tienes en mente? 🤔,Qu'avez-vous à l'esprit ? 🤔,О чём вы думаете? 🤔,Bạn đang nghĩ gì? 🤔,你在想什么？🤔
 getInputThoughtsPlaceholders.1,,Let me help you create a plan. 📃,Déjame ayudarte a crear un plan. 📃,Laissez-moi vous aider à créer un plan. 📃,Давайте я помогу вам составить план. 📃,Hãy để tôi giúp bạn tạo một kế hoạch. 📃,让我帮你制定一个计划吧。📃
 getInputThoughtsPlaceholders.2,,What's our goal? 🎯,¿Cuál es nuestro objetivo? 🎯,Quel est notre objectif ? 🎯,Какова наша цель? 🎯,Mục tiêu của chúng ta là gì? 🎯,我们的目标是什么？🎯
@@ -17,7 +65,9 @@ getInputThoughtsPlaceholders.5,,Have a mission for today? 🚀,¿Tienes una misi
 getInputThoughtsPlaceholders.6,,Where are we heading today? 🧑‍🚀,¿Hacia dónde nos dirigimos hoy? 🧑‍🚀,Où allons-nous aujourd'hui ? 🧑‍🚀,Куда мы сегодня направляемся? 🧑‍🚀,Hôm nay chúng ta sẽ đi đâu? 🧑‍🚀,我们今天要去哪里？🧑‍🚀
 getInputThoughtsPlaceholders.7,,Evaluating a strategy? 📊,¿Evaluando una estrategia? 📊,Vous évaluez une stratégie ? 📊,Оцениваете стратегию? 📊,Đang đánh giá một chiến lược? 📊,在评估一个策略吗？📊
 getInputThoughtsPlaceholders.8,,Let's talk about your vision. 🌟,Hablemos de tu visión. 🌟,Parlons de votre vision. 🌟,Давайте поговорим о вашем видении. 🌟,Hãy nói về tầm nhìn của bạn. 🌟,来谈谈你的愿景吧。🌟
+guest,,Guest,Invitado,Invité,Гость,Khách,访客
 language,,Language,Idioma,Langue,Язык,Ngôn ngữ,语言
+loginToEnjoyMore,,Login to enjoy more!,¡Inicia sesión para disfrutar más!,Connectez-vous pour en profiter davantage !,"Войдите, чтобы получить больше возможностей!",Đăng nhập để trải nghiệm nhiều hơn!,登录以享受更多功能！
 pages.chat.aiLabel,,AI,IA,IA,ИИ,AI,AI
 pages.chat.loginPrompt,,Please login to try this feature,Por favor inicia sesión para probar esta función,Veuillez vous connecter pour essayer cette fonctionnalité,"Пожалуйста, войдите в систему, чтобы попробовать эту функцию",Vui lòng đăng nhập để thử tính năng này,请登录以尝试此功能
 pages.chat.title,,Chat,Chat,Chat,Trò chuyện,Trò chuyện,聊天
@@ -53,55 +103,8 @@ pages.test.description,,A page for testing various components and integrations.,
 pages.test.intro,,This is just a simple page to test stuff.,Esta es solo una página simple para probar cosas.,Ceci est juste une page simple pour tester des choses.,Это просто простая страница для тестирования.,Đây chỉ là một trang đơn giản để thử nghiệm mọi thứ.,这只是一个用于测试的简单页面。
 pages.test.section.convex.title,,Convex Integration Test,Prueba de Integración de Convex,Test d'Intégration Convex,Тест интеграции Convex,Kiểm tra Tích hợp Convex,Convex 集成测试
 pages.test.title,,Test,Prueba,Test,Тест,Kiểm tra,测试
-welcome,,Welcome,Bienvenido,Bienvenue,Добро пожаловать,Chào mừng,欢迎
-chat.sidebar.newChat,,New Chat,Nuevo chat,Nouvelle conversation,Новый чат,Cuộc trò chuyện mới,新建聊天
-chat.sidebar.threads.loading,,Loading threads...,Cargando conversaciones...,Chargement des conversations...,Загрузка бесед...,Đang tải các cuộc trò chuyện...,正在加载对话...
-chat.sidebar.threads.empty,,No chats yet.,No hay chats todavía.,Pas encore de conversations.,Чатов пока нет.,Chưa có cuộc trò chuyện nào.,尚无聊天记录。
-chat.alert.deleteThread.title,,Delete Thread,Eliminar conversación,Supprimer la conversation,Удалить тему,Xóa Chủ Đề,删除话题
-chat.alert.deleteThread.description,,"Are you sure you want to delete ""{name}""?
-This action cannot be undone.","¿Estás seguro de que quieres eliminar ""{name}""?
-Esta acción no se puede deshacer.","Êtes-vous sûr de vouloir supprimer ""{name}"" ?
-Cette action ne peut pas être annulée.","Вы уверены, что хотите удалить ""{name}""?
-Это действие нельзя будет отменить.","Bạn có chắc chắn muốn xóa ""{name}"" không?
-Hành động này không thể hoàn tác.","您确定要删除“{name}”吗？
-此操作无法撤销。"
-cancel,,Cancel,Cancelar,Annuler,Отмена,Huỷ Bỏ,取消
-confirm,,Confirm,Confirmar,Confirmer,Подтвердить,Xác nhận,确认
-continue,,Continue,Continuar,Continuer,Продолжить,Tiếp tục,继续
 pinned,,Pinned,Fijados,Épinglé,Закреплено,Đã ghim,已固定
 recent,,Recent,Recientes,Récent,Недавние,Gần đây,最近
-chat.multiStreamConfirmDialog.title,,There are messages still streaming,Hay mensajes que aún se están generando,Des messages sont encore en cours de génération,Сообщения все еще передаются,Vẫn còn tin nhắn đang được tạo,仍有消息正在生成
-chat.multiStreamConfirmDialog.description,,"Sending follow-up messages about in-streaming messages can cause the model to be confused, continue?","Enviar mensajes de seguimiento sobre mensajes en transmisión puede confundir al modelo, ¿continuar?","L'envoi de messages de suivi concernant des messages en cours de diffusion peut perturber le modèle, continuer ?",Отправка последующих сообщений о сообщениях в потоке может вызвать путаницу у модели. Продолжить?,"Việc gửi tin nhắn tiếp theo về các tin nhắn đang trong quá trình phát có thể khiến mô hình bị nhầm lẫn, bạn có muốn tiếp tục không?",发送关于正在流式传输消息的后续消息可能会导致模型混淆，是否继续？
-generating,,Generating,Generando,Génération en cours,Генерация,Đang tạo,正在生成
-chat.interface.sendToStart,,Send a message to start chatting.,Envía un mensaje para comenzar a chatear.,Envoyez un message pour commencer la conversation.,"Отправьте сообщение, чтобы начать общение.",Gửi tin nhắn để bắt đầu trò chuyện.,发送消息以开始聊天。
-chat.interface.selectOrStart,,Select a chat or start a new one.,Selecciona un chat o inicia uno nuevo.,Sélectionnez une conversation ou commencez-en une nouvelle.,Выберите чат или начните новый.,Chọn một cuộc trò chuyện hoặc bắt đầu cuộc trò chuyện mới.,选择一个聊天或开始新的聊天。
-guest,,Guest,Invitado,Invité,Гость,Khách,访客
-loginToEnjoyMore,,Login to enjoy more!,¡Inicia sesión para disfrutar más!,Connectez-vous pour en profiter davantage !,"Войдите, чтобы получить больше возможностей!",Đăng nhập để trải nghiệm nhiều hơn!,登录以享受更多功能！
-chat.toast.threadRemovedExternal,,The chat has been removed by the owner.,El chat ha sido eliminado por el propietario.,Le chat a été supprimé par le propriétaire.,Чат был удален владельцем.,Cuộc trò chuyện đã bị xóa bởi chủ sở hữu.,此聊天已被所有者移除。
-chat.thread.pin,,Pin Thread,Fijar conversación,Épingler la conversation,Закрепить тему,Ghim chủ đề,置顶话题
-chat.thread.unpin,,Unpin Thread,Desfijar conversación,Désépingler la conversation,Открепить тему,Bỏ ghim chủ đề,取消置顶话题
-chat.thread.delete,,Delete Thread,Eliminar conversación,Supprimer la conversation,Удалить тему,Xóa chủ đề,删除话题
-chat.message.copy,,Copy message,Copiar mensaje,Copier le message,Копировать сообщение,Sao chép tin nhắn,复制消息
-chat.message.branch,,Branch off,Crear ramificación,Créer une branche,Создать ветку,Tạo nhánh,分支话题
-chat.toast.threadBranched,,The thread has been branched off.,La conversación ha sido ramificada.,La conversation a été ramifiée.,Тема была выделена в отдельную ветку.,Chủ đề đã được tạo nhánh.,话题已被分支。
-chat.thread.branchedFrom,,Branched from {title},Ramificado desde {title},Dérivé de {title},Ответвлено от {title},Được tạo nhánh từ {title},分支自 {title}
-chat.thread.frozen,,Thread is frozen,El hilo está congelado,La discussion est gelée,Тема заморожена,Chủ đề đã được đóng băng,线程已冻结
-chat.thread.freeze,,Freeze thread,Congelar hilo,Geler la discussion,Заморозить тему,Đóng băng chủ đề,冻结线程
-chat.thread.unfreeze,,Unfreeze thread,Descongelar hilo,Dégeler la discussion,Разморозить тему,Giải băng chủ đề,解冻线程
+settings,,Settings,,,,Cài đặt
 tip.holdShift,,"Hold ""Shift"" to skip confirmation","Mantén presionado ""Shift"" para omitir la confirmación","Maintenez ""Maj"" pour ignorer la confirmation","Удерживайте ""Shift"", чтобы пропустить подтверждение","Giữ phím ""Shift"" để bỏ qua xác nhận","按住 ""Shift"" 跳过确认"
-chat.thread.frozenWithDescription,,"Thread is frozen, new messages will create a new branch","El hilo está congelado, los nuevos mensajes crearán una nueva rama","La discussion est gelée, les nouveaux messages créeront une nouvelle branche","Тема заморожена, новые сообщения создадут новую ветку","Chủ đề đã bị đóng băng, tin nhắn mới sẽ tạo một nhánh mới",线程已冻结，新消息将创建一个新分支
-chat.thread.share,,Share thread,Compartir hilo,Partager la discussion,Поделиться дискуссией,Chia sẻ chủ đề,共享线程
-chat.alert.shareThread.title,,Share Thread,Compartir hilo,Partager la discussion,Поделиться дискуссией,Chia sẻ chủ đề,共享线程
-chat.alert.shareThread.description,,"Are you sure you want to share ""{name}""?
-The recipient will have full access to the history and future of the thread.","¿Estás seguro de que quieres compartir ""{name}""?
-El destinatario tendrá acceso completo al historial y futuro de la conversación.","Êtes-vous sûr de vouloir partager ""{name}"" ?
-Le destinataire aura un accès complet à l'historique et au futur de la conversation.","Вы уверены, что хотите поделиться ""{name}""?
-Получатель получит полный доступ к истории и будущему этой ветки.","Bạn có chắc chắn muốn chia sẻ ""{name}""?
-Người nhận sẽ có toàn quyền truy cập vào lịch sử và tương lai của cuộc trò chuyện.","您确定要分享“{name}”吗？
-接收者将可以完全访问该线程的历史记录和未来内容。"
-chat.toast.threadShareLinkCopied,,The thread access link has been copied to your clipboard.,El enlace de acceso a la conversación ha sido copiado a tu portapapeles.,Le lien d'accès à la conversation a été copié dans votre presse-papiers.,Ссылка для доступа к ветке скопирована в ваш буфер обмена.,Đường dẫn truy cập cuộc trò chuyện đã được sao chép vào bảng tạm của bạn.,线程访问链接已复制到您的剪贴板。
-chat.typeYourMessageHere,,Type your message here...,Escribe tu mensaje aquí...,Tapez votre message ici...,Введите ваше сообщение здесь...,Nhập tin nhắn của bạn tại đây...,在这里输入你的消息...
-chat.provider.hosted,,Hosted,Alojado (H),Hébergé,Управляемый (H),Được cung cấp (H),托管 (H)
-chat.provider.openrouter,,OpenRouter,OpenRouter,OpenRouter,OpenRouter,OpenRouter,OpenRouter
-chat.provider.openai,,OpenAI,OpenAI,OpenAI,OpenAI,OpenAI,OpenAI
-chat.provider.google,,Google,Google,Google,Google,Google,Google
+welcome,,Welcome,Bienvenido,Bienvenue,Добро пожаловать,Chào mừng,欢迎

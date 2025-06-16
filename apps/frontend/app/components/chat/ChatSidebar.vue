@@ -312,7 +312,7 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
               </DropdownMenuItem>
               <GeneralSettingsSheet>
                 <DropdownMenuItem class="justify-between" @select.prevent>
-                  <div>Settings</div>
+                  <div>{{ $t('settings') }}</div>
                   <div class="i-hugeicons:settings-01" />
                 </DropdownMenuItem>
               </GeneralSettingsSheet>

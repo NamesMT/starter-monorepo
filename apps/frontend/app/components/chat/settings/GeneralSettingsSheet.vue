@@ -2,11 +2,19 @@
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from '@/lib/shadcn/components/ui/sheet'
+import { useSidebar } from '~/lib/shadcn/components/ui/sidebar'
+
+const { $auth } = useNuxtApp()
+const sidebarContext = useSidebar()
+const { locale, locales, setLocale } = useI18n()
+const computedNextLocale = computed(() => {
+  const currentLocaleIndex = locales.value.findIndex(lO => lO.code === locale.value)
+  return locales.value[(currentLocaleIndex + 1) % locales.value.length]!.code
+})
 </script>
 
 <template>
@@ -14,14 +22,42 @@ import {
     <SheetTrigger as-child>
       <slot />
     </SheetTrigger>
-    <SheetContent>
+    <SheetContent :side="sidebarContext.isMobile.value ? 'top' : 'right'" class="flex flex-col">
       <SheetHeader>
-        <SheetTitle>Are you absolutely sure?</SheetTitle>
-        <SheetDescription>
-          This action cannot be undone. This will permanently delete your account
-          and remove your data from our servers.
-        </SheetDescription>
+        <SheetTitle>{{ $t('chat.settings.general.title') }}</SheetTitle>
       </SheetHeader>
+
+      <div class="flex grow flex-col gap-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <Button class="w-fit uppercase" variant="outline" @pointerdown="setLocale(computedNextLocale)">
+              <div class="flex items-center text-mainGradient">
+                <div i-hugeicons:translate class="bg-mainGradient" />: <p class="ml-1">
+                  {{ locale.substring(0, 2) }}
+                </p>
+              </div>
+            </Button>
+          </div>
+          <div>
+            <Button v-if="$auth.loggedIn" @click="navigateTo(getSignOutUrl(), { external: true })">
+              {{
+                $t('pages.home.auth.signOutButton') }}
+            </Button>
+            <Button v-else @click="navigateTo(getSignInUrl(), { external: true })">
+              {{ $t('pages.home.auth.signInButton')
+              }}
+            </Button>
+          </div>
+        </div>
+
+        <hr>
+
+        <div>
+          <SheetHeader>
+            <SheetTitle>{{ $t('chat.settings.general.title') }}</SheetTitle>
+          </SheetHeader>
+        </div>
+      </div>
     </SheetContent>
   </Sheet>
 </template>
