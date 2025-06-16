@@ -44,7 +44,7 @@ const chatContext = useChatContext()
           <MDC v-else :value="message.content" class="only-child:[&>.prose-p]:my-0" />
           <div class="hidden first:block">
             <Skeleton
-              class="h-5 w-$c-W rounded-full bg-muted-foreground" :style="{
+              class="h-5 max-w-full w-$c-W rounded-full bg-muted-foreground" :style="{
                 '--c-W': `${(Math.floor(Math.random() * (300 - 100 + 1)) + 100) * (message.role === 'user' ? 1 : 2)}px`,
               }"
             />
