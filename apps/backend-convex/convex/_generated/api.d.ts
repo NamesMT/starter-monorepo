@@ -8,7 +8,6 @@
  * @module
  */
 
-import type * as _counters from "../_counters.js";
 import type * as authInfo from "../authInfo.js";
 import type * as crons from "../crons.js";
 import type * as http_ai from "../http/ai.js";
@@ -32,7 +31,6 @@ import type {
  * ```
  */
 declare const fullApi: ApiFromModules<{
-  _counters: typeof _counters;
   authInfo: typeof authInfo;
   crons: typeof crons;
   "http/ai": typeof http_ai;

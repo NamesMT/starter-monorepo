@@ -6,7 +6,7 @@ import { clearUndefined } from '@namesmt/utils'
 import { openrouter } from '@openrouter/ai-sdk-provider'
 import { generateText } from 'ai'
 import { ConvexError, v } from 'convex/values'
-import { messagesInThreadCounter } from './_counters'
+import { singleShardCounter } from '../utils/counters'
 import { api, internal } from './_generated/api'
 import { action, internalMutation, mutation, query } from './_generated/server'
 
@@ -139,7 +139,7 @@ export const branchThreadFromMessage = mutation({
       })
     }))
 
-    await messagesInThreadCounter.add(ctx, thread._id, messages.length)
+    await singleShardCounter.add(ctx, `messages-in-thread_${newThreadId}`, messages.length)
 
     return newThreadId
   },

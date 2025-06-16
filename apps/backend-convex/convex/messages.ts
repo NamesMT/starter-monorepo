@@ -1,6 +1,6 @@
 import { objectPick } from '@namesmt/utils'
 import { ConvexError, v } from 'convex/values'
-import { messagesInThreadCounter } from './_counters'
+import { singleShardCounter } from '../utils/counters'
 import { internalMutation, internalQuery, query } from './_generated/server'
 import { assertThreadAccess } from './threads'
 
@@ -37,7 +37,7 @@ export const countByThread = query({
 
     await assertThreadAccess(ctx, { thread, lockerKey: args.lockerKey })
 
-    return await messagesInThreadCounter.count(ctx, args.threadId)
+    return await singleShardCounter.count(ctx, `messages-in-thread_${args.threadId}`)
   },
 })
 
@@ -77,7 +77,7 @@ export const internalAdd = internalMutation({
     lockerKey: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    await messagesInThreadCounter.inc(ctx, args.threadId)
+    await singleShardCounter.inc(ctx, `messages-in-thread_${args.threadId}`)
 
     return await ctx.db.insert('messages', {
       ...objectPick(args, ['threadId', 'role', 'content', 'context', 'isStreaming', 'streamId', 'provider', 'model']),
