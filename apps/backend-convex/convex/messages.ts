@@ -61,7 +61,7 @@ export const get = query({
   },
 })
 
-export const add = internalMutation({
+export const internalAdd = internalMutation({
   args: {
     threadId: v.id('threads'),
     role: v.union(v.literal('user'), v.literal('assistant')),
@@ -77,12 +77,6 @@ export const add = internalMutation({
     lockerKey: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const thread = await ctx.db.get(args.threadId)
-    if (!thread)
-      throw new ConvexError('Thread not found')
-
-    await assertThreadAccess(ctx, { thread, lockerKey: args.lockerKey })
-
     await messagesInThreadCounter.inc(ctx, args.threadId)
 
     return await ctx.db.insert('messages', {
@@ -103,12 +97,6 @@ export const updateStreamingMessage = internalMutation({
     const message = await ctx.db.get(args.messageId)
     if (!message)
       throw new ConvexError('Message not found')
-
-    const thread = await ctx.db.get(message.threadId)
-    if (!thread)
-      throw new ConvexError('Thread not found')
-
-    await assertThreadAccess(ctx, { thread, lockerKey: args.lockerKey })
 
     await ctx.db.patch(args.messageId, {
       content: args.content,

@@ -116,7 +116,7 @@ aiApp
         streamId = `${Date.now()}_${randomStr(10)}`
 
         // Add user message to thread
-        await c.env.runMutation(internal.messages.add, {
+        await c.env.runMutation(internal.messages.internalAdd, {
           threadId,
           role: 'user',
           content,
@@ -127,7 +127,7 @@ aiApp
         })
 
         // Add assistant message to thread (initial streaming)
-        streamingMessageId = await c.env.runMutation(internal.messages.add, {
+        streamingMessageId = await c.env.runMutation(internal.messages.internalAdd, {
           threadId,
           role: 'assistant',
           content: '',
