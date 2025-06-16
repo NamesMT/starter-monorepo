@@ -226,7 +226,7 @@ aiApp
             await waitForSave()
             await c.env.runMutation(internal.messages.finishStreaming, { streamId })
 
-            controller.enqueue(encoder.encode(`o: ${JSON.stringify({ error: `\`\`\`\n${errorMessage}\n\`\`\`` })}\n`))
+            controller.enqueue(encoder.encode(`o: ${JSON.stringify({ error: `\n\`\`\`\n${errorMessage}\n\`\`\`` })}\n`))
             controller.close()
           }
         },
