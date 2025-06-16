@@ -22,46 +22,40 @@ export function buildAiSdkMessage(message: Doc<'messages'>): BuiltMessage {
   }
 }
 
-export function buildUserMessageContent({ content, context }: Pick<
+export function buildUserMessageContent({ _id, content, context }: Pick<
   Doc<'messages'>,
-'content' | 'context'
+  '_id' | 'content' | 'context'
 >) {
-  let builtContent = ''
+  const builtContent = [
+    `<!-- MM START`,
+    `MID: "${_id}"`,
+    ...(context?.from ? [`From: "${context.from}"`] : []),
+    ...(context?.uid ? [`UID: "${context.uid}"`] : []),
+    `MM END -->`,
+    '',
+  ]
 
-  if (context && Object.keys(context)) {
-    builtContent += `<!-- MM START\n`
+  builtContent.push(content)
 
-    if (context.from)
-      builtContent += `From: "${context.from}"\n`
-
-    if (context.uid)
-      builtContent += `UID: "${context.uid}"\n`
-
-    builtContent += `MM END -->\n\n`
-  }
-
-  builtContent += content
-
-  return builtContent
+  return builtContent.join('\n')
 }
 
-export function buildAssistantMessageContent({ content, model, provider, isStreaming }: Pick<
+export function buildAssistantMessageContent({ _id, content, model, provider, isStreaming }: Pick<
   Doc<'messages'>,
-'content' | 'model' | 'provider' | 'isStreaming'
+  '_id' | 'content' | 'model' | 'provider' | 'isStreaming'
 >) {
-  let builtContent = ''
+  const builtContent = [
+    `<!-- MM START`,
+    `MID: "${_id}"`,
+    `From: "${provider}/${model}"`,
+    ...(isStreaming ? [`This message is still streaming, content is not finalized`] : []),
+    `MM END -->`,
+    '',
+  ]
 
-  builtContent += `<!-- MM START\n`
-  builtContent += `From: "${provider}/${model}"\n`
+  builtContent.push(content)
 
-  if (isStreaming)
-    builtContent += `This message is still streaming, content is not finalized\n`
-
-  builtContent += `MM END -->\n\n`
-
-  builtContent += content
-
-  return builtContent
+  return builtContent.join('\n')
 }
 
 export function buildSystemPrompt({ model }: AgentObject) {
@@ -69,7 +63,7 @@ export function buildSystemPrompt({ model }: AgentObject) {
     `You are "${model}", a distinct AI assistant in a multi-model, multi-user chat room.`,
     `Key rules:`,
     `1. Treat the latest user message as directed specifically to you`,
-    `2. Previous messages contexts (if present), will have a \`MM\` (Message Metadata) header (automatically added to all messages), which contains metadata info of each message, for example: which agent or which user sent the message.`,
+    `2. Previous messages contexts (if present), will have a \`MM\` (Message Metadata) header (automatically added to all messages), which contains metadata info of each message, for example: \`MID\` (Message ID), \`From\` + \`UID\` (which agent or which user sent the message).`,
     `3. The \`MM\` header contains metadata only for context - you are not required to respond to it`,
     `4. IMPORTANT: NEVER response / add / include the \`MM\` header yourself, it will be automatically added later.`,
     `4. Other models in the chat will have their own identities and responses will be clearly attributed`,
