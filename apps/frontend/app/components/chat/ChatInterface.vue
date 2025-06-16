@@ -2,7 +2,7 @@
 <script setup lang="ts">
 import type { Doc, Id } from 'backend-convex/convex/_generated/dataModel'
 import type Lenis from 'lenis'
-import { keyBy, sleep, uniquePromise } from '@namesmt/utils'
+import { keyBy, randomStr, sleep, uniquePromise } from '@namesmt/utils'
 import { api } from 'backend-convex/convex/_generated/api'
 import { useConvexClient } from 'convex-vue'
 import { countdown, debounce, getInstance, throttle } from 'kontroll'
@@ -142,13 +142,13 @@ async function handleSubmit({ input }: HandleSubmitArgs) {
 
   // Optimistically add the messages
   messages.value.push({
-    id: `user-${Date.now()}`,
+    id: `user-${Date.now()}_${randomStr(4)}`,
     role: 'user',
     content: userInput,
     context: { from: getChatNickname() },
   } as any as CustomMessage)
   messages.value.push({
-    id: `assistant-${Date.now()}`,
+    id: `assistant-${Date.now()}_${randomStr(4)}`,
     role: 'assistant',
     model: chatContext.activeAgent.value.model,
     content: '',

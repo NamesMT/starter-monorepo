@@ -1,11 +1,9 @@
 import type { HonoWithConvex } from 'convex-helpers/server/hono'
 import type { Doc, Id } from '../_generated/dataModel'
 import type { ActionCtx } from '../_generated/server'
-import { createOpenAI } from '@ai-sdk/openai'
 import RateLimiter, { MINUTE } from '@convex-dev/rate-limiter'
 import { zValidator } from '@hono/zod-validator'
 import { randomStr, sleep } from '@namesmt/utils'
-import { createOpenRouter } from '@openrouter/ai-sdk-provider'
 import { streamText } from 'ai'
 import { ConvexError } from 'convex/values'
 import { Hono } from 'hono'
@@ -13,7 +11,7 @@ import { cors } from 'hono/cors'
 import { throttle } from 'kontroll'
 import { z } from 'zod'
 import { getAgentModel } from '../../utils/agent'
-import { buildAiSdkMessage } from '../../utils/message'
+import { buildAiSdkMessage, buildSystemPrompt } from '../../utils/message'
 import { api, components, internal } from '../_generated/api'
 
 const rateLimiter = new RateLimiter(components.rateLimiter, {
@@ -191,7 +189,7 @@ aiApp
 
             const aiStream = streamText({
               model: getAgentModel({ provider, model, apiKey }),
-              system: 'You are inside a chat room of multiple users and multiple agents, previous messages contexts (if present), will have an auto-added `SC` (System Context) header, which contains metadata info of each message, for example: which agent or which user sent the message, etc..., You can use it for context.\nIMPORTANT: NEVER response / add / include the `SC` header in your response, it will be automatically added later.',
+              system: buildSystemPrompt({ provider, model }),
               messages: messagesContext,
               onError: (ev) => {
                 console.error(ev.error)

@@ -1,3 +1,4 @@
+import type { AgentObject } from '@local/common/src/aisdk'
 import type { Doc } from '../convex/_generated/dataModel'
 
 export interface BuiltMessage {
@@ -28,7 +29,7 @@ export function buildUserMessageContent({ content, context }: Pick<
   let builtContent = ''
 
   if (context && Object.keys(context)) {
-    builtContent += `<!-- SC START\n`
+    builtContent += `<!-- MM START\n`
 
     if (context.from)
       builtContent += `From: "${context.from}"\n`
@@ -36,7 +37,7 @@ export function buildUserMessageContent({ content, context }: Pick<
     if (context.uid)
       builtContent += `UID: "${context.uid}"\n`
 
-    builtContent += `SC END -->\n\n`
+    builtContent += `MM END -->\n\n`
   }
 
   builtContent += content
@@ -50,15 +51,28 @@ export function buildAssistantMessageContent({ content, model, provider, isStrea
 >) {
   let builtContent = ''
 
-  builtContent += `<!-- SC START\n`
+  builtContent += `<!-- MM START\n`
   builtContent += `From: "${provider}/${model}"\n`
 
   if (isStreaming)
     builtContent += `This message is still streaming, content is not finalized\n`
 
-  builtContent += `SC END -->\n\n`
+  builtContent += `MM END -->\n\n`
 
   builtContent += content
 
   return builtContent
+}
+
+export function buildSystemPrompt({ model }: AgentObject) {
+  return [
+    `You are "${model}", a distinct AI assistant in a multi-model, multi-user chat room.`,
+    `Key rules:`,
+    `1. Treat the latest user message as directed specifically to you`,
+    `2. Previous messages contexts (if present), will have a \`MM\` (Message Metadata) header (automatically added to all messages), which contains metadata info of each message, for example: which agent or which user sent the message.`,
+    `3. The \`MM\` header contains metadata only for context - you are not required to respond to it`,
+    `4. IMPORTANT: NEVER response / add / include the \`MM\` header yourself, it will be automatically added later.`,
+    `4. Other models in the chat will have their own identities and responses will be clearly attributed`,
+    `5. Maintain your own personality and knowledge base in all interactions`,
+  ].join('\n')
 }
