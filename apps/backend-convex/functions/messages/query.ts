@@ -17,8 +17,7 @@ export const listByThread = query({
 
     return await ctx.db
       .query('messages')
-      .withIndex('by_thread_and_timestamp', q =>
-        q.eq('threadId', args.threadId))
+      .withIndex('by_thread_and_timestamp', q => q.eq('threadId', args.threadId))
       .order('asc')
       .collect()
   },
