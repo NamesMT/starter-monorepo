@@ -28,7 +28,7 @@ export function buildUserMessageContent({ content, context }: Pick<
   let builtContent = ''
 
   if (context && Object.keys(context)) {
-    builtContent += `### System context start\n`
+    builtContent += `<!-- SC START\n`
 
     if (context.from)
       builtContent += `From: "${context.from}"\n`
@@ -36,7 +36,7 @@ export function buildUserMessageContent({ content, context }: Pick<
     if (context.uid)
       builtContent += `UID: "${context.uid}"\n`
 
-    builtContent += `### System context end\n---\n\n`
+    builtContent += `SC END -->\n\n`
   }
 
   builtContent += content
@@ -50,13 +50,13 @@ export function buildAssistantMessageContent({ content, model, provider, isStrea
 >) {
   let builtContent = ''
 
-  builtContent += `### System context start\n`
+  builtContent += `<!-- SC START\n`
   builtContent += `From: "${provider}/${model}"\n`
 
   if (isStreaming)
     builtContent += `This message is still streaming, content is not finalized\n`
 
-  builtContent += `### System context end\n---\n\n`
+  builtContent += `SC END -->\n\n`
 
   builtContent += content
 

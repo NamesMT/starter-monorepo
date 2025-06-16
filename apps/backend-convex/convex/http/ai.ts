@@ -202,7 +202,7 @@ aiApp
 
             const aiStream = streamText({
               model: getAgentModel({ provider, model, apiKey }),
-              system: 'You are inside a chat room of multiple users and multiple agents, each message have an auto-added `System Context` block, which contains important information of each message, for example: which agent, which user sent which message,..., You can use it for context.\nIMPORTANT: NEVER add / include the `System Context` block in your response yourself, it will be automatically added later.',
+              system: 'You are inside a chat room of multiple users and multiple agents, previous messages contexts (if present), will have an auto-added `SC` (System Context) header, which contains metadata info of each message, for example: which agent or which user sent the message, etc..., You can use it for context.\nIMPORTANT: NEVER response / add / include the `SC` header in your response, it will be automatically added later.',
               messages: messagesContext,
               onError: (ev) => {
                 console.error(ev.error)
