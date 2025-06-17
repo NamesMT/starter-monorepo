@@ -71,7 +71,7 @@ const { isPending, isError, data, error } = useQuery({
             <template #fallback>
               <Button>...</Button>
             </template>
-            <Button @pointerdown="colorMode.preference = (colorMode.preference !== 'dark') ? 'dark' : 'light'">
+            <Button @pointerdown="colorMode.preference = (colorMode.value !== 'dark') ? 'dark' : 'light'">
               {{ colorMode.preference }}
             </Button>
           </ClientOnly>

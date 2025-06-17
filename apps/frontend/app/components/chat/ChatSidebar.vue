@@ -160,9 +160,9 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
       <div class="absolute right-3 top-3">
         <Button
           variant="ghost" size="icon" class="size-7"
-          @click="colorMode.preference = (colorMode.preference === 'dark') ? 'light' : 'dark'"
+          @click="colorMode.preference = (colorMode.value === 'dark') ? 'light' : 'dark'"
         >
-          <div>{{ colorMode.preference === 'dark' ? '🌙' : '🌞' }}</div>
+          <div>{{ colorMode.value === 'dark' ? '🌙' : '🌞' }}</div>
         </Button>
       </div>
 
