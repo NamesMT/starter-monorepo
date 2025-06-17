@@ -1,5 +1,6 @@
 import type { AgentObject } from '@local/common/src/aisdk'
 import type { LanguageModelV1 } from '@openrouter/ai-sdk-provider'
+import { createOpenAI } from '@ai-sdk/openai'
 import { createOpenRouter, openrouter } from '@openrouter/ai-sdk-provider'
 
 export function getAgentModel({ provider, model, apiKey }: AgentObject): LanguageModelV1 {
@@ -22,6 +23,8 @@ export function getAgentModel({ provider, model, apiKey }: AgentObject): Languag
       switch (provider) {
         case 'openrouter':
           return createOpenRouter({ apiKey })(model)
+        case 'openai':
+          return createOpenAI({ apiKey })(model)
         default:
           throw new Error(`Unknown provider: ${provider}`)
       }
