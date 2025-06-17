@@ -4,7 +4,7 @@ import type Lenis from 'lenis'
 const props = defineProps<{
   nearTopBottom: Array<null | boolean | number>
   lenisRef: undefined | { $el: HTMLElement, lenis: Lenis }
-  streamingMessages: number
+  streamingMessagesMap: Record<string, true>
 }>()
 
 const emit = defineEmits<{
@@ -28,7 +28,7 @@ function handleSubmit({ confirmMultiStream = false }) {
   if (!userInput)
     return
 
-  if (!confirmMultiStream && props.streamingMessages > 0) {
+  if (!confirmMultiStream && Object.keys(props.streamingMessagesMap).length > 0) {
     multiStreamConfirmDialogOpen.value = true
     return
   }

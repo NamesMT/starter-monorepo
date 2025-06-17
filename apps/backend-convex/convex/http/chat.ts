@@ -19,20 +19,23 @@ const rateLimiter = new RateLimiter(components.rateLimiter, {
   aiChat: { kind: 'token bucket', rate: 10, period: MINUTE, capacity: 3 },
 })
 
-export const aiApp: HonoWithConvex<ActionCtx> = new Hono()
-aiApp
+export const chatApp: HonoWithConvex<ActionCtx> = new Hono()
+chatApp
   .use(cors())
   .post(
-    '/chat/stream',
+    '/stream',
     zValidator('json', z.object({
       threadId: z.string(),
       provider: z.string(),
       model: z.string(),
       apiKey: z.optional(z.string()),
       content: z.optional(z.string()),
+      // Optionally set the stream id when creating a new stream message for identification
+      streamId: z.optional(z.string()),
       context: z.optional(z.object({
         from: z.optional(z.string()),
       })),
+      // Will bypass `content` and `streamId`, resumes the target streamId.
       resumeStreamId: z.optional(z.string()),
       finishOnly: z.optional(z.boolean()),
       lockerKey: z.optional(z.string()),
@@ -52,6 +55,7 @@ aiApp
         finishOnly,
         lockerKey,
       } = c.req.valid('json')
+      let { streamId } = c.req.valid('json')
 
       // getUserIdentity on HTTP Action will throw if not authenticated 🤦‍♂️
       const userIdentity = await c.env.auth.getUserIdentity().catch(() => null)
@@ -65,21 +69,19 @@ aiApp
       const threadId = _threadId as Id<'threads'>
       const thread = await c.env.runQuery(api.threads.get, { threadId, lockerKey })
 
-      let streamId: string
       let streamingMessageId: Id<'messages'>
       let existingMessage: Doc<'messages'> | null = null
 
-      // Disable SSE resume for now until we have pub sub
+      // Disable SSE resume, if you want SSE resume, implement a pub-sub.
       if (resumeStreamId)
         throw new ConvexError('SSE stream resume is disabled')
 
+      // On SSE resume
       if (resumeStreamId) {
         streamId = resumeStreamId
 
         // Check if there's an existing streaming message to resume
-        existingMessage = await c.env.runQuery(internal.messages.getStreamingMessage, {
-          streamId,
-        })
+        existingMessage = await c.env.runQuery(internal.messages.getStreamingMessage, { streamId })
 
         if (!existingMessage) {
           // If no streaming message found, just return success
@@ -96,12 +98,17 @@ aiApp
           c.text('OK')
         }
       }
+      // On new stream
       else if (content) {
         if (thread.frozen)
           throw new ConvexError(`Can't send new messages to frozen thread`)
 
-        // Create new streaming session
-        streamId = `${Date.now()}_${randomStr(10)}`
+        // If user provides a streamId, check if its properly unused
+        if (streamId) {
+          if (await c.env.runQuery(internal.messages.getStreamingMessage, { streamId }))
+            throw new ConvexError('streamId is already in use')
+        }
+        streamId = streamId ?? `stream-${Date.now()}_${randomStr(4)}`
 
         // Add user message to thread
         await c.env.runMutation(internal.messages.internalAdd, {
@@ -114,7 +121,7 @@ aiApp
           lockerKey,
         })
 
-        // Add assistant message to thread (initial streaming)
+        // Add assistant message to thread
         streamingMessageId = await c.env.runMutation(internal.messages.internalAdd, {
           threadId,
           role: 'assistant',

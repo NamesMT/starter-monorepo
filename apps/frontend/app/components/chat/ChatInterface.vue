@@ -2,7 +2,7 @@
 <script setup lang="ts">
 import type { Doc, Id } from 'backend-convex/convex/_generated/dataModel'
 import type Lenis from 'lenis'
-import { keyBy, randomStr, sleep, uniquePromise } from '@namesmt/utils'
+import { keyBy, objectPick, randomStr, sleep, uniquePromise } from '@namesmt/utils'
 import { api } from 'backend-convex/convex/_generated/api'
 import { useConvexClient } from 'convex-vue'
 import { countdown, debounce, getInstance, throttle } from 'kontroll'
@@ -43,7 +43,7 @@ const cachedThreadsMessages: {
 } = {}
 const messages = ref<Array<CustomMessage>>([])
 const messagesKeyed = computed(() => keyBy(messages.value, 'id'))
-const streamingMessages = ref(0)
+const streamingMessagesMap = reactive<Record<string, true>>({ })
 const isFetching = ref(false)
 const chatInput = ref('')
 
@@ -56,14 +56,25 @@ const { ignoreUpdates: ignorePathUpdate } = watchIgnorable(
 
     messages.value = cachedThreadsMessages[threadId as string] ?? []
 
-    doScrollBottom({ smooth: false })
+    nextTick(() => { doScrollBottom({ smooth: false, maybe: true }) })
 
     if (threadId) {
       isFetching.value = true
       await convex.query(api.messages.listByThread, { threadId: threadId as Doc<'threads'>['_id'], lockerKey: getLockerKey(threadId) })
-        .then((existingMessages) => {
+        .then((messagesFromConvex) => {
           if (threadIdRef.value === threadId) {
-            messages.value = existingMessages.map(customMessageTransform)
+            if (threadId === oldThreadId) {
+              for (const index in messagesFromConvex) {
+                const m = messagesFromConvex[index]!
+                if (m.streamId && !streamingMessagesMap[m.streamId]) {
+                  messages.value.push(customMessageTransform(messagesFromConvex[+index - 1]!))
+                  messages.value.push(customMessageTransform(m))
+                }
+              }
+            }
+            else {
+              messages.value = messagesFromConvex.map(customMessageTransform)
+            }
           }
         })
         .catch((e) => {
@@ -93,11 +104,12 @@ const { ignoreUpdates: ignorePathUpdate } = watchIgnorable(
           && message.streamId
         ) {
           console.log('Attempting to resume stream for session:', message.streamId)
-          uniquePromise(message.streamId, () => resumeStreamProcess(message.streamId!, message.id))
+          nextTick(() => { uniquePromise(message.streamId!, () => resumeStreamProcess(message.streamId!, message.id)) })
         }
       }
 
-      nextTick(() => doScrollBottom({ tries: 6 }))
+      if (threadId !== oldThreadId)
+        nextTick(() => doScrollBottom({ tries: 6 }))
     }
   },
   { immediate: true },
@@ -140,6 +152,8 @@ async function handleSubmit({ input }: HandleSubmitArgs) {
       .then(() => { sleep(500).then(() => handleSubmit({ input })) })
   }
 
+  const streamId = `stream-${Date.now()}_${randomStr(4)}`
+
   // Optimistically add the messages
   messages.value.push({
     id: `user-${Date.now()}_${randomStr(4)}`,
@@ -153,7 +167,7 @@ async function handleSubmit({ input }: HandleSubmitArgs) {
     model: chatContext.activeAgent.value.model,
     content: '',
     isStreaming: true,
-    streamId: undefined,
+    streamId,
   } as any as CustomMessage)
 
   // For some reason creating object reference first does not work, so we push and then get last message
@@ -187,8 +201,8 @@ async function handleSubmit({ input }: HandleSubmitArgs) {
   // Wraps in a kontroller to make sure there is only one stream on the same message
   throttle(
     1,
-    () => streamToMessage({ message: targetMessage, content: userInput }),
-    { key: `messageStream-${targetMessage.id}` },
+    () => streamToMessage({ message: targetMessage, content: userInput, streamId }),
+    { key: `messageStream-${streamId}` },
   )
 }
 
@@ -200,10 +214,10 @@ async function resumeStreamProcess(streamSessionId: string, messageId: string) {
   if (getInstance(threadIdRef.value))
     return console.warn('Trying to resume stream for message that is currently streaming:', messageId)
 
-  // Currently we doesn't support SSE resume yet
+  // Currently SSE resume not implemented yet
   // await streamToMessage({ message, resumeStreamId: streamSessionId })
 
-  // Using custom convex polling instead
+  // Using custom convex polling resume instead
   await pollToMessage({ message, resumeStreamId: streamSessionId })
 }
 
@@ -218,22 +232,26 @@ async function pollToMessage({ message, resumeStreamId, threadId = threadIdRef.v
     return
   }
 
+  streamingMessagesMap[resumeStreamId] = true
+  console.log(`Polling: ${message.id}`)
+
   const messageFromConvex = await convex.query(api.messages.get, {
     messageId: message._id,
     lockerKey: getLockerKey(threadId),
   })
-  Object.assign(message, customMessageTransform(messageFromConvex))
+  Object.assign(message, objectPick(messageFromConvex, ['content', 'context', 'isStreaming']))
 
   if (message.isStreaming) {
     // Wraps in a kontroller to make sure there is only one stream on the same message
     countdown(
       500,
-      () => pollToMessage({ message, resumeStreamId, threadId }),
-      { key: `messageStream-${message.id}` },
+      () => { nextTick(() => { pollToMessage({ message, resumeStreamId, threadId }) }) },
+      { key: `messageStream-${resumeStreamId}` },
     )
   }
   else {
-    console.log('Poll completed')
+    console.log(`Poll completed: ${message.id}`)
+    delete streamingMessagesMap[resumeStreamId]
   }
 
   nextTick(() => { doScrollBottom({ maybe: true }) })
@@ -242,17 +260,19 @@ async function pollToMessage({ message, resumeStreamId, threadId = threadIdRef.v
 interface StreamToMessageArgs {
   message: CustomMessage
   content?: string
+  streamId?: string
   resumeStreamId?: string
 }
-async function streamToMessage({ message, content, resumeStreamId }: StreamToMessageArgs) {
+async function streamToMessage({ message, content, streamId, resumeStreamId }: StreamToMessageArgs) {
   try {
-    ++streamingMessages.value
+    streamingMessagesMap[(streamId ?? resumeStreamId)!] = true
 
     const currentThreadId = threadIdRef.value
     const { response, abortController } = await postChatStream({
       threadId: currentThreadId as Id<'threads'>,
       ...chatContext.activeAgent.value,
       content,
+      streamId,
       resumeStreamId,
     })
 
@@ -315,6 +335,8 @@ async function streamToMessage({ message, content, resumeStreamId }: StreamToMes
       if (state.content)
         message.content += state.content
 
+      console.log({ chunk, write: state.content })
+
       nextTick(() => { doScrollBottom({ maybe: true }) })
     }
 
@@ -325,14 +347,14 @@ async function streamToMessage({ message, content, resumeStreamId }: StreamToMes
     message!.content += `\nError: ${(error as Error).message}`
   }
   finally {
-    --streamingMessages.value
+    delete streamingMessagesMap[(streamId ?? resumeStreamId)!]
   }
 
   console.log('Stream completed')
 }
 
 async function _branchThreadFromMessage({ messageId, lockerKey }: BranchThreadFromMessageArgs) {
-  if (streamingMessages.value > 0)
+  if (Object.keys(streamingMessagesMap).length > 0)
     throw new Error('Can not branch while streaming')
 
   const messagesLte = messages.value.slice(0, messages.value.findIndex(m => m._id === messageId) + 1)
@@ -417,7 +439,7 @@ function doScrollBottom({ smooth = true, maybe = false, tries = 0, lastScrollTop
     </VueLenis>
 
     <PrompterArea
-      v-bind="{ nearTopBottom, lenisRef, streamingMessages }"
+      v-bind="{ nearTopBottom, lenisRef, streamingMessagesMap }"
       v-model:chat-input="chatInput"
       @submit="(input) => handleSubmit({ input })"
     />

@@ -81,6 +81,7 @@ export interface PostChatStreamArgs {
   model: string
   apiKey?: string
   content?: string
+  streamId?: string
   resumeStreamId?: string
   finishOnly?: boolean
   abortController?: AbortController
@@ -93,7 +94,7 @@ export async function postChatStream(args: PostChatStreamArgs) {
   const { convexApiUrl } = useRuntimeConfig().public
   const { $auth } = useNuxtApp()
 
-  const response = await fetch(`${convexApiUrl}/api/ai/chat/stream`, {
+  const response = await fetch(`${convexApiUrl}/api/chat/stream`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
