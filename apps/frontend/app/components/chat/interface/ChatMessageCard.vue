@@ -41,7 +41,7 @@ const chatContext = useChatContext()
             <div>{{ $t('generating') }}</div>
             <div class="spinner h-5 w-5" />
           </div>
-          <MDC v-else :value="message.content" class="only-child:[&>.prose-p]:my-0" />
+          <MDC v-else :key="String(message.isStreaming)" :value="message.content" class="only-child:[&>.prose-p]:my-0" />
           <div class="hidden first:block">
             <Skeleton
               class="h-5 max-w-full w-$c-W rounded-full bg-muted-foreground" :style="{
