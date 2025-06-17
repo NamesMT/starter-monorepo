@@ -81,7 +81,9 @@ function handleSubmit({ confirmMultiStream = false }) {
           </div>
           <Button
             variant="default"
-            class="i-hugeicons:login-square-01 enabled:(bg-mainGradient) disabled:bg-surface-500"
+            size="icon"
+            class="i-hugeicons:upload-square-01 enabled:bg-mainGradient disabled:bg-surface-500"
+            :class="chatContext.insaneUI.value ? 'enabled:animate-spin' : 'motion-safe:enabled:animate-bounce'"
             :disabled="!chatInputTA"
             @click="handleSubmit({ })"
           />
