@@ -335,8 +335,6 @@ async function streamToMessage({ message, content, streamId, resumeStreamId }: S
       if (state.content)
         message.content += state.content
 
-      console.log({ chunk, write: state.content })
-
       nextTick(() => { doScrollBottom({ maybe: true }) })
     }
 
