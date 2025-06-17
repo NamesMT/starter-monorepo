@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { Doc } from 'backend-convex/convex/_generated/dataModel'
+import { keyBy } from '@namesmt/utils'
 import { api } from 'backend-convex/convex/_generated/api'
 import { useConvexQuery } from 'convex-vue'
 import { computed, ref } from 'vue'
-
 import {
   ContextMenu,
   ContextMenuContent,
@@ -39,16 +39,7 @@ const isFetching = ref(false)
 // Subscribe to Convex to sync threads
 if ($auth.loggedIn) {
   const { data: threadsFromConvex, isLoading: fetchingFromConvex } = useConvexQuery(api.threads.listByUser)
-  watch(threadsFromConvex, (tFC) => {
-    // Keep threads that are not assigned to any users
-    // Must reconstruct array or else it cant be cloned to IDB.
-    threads.value = JSON.parse(JSON.stringify(
-      [
-        ...threads.value.filter(t => !t.userId),
-        ...tFC,
-      ].sort((a, b) => b.timestamp - a.timestamp),
-    ))
-  })
+  watch(threadsFromConvex, _mergeToLocalThreads)
   watch(fetchingFromConvex, (fFC) => {
     isFetching.value = fFC
   })
@@ -71,19 +62,22 @@ if ($auth.loggedIn) {
 // For anonymous users, subscribe to threads via sessionId
 else {
   const { data: threadsFromConvex, isLoading: fetchingFromConvex } = useConvexQuery(api.threads.listBySessionId, { sessionId: $init.sessionId })
-  watch(threadsFromConvex, (tFC) => {
-    // Keep threads from other sessionIds, that are not assigned to any users
-    // Must reconstruct array or else it cant be cloned to IDB.
-    threads.value = JSON.parse(JSON.stringify(
-      [
-        ...threads.value.filter(t => !t.userId && t.sessionId !== $init.sessionId),
-        ...tFC.map(t => ({ ...t, lockerKey: getLockerKey(t._id) })),
-      ].sort((a, b) => b.timestamp - a.timestamp),
-    ))
-  })
+  watch(threadsFromConvex, _mergeToLocalThreads)
   watch(fetchingFromConvex, (fFC) => {
     isFetching.value = fFC
   })
+}
+
+function _mergeToLocalThreads(tFC: Doc<'threads'>[]) {
+  const threadsMapped = keyBy(tFC, '_id')
+  for (const thread of threads.value) {
+    if (!threadsMapped[thread._id])
+      threadsMapped[thread._id] = thread
+  }
+  threads.value = Object.values(threadsMapped).map((t) => {
+    t.lockerKey = t.lockerKey || getLockerKey(t._id)
+    return t
+  }).sort((a, b) => b.timestamp - a.timestamp)
 }
 
 // Fuck TS in these situations
