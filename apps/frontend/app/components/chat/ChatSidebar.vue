@@ -216,7 +216,7 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
                   <NuxtLink
                     :to="`/chat/${thread._id}`"
                     class="group/thread relative block flex items-center gap-2 overflow-hidden rounded-md p-2 px-3 text-sm [&.router-link-exact-active]:bg-primary/10 hover:bg-primary/20"
-                    @mousedown="navigateTo(`/chat/${thread._id}`);"
+                    @mousedown.left="navigateTo(`/chat/${thread._id}`);"
                     @click="navigateTo(`/chat/${thread._id}`); sidebarContext.setOpenMobile(false)"
                   >
                     <div class="h-4 flex items-center gap-1">
