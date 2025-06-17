@@ -118,19 +118,17 @@ async function _deleteThread(thread: Doc<'threads'>) {
     threadIdRef.value = ''
 
   threads.value.splice(threads.value.indexOf(thread), 1)
-  await deleteThread(convex, { threadId: thread._id, lockerKey: $auth.loggedIn ? undefined : thread.lockerKey })
+  await deleteThread(convex, { threadId: thread._id, lockerKey: $auth.loggedIn ? undefined : getLockerKey(thread._id) })
 }
 
 async function _shareThread(thread: Doc<'threads'>) {
-  let lockerKey = thread.lockerKey
-  if (!lockerKey) {
+  if (!thread.lockerKey && !getLockerKey(thread._id)) {
     const newLockerKey = getRandomLockerKey()
     await threadSetLockerKey(convex, { threadId: thread._id, newLockerKey })
     setLockerKey(thread._id, newLockerKey)
-    lockerKey = newLockerKey
   }
 
-  await copy(`${window.location.origin}/chat/${thread._id}?lockerKey=${lockerKey}`)
+  await copy(`${window.location.origin}/chat/${thread._id}?lockerKey=${getLockerKey(thread._id)}`)
   toast({ description: t('chat.toast.threadShareLinkCopied') })
 }
 
@@ -138,7 +136,7 @@ async function _freezeThread(thread: Doc<'threads'>) {
   const prevVal = thread.frozen
   thread.frozen = true
 
-  await freezeThread(convex, { threadId: thread._id, lockerKey: thread.lockerKey })
+  await freezeThread(convex, { threadId: thread._id, lockerKey: getLockerKey(thread._id) })
     .catch(() => { thread.frozen = prevVal })
 }
 
@@ -146,7 +144,7 @@ async function _unfreezeThread(thread: Doc<'threads'>) {
   const prevVal = thread.frozen
   thread.frozen = undefined
 
-  await unfreezeThread(convex, { threadId: thread._id, lockerKey: thread.lockerKey })
+  await unfreezeThread(convex, { threadId: thread._id, lockerKey: getLockerKey(thread._id) })
     .catch(() => { thread.frozen = prevVal })
 }
 
