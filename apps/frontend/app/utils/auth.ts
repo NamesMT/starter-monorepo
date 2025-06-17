@@ -7,6 +7,7 @@ export function getSignInUrl({ query }: getSignInUrlParams = {}) {
   const runtimeConfig = useRuntimeConfig()
 
   return withQuery(`${runtimeConfig.public.backendUrl}/api/auth/login`, {
+    path: useRequestURL().pathname,
     ...query,
   })
 }
