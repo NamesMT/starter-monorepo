@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type Lenis from 'lenis'
+import { useSidebar } from '~/lib/shadcn/components/ui/sidebar'
 
 const props = defineProps<{
   nearTopBottom: Array<null | boolean | number>
@@ -14,6 +15,7 @@ const emit = defineEmits<{
 const chatInput = defineModel<string>('chatInput', { required: true })
 
 const isDev = import.meta.dev
+const sidebarContext = useSidebar()
 const chatContext = useChatContext()
 const { t } = useI18n()
 
@@ -66,7 +68,12 @@ function handleSubmit({ confirmMultiStream = false }) {
           v-model="chatInputTA"
           :placeholder="chatPlaceholder"
           class="min-h-12 resize-none bg-transparent outline-none placeholder-secondary-700/60 dark:placeholder-secondary-300/60"
-          @keydown.enter.exact.prevent="handleSubmit({ })"
+          @keydown.enter.exact="(e) => {
+            if (!sidebarContext.isMobile.value) {
+              e.preventDefault()
+              handleSubmit({ })
+            }
+          }"
         />
         <div class="flex items-center justify-between">
           <div class="flex items-center">
