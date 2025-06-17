@@ -74,10 +74,10 @@ function _mergeToLocalThreads(tFC: Doc<'threads'>[]) {
     if (!threadsMapped[thread._id])
       threadsMapped[thread._id] = thread
   }
-  threads.value = Object.values(threadsMapped).map((t) => {
+  threads.value = JSON.parse(JSON.stringify(Object.values(threadsMapped).map((t) => {
     t.lockerKey = t.lockerKey || getLockerKey(t._id)
     return t
-  }).sort((a, b) => b.timestamp - a.timestamp)
+  }).sort((a, b) => b.timestamp - a.timestamp)))
 }
 
 // Fuck TS in these situations
