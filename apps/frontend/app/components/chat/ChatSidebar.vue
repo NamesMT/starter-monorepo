@@ -264,7 +264,7 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
                     {{ pinned ? $t('chat.thread.unpin') : $t('chat.thread.pin') }}
                   </ContextMenuItem>
                   <ContextMenuItem @select.prevent>
-                    <DeleteThreadAlertDialog :thread :callback="() => { _deleteThread(thread) }" :tip-only="true">
+                    <DeleteThreadAlertDialog :thread :callback="() => _deleteThread(thread)" :tip-only="true">
                       <p>{{ $t('chat.thread.delete') }}</p>
                     </DeleteThreadAlertDialog>
                   </ContextMenuItem>
@@ -276,7 +276,7 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
                     {{ thread.frozen ? $t('chat.thread.unfreeze') : $t('chat.thread.freeze') }}
                   </ContextMenuItem>
                   <ContextMenuItem @select.prevent>
-                    <ShareThreadAlertDialog :thread :callback="() => { _shareThread(thread) }" :tip-only="true">
+                    <ShareThreadAlertDialog :thread :callback="() => _shareThread(thread)" :tip-only="true">
                       <p>{{ $t('chat.thread.share') }}</p>
                     </ShareThreadAlertDialog>
                   </ContextMenuItem>
