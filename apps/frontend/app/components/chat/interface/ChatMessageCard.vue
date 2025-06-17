@@ -23,8 +23,8 @@ const chatContext = useChatContext()
       :is="chatContext.insaneUI.value ? LiquidGlassDiv : 'div'"
       class="border rounded-$radius $c-radius=$radius" :class="[
         message.role === 'user'
-          ? 'bg-secondary-100 dark:bg-secondary-950 border-secondary-200 max-w-80% md:max-w-2xl'
-          : 'bg-primary-100 dark:bg-primary-950 border-primary-200 max-w-full md:max-w-3xl',
+          ? 'bg-secondary-100 dark:bg-secondary-950 border-secondary-200 max-w-80% lg:max-w-2xl'
+          : 'bg-primary-100 dark:bg-primary-950 border-primary-200 max-w-full lg:max-w-3xl',
         chatContext.insaneUI.value
           ? 'bg-opacity-50!'
           : 'bg-opacity-5!',
