@@ -80,6 +80,7 @@ const nicknameRef = useChatNickname()
               :placeholder="$auth.loggedIn ? $auth.user.name : 'Anonymous'"
               type="text"
               class="h-9 px-2 py-1"
+              @update:model-value="nicknameRef = nicknameRef.trim()"
             />
           </div>
         </div>

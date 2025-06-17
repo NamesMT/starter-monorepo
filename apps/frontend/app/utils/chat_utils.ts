@@ -20,8 +20,9 @@ export function getChatNickname() {
   const { $auth } = useNuxtApp()
 
   const lSNickname = localStorage.getItem('chat/user-nickname')
+  const parsedlSNickname = lSNickname ? JSON.parse(lSNickname) : undefined
 
-  return lSNickname ? JSON.parse(lSNickname) : $auth?.user?.name || 'Anonymous'
+  return parsedlSNickname.trim() ? parsedlSNickname : $auth?.user?.name || 'Anonymous'
 }
 
 export function getChatFallbackNickname() {
