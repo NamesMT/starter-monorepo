@@ -12,9 +12,9 @@ const chatContext = useChatContext()
 </script>
 
 <template>
-  <div class="absolute inset-0 z-0">
+  <div class="z-0">
     <FlickeringGrid
-      v-if="chatContext.insaneUI.value" class="absolute inset-0 z-0 place-content-center"
+      v-if="chatContext.insaneUI.value" class="pointer-events-none absolute inset-0 z-0 place-content-center"
       :square-size="10" :grid-gap="5" color="#60A5FA" :max-opacity="0.5" :flicker-chance="0.1"
     />
 
