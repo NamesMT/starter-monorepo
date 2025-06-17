@@ -1,4 +1,5 @@
 import { randomStr } from '@namesmt/utils'
+import { destr } from 'destr'
 
 export function getRandomLockerKey() {
   return `locker_${Date.now()}_${randomStr(8)}`
@@ -19,10 +20,9 @@ export function useChatNickname() {
 export function getChatNickname() {
   const { $auth } = useNuxtApp()
 
-  const lSNickname = localStorage.getItem('chat/user-nickname')
-  const parsedlSNickname = lSNickname ? JSON.parse(lSNickname) : undefined
+  const lSNickname = destr<string>(localStorage.getItem('chat/user-nickname') ?? '').trim()
 
-  return parsedlSNickname.trim() ? parsedlSNickname : $auth?.user?.name || 'Anonymous'
+  return lSNickname || $auth?.user?.name || 'Anonymous'
 }
 
 export function getChatFallbackNickname() {
