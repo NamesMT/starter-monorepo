@@ -26,7 +26,7 @@ const chatContext = useChatContext()
         v-if="!messages.length"
         :key="chatContext.interfaceSRK.value"
         v-motion-pop-visible-once
-        class="relative z-2 mx-auto w-fit whitespace-pre-wrap px-10 py-6 text-center text-4xl font-medium tracking-tighter"
+        class="relative z-2 mx-auto w-fit whitespace-pre-wrap px-10 py-6 text-center text-4xl font-medium tracking-tighter opacity-100!"
       >
         <p>
           {{ threadIdRef ? $t('chat.interface.sendToStart') : $t('chat.interface.selectOrStart') }}
