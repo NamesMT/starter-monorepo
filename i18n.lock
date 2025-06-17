@@ -36,6 +36,7 @@ checksums:
     chat.thread.share: 3a257c0d42ffa5ed6eddfc71e46db6c0
     chat.thread.unfreeze: 0fcaf656c357870fb42132f7342aa23a
     chat.thread.unpin: 9f3e0c1a25452b171dfffee566e11d49
+    chat.toast.menuOpenedFirstTime: eaf71306cc359e6f887ea63200ed8758
     chat.toast.threadBranched: edc2466649225081b38d4c6fe1dd27cf
     chat.toast.threadRemovedExternal: db7f0c7a17abd8f2fa3bdf24f0e81377
     chat.toast.threadNameRemovedExternal: 4a962f76e9e63e9c764659f88661058c
