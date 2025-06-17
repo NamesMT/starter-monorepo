@@ -13,7 +13,7 @@ const nicknameRef = useChatNickname()
           <AvatarFallback>👤</AvatarFallback>
         </Avatar>
         <div class="truncate">
-          <p>{{ $auth.user.name }} <span class="text-xs">({{ nicknameRef || getChatFallbackNickname() }})</span></p>
+          <p>{{ $auth.user.name }} <span v-show="nicknameRef" aria-label="User nickname" class="text-xs">({{ nicknameRef || getChatFallbackNickname() }})</span></p>
           <p class="truncate text-xs">
             {{ $auth.user.email }}
           </p>
@@ -24,7 +24,7 @@ const nicknameRef = useChatNickname()
           <AvatarFallback>🍳</AvatarFallback>
         </Avatar>
         <div class="truncate">
-          <p>{{ $t('guest') }} <span class="text-xs">({{ nicknameRef || getChatFallbackNickname() }})</span></p>
+          <p>{{ $t('guest') }} <span aria-label="User nickname" class="text-xs">({{ nicknameRef || getChatFallbackNickname() }})</span></p>
           <p class="truncate text-xs">
             {{ $t('loginToEnjoyMore') }}
           </p>
