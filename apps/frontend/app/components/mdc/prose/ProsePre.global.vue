@@ -44,7 +44,7 @@ const icon = computed(
   () => icons.value.get(props.filename?.toLowerCase()) || icons.value.get(props.language ?? ''),
 )
 
-const isSingleLine = computed(() => props.code.trim().split('\n').length === 1)
+const linesCount = computed(() => props.code.trim().split('\n').length)
 
 onUnmounted(() => {
   observer.stop()
@@ -52,7 +52,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div :data-header="props.showHeader" class="group/pre-card prose-pre-card">
+  <div :data-header="props.showHeader" class="group/pre-card prose-pre-card" :data-lenis-prevent="(linesCount > 14) || undefined">
     <div v-if="props.showHeader && props.filename" name="header">
       <div v-if="icon" :class="`i-${icon}`" />
       <span> {{ props.filename }}</span>
@@ -61,7 +61,7 @@ onUnmounted(() => {
 
     <span v-if="!props.filename" name="absolute-copy-btn"><CodeCopy :code="props.code" class="opacity-0 group-hover/pre-card:opacity-100" /></span>
 
-    <span v-if="!props.filename && !isSingleLine" name="absolute-language">
+    <span v-if="!props.filename && linesCount === 1" name="absolute-language">
       {{ props.language }}
     </span>
 
@@ -69,7 +69,7 @@ onUnmounted(() => {
       <div
         name="code-wrapper"
         :data-inline-copy="props.showHeader && !props.filename"
-        :data-no-language="!props.language"
+        :data-no-language="!props.language || (props.language as any) === 'text'"
       >
         <pre ref="preRef" class="prose-pre" :class="props.class">
           <slot />

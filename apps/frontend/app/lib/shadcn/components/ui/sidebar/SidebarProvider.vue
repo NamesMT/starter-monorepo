@@ -65,7 +65,7 @@ provideSidebarContext({
 </script>
 
 <template>
-  <TooltipProvider :delay-duration="0">
+  <TooltipProvider>
     <div
       :style="{
         '--sidebar-width': SIDEBAR_WIDTH,

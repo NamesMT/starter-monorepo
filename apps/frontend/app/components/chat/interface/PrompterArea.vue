@@ -71,9 +71,10 @@ function handleSubmit({ confirmMultiStream = false }) {
           @keydown.enter.exact="(e) => {
             if (!sidebarContext.isMobile.value) {
               e.preventDefault()
-              handleSubmit({ })
+              handleSubmit({})
             }
           }"
+          @keydown.enter.ctrl.exact="handleSubmit({})"
         />
         <div class="flex items-center justify-between">
           <div class="flex items-center">
@@ -85,7 +86,7 @@ function handleSubmit({ confirmMultiStream = false }) {
             class="i-hugeicons:upload-square-01 enabled:bg-mainGradient disabled:bg-surface-500"
             :class="chatContext.insaneUI.value ? 'enabled:animate-spin' : 'motion-safe:enabled:animate-bounce'"
             :disabled="!chatInputTA"
-            @click="handleSubmit({ })"
+            @click="handleSubmit({})"
           />
         </div>
       </form>

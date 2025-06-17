@@ -32,7 +32,7 @@ const { $auth } = useNuxtApp()
 
 <template>
   <AlertDialog>
-    <Tooltip :delay-duration="500">
+    <Tooltip>
       <AlertDialogTrigger v-show="!thread.userId || (thread.userId === $auth?.user?.sub)" as-child>
         <TooltipTrigger as-child @pointerdown.stop.prevent @click.shift.stop.prevent="callback()">
           <slot />

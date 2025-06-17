@@ -15,7 +15,7 @@ if (!thread.parentThread)
 </script>
 
 <template>
-  <Tooltip :delay-duration="500">
+  <Tooltip>
     <TooltipTrigger as-child>
       <NuxtLink
         :to="`/chat/${thread.parentThread}`"

@@ -9,7 +9,7 @@ const activeAgentDisplay = computed(() => displayActiveAgent(chatContext.activeA
 
 <template>
   <DropdownMenu>
-    <Tooltip :delay-duration="500">
+    <Tooltip>
       <TooltipTrigger as-child>
         <DropdownMenuTrigger as-child>
           <Button variant="ghost" size="sm" class="h-fit w-40 flex items-center justify-between gap-1 border-x-3px border-primary border-opacity-80 px-2 py-1 -ml-1.5 light:border-primary-600 hover:bg-accent/30">

@@ -207,7 +207,7 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
                   <!-- Using [&.active] instead of :active-class because of reactivity bug -->
                   <NuxtLink
                     :to="`/chat/${thread._id}`"
-                    class="group/thread relative block flex items-center gap-2 overflow-hidden rounded-md p-2 px-3 text-sm [&.router-link-exact-active]:bg-primary/10 hover:bg-primary/20"
+                    class="group/thread relative block flex items-center gap-2 overflow-hidden rounded-md p-2 px-3 text-sm $BGCOLOR=$primary-200 [&.router-link-exact-active]:(bg-[hsl(var(--BGCOLOR)/0.3)]) hover:(bg-[hsl(var(--BGCOLOR)/0.7)]) dark:$BGCOLOR=$primary-800"
                     @mousedown.left="navigateTo(`/chat/${thread._id}`);"
                     @click="navigateTo(`/chat/${thread._id}`); sidebarContext.setOpenMobile(false)"
                   >
@@ -216,7 +216,7 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
                       <FrozenIconButton v-if="thread.frozen" :thread />
                     </div>
 
-                    <Tooltip :delay-duration="500">
+                    <Tooltip>
                       <TooltipTrigger as-child>
                         <div class="truncate">
                           {{ thread.title }}
@@ -227,11 +227,12 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
                       </TooltipContent>
                     </Tooltip>
 
-                    <LiquidGlassDiv
-                      class="right-0 top-0 h-full flex translate-x-[calc(100%+1rem)] items-center gap-1 px-2 pr-1 transition-transform will-change-transform $c-radius=6px absolute! group-hover/thread:translate-x-0"
+                    <div
+                      class="right-0 top-0 h-full flex translate-x-[calc(100%+1rem)] items-center gap-1 bg-[hsl(var(--BGCOLOR))] px-2 pr-1 transition-transform will-change-transform absolute! group-hover/thread:translate-x-0"
                       @click.stop.prevent
                     >
-                      <Tooltip :delay-duration="500">
+                      <div class="pointer-events-none absolute bottom-0 right-[100%] top-0 h-12 w-8 from-[hsl(var(--BGCOLOR))] to-transparent bg-gradient-to-l opacity-0 group-hover/thread:opacity-100" />
+                      <Tooltip>
                         <TooltipTrigger as-child>
                           <Button
                             tabindex="-1" variant="ghost" size="icon" class="size-7 transition-none hover:bg-surface-200/20!"
@@ -244,9 +245,8 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
                           <p>{{ pinned ? $t('chat.thread.unpin') : $t('chat.thread.pin') }}</p>
                         </TooltipContent>
                       </Tooltip>
-
                       <ReuseDeleteBtn :thread />
-                    </LiquidGlassDiv>
+                    </div>
                   </NuxtLink>
                 </ContextMenuTrigger>
                 <ContextMenuContent>

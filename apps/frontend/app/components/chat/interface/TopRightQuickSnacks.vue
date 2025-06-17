@@ -4,7 +4,7 @@ const chatContext = useChatContext()
 
 <template>
   <div class="absolute right-3 top-3 hidden items-center lg:flex">
-    <Tooltip :delay-duration="500">
+    <Tooltip>
       <TooltipTrigger as-child>
         <Button
           variant="ghost" size="icon"

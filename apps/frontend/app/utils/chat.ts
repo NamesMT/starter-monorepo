@@ -61,7 +61,7 @@ export interface ChatContext {
   // Interface soft render key
   interfaceSRK: Ref<number>
 }
-export const [useChatContext, provideChatContext] = createContext<ChatContext>('chat page')
+export const [useChatContext, provideChatContext] = createContext<ChatContext>('chat/root')
 
 export function displayActiveAgent(agent: AgentObject) {
   if (agent.provider === 'hosted')

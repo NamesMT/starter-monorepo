@@ -15,3 +15,8 @@
   background-clip: content-box;
   -webkit-background-clip: content-box;
 }
+
+/* ::-webkit-scrollbar-track {
+  background: hsl(var(--accent)/.2);
+  border-radius: 4px;
+} */

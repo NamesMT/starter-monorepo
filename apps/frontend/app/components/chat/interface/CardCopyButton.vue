@@ -7,7 +7,7 @@ const {
 </script>
 
 <template>
-  <Tooltip :delay-duration="500">
+  <Tooltip>
     <TooltipTrigger as-child>
       <CodeCopy :code="message.content" class="hover:text-accent-foreground hover:bg-accent!" />
     </TooltipTrigger>
