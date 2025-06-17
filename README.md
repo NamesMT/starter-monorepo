@@ -73,16 +73,18 @@ A super efficient and powerful, yet friendly LLM Chat system, featuring:
   * Business-ready, support `hosted` provider that you can control the billing of.
   * Supports other add-in **BYOK** providers, like `OpenAI`, `OpenRouter`,...
   * Seamless authentication integration with the main `backend`.
-  * Beautiful syntax highlighting. 🌈
+  * Beautiful syntax highlighting 🌈.
   * Thread branching, freezing, and sharing.
   * Real-time, multi-agents, multi-users support ¹.
     * Invite your families and friends, and play with the Agents together in real-time.
     * Or maybe invite your colleagues, and brainstorm together with the help and power of AI.
   * Resumable and multi-streams ¹.
-    * Ask follow-up questions while the previous isn't done, the model is able to pick up what's available currently. 🍳🍳
+    * Ask follow-up questions while the previous isn't done, the model is able to pick up what's available currently 🍳🍳.
+    * Multi-users can send messages at the same time 😲😲.
   * Easy and private: anonymous, guest usage supported.
   * Mobile-friendly.
   * Fully internalized, with AI-powered translations and smooth switching between languages.
+  * Blazingly fast ⚡ with local caching and optimistic updates.
   * Designed to be scalable
     * > Things are isolated and common interfaces are defined and utilized where possible, there's no tightly coupled-hacks that prevents future scaling, things just works, elegantly.
 
