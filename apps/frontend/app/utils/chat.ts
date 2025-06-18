@@ -75,6 +75,13 @@ export function useThreadIdRef() {
   return useRouteParams<string>('all', undefined, { transform: { get: s => Array.isArray(s) ? s[0] : s } })
 }
 
+/**
+ * The `sendMessage` query is watched by `ChatInterface` to submit the message.
+ */
+export function newThreadAndSubmit(content: string) {
+  navigateTo({ path: '/chat', query: { sendMessage: content } })
+}
+
 export interface PostChatStreamArgs {
   threadId: Id<'threads'>
   provider: string

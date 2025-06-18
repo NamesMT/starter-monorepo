@@ -35,6 +35,9 @@ for (const provider of supportedProvidersCommon) {
 }
 
 const nicknameRef = useChatNickname()
+
+const [DefineKbd, ReuseKbd] = createReusableTemplate()
+const [DefineShortcutLi, ReuseShortcutLi] = createReusableTemplate<{ title: string, keys: string[] }>()
 </script>
 
 <template>
@@ -118,6 +121,53 @@ const nicknameRef = useChatNickname()
           </div>
         </div>
       </div>
+
+      <SheetFooter>
+        <div class="w-full flex flex-col gap-3 rounded-md bg-primary-50 p-4 text-sm dark:bg-primary-950">
+          <!-- Define locally reusable components -->
+          <div class="hidden">
+            <DefineKbd v-slot="{ k }">
+              <kbd class="rounded bg-background px-2 py-1 text-sm font-sans">{{ k }}</kbd>
+            </DefineKbd>
+
+            <DefineShortcutLi v-slot="{ title, keys }">
+              <li class="flex items-center justify-between">
+                <div>{{ title }}</div>
+                <div class="flex gap-1">
+                  <ReuseKbd v-for="k, index of keys" :key="index" :k />
+                </div>
+              </li>
+            </DefineShortcutLi>
+          </div>
+
+          <h4 class="font-semibold">
+            {{ $t('keyboard-shortcuts') }}
+          </h4>
+
+          <hr>
+
+          <ul class="flex flex-col gap-4">
+            <ReuseShortcutLi
+              v-bind="{
+                title: $t('chat.settings.general.shortcuts.search'),
+                keys: ['Ctrl', 'K'],
+              }"
+            />
+            <ReuseShortcutLi
+              v-bind="{
+                title: $t('chat.settings.general.shortcuts.newChat'),
+                keys: ['Ctrl', 'Shift', 'O'],
+              }"
+            />
+            <ReuseShortcutLi
+              v-bind="{
+                title: $t('chat.settings.general.shortcuts.toggleSidebar'),
+                keys: ['Ctrl', 'B'],
+              }"
+            />
+          </ul>
+        </div>
+      </SheetFooter>
     </SheetContent>
   </Sheet>
 </template>

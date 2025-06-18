@@ -38,6 +38,16 @@ const threadIdRef = useThreadIdRef()
 const isThreadFrozen = computed(() => chatContext.activeThread.value?.frozen)
 const fetchKey = ref(0)
 
+const sendMessageRef = useRouteQuery<string | undefined>('sendMessage')
+whenever(
+  sendMessageRef,
+  (v) => {
+    handleSubmit({ input: v })
+    sendMessageRef.value = undefined
+  },
+  { immediate: true },
+)
+
 const cachedThreadsMessages: {
   [threadId: string]: Array<CustomMessage>
 } = {}
@@ -104,7 +114,7 @@ const { ignoreUpdates: ignorePathUpdate } = watchIgnorable(
           && message.streamId
         ) {
           console.log('Attempting to resume stream for session:', message.streamId)
-          nextTick(() => { uniquePromise(message.streamId!, () => resumeStreamProcess(message.streamId!, message.id)) })
+          nextTick(() => { uniquePromise(message.streamId!, () => resumeStreamToMessage(message.streamId!, message.id)) })
         }
       }
 
@@ -206,7 +216,7 @@ async function handleSubmit({ input }: HandleSubmitArgs) {
   )
 }
 
-async function resumeStreamProcess(streamSessionId: string, messageId: string) {
+async function resumeStreamToMessage(streamSessionId: string, messageId: string) {
   const message = messagesKeyed.value[messageId]
   if (!message)
     return console.warn('Trying to resume stream for message that does not exist:', messageId)

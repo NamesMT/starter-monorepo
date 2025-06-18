@@ -29,6 +29,9 @@ Hiện tại cuộc trò chuyện này chưa được gán cho bất kỳ tài k
 接收者将拥有完全的访问权限，包括删除以及查看该线程的历史和未来内容。
 目前该线程未分配给任何用户账户，其所有权将转移给第一个加入该线程的用户账户。"
 chat.alert.shareThread.title,,Share Thread,Compartir hilo,Partager la discussion,Поделиться дискуссией,Chia sẻ chủ đề,共享线程
+chat.components.chatSearchDialog.enterToSend.p2,,to start new chat,para iniciar nuevo chat,pour démarrer une nouvelle conversation,чтобы начать новый чат,để bắt đầu cuộc trò chuyện mới,开始新聊天
+chat.components.chatSearchDialog.noResultsFound,,No results found.,No se encontraron resultados.,Aucun résultat trouvé.,Результаты не найдены.,Không tìm thấy kết quả nào.,未找到结果。
+chat.components.chatSearchDialog.placeholder,,Search or press Enter to start new chat...,Busca o presiona Enter para iniciar nuevo chat...,Recherchez ou appuyez sur Entrée pour démarrer une nouvelle conversation...,"Ищите или нажмите Enter, чтобы начать новый чат...",Tìm kiếm hoặc nhấn Enter để bắt đầu cuộc trò chuyện mới...,搜索或按 Enter 键开始新聊天...
 chat.interface.selectOrStart,,Select a chat or start a new one.,Selecciona un chat o inicia uno nuevo.,Sélectionnez une conversation ou commencez-en une nouvelle.,Выберите чат или начните новый.,Chọn một cuộc trò chuyện hoặc bắt đầu cuộc trò chuyện mới.,选择一个聊天或开始新的聊天。
 chat.interface.sendToStart,,Send a message to start chatting.,Envía un mensaje para comenzar a chatear.,Envoyez un message pour commencer la conversation.,"Отправьте сообщение, чтобы начать общение.",Gửi tin nhắn để bắt đầu trò chuyện.,发送消息以开始聊天。
 chat.message.branch,,Branch off,Crear ramificación,Créer une branche,Создать ветку,Tạo nhánh,分支话题
@@ -39,6 +42,9 @@ chat.provider.google,,Google,Google,Google,Google,Google,Google
 chat.provider.hosted,,Hosted,Alojado (H),Hébergé,Управляемый (H),Được cung cấp (H),托管 (H)
 chat.provider.openai,,OpenAI,OpenAI,OpenAI,OpenAI,OpenAI,OpenAI
 chat.provider.openrouter,,OpenRouter,OpenRouter,OpenRouter,OpenRouter,OpenRouter,OpenRouter
+chat.settings.general.shortcuts.newChat,,New Chat,Nuevo chat,Nouvelle conversation,Новый чат,Cuộc trò chuyện mới,新建聊天
+chat.settings.general.shortcuts.search,,Search,Buscar,Rechercher,Поиск,Tìm kiếm,搜索
+chat.settings.general.shortcuts.toggleSidebar,,Toggle Sidebar,Alternar barra lateral,Afficher/masquer la barre latérale,Переключить боковую панель,Bật/tắt thanh bên,切换侧边栏
 chat.settings.general.title,,General Settings,Configuración general,Paramètres généraux,Общие настройки,Cài đặt chung,常规设置
 chat.settings.providers.title,,Providers Settings,Configuración de proveedores,Paramètres des fournisseurs,Настройки провайдеров,Cài đặt nhà cung cấp,服务提供商设置
 chat.settings.providerDialog.description,,"Changes are automatically saved, just close!","Los cambios se guardan automáticamente, ¡solo cierra!","Les modifications sont automatiquement enregistrées, il suffit de fermer !","Изменения сохраняются автоматически, просто закройте!","Các thay đổi được tự động lưu, chỉ cần đóng lại!",更改会自动保存，直接关闭即可！
@@ -85,6 +91,7 @@ getInputThoughtsPlaceholders.6,,Where are we heading today? 🧑‍🚀,¿Hacia 
 getInputThoughtsPlaceholders.7,,Evaluating a strategy? 📊,¿Evaluando una estrategia? 📊,Vous évaluez une stratégie ? 📊,Оцениваете стратегию? 📊,Đang đánh giá một chiến lược? 📊,在评估一个策略吗？📊
 getInputThoughtsPlaceholders.8,,Let's talk about your vision. 🌟,Hablemos de tu visión. 🌟,Parlons de votre vision. 🌟,Давайте поговорим о вашем видении. 🌟,Hãy nói về tầm nhìn của bạn. 🌟,来谈谈你的愿景吧。🌟
 guest,,Guest,Invitado,Invité,Гость,Khách,访客
+keyboard-shortcuts,,Keyboard Shortcuts,Atajos de teclado,Raccourcis clavier,Горячие клавиши,Phím tắt,键盘快捷键
 language,,Language,Idioma,Langue,Язык,Ngôn ngữ,语言
 loginToEnjoyMore,,Login to enjoy more!,¡Inicia sesión para disfrutar más!,Connectez-vous pour en profiter davantage !,"Войдите, чтобы получить больше возможностей!",Đăng nhập để trải nghiệm nhiều hơn!,登录以享受更多功能！
 pages.chat.aiLabel,,AI,IA,IA,ИИ,AI,AI

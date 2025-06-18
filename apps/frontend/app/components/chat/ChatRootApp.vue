@@ -78,8 +78,11 @@ provideChatContext({
 
 <template>
   <SidebarProvider>
-    <ChatSidebar class="z-5" />
-    <ChatInterface class="h-full w-full" />
-    <ChatFloatingMenu class="absolute left-2 top-2 z-10" />
+    <ChatGlobalsProvider>
+      <ChatHotkeysHook />
+      <ChatSidebar class="z-5" />
+      <ChatInterface class="h-full w-full" />
+      <ChatFloatingMenu class="absolute left-2 top-2 z-10" />
+    </ChatGlobalsProvider>
   </SidebarProvider>
 </template>

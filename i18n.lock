@@ -9,6 +9,9 @@ checksums:
     chat.alert.shareThread.description: 38470c662f7c91952c7190a873d200ac
     chat.alert.shareThread.descriptionDanger: 85dad0b017b628e0c2e29abb45e3d5fa
     chat.alert.shareThread.title: e00e8208d2dd52a00a4cbccdc57199e3
+    chat.components.chatSearchDialog.enterToSend.p2: 8200cd3e922c0c7e39704491c3e5773a
+    chat.components.chatSearchDialog.noResultsFound: 8e37a23d37d7b4f501a20991a0d311ea
+    chat.components.chatSearchDialog.placeholder: 276dc6685b4414d6dfbb0df54d74b8bd
     chat.interface.selectOrStart: 5ae94ab41d0b599f36924f5db15dd16d
     chat.interface.sendToStart: 6ba07995188dc929a2de0e8f0bb4d1ea
     chat.message.branch: 8ee786a7be37ef90ade2cd00741f8dd0
@@ -19,6 +22,9 @@ checksums:
     chat.provider.hosted: 582f9507edebe074a4e28c50934142c1
     chat.provider.openai: 386a12cfe55562a8e181c9bfcac6b156
     chat.provider.openrouter: 6b69e3f00f088bceefec2df193999b61
+    chat.settings.general.shortcuts.newChat: 3d7b701878aca8e2dbb7c6732f7f3bee
+    chat.settings.general.shortcuts.search: 49dd6c21604b5e8d4153ff1aff2177e1
+    chat.settings.general.shortcuts.toggleSidebar: 0ef91fcb33b04612eb8a202f673d7881
     chat.settings.general.title: 651afaa0d070ecc9a98b70581e25872f
     chat.settings.providers.title: 885363f661b972c99ee993471ffd3668
     chat.settings.providerDialog.description: 714bdd74c5dfa51ebdeed2a0bc6c7644
@@ -65,6 +71,7 @@ checksums:
     getInputThoughtsPlaceholders.7: 615c6d538cc820ceb555c3112590e182
     getInputThoughtsPlaceholders.8: 25c12561f1c70b7b47c00628edbec9aa
     guest: 2aec6d6ebe0d9a1db0a5c8cd5a98b8c3
+    keyboard-shortcuts: ef00d7494b69def6841620bd6554d040
     language: 277fd1a41cc237a437cd1d5e4a80463b
     loginToEnjoyMore: 047389679c35d5ff4ab81e5f65e303ec
     pages.chat.aiLabel: b764382ca31f0c1570802ead170ad235
