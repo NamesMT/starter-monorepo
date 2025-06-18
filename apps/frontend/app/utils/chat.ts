@@ -6,11 +6,9 @@ import { createContext } from 'reka-ui'
 export interface AgentsSetting {
   providers: {
     /**
-     * `hosted` is here for types only, it will not be accessible via `agentsSetting` and persist to IDB
+     * Note that `hosted` will not be accessible here and not persisted to IDB
      */
-    hosted?: CommonProviderAgentsSetting
-    openrouter?: CommonProviderAgentsSetting
-    openai?: CommonProviderAgentsSetting
+    [name: string]: CommonProviderAgentsSetting
   }
   /**
    * A special string in format of `provider/model`, `model` could be empty

@@ -38,7 +38,9 @@ chat.message.branch,,Branch off,Crear ramificación,Créer une branche,Созд�
 chat.message.copy,,Copy message,Copiar mensaje,Copier le message,Копировать сообщение,Sao chép tin nhắn,复制消息
 chat.multiStreamConfirmDialog.description,,"Sending follow-up messages about in-streaming messages can cause the model to be confused, continue?","Enviar mensajes de seguimiento sobre mensajes en transmisión puede confundir al modelo, ¿continuar?","L'envoi de messages de suivi concernant des messages en cours de diffusion peut perturber le modèle, continuer ?",Отправка последующих сообщений о сообщениях в потоке может вызвать путаницу у модели. Продолжить?,"Việc gửi tin nhắn tiếp theo về các tin nhắn đang trong quá trình phát có thể khiến mô hình bị nhầm lẫn, bạn có muốn tiếp tục không?",发送关于正在流式传输消息的后续消息可能会导致模型混淆，是否继续？
 chat.multiStreamConfirmDialog.title,,There are messages still streaming,Hay mensajes que aún se están generando,Des messages sont encore en cours de génération,Сообщения все еще передаются,Vẫn còn tin nhắn đang được tạo,仍有消息正在生成
+chat.provider.groq,,Groq,Groq,Groq,Groq,Groq,Groq
 chat.provider.google,,Google,Google,Google,Google,Google,Google
+chat.provider.anthropic,,Anthropic,Anthropic,Anthropic,Anthropic,Anthropic,Anthropic
 chat.provider.hosted,,Hosted,Alojado (H),Hébergé,Управляемый (H),Được cung cấp (H),托管 (H)
 chat.provider.openai,,OpenAI,OpenAI,OpenAI,OpenAI,OpenAI,OpenAI
 chat.provider.openrouter,,OpenRouter,OpenRouter,OpenRouter,OpenRouter,OpenRouter,OpenRouter

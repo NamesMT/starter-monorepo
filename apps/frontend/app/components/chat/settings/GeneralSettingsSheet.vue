@@ -20,7 +20,7 @@ const computedNextLocale = computed(() => {
 })
 
 // Providers that are supported through `Common` interface
-const supportedProvidersCommon = ['openrouter', 'openai'] as const
+const supportedProvidersCommon = ['openrouter', 'openai', 'google', 'anthropic', 'groq'] as const
 
 // Bootstraping object data for the supported providers
 for (const provider of supportedProvidersCommon) {
