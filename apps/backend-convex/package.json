@@ -18,14 +18,14 @@
   },
   "dependencies": {
     "@ai-sdk/openai": "^1.3.22",
-    "@convex-dev/rate-limiter": "^0.2.8",
+    "@convex-dev/rate-limiter": "^0.2.10",
     "@convex-dev/sharded-counter": "^0.1.8",
     "@hono/zod-validator": "^0.7.0",
     "@openrouter/ai-sdk-provider": "^0.7.2",
     "ai": "^4.3.16",
     "convex-helpers": "^0.1.94",
     "destr": "^2.0.5",
-    "hono": "^4.7.11",
+    "hono": "^4.8.0",
     "zod": "^3.25.67"
   },
   "devDependencies": {
@@ -35,6 +35,6 @@
     "@namesmt/utils": "^0.5.14",
     "convex": "^1.24.8",
     "kontroll": "^1.1.1",
-    "vitest": "^3.2.3"
+    "vitest": "^3.2.4"
   }
 }

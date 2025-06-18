@@ -31,7 +31,7 @@
     "@namesmt/utils": "^0.5.14",
     "@types/aws-lambda": "^8.10.150",
     "@types/node": "^20.19.1",
-    "@unocss/eslint-plugin": "^66.2.1",
+    "@unocss/eslint-plugin": "^66.2.3",
     "eslint": "^9.29.0",
     "frontend": "workspace:*",
     "lint-staged": "^16.1.2",
