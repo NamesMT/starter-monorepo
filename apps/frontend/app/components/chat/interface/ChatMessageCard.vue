@@ -55,9 +55,9 @@ const chatContext = useChatContext()
 
     <div
       v-if="message.role === 'user'"
-      class="absolute right-2 top-100% flex gap-1 opacity-0 transition-opacity group-hover/message:opacity-100"
+      class="absolute top-100% flex gap-1 opacity-0 transition-opacity group-hover/message:opacity-100"
     >
-      <div v-if="message.context?.from" class="text-xs">
+      <div v-if="message.context?.from" class="mr-2 text-xs">
         {{ message.context.from }}
       </div>
     </div>
