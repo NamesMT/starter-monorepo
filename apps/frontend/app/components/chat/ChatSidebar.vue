@@ -19,18 +19,12 @@ import {
   useSidebar,
 } from '@/lib/shadcn/components/ui/sidebar'
 import { Button } from '~/lib/shadcn/components/ui/button'
-import { useToast } from '~/lib/shadcn/components/ui/toast'
 
 const { $auth, $init } = useNuxtApp()
 const colorMode = useColorMode()
 const convex = useConvexClient()
 const chatContext = useChatContext()
 const sidebarContext = useSidebar()
-const { toast } = useToast()
-const { t } = useI18n()
-const { copy } = useClipboard({ legacy: true })
-
-const threadIdRef = useThreadIdRef()
 
 const threads = chatContext.threads
 const pinnedThreadIds = chatContext.pinnedThreadIds
@@ -107,25 +101,6 @@ function unpinThread(thread: Doc<'threads'>) {
   nextTick(() => { document.getElementById(`li_thread_${thread._id}`)?.scrollIntoView({ behavior: 'smooth' }) })
 }
 
-async function _deleteThread(thread: Doc<'threads'>) {
-  if (threadIdRef.value === thread._id)
-    threadIdRef.value = ''
-
-  threads.value.splice(threads.value.indexOf(thread), 1)
-  await deleteThread(convex, { threadId: thread._id, lockerKey: $auth.loggedIn ? undefined : getLockerKey(thread._id) })
-}
-
-async function _shareThread(thread: Doc<'threads'>) {
-  if (!thread.lockerKey && !getLockerKey(thread._id)) {
-    const newLockerKey = getRandomLockerKey()
-    await threadSetLockerKey(convex, { threadId: thread._id, newLockerKey })
-    setLockerKey(thread._id, newLockerKey)
-  }
-
-  await copy(`${window.location.origin}/chat/${thread._id}?lockerKey=${getLockerKey(thread._id)}`)
-  toast({ description: t('chat.toast.threadShareLinkCopied') })
-}
-
 async function _freezeThread(thread: Doc<'threads'>) {
   const prevVal = thread.frozen
   thread.frozen = true
@@ -193,7 +168,7 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
         <!-- Define some locally reusable items -->
         <div class="hidden">
           <DefineDeleteBtn v-slot="{ thread }">
-            <DeleteThreadAlertDialog :thread :callback="() => { _deleteThread(thread) }">
+            <DeleteThreadAlertDialog :thread>
               <Button tabindex="-1" variant="ghost" size="icon" class="size-7 transition-none">
                 <div class="i-hugeicons:cancel-01" />
               </Button>
@@ -256,7 +231,7 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
                     {{ pinned ? $t('chat.thread.unpin') : $t('chat.thread.pin') }}
                   </ContextMenuItem>
                   <ContextMenuItem @select.prevent>
-                    <DeleteThreadAlertDialog :thread :callback="() => _deleteThread(thread)" :tip-only="true">
+                    <DeleteThreadAlertDialog :thread>
                       <p>{{ $t('chat.thread.delete') }}</p>
                     </DeleteThreadAlertDialog>
                   </ContextMenuItem>
@@ -268,7 +243,7 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
                     {{ thread.frozen ? $t('chat.thread.unfreeze') : $t('chat.thread.freeze') }}
                   </ContextMenuItem>
                   <ContextMenuItem @select.prevent>
-                    <ShareThreadAlertDialog :thread :callback="() => _shareThread(thread)" :tip-only="true">
+                    <ShareThreadAlertDialog :thread :tip-only="true">
                       <p>{{ $t('chat.thread.share') }}</p>
                     </ShareThreadAlertDialog>
                   </ContextMenuItem>

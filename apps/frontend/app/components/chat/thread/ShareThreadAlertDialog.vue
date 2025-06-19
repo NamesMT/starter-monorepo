@@ -16,26 +16,52 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/lib/shadcn/components/ui/tooltip'
+import Button from '~/lib/shadcn/components/ui/button/Button.vue'
+import { useToast } from '~/lib/shadcn/components/ui/toast'
 
 const {
   thread,
-  callback,
   tipOnly,
 } = defineProps<{
   thread: Doc<'threads'>
-  callback: () => void
   tipOnly?: boolean
 }>()
 
 const { $auth } = useNuxtApp()
+const convex = useConvexClient()
+const { toast } = useToast()
+const { t } = useI18n()
+const { copy } = useClipboard({ legacy: true })
+
 const open = ref(false)
+const linkRef = ref('')
+
+async function _shareThread() {
+  if (!thread.lockerKey && !getLockerKey(thread._id)) {
+    const newLockerKey = getRandomLockerKey()
+    await threadSetLockerKey(convex, { threadId: thread._id, newLockerKey })
+    setLockerKey(thread._id, newLockerKey)
+  }
+
+  linkRef.value = `${window.location.origin}/chat/${thread._id}?lockerKey=${getLockerKey(thread._id)}`
+}
+
+async function _shareCopyToast() {
+  await _shareThread()
+  await copy(`${window.location.origin}/chat/${thread._id}?lockerKey=${getLockerKey(thread._id)}`)
+  toast({ description: t('chat.toast.threadShareLinkCopied') })
+}
 </script>
 
 <template>
   <AlertDialog v-model:open="open">
     <Tooltip>
       <AlertDialogTrigger v-show="!thread.userId || (thread.userId === $auth?.user?.sub)" as-child>
-        <TooltipTrigger as-child @pointerdown.stop.prevent @click.shift.stop.prevent="open = false; callback()">
+        <TooltipTrigger
+          as-child
+          @pointerdown.stop.prevent
+          @click.shift.stop.prevent="async () => { open = false; await _shareCopyToast() }"
+        >
           <slot />
         </TooltipTrigger>
         <TooltipContent side="bottom" :side-offset="6">
@@ -58,10 +84,19 @@ const open = ref(false)
           }}
         </AlertDialogDescription>
       </AlertDialogHeader>
+      <div v-show="linkRef" class="relative">
+        <Input v-model="linkRef" disabled />
+        <CodeCopy :code="linkRef" class="absolute right-0 top-0 size-10! rounded-md! hover:text-accent-foreground hover:bg-accent!" />
+      </div>
       <AlertDialogFooter>
-        <AlertDialogCancel>{{ $t('cancel') }}</AlertDialogCancel>
-        <AlertDialogAction @click="callback()">
-          {{ $t('confirm') }}
+        <template v-if="!linkRef">
+          <AlertDialogCancel>{{ $t('cancel') }}</AlertDialogCancel>
+          <Button @click.exact="_shareThread()" @click.shift="_shareCopyToast(); open = false">
+            {{ $t('confirm') }}
+          </Button>
+        </template>
+        <AlertDialogAction v-else>
+          {{ $t('close') }}
         </AlertDialogAction>
       </AlertDialogFooter>
     </AlertDialogContent>

@@ -4,6 +4,7 @@ checksums:
     hello: f01e599cced8b7d7105329947b5096de
   fa34a32ee742667d36ef7288982efb9c:
     cancel: 2e2a849c2223911717de8caa2c71bade
+    close: 2c2e22f8424a1031de89063bd0022e16
     chat.alert.deleteThread.description: b0cca6d07bbbd907b4d25dc2a1dbe2e3
     chat.alert.deleteThread.title: 3dea4a78f8c5c2073d8eab4aad3f2015
     chat.alert.shareThread.description: 38470c662f7c91952c7190a873d200ac
@@ -18,7 +19,9 @@ checksums:
     chat.message.copy: 4de06ccf7d0ea910de03abfa965a61af
     chat.multiStreamConfirmDialog.description: 8eabadec77370a396bfd91ec2baddf48
     chat.multiStreamConfirmDialog.title: 8cb2a1e566120ab9a2519672e4086692
+    chat.provider.groq: 4d333e72cbcb95703014a55d715eb935
     chat.provider.google: 6cc462fb53d90d404f48d5a6695c1de1
+    chat.provider.anthropic: cef2eed0c62f6a7dc0fe0df652bfb162
     chat.provider.hosted: 582f9507edebe074a4e28c50934142c1
     chat.provider.openai: 386a12cfe55562a8e181c9bfcac6b156
     chat.provider.openrouter: 6b69e3f00f088bceefec2df193999b61

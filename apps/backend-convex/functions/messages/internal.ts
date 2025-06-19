@@ -1,4 +1,4 @@
-import { objectPick } from '@namesmt/utils'
+import { clearUndefined, objectPick } from '@namesmt/utils'
 import { ConvexError, v } from 'convex/values'
 import { internalMutation, internalQuery } from '../../convex/_generated/server'
 import { singleShardCounter } from '../../utils/counters'
@@ -40,10 +40,10 @@ export const updateStreamingMessage = internalMutation({
     if (!message)
       throw new ConvexError('Message not found')
 
-    await ctx.db.patch(args.messageId, {
+    await ctx.db.patch(args.messageId, clearUndefined({
       content: args.content,
       isStreaming: args.isStreaming,
-    })
+    }))
   },
 })
 

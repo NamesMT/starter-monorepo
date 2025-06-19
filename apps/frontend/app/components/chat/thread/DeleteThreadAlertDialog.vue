@@ -19,22 +19,31 @@ import {
 
 const {
   thread,
-  callback,
   tipOnly,
 } = defineProps<{
   thread: Doc<'threads'>
-  callback: () => void
   tipOnly?: boolean
 }>()
 
 const { $auth } = useNuxtApp()
+const convex = useConvexClient()
+const threadIdRef = useThreadIdRef()
+const { threads } = useChatContext()
+
+async function _deleteThread() {
+  if (threadIdRef.value === thread._id)
+    threadIdRef.value = ''
+
+  threads.value.splice(threads.value.indexOf(thread), 1)
+  await deleteThread(convex, { threadId: thread._id, lockerKey: $auth.loggedIn ? undefined : getLockerKey(thread._id) })
+}
 </script>
 
 <template>
   <AlertDialog>
     <Tooltip>
       <AlertDialogTrigger v-show="!thread.userId || (thread.userId === $auth?.user?.sub)" as-child>
-        <TooltipTrigger as-child @pointerdown.stop.prevent @click.shift.stop.prevent="callback()">
+        <TooltipTrigger as-child @pointerdown.stop.prevent @click.shift.stop.prevent="_deleteThread()">
           <slot />
         </TooltipTrigger>
         <TooltipContent side="bottom" :side-offset="6">
@@ -55,7 +64,7 @@ const { $auth } = useNuxtApp()
       </AlertDialogHeader>
       <AlertDialogFooter>
         <AlertDialogCancel>{{ $t('cancel') }}</AlertDialogCancel>
-        <AlertDialogAction @click="callback()">
+        <AlertDialogAction @click="_deleteThread()">
           {{ $t('confirm') }}
         </AlertDialogAction>
       </AlertDialogFooter>

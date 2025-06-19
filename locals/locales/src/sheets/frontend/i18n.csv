@@ -1,5 +1,6 @@
 KEY,Description,en,es,fr,ru,vi,zh-CN
 cancel,,Cancel,Cancelar,Annuler,Отмена,Huỷ Bỏ,取消
+close,,Close,Cerrar,Fermer,Закрыть,Đóng,关闭
 chat.alert.deleteThread.description,,"Are you sure you want to delete ""{name}""?
 This action cannot be undone.","¿Estás seguro de que quieres eliminar ""{name}""?
 Esta acción no se puede deshacer.","Êtes-vous sûr de vouloir supprimer ""{name}"" ?

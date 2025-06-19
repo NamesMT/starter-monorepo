@@ -90,6 +90,7 @@ A super efficient and powerful, yet friendly LLM Chat system, featuring:
     * Any AI provider that is compatible with `@ai-sdk` interface can be added in a few words of code, I just don't want to bloat the UI by adding all of them.
 
 `*1`: currently the "stream" received when resuming or for other real-time users in the same thread is implemented via a custom polling mechanism, and not SSE. it is intentionally chosed to be this way for more minimal infrastructure setup and wider hosting support, so smaller user groups can host their own version easily, it is still very performant and efficient.
+  * There is boilerplate code for SSE resume support, you can simply add a pub-sub to the backend and switch to using SSE resume in `ChatInterface`.
 
 ### Apps and Libraries
 

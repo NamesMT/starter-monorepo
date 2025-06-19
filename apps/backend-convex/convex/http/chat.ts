@@ -145,7 +145,7 @@ chatApp
         .filter(msg => msg._id !== streamingMessageId)
         .map(buildAiSdkMessage)
 
-      let aiResponse = existingMessage ? existingMessage.content : ''
+      let aiResponse = ''
 
       let pendingSave = false
       function doSave() {
@@ -156,7 +156,6 @@ chatApp
             await c.env.runMutation(internal.messages.updateStreamingMessage, {
               messageId: streamingMessageId,
               content: aiResponse,
-              isStreaming: true,
               lockerKey,
             }).finally(() => {
               pendingSave = false
@@ -180,20 +179,12 @@ chatApp
       const stream = new ReadableStream({
         async start(controller) {
           try {
-            // Send session ID first
+            // Send message's metadata first
             controller.enqueue(encoder.encode(`o: ${JSON.stringify({
               messageId: streamingMessageId,
               sessionId: streamId,
               resuming: !!existingMessage,
             })}\n`))
-
-            // If resuming, send existing content first
-            if (existingMessage && existingMessage.content) {
-              controller.enqueue(encoder.encode(`o: ${JSON.stringify({
-                content: existingMessage.content,
-                isResume: true,
-              })}\n`))
-            }
 
             const aiStream = streamText({
               model: getAgentModel({ provider, model, apiKey }),
