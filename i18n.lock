@@ -27,6 +27,7 @@ checksums:
     chat.provider.openrouter: 6b69e3f00f088bceefec2df193999b61
     chat.settings.general.shortcuts.newChat: 3d7b701878aca8e2dbb7c6732f7f3bee
     chat.settings.general.shortcuts.search: 49dd6c21604b5e8d4153ff1aff2177e1
+    chat.settings.general.shortcuts.toggleSettings: 5a73e6330a42000e225218d844d96f59
     chat.settings.general.shortcuts.toggleSidebar: 0ef91fcb33b04612eb8a202f673d7881
     chat.settings.general.title: 651afaa0d070ecc9a98b70581e25872f
     chat.settings.providers.title: 885363f661b972c99ee993471ffd3668

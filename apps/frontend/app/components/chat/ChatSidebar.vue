@@ -18,12 +18,14 @@ import {
   SidebarHeader,
   useSidebar,
 } from '@/lib/shadcn/components/ui/sidebar'
+import { useChatGlobalsContext } from '~/components/chat/ChatGlobalsProvider.vue'
 import { Button } from '~/lib/shadcn/components/ui/button'
 
 const { $auth, $init } = useNuxtApp()
 const colorMode = useColorMode()
 const convex = useConvexClient()
 const chatContext = useChatContext()
+const chatGlobalsContext = useChatGlobalsContext()
 const sidebarContext = useSidebar()
 
 const threads = chatContext.threads
@@ -287,12 +289,10 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
                 <div>InsaneUI</div>
                 <div :class="chatContext.insaneUI.value ? ' i-hugeicons:crazy bg-mainGradient' : ' i-hugeicons:confused'" />
               </DropdownMenuItem>
-              <GeneralSettingsSheet>
-                <DropdownMenuItem class="justify-between" @select.prevent>
-                  <div>{{ $t('settings') }}</div>
-                  <div class="i-hugeicons:settings-01" />
-                </DropdownMenuItem>
-              </GeneralSettingsSheet>
+              <DropdownMenuItem class="justify-between" @click="chatGlobalsContext.generalSettingsOpen.value = true">
+                <div>{{ $t('settings') }}</div>
+                <div class="i-hugeicons:settings-01" />
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </SidebarMenuItem>

@@ -4,8 +4,8 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from '@/lib/shadcn/components/ui/sheet'
+import { useChatGlobalsContext } from '~/components/chat/ChatGlobalsProvider.vue'
 import Input from '~/lib/shadcn/components/ui/input/Input.vue'
 import { useSidebar } from '~/lib/shadcn/components/ui/sidebar'
 import Switch from '~/lib/shadcn/components/ui/switch/Switch.vue'
@@ -13,6 +13,7 @@ import Switch from '~/lib/shadcn/components/ui/switch/Switch.vue'
 const { $auth } = useNuxtApp()
 const sidebarContext = useSidebar()
 const { agentsSettings } = useChatContext()
+const { generalSettingsOpen } = useChatGlobalsContext()
 const { locale, locales, setLocale } = useI18n()
 const computedNextLocale = computed(() => {
   const currentLocaleIndex = locales.value.findIndex(lO => lO.code === locale.value)
@@ -41,10 +42,7 @@ const [DefineShortcutLi, ReuseShortcutLi] = createReusableTemplate<{ title: stri
 </script>
 
 <template>
-  <Sheet>
-    <SheetTrigger as-child>
-      <slot />
-    </SheetTrigger>
+  <Sheet v-model:open="generalSettingsOpen">
     <SheetContent :side="sidebarContext.isMobile.value ? 'top' : 'right'" class="flex flex-col">
       <SheetHeader>
         <SheetTitle>{{ $t('chat.settings.general.title') }}</SheetTitle>
@@ -163,6 +161,12 @@ const [DefineShortcutLi, ReuseShortcutLi] = createReusableTemplate<{ title: stri
               v-bind="{
                 title: $t('chat.settings.general.shortcuts.toggleSidebar'),
                 keys: ['Ctrl', 'B'],
+              }"
+            />
+            <ReuseShortcutLi
+              v-bind="{
+                title: $t('chat.settings.general.shortcuts.toggleSettings'),
+                keys: ['Ctrl', 'G'],
               }"
             />
           </ul>

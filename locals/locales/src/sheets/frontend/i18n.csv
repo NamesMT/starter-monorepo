@@ -47,6 +47,7 @@ chat.provider.openai,,OpenAI,OpenAI,OpenAI,OpenAI,OpenAI,OpenAI
 chat.provider.openrouter,,OpenRouter,OpenRouter,OpenRouter,OpenRouter,OpenRouter,OpenRouter
 chat.settings.general.shortcuts.newChat,,New Chat,Nuevo chat,Nouvelle conversation,Новый чат,Cuộc trò chuyện mới,新建聊天
 chat.settings.general.shortcuts.search,,Search,Buscar,Rechercher,Поиск,Tìm kiếm,搜索
+chat.settings.general.shortcuts.toggleSettings,,Toggle Settings,Alternar configuración,Afficher/masquer les paramètres,Переключить настройки,Bật/tắt cài đặt,切换设置
 chat.settings.general.shortcuts.toggleSidebar,,Toggle Sidebar,Alternar barra lateral,Afficher/masquer la barre latérale,Переключить боковую панель,Bật/tắt thanh bên,切换侧边栏
 chat.settings.general.title,,General Settings,Configuración general,Paramètres généraux,Общие настройки,Cài đặt chung,常规设置
 chat.settings.providers.title,,Providers Settings,Configuración de proveedores,Paramètres des fournisseurs,Настройки провайдеров,Cài đặt nhà cung cấp,服务提供商设置
