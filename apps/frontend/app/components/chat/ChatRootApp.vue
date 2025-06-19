@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { AgentsSettings, HostedProvider } from '@local/common/src/chat'
 import type { Doc } from 'backend-convex/convex/_generated/dataModel'
 import { keyBy } from '@namesmt/utils'
 import { useIDBKeyval } from '@vueuse/integrations/useIDBKeyval'
@@ -7,14 +8,14 @@ import { SidebarProvider } from '@/lib/shadcn/components/ui/sidebar'
 // Load all async data
 const { data: threads, isFinished: threadsLoaded } = useIDBKeyval<Doc<'threads'>[]>('chat/threads', [])
 const { data: pinnedThreadIds, isFinished: pinnedThreadIdsLoaded } = useIDBKeyval<string[]>('chat/pinnedThreadIds', [])
-const { data: agentsSetting, isFinished: agentsSettingLoaded } = useIDBKeyval<AgentsSetting>('chat/agentsSetting', {
+const { data: agentsSettings, isFinished: agentsSettingsLoaded } = useIDBKeyval<AgentsSettings>('chat/agentsSettings', {
   providers: {
   },
   selectedAgent: 'hosted/qwen3-32b',
 })
 
 await until(computed(() =>
-  threadsLoaded.value && agentsSettingLoaded.value && pinnedThreadIdsLoaded.value,
+  threadsLoaded.value && agentsSettingsLoaded.value && pinnedThreadIdsLoaded.value,
 )).toBeTruthy({ timeout: 60000, throwOnTimeout: true })
 
 // ## Threads
@@ -47,18 +48,28 @@ const hostedProvider = computed<HostedProvider>(() => ({
     'llama-4-scout': {
       enabled: true,
     },
+    'gemini-2.0-flash-exp': {
+      enabled: true,
+      attachments: ['image/png', 'image/jpeg', 'image/webp', 'application/pdf', 'text/plain'],
+    },
   },
   default: 'qwen3-32b',
 }))
 
 const activeAgent = computed(() => {
-  let [provider, model] = agentsSetting.value.selectedAgent?.split(/\/(.*)/) as
-    [keyof typeof agentsSetting.value.providers | 'hosted', string]
+  let [provider, model]: [string, string] = agentsSettings.value.selectedAgent?.split(/\/(.*)/) as any
 
-  if (!provider || !model || (provider !== 'hosted' && !agentsSetting.value.providers[provider]))
+  if (!provider || !model || (provider !== 'hosted' && !agentsSettings.value.providers[provider]))
     [provider, model] = ['hosted', hostedProvider.value.default!]
 
-  return { provider, model, apiKey: agentsSetting.value.providers[provider]?.apiKey }
+  return {
+    provider,
+    model,
+    modelSettings: provider === 'hosted'
+      ? hostedProvider.value.models[model]
+      : agentsSettings.value.providers[provider]?.models[model],
+    apiKey: agentsSettings.value.providers[provider]?.apiKey,
+  }
 })
 
 provideChatContext({
@@ -68,7 +79,7 @@ provideChatContext({
   activeThread,
 
   hostedProvider,
-  agentsSetting,
+  agentsSettings,
   activeAgent,
 
   insaneUI: useLocalState('chat/insaneUI', () => false),

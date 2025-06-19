@@ -1,46 +1,7 @@
 import type { Message } from '@ai-sdk/vue'
-import type { AgentObject } from '@local/common/src/aisdk'
+import type { AgentObject, AgentsSettings, HostedProvider } from '@local/common/src/chat'
 import type { Doc, Id } from 'backend-convex/convex/_generated/dataModel'
 import { createContext } from 'reka-ui'
-
-export interface AgentsSetting {
-  providers: {
-    /**
-     * Note that `hosted` will not be accessible here and not persisted to IDB
-     */
-    [name: string]: CommonProviderAgentsSetting
-  }
-  /**
-   * A special string in format of `provider/model`, `model` could be empty
-   * so that the default model is always used (in the future where we add multi-acounts settings link)
-   *
-   * Note that `selectedAgent` is not the source of truth whether
-   * which model is used, bad config will fallback to default hosted model.
-   */
-  selectedAgent: string
-}
-
-export interface CommonProviderAgentsSetting {
-  enabled: boolean
-  apiKey?: string
-  models: {
-    [key: string]: {
-      enabled: boolean
-    }
-  }
-  default?: string
-}
-
-export interface HostedProvider {
-  enabled: true
-  apiKey?: string
-  models: {
-    [key: string]: {
-      enabled: boolean
-    }
-  }
-  default: string
-}
 
 export interface ChatContext {
   threads: Ref<Doc<'threads'>[]>
@@ -49,7 +10,7 @@ export interface ChatContext {
   activeThread: ComputedRef<Doc<'threads'> | undefined>
 
   hostedProvider: ComputedRef<HostedProvider>
-  agentsSetting: Ref<AgentsSetting>
+  agentsSettings: Ref<AgentsSettings>
   /**
    * The resolved active agent
    */

@@ -1,4 +1,4 @@
-import type { AgentObject } from '@local/common/src/aisdk'
+import type { AgentObject } from '@local/common/src/chat'
 import type { LanguageModelV1 } from '@openrouter/ai-sdk-provider'
 import { createAnthropic } from '@ai-sdk/anthropic'
 import { createGoogleGenerativeAI } from '@ai-sdk/google'
@@ -17,6 +17,8 @@ export function getAgentModel({ provider, model, apiKey }: AgentObject): Languag
         return openrouter('mistralai/devstral-small:free')
       case 'llama-4-scout':
         return openrouter('meta-llama/llama-4-scout:free')
+      case 'gemini-2.0-flash-exp':
+        return openrouter('google/gemini-2.0-flash-exp:free')
       default:
         throw new Error(`Invalid model for hosted provider`)
     }

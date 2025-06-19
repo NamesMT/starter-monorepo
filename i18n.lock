@@ -12,7 +12,7 @@ checksums:
     chat.alert.shareThread.title: e00e8208d2dd52a00a4cbccdc57199e3
     chat.components.chatSearchDialog.enterToSend.p2: 8200cd3e922c0c7e39704491c3e5773a
     chat.components.chatSearchDialog.noResultsFound: 8e37a23d37d7b4f501a20991a0d311ea
-    chat.components.chatSearchDialog.placeholder: 276dc6685b4414d6dfbb0df54d74b8bd
+    chat.components.chatSearchDialog.placeholder: 2d652853f7644696961d0e41102ab5b6
     chat.interface.selectOrStart: 5ae94ab41d0b599f36924f5db15dd16d
     chat.interface.sendToStart: 6ba07995188dc929a2de0e8f0bb4d1ea
     chat.message.branch: 8ee786a7be37ef90ade2cd00741f8dd0

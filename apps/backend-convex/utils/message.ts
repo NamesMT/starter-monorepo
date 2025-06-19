@@ -1,4 +1,4 @@
-import type { AgentObject } from '@local/common/src/aisdk'
+import type { AgentObject } from '@local/common/src/chat'
 import type { Doc } from '../convex/_generated/dataModel'
 
 export interface BuiltMessage {

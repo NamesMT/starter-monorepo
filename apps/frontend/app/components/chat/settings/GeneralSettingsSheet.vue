@@ -12,7 +12,7 @@ import Switch from '~/lib/shadcn/components/ui/switch/Switch.vue'
 
 const { $auth } = useNuxtApp()
 const sidebarContext = useSidebar()
-const { agentsSetting } = useChatContext()
+const { agentsSettings } = useChatContext()
 const { locale, locales, setLocale } = useI18n()
 const computedNextLocale = computed(() => {
   const currentLocaleIndex = locales.value.findIndex(lO => lO.code === locale.value)
@@ -24,8 +24,8 @@ const supportedProvidersCommon = ['openrouter', 'openai', 'google', 'anthropic',
 
 // Bootstraping object data for the supported providers
 for (const provider of supportedProvidersCommon) {
-  if (!agentsSetting.value.providers[provider]) {
-    agentsSetting.value.providers[provider] = {
+  if (!agentsSettings.value.providers[provider]) {
+    agentsSettings.value.providers[provider] = {
       enabled: false,
       apiKey: '',
       models: {
@@ -98,7 +98,7 @@ const [DefineShortcutLi, ReuseShortcutLi] = createReusableTemplate<{ title: stri
           </SheetHeader>
 
           <div
-            v-for="[provider, setting] of supportedProvidersCommon.map((p) => [p, agentsSetting.providers[p]!] as const)"
+            v-for="[provider, setting] of supportedProvidersCommon.map((p) => [p, agentsSettings.providers[p]!] as const)"
             :key="provider"
             class="flex items-center justify-between gap-2"
           >

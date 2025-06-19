@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { CommonProviderAgentsSettings } from '@local/common/src/chat'
 import {
   Dialog,
   DialogContent,
@@ -22,7 +23,7 @@ const {
   settings,
 } = defineProps<{
   name: string
-  settings: CommonProviderAgentsSetting
+  settings: CommonProviderAgentsSettings
 }>()
 
 const modelsRef = ref(Object.keys(settings.models))
@@ -31,7 +32,7 @@ watch(modelsRef, () => {
   settings.models = modelsRef.value.reduce((obj, m) => {
     obj[m] = { enabled: true }
     return obj
-  }, {} as CommonProviderAgentsSetting['models'])
+  }, {} as CommonProviderAgentsSettings['models'])
 })
 </script>
 

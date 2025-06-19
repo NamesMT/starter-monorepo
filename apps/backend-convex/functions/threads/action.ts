@@ -1,4 +1,4 @@
-import { simpleMessagesToString } from '@local/common/src/aisdk'
+import { simpleMessagesToString } from '@local/common/src/chat'
 import { openrouter } from '@openrouter/ai-sdk-provider'
 import { generateText } from 'ai'
 import { v } from 'convex/values'

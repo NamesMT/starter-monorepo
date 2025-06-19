@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const chatContext = useChatContext()
 const enabledProviders = computed(() =>
-  Object.entries(chatContext.agentsSetting.value.providers).filter(([_, v]) => v.enabled),
+  Object.entries(chatContext.agentsSettings.value.providers).filter(([_, v]) => v.enabled),
 )
 
 const activeAgentDisplay = computed(() => displayActiveAgent(chatContext.activeAgent.value))
@@ -25,7 +25,7 @@ const activeAgentDisplay = computed(() => displayActiveAgent(chatContext.activeA
           <DropdownMenuItem
             v-for="[model] of Object.entries(chatContext.hostedProvider.value.models).filter((([_m, v]) => v.enabled))"
             :key="model"
-            @click="chatContext.agentsSetting.value.selectedAgent = `hosted/${model}`"
+            @click="chatContext.agentsSettings.value.selectedAgent = `hosted/${model}`"
           >
             {{ model }}
           </DropdownMenuItem>
@@ -36,7 +36,7 @@ const activeAgentDisplay = computed(() => displayActiveAgent(chatContext.activeA
             <DropdownMenuItem
               v-for="[model] of Object.entries(providerSettings.models).filter((([_m, v]) => v.enabled))"
               :key="model"
-              @click="chatContext.agentsSetting.value.selectedAgent = `${provider}/${model}`"
+              @click="chatContext.agentsSettings.value.selectedAgent = `${provider}/${model}`"
             >
               {{ model }}
             </DropdownMenuItem>
