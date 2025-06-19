@@ -1,3 +1,4 @@
+import type { UserContent } from 'ai'
 import type { HonoWithConvex } from 'convex-helpers/server/hono'
 import type { Doc, Id } from '../_generated/dataModel'
 import type { ActionCtx } from '../_generated/server'
@@ -24,24 +25,24 @@ chatApp
   .use(cors())
   .post(
     '/stream',
-    zValidator('json', z.object({
+    zValidator('form', z.object({
       threadId: z.string(),
       provider: z.string(),
       model: z.string(),
       apiKey: z.optional(z.string()),
       content: z.optional(z.string()),
-      // Optionally set the stream id when creating a new stream message for identification
+      attachments: z.preprocess(
+        arg => (arg === undefined ? [] : (Array.isArray(arg) ? arg : [arg])),
+        z.array(z.instanceof(File)),
+      ),
       streamId: z.optional(z.string()),
-      context: z.optional(z.object({
-        from: z.optional(z.string()),
-      })),
-      // Will bypass `content` and `streamId`, resumes the target streamId.
+      context: z.optional(z.string().transform(val => JSON.parse(val))),
       resumeStreamId: z.optional(z.string()),
-      finishOnly: z.optional(z.boolean()),
+      finishOnly: z.optional(z.coerce.boolean()),
       lockerKey: z.optional(z.string()),
-    }).refine(data => data.content !== undefined || data.resumeStreamId !== undefined, {
-      message: `Either 'content' or 'resumeStreamId' must be provided.`,
-      path: ['content', 'resumeStreamId'],
+    }).refine(data => data.content !== undefined || data.resumeStreamId !== undefined || data.attachments.length > 0, {
+      message: `Either 'content', 'resumeStreamId' or 'attachments' must be provided.`,
+      path: ['content', 'resumeStreamId', 'attachments'],
     })),
     async (c) => {
       const {
@@ -50,12 +51,13 @@ chatApp
         model,
         apiKey,
         content,
+        attachments,
         context = {},
         resumeStreamId,
         finishOnly,
         lockerKey,
-      } = c.req.valid('json')
-      let { streamId } = c.req.valid('json')
+      } = c.req.valid('form')
+      let { streamId } = c.req.valid('form')
 
       // getUserIdentity on HTTP Action will throw if not authenticated 🤦‍♂️
       const userIdentity = await c.env.auth.getUserIdentity().catch(() => null)
@@ -99,7 +101,7 @@ chatApp
         }
       }
       // On new stream
-      else if (content) {
+      else if (content || attachments.length > 0) {
         if (thread.frozen)
           throw new ConvexError(`Can't send new messages to frozen thread`)
 
@@ -114,7 +116,7 @@ chatApp
         await c.env.runMutation(internal.messages.internalAdd, {
           threadId,
           role: 'user',
-          content,
+          content: content ?? '',
           context: { ...context, uid: userIdentity?.subject ?? 'N/A' },
           provider,
           model,
@@ -143,7 +145,25 @@ chatApp
       // Prepare messages for AI API
       const messagesContext = messages
         .filter(msg => msg._id !== streamingMessageId)
-        .map(buildAiSdkMessage)
+        .map(buildAiSdkMessage) as any[]
+
+      // Add attachments directly to last user message for now, will design DB schema for it later.
+      if (attachments.length > 0) {
+        const lastMessage = messagesContext.at(-1)
+
+        if (lastMessage?.role === 'user') {
+          const newUserMessageContent: UserContent = [{ type: 'text', text: lastMessage.content as string }]
+
+          for (const file of attachments) {
+            const buffer = await file.arrayBuffer()
+            newUserMessageContent.push({
+              type: 'image',
+              image: buffer,
+            })
+          }
+          lastMessage.content = newUserMessageContent
+        }
+      }
 
       let aiResponse = ''
 

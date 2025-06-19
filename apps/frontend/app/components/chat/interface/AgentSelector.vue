@@ -22,24 +22,20 @@ const activeAgentDisplay = computed(() => displayActiveAgent(chatContext.activeA
         <DropdownMenuContent>
           <DropdownMenuLabel>{{ $t('chat.provider.hosted') }}</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem
-            v-for="[model] of Object.entries(chatContext.hostedProvider.value.models).filter((([_m, v]) => v.enabled))"
+          <AgentSelectorModelItem
+            v-for="[model, modelSettings] of Object.entries(chatContext.hostedProvider.value.models).filter((([_m, v]) => v.enabled))"
             :key="model"
-            @click="chatContext.agentsSettings.value.selectedAgent = `hosted/${model}`"
-          >
-            {{ model }}
-          </DropdownMenuItem>
+            v-bind="{ provider: 'hosted', model, modelSettings }"
+          />
           <template v-for="[provider, providerSettings] of enabledProviders" :key="provider">
             <DropdownMenuSeparator />
             <DropdownMenuLabel>{{ $t(`chat.provider.${provider}`) }}</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              v-for="[model] of Object.entries(providerSettings.models).filter((([_m, v]) => v.enabled))"
+            <AgentSelectorModelItem
+              v-for="[model, modelSettings] of Object.entries(providerSettings.models).filter((([_m, v]) => v.enabled))"
               :key="model"
-              @click="chatContext.agentsSettings.value.selectedAgent = `${provider}/${model}`"
-            >
-              {{ model }}
-            </DropdownMenuItem>
+              v-bind="{ provider, model, modelSettings }"
+            />
           </template>
         </DropdownMenuContent>
       </TooltipTrigger>

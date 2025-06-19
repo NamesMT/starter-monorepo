@@ -19,6 +19,5 @@ CUSTOM_JWT_JWKS_URL=https://topnames-dev.eu.kinde.com/.well-known/jwks
 For developing a new feature, and for small features, create functions in `convex/` directly as per common Convex usage.
 
 When it's stable and grows, move it to `functions/` and re-exports it from there.
-  * When it's in the `functions/` directory, changes won't cause a dev deploy immediately, you need to save some files in `convex` to trigger a deploy.
 
 Reusable utils that does not closely tied to any function / table should be placed in `utils/`.

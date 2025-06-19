@@ -42,7 +42,7 @@ const sendMessageRef = useRouteQuery<string | undefined>('sendMessage')
 whenever(
   sendMessageRef,
   (v) => {
-    handleSubmit({ input: v })
+    handleSubmit({ input: v, files: [] })
     sendMessageRef.value = undefined
   },
   { immediate: true },
@@ -147,10 +147,11 @@ watchImmediate(threadIdRef, (threadId) => {
 
 interface HandleSubmitArgs {
   input: string
+  files: File[]
 }
-async function handleSubmit({ input }: HandleSubmitArgs) {
+async function handleSubmit({ input, files }: HandleSubmitArgs) {
   const userInput = input.trim()
-  if (!userInput)
+  if (!userInput && !files.length)
     return
 
   if (isThreadFrozen.value) {
@@ -159,7 +160,7 @@ async function handleSubmit({ input }: HandleSubmitArgs) {
       throw new Error(`Can't branch off empty thread`)
 
     return await _branchThreadFromMessage({ messageId: lastMessage._id, lockerKey: getLockerKey(lastMessage.threadId) })
-      .then(() => { sleep(500).then(() => handleSubmit({ input })) })
+      .then(() => { sleep(500).then(() => handleSubmit({ input, files })) })
   }
 
   const streamId = `stream-${Date.now()}_${randomStr(4)}`
@@ -168,7 +169,7 @@ async function handleSubmit({ input }: HandleSubmitArgs) {
   messages.value.push({
     id: `user-${Date.now()}_${randomStr(4)}`,
     role: 'user',
-    content: userInput,
+    content: userInput, // TODO: display attachments for user message
     context: { from: getChatNickname() },
   } as any as CustomMessage)
   messages.value.push({
@@ -211,7 +212,7 @@ async function handleSubmit({ input }: HandleSubmitArgs) {
   // Wraps in a kontroller to make sure there is only one stream on the same message
   throttle(
     1,
-    () => streamToMessage({ message: targetMessage, content: userInput, streamId }),
+    () => streamToMessage({ message: targetMessage, content: userInput, attachments: files, streamId }),
     { key: `messageStream-${streamId}` },
   )
 }
@@ -270,10 +271,11 @@ async function pollToMessage({ message, resumeStreamId, threadId = threadIdRef.v
 interface StreamToMessageArgs {
   message: CustomMessage
   content?: string
+  attachments?: File[]
   streamId?: string
   resumeStreamId?: string
 }
-async function streamToMessage({ message, content, streamId, resumeStreamId }: StreamToMessageArgs) {
+async function streamToMessage({ message, content, attachments, streamId, resumeStreamId }: StreamToMessageArgs) {
   try {
     streamingMessagesMap[(streamId ?? resumeStreamId)!] = true
 
@@ -282,6 +284,7 @@ async function streamToMessage({ message, content, streamId, resumeStreamId }: S
       threadId: currentThreadId as Id<'threads'>,
       ...chatContext.activeAgent.value,
       content,
+      attachments,
       streamId,
       resumeStreamId,
     })
@@ -449,7 +452,7 @@ function doScrollBottom({ smooth = true, maybe = false, tries = 0, lastScrollTop
     <PrompterArea
       v-bind="{ nearTopBottom, lenisRef, streamingMessagesMap }"
       v-model:chat-input="chatInput"
-      @submit="(input) => handleSubmit({ input })"
+      @submit="(payload) => handleSubmit(payload)"
     />
 
     <TopRightQuickSnacks />

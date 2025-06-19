@@ -9,10 +9,11 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  submit: [input: string]
+  submit: [payload: { input: string, files: File[] }]
 }>()
 
 const chatInput = defineModel<string>('chatInput', { required: true })
+const attachments = ref<File[]>([])
 
 const isDev = import.meta.dev
 const sidebarContext = useSidebar()
@@ -27,7 +28,7 @@ syncRef(chatInput, chatInputTA)
 
 function handleSubmit({ confirmMultiStream = false }) {
   const userInput = chatInputTA.value.trim()
-  if (!userInput)
+  if (!userInput && attachments.value.length === 0)
     return
 
   if (!confirmMultiStream && Object.keys(props.streamingMessagesMap).length > 0) {
@@ -35,7 +36,8 @@ function handleSubmit({ confirmMultiStream = false }) {
     return
   }
 
-  emit('submit', chatInputTA.value)
+  emit('submit', { input: chatInputTA.value, files: attachments.value })
+  attachments.value = []
 }
 </script>
 
@@ -76,16 +78,46 @@ function handleSubmit({ confirmMultiStream = false }) {
           }"
           @keydown.enter.ctrl.exact="handleSubmit({})"
         />
+        <div
+          v-if="attachments.length"
+          class="max-w-full flex flex-nowrap gap-2 truncate p-2"
+        >
+          <div
+            v-for="(file, index) of attachments" :key="index"
+            class="flex items-center gap-2 truncate rounded-md bg-surface-200/50 p-1 px-2 text-xs"
+          >
+            <p class="truncate">
+              {{ file.name }}
+            </p>
+            <button @click="attachments.splice(index, 1)">
+              <div class="i-hugeicons:cancel-01 h-4 w-4" />
+            </button>
+          </div>
+        </div>
         <div class="flex items-center justify-between">
-          <div class="flex items-center">
+          <div class="flex items-center gap-2">
             <AgentSelector />
+
+            <div v-if="chatContext.activeAgent.value.modelSettings?.attachments?.length" class="flex items-center gap-2">
+              <Button
+                variant="ghost" size="icon" class="size-7 rounded-full p-1"
+                @click="() => ($refs.fileInput as HTMLInputElement).click()"
+              >
+                <div class="i-hugeicons:attachment-01 h-5 w-5" />
+              </Button>
+              <input
+                ref="fileInput" type="file" multiple class="hidden"
+                :accept="chatContext.activeAgent.value.modelSettings?.attachments.join(', ')"
+                @change="(e) => attachments = Array.from((e.target as HTMLInputElement).files ?? [])"
+              >
+            </div>
           </div>
           <Button
             variant="default"
             size="icon"
-            class="i-hugeicons:upload-square-01 enabled:bg-mainGradient disabled:bg-surface-500"
+            class="i-hugeicons:upload-square-01 disabled:bg-surface-500 enabled:bg-mainGradient"
             :class="chatContext.insaneUI.value ? 'enabled:animate-spin' : 'motion-safe:enabled:animate-bounce'"
-            :disabled="!chatInputTA"
+            :disabled="!chatInputTA && attachments.length === 0"
             @click="handleSubmit({})"
           />
         </div>

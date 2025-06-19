@@ -47,6 +47,7 @@ export interface PostChatStreamArgs {
   model: string
   apiKey?: string
   content?: string
+  attachments?: File[]
   streamId?: string
   resumeStreamId?: string
   finishOnly?: boolean
@@ -60,17 +61,25 @@ export async function postChatStream(args: PostChatStreamArgs) {
   const { convexApiUrl } = useRuntimeConfig().public
   const { $auth } = useNuxtApp()
 
+  const formData = new FormData()
+  for (const [key, value] of Object.entries(args)) {
+    if (key === 'attachments' && value) {
+      for (const file of value as File[])
+        formData.append('attachments', file)
+    }
+    else if (value !== undefined) {
+      formData.append(key, String(value))
+    }
+  }
+  formData.append('context', JSON.stringify({ from: getChatNickname() }))
+  formData.append('lockerKey', getLockerKey(args.threadId) ?? '')
+
   const response = await fetch(`${convexApiUrl}/api/chat/stream`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${$auth.token}`,
+      Authorization: `Bearer ${$auth.token}`,
     },
-    body: JSON.stringify({
-      ...args,
-      context: { from: getChatNickname() },
-      lockerKey: getLockerKey(args.threadId),
-    }),
+    body: formData,
     signal: abortController.signal,
   })
 
