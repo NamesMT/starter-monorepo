@@ -28,7 +28,7 @@ watch(() => route.name, () => { windowsScroll.measure() })
       </Head>
 
       <Body>
-        <div class="min-h-screen w-full flex flex-col">
+        <div class="w-full flex flex-col min-h-dvh">
           <!-- Header -->
           <DefaultHeader
             v-motion-slide-visible-once-left

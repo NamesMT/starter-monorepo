@@ -418,7 +418,7 @@ function doScrollBottom({ smooth = true, maybe = false, tries = 0, lastScrollTop
 
 <template>
   <div class="relative overflow-hidden">
-    <VueLenis ref="lenisRef" class="h-screen overflow-y-scroll px-4">
+    <VueLenis ref="lenisRef" class="overflow-y-scroll px-4 h-dvh">
       <ChatInterfaceBackground v-bind="{ messages, isFetching }" />
       <div class="mx-auto h-full max-w-full lg:max-w-4xl">
         <div v-if="messages.length" class="relative z-2 space-y-4">

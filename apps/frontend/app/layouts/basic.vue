@@ -24,7 +24,7 @@ const title = computed(() => route.meta.title && t(route.meta.title))
       </Head>
 
       <Body>
-        <div class="min-h-screen w-full flex flex-col">
+        <div class="w-full flex flex-col min-h-dvh">
           <!-- NuxtPage -->
           <div id="app-body" class="flex grow">
             <slot />

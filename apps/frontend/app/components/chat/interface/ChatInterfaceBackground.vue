@@ -20,7 +20,7 @@ const chatContext = useChatContext()
 
     <div
       v-show="!messages.length && !isFetching"
-      class="absolute left-0 z-0 h-screen w-full place-content-center overflow-hidden transition-height"
+      class="absolute left-0 z-0 w-full place-content-center overflow-hidden transition-height h-dvh"
     >
       <IUIMaybeGlassCard
         v-if="!messages.length"
