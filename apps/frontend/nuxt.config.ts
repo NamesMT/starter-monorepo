@@ -129,7 +129,6 @@ export default defineNuxtConfig({
     // 'nuxt-booster',
     'shadcn-nuxt',
     'convex-nuxt',
-    'lenis/nuxt',
     '@nuxtjs/mdc',
   ],
 
