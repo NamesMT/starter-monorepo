@@ -68,6 +68,8 @@ So if you use SSR, you could use the official [Nuxt Kinde](https://nuxt.com/modu
 #### AI / LLM Chat
 
 > Work started in 2025-06-12 for [**T3 Chat Cloneathon**](https://cloneathon.t3.chat/) competition, with no prior AI SDK and chat streams experience, but I think I did an amazing job 🫡!
+> 
+> The focus of the project is for broader adoption, prioritizing easy-to-access UI/UX, bleeding-edge features like workflows are a low prio, though, advanced capabilities per-model capabilities and fine-tuning are still expected to be elegantly supported via the model's interface. #48
 
 A super efficient and powerful, yet friendly LLM Chat system, featuring:
   * Business-ready, support `hosted` provider that you can control the billing of.
@@ -81,7 +83,8 @@ A super efficient and powerful, yet friendly LLM Chat system, featuring:
   * Resumable and multi-streams ¹.
     * Ask follow-up questions while the previous isn't done, the model is able to pick up what's available currently 🍳🍳.
     * Multi-users can send messages at the same time 😲😲.
-  * Easy and private: anonymous, guest usage supported.
+  * Easy and private: guest, anonymous usage supported.
+    * Your dad can just join and chat with just a link share 😉, no setup needed.
   * Mobile-friendly.
   * Fully internalized, with AI-powered translations and smooth switching between languages.
   * Blazingly fast ⚡ with local caching and optimistic updates.
