@@ -92,10 +92,10 @@ export const resolveStuckStreamMessages = internalMutation({
   handler: async (ctx) => {
     const messages = await ctx.db
       .query('messages')
-      // Get streams that are older than 15 minutes
-      .withIndex('by_timestamp', q =>
-        q.lte('timestamp', Date.now() - 15 * 60 * 1000))
-      .filter(q => q.eq(q.field('isStreaming'), true))
+      // Get messages that are currently streaming
+      .withIndex('by_stream_id', q => q.gte('streamId', ''))
+      // Filter to those that are older than 10 mins
+      .filter(q => q.lte(q.field('timestamp'), Date.now() - 10 * 60 * 1000))
       .collect()
 
     if (!messages.length)
@@ -104,6 +104,7 @@ export const resolveStuckStreamMessages = internalMutation({
     for (const message of messages) {
       await ctx.db.patch(message._id, {
         isStreaming: false,
+        streamId: undefined,
         content: message.content += `\nError: Streaming timed out`,
       })
     }
