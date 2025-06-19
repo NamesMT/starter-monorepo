@@ -35,6 +35,7 @@ checksums:
     chat.settings.providerDialog.form.apiKey: ce825fec5b3e1f8e27c45b1a63619985
     chat.settings.providerDialog.form.models: d7687c91fa3ba81da866dee3becc5b5b
     chat.sidebar.newChat: 3d7b701878aca8e2dbb7c6732f7f3bee
+    chat.sidebar.search.placeholder: 7dead413e5e7e09286f0aaa95a755d6a
     chat.sidebar.threads.empty: eaa3199ed3ba5dd2bb3988ea999649e3
     chat.sidebar.threads.loading: c0591fcc6aa3eb6092ab4f4ce577804c
     chat.thread.branchedFrom: 9235ad091f1d3b7f65a33b2e906674ad

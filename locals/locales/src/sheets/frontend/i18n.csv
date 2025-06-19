@@ -55,6 +55,7 @@ chat.settings.providerDialog.description,,"Changes are automatically saved, just
 chat.settings.providerDialog.form.apiKey,,API Key,Clave API,Clé API,Ключ API,Khóa API,API 密钥
 chat.settings.providerDialog.form.models,,Models,Modelos,Modèles,Модели,Các mô hình,模型
 chat.sidebar.newChat,,New Chat,Nuevo chat,Nouvelle conversation,Новый чат,Cuộc trò chuyện mới,新建聊天
+chat.sidebar.search.placeholder,,Search chats...,Buscar chats...,Rechercher des conversations...,Поиск чатов...,Tìm kiếm cuộc trò chuyện...,搜索聊天...
 chat.sidebar.threads.empty,,No chats yet.,No hay chats todavía.,Pas encore de conversations.,Чатов пока нет.,Chưa có cuộc trò chuyện nào.,尚无聊天记录。
 chat.sidebar.threads.loading,,Loading threads...,Cargando conversaciones...,Chargement des conversations...,Загрузка бесед...,Đang tải các cuộc trò chuyện...,正在加载对话...
 chat.thread.branchedFrom,,Branched from {title},Ramificado desde {title},Dérivé de {title},Ответвлено от {title},Được tạo nhánh từ {title},分支自 {title}
