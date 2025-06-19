@@ -208,7 +208,7 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
                       class="right-0 top-0 h-full flex translate-x-[calc(100%+1rem)] items-center gap-1 bg-[hsl(var(--BGCOLOR))] px-2 pr-1 transition-transform will-change-transform absolute! group-hover/thread:translate-x-0"
                       @click.stop.prevent
                     >
-                      <div class="pointer-events-none absolute bottom-0 right-[100%] top-0 h-12 w-8 from-[hsl(var(--BGCOLOR))] to-transparent bg-gradient-to-l opacity-0 group-hover/thread:opacity-100" />
+                      <div class="pointer-events-none absolute bottom-0 right-[100%] top-0 h-12 w-8 from-[hsl(var(--BGCOLOR))] to-transparent bg-gradient-to-l opacity-0 transition-opacity group-hover/thread:opacity-100" />
                       <Tooltip>
                         <TooltipTrigger as-child>
                           <Button
