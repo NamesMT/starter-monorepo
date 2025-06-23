@@ -36,8 +36,6 @@
 
 Check the [Nuxt documentation](https://nuxt.com/) to learn more.
 
-## Setup
-
 ## Development Server
 
 Please refer to monorepo root [README](../../README.md)
@@ -45,3 +43,7 @@ Please refer to monorepo root [README](../../README.md)
 ## Production
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+## Notes
+
+The `deploy` script does not depends on `build` (look [HERE](./turbo.json)), so, the `deploy` script should includes the build command for CI.
