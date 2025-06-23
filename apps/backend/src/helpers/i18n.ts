@@ -1,23 +1,36 @@
 import { defaultOptions } from '@local/locales/src/index'
 import { createI18n } from 'petite-vue-i18n'
 
-export type DeepStringRecord = { [key: string]: string | DeepStringRecord }
-async function importBackendLocale(locale: string): Promise<DeepStringRecord> {
-  const commonLocale = await import(`../../../../locals/locales/dist/${locale}.json`).then(r => r.default)
-  const backendLocale = await import(`../../../../locals/locales/dist/backend/${locale}.json`).then(r => r.default)
-  return { ...commonLocale, ...backendLocale }
+const locales = {
+  'en': {
+    ...(await import('@local/locales/dist/en.json').then(r => r.default)),
+    ...(await import('@local/locales/dist/backend/en.json').then(r => r.default)),
+  },
+  'es': {
+    ...(await import('@local/locales/dist/es.json').then(r => r.default)),
+    ...(await import('@local/locales/dist/backend/es.json').then(r => r.default)),
+  },
+  'fr': {
+    ...(await import('@local/locales/dist/fr.json').then(r => r.default)),
+    ...(await import('@local/locales/dist/backend/fr.json').then(r => r.default)),
+  },
+  'ru': {
+    ...(await import('@local/locales/dist/ru.json').then(r => r.default)),
+    ...(await import('@local/locales/dist/backend/ru.json').then(r => r.default)),
+  },
+  'vi': {
+    ...(await import('@local/locales/dist/vi.json').then(r => r.default)),
+    ...(await import('@local/locales/dist/backend/vi.json').then(r => r.default)),
+  },
+  'zh-CN': {
+    ...(await import('@local/locales/dist/zh-CN.json').then(r => r.default)),
+    ...(await import('@local/locales/dist/backend/zh-CN.json').then(r => r.default)),
+  },
 }
 
 export const i18n = createI18n({
   ...defaultOptions,
-  messages: {
-    'en': await importBackendLocale('en'),
-    'es': await importBackendLocale('es'),
-    'fr': await importBackendLocale('fr'),
-    'ru': await importBackendLocale('ru'),
-    'vi': await importBackendLocale('vi'),
-    'zh-CN': await importBackendLocale('zh-CN'),
-  },
+  messages: locales,
 })
 
 export const i18nComposer = i18n.global
