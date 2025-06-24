@@ -21,11 +21,18 @@ const siteConfig = {
   description: 'Monorepo with 🤖 AI initialize and localize | 🔥Hono + OpenAPI & RPC, Nuxt, Convex, SST Ion, Kinde Auth, Tanstack Query, Shadcn, UnoCSS, Spreadsheet I18n, Lingo.dev',
 }
 
-function genFrontendLocale(code: string, languageISO: string, dir?: LocaleObject<string>['dir']): LocaleObject<string> {
+interface GenFrontendLocaleProps {
+  code: string
+  languageISO: string
+  name?: string
+  dir?: LocaleObject<string>['dir']
+}
+function genFrontendLocale({ code, languageISO, name, dir }: GenFrontendLocaleProps): LocaleObject<string> {
   return {
     code,
     language: languageISO,
     files: [`${code}.json`, `frontend/${code}.json`],
+    name,
     dir,
   }
 }
@@ -154,12 +161,36 @@ export default defineNuxtConfig({
     strategy: 'no_prefix',
     defaultLocale: 'en',
     locales: [
-      genFrontendLocale('en', 'en-US'),
-      genFrontendLocale('es', 'es-ES'),
-      genFrontendLocale('fr', 'fr-FR'),
-      genFrontendLocale('ru', 'ru-RU'),
-      genFrontendLocale('vi', 'vi-VN'),
-      genFrontendLocale('zh-CN', 'zh-CN'),
+      genFrontendLocale({
+        code: 'en',
+        languageISO: 'en-US',
+        name: 'English',
+      }),
+      genFrontendLocale({
+        code: 'es',
+        languageISO: 'es-ES',
+        name: 'Español',
+      }),
+      genFrontendLocale({
+        code: 'fr',
+        languageISO: 'fr-FR',
+        name: 'Français',
+      }),
+      genFrontendLocale({
+        code: 'ru',
+        languageISO: 'ru-RU',
+        name: 'Русский',
+      }),
+      genFrontendLocale({
+        code: 'vi',
+        languageISO: 'vi-VN',
+        name: 'Tiếng Việt',
+      }),
+      genFrontendLocale({
+        code: 'zh-CN',
+        languageISO: 'zh-CN',
+        name: '中文',
+      }),
     ],
     bundle: {
       optimizeTranslationDirective: false,
