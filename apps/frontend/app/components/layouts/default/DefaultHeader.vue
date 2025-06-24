@@ -11,7 +11,7 @@
     </div>
 
     <div
-      class="divide-primary-2 text-body-2 col-span-6 h-full flex flex-row justify-center gap-2 text-surface-700 font-medium 2xl:gap-10 lg:gap-6 md:gap-5 sm:gap-4 xl:gap-7 [&>*]:(px-4 md:px-6 xl:px-8) dark:text-surface-300"
+      class="col-span-6 h-full flex flex-row justify-center gap-2 text-surface-700 font-medium 2xl:gap-10 lg:gap-6 md:gap-5 sm:gap-4 xl:gap-7 [&>*]:(px-4 md:px-6 xl:px-8) dark:text-surface-300"
     >
       <NuxtLink
         to="/" class="group flex items-center"
