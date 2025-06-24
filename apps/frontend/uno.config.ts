@@ -13,8 +13,9 @@ import { presetShadcn } from 'unocss-preset-shadcn'
 import { parseColor } from 'unocss/preset-mini'
 import { codeIconMap } from './app/components/mdc/config'
 
+const colorPalettePresets = ['primary', 'secondary', 'surface']
 const colorsPaletteMap: Record<string, string> = {}
-for (const color of ['primary', 'secondary', 'surface']) {
+for (const color of colorPalettePresets) {
   // length 12 = 0-950
   Array.from({ length: 12 }, (_, i) => i).forEach((num) => {
     const key = `${color}-${colorIndexer(num)}`
@@ -32,6 +33,22 @@ function colorIndexer(num: number) {
   return res
 }
 
+/**
+ * Generates common color variables like `DEFAULT`, `foreground`
+ */
+function commonColorVarsGen(varName: string, additionalVars?: Array<string>) {
+  return {
+    [varName]: {
+      DEFAULT: `hsl(var(--${varName}))`,
+      foreground: `hsl(var(--${varName}-foreground))`,
+      ...(additionalVars && additionalVars.reduce((acc, cur) => {
+        acc[cur] = `hsl(var(--${varName}-${cur}))`
+        return acc
+      }, {} as Record<string, string>)),
+    },
+  }
+}
+
 export default defineConfig({
   theme: {
     ringWidth: {
@@ -41,50 +58,30 @@ export default defineConfig({
       ...colorsPaletteMap,
       'mono': 'hsl(var(--mono))',
       'mono-i': 'hsl(var(--mono-i))',
-      'primary': {
-        DEFAULT: 'hsl(var(--primary))',
-        foreground: 'hsl(var(--primary-foreground))',
-      },
-      'secondary': {
-        DEFAULT: 'hsl(var(--secondary))',
-        foreground: 'hsl(var(--secondary-foreground))',
-      },
-      'destructive': {
-        DEFAULT: 'hsl(var(--destructive))',
-        foreground: 'hsl(var(--destructive-foreground))',
-      },
-      'muted': {
-        DEFAULT: 'hsl(var(--muted))',
-        foreground: 'hsl(var(--muted-foreground))',
-      },
-      'accent': {
-        DEFAULT: 'hsl(var(--accent))',
-        foreground: 'hsl(var(--accent-foreground))',
-      },
-      'popover': {
-        DEFAULT: 'hsl(var(--popover))',
-        foreground: 'hsl(var(--popover-foreground))',
-      },
-      'card': {
-        DEFAULT: 'hsl(var(--card))',
-        foreground: 'hsl(var(--card-foreground))',
-      },
       'background': 'hsl(var(--background))',
       'foreground': 'hsl(var(--foreground))',
       'border': 'hsl(var(--border))',
       'input': 'hsl(var(--input))',
       'ring': 'hsl(var(--ring))',
+      ...colorPalettePresets.reduce((acc, cur) => {
+        Object.assign(acc, commonColorVarsGen(cur))
+        return acc
+      }, {} as Record<string, Record<string, string>>),
+      ...commonColorVarsGen('destructive'),
+      ...commonColorVarsGen('muted'),
+      ...commonColorVarsGen('accent'),
+      ...commonColorVarsGen('popover'),
+      ...commonColorVarsGen('card'),
 
-      'sidebar': {
-        'DEFAULT': 'hsl(var(--sidebar-background))',
-        'foreground': 'hsl(var(--sidebar-foreground))',
-        'primary': 'hsl(var(--sidebar-primary))',
-        'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-        'accent': 'hsl(var(--sidebar-accent))',
-        'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-        'border': 'hsl(var(--sidebar-border))',
-        'ring': 'hsl(var(--sidebar-ring))',
-      },
+      ...commonColorVarsGen('sidebar', [
+        'primary',
+        'primary-foreground',
+        'accent',
+        'accent-foreground',
+        'border',
+        'ring',
+      ]),
+      // Ref: https://github.com/unocss/unocss/issues/4770
       'sidebar-primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
       'sidebar-accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
     },
