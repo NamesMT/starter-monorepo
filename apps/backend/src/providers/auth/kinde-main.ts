@@ -1,4 +1,3 @@
-import { logger } from '#src/helpers/logger.js'
 import { createKindeServerClient, GrantType } from '@kinde-oss/kinde-typescript-sdk'
 import { env } from 'std-env'
 import { cacheProvider, getCachedProvider, isNonSharingPlatforms } from '..'
@@ -20,7 +19,7 @@ export async function initKindeClient() {
   const cachedClient = getCachedKindeClient()
 
   if (!isNonSharingPlatforms && cachedClient)
-    logger.warn('Already initialized')
+    console.warn('Already initialized')
 
   const client = createKindeServerClient(GrantType.AUTHORIZATION_CODE, {
     authDomain: env.KINDE_DOMAIN!,

@@ -18,7 +18,7 @@ Things like 3rd party APIs, DBs, Storages connectors, etc, should be placed in `
 
 Things that interact with `#src/providers` should be placed in `#src/services` folder. (like an `user` service)
 
-Other globally reuseable code should be placed in `#src/helpers` folder. (like `error`, `logger` utils)
+Other globally reuseable code should be placed in `#src/helpers` folder. (like `error`, `i18n` utils)
 
 Locally reusable code should be placed in the same folder as the file that uses it, its name should be its usable scope, suffixing the file name with `.helper`, e.g: `/api/dummy/hello.helper.ts`, `/api/$.helper.ts`.
 
@@ -38,3 +38,9 @@ Again, the recommended structure is to mirror the api url path, but, if for some
 #### Hono `app` export naming conventions:
 * Root and main app entries (app.ts, $.ts) should be named as: `<Name>App`, and it should only `.route` other instances or `.use` middlewares, do not define routes on the `App` instance.
 * For other app entries, a.k.a routes defines, it should be named as: `<Name>RouteApp`, i.e: `/api/dummy/hello.ts` should be named as `dummyHelloRouteApp`/`helloRouteApp`.
+
+## Notes & Guides
+
+### Deploying to AWS Lambda for medium / big functions
+
+When deploying to AWS Lambda, the best pratice is that you'll use something like `https://github.com/0x80/isolate-package` to isolate and create a zip file for all prod dependencies packages, zip it, and deploy it as a "layer" for the Lambda function.

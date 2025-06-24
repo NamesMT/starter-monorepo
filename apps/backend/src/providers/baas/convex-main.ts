@@ -1,4 +1,3 @@
-import { logger } from '#src/helpers/logger.js'
 import { ConvexHttpClient } from 'convex/browser'
 import { env } from 'std-env'
 import { cacheProvider, getCachedProvider, isNonSharingPlatforms } from '..'
@@ -20,7 +19,7 @@ export async function initConvexClient() {
   const cachedClient = getCachedConvexClient()
 
   if (!isNonSharingPlatforms && cachedClient)
-    logger.warn('Already initialized')
+    console.warn('Already initialized')
 
   if (!env.CONVEX_URL)
     throw new Error('CONVEX_URL is not set')

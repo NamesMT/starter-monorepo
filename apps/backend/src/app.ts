@@ -5,7 +5,6 @@ import { cors } from 'hono/cors'
 import { logger as loggerMiddleware } from 'hono/logger'
 import { env, isWorkerd } from 'std-env'
 import { apiApp } from './api/$'
-import { logger } from './helpers/logger'
 import { setupOpenAPI } from './openAPI'
 import { providersInit } from './providers'
 
@@ -28,7 +27,7 @@ export const app = appFactory.createApp()
   .onError(errorHandler)
 
   // Request logging middleware
-  .use(loggerMiddleware(logger.log))
+  .use(loggerMiddleware())
 
   // Register trigger routes, after the logging middleware but before the request-based middlewares
   .route('/', triggerFactory.honoApp)

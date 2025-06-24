@@ -1,12 +1,22 @@
+/* eslint-disable no-console */
 import type { HonoEnv } from '#src/types.js'
 import type { ErrorHandler } from 'hono'
 import type { ContentfulStatusCode } from 'hono/utils/http-status'
-import { logger } from '#src/helpers/logger.js'
 import { DetailedError } from '@namesmt/utils'
 import { HTTPException } from 'hono/http-exception'
 
 export const errorHandler: ErrorHandler<HonoEnv> = (err, c) => {
-  logger.error(err)
+  const _e = err as any
+  // If Error is not server exception, log to debug only
+  if (
+    (_e.statusCode && _e.statusCode < 500)
+    || (_e.status && _e.status < 500)
+  ) {
+    console.debug(err)
+  }
+  else {
+    console.error(err)
+  }
 
   // Handling of default Hono's HTTPException
   if (err instanceof HTTPException) {
