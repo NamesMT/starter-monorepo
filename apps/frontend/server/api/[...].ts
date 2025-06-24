@@ -1,16 +1,13 @@
 import { createProxyEventHandler } from 'h3-proxy'
 
-let currentUrl = useRuntimeConfig().public.backendUrl
-let currentHandler = createProxyEventHandler({
-  target: currentUrl,
-  changeOrigin: true,
-  configureProxyRequest: () => ({ streamRequest: true, sendStream: true, fetchOptions: { redirect: 'manual' } }),
-})
+// Supports hot-reloading of the backend server config
+let currentBackendUrl = useRuntimeConfig().public.backendUrl
+let currentHandler = createHandler()
 export default defineEventHandler(async (e) => {
   const backendUrl = useRuntimeConfig().public.backendUrl
-  if (currentUrl !== backendUrl) {
-    recreateHandler()
-    currentUrl = backendUrl
+  if (currentBackendUrl !== backendUrl) {
+    currentHandler = createHandler()
+    currentBackendUrl = backendUrl
   }
 
   return currentHandler(e).catch((err: Error) => {
@@ -21,9 +18,10 @@ export default defineEventHandler(async (e) => {
   })
 })
 
-function recreateHandler() {
-  currentHandler = createProxyEventHandler({
-    target: currentUrl,
+function createHandler() {
+  return createProxyEventHandler({
+    target: currentBackendUrl,
+    enableLogger: false,
     changeOrigin: true,
     configureProxyRequest: () => ({ streamRequest: true, sendStream: true, fetchOptions: { redirect: 'manual' } }),
   })
