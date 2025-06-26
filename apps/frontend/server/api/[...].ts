@@ -23,6 +23,13 @@ function createHandler() {
     target: currentBackendUrl,
     enableLogger: false,
     changeOrigin: true,
-    configureProxyRequest: () => ({ streamRequest: true, sendStream: true, fetchOptions: { redirect: 'manual' } }),
+    configureProxyRequest: () => ({
+      streamRequest: true,
+      sendStream: true,
+      fetchOptions: { redirect: 'manual' },
+      headers: {
+        Origin: useRuntimeConfig().public.frontendUrl,
+      },
+    }),
   })
 }
