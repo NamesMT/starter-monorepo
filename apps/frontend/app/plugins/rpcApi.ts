@@ -9,14 +9,17 @@ export default defineNuxtPlugin({
   name: 'local-rpcApi',
   parallel: true,
   async setup() {
-    const url = useRequestURL()
-    // If the frontend and backend domain are on the same domain, we will call the proxy instead of the backendUrl directly
+    const requestUrl = useRequestURL()
     const backendUrl = useRuntimeConfig().public.backendUrl
     const urlBackend = new URL(backendUrl)
     const enableProxy = useAppConfig().enableProxy
+    // `auto`: if the frontend and backend domain are on the same domain, we will call the proxy instead of the backendUrl directly
     const callProxy = enableProxy === 'auto'
-      ? urlBackend.hostname === url.hostname
+      ? urlBackend.hostname === requestUrl.hostname
       : enableProxy
+    const apiUrl = callProxy
+      ? requestUrl.origin
+      : backendUrl
 
     // this wrappedFetch calculates the sha256 hash of the request body and adds it to the headers, it is necessary for AWS Lambda + OAC on POST/PUT requests.
     const wrappedFetch = async (url: string | URL | Request, options?: RequestInit) => {
@@ -40,12 +43,7 @@ export default defineNuxtPlugin({
       fetch: wrappedFetch,
     } satisfies ClientRequestOptions
 
-    const apiClient = hc<typeof app>(
-      callProxy
-        ? `https://${url.host}`
-        : backendUrl,
-      clientRequestOptions,
-    )
+    const apiClient = hc<typeof app>(apiUrl, clientRequestOptions)
 
     // Uncomment to include an Authorization header with the session token
     // await _withHeaderSession()
@@ -66,6 +64,7 @@ export default defineNuxtPlugin({
     return {
       provide: {
         apiClient,
+        apiUrl,
       },
     }
   },
