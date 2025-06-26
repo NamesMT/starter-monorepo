@@ -4,16 +4,16 @@ export interface getSignInUrlParams {
   query?: Record<string, string>
 }
 export function getSignInUrl({ query }: getSignInUrlParams = {}) {
-  const runtimeConfig = useRuntimeConfig()
+  const { $apiUrl } = useNuxtApp()
 
-  return withQuery(`${runtimeConfig.public.backendUrl}/api/auth/login`, {
+  return withQuery(`${$apiUrl}/api/auth/login`, {
     path: useRequestURL().pathname,
     ...query,
   })
 }
 
 export function getSignOutUrl() {
-  const runtimeConfig = useRuntimeConfig()
+  const { $apiUrl } = useNuxtApp()
 
-  return `${runtimeConfig.public.backendUrl}/api/auth/logout`
+  return `${$apiUrl}/api/auth/logout`
 }
