@@ -3,7 +3,7 @@
   "type": "module",
   "version": "2.0.0",
   "private": true,
-  "packageManager": "pnpm@10.12.1",
+  "packageManager": "pnpm@10.12.4",
   "engines": {
     "node": ">=20.13.1"
   },
@@ -22,17 +22,17 @@
   },
   "dependencies": {
     "pathe": "^2.0.3",
-    "sst": "^3.17.5",
+    "sst": "^3.17.8",
     "std-env": "^3.9.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^4.14.1",
+    "@antfu/eslint-config": "^4.16.1",
     "@dotenvx/dotenvx": "1.11.4",
     "@namesmt/utils": "^0.5.14",
     "@types/aws-lambda": "^8.10.150",
-    "@types/node": "^20.19.1",
-    "@unocss/eslint-plugin": "^66.2.3",
-    "eslint": "^9.29.0",
+    "@types/node": "^22.15.34",
+    "@unocss/eslint-plugin": "^66.3.2",
+    "eslint": "^9.30.0",
     "frontend": "workspace:*",
     "lint-staged": "^16.1.2",
     "simple-git-hooks": "^2.13.0",
@@ -42,8 +42,6 @@
   },
   "pnpm": {
     "overrides": {
-      "@nuxt/kit": "^4.0.0-alpha.2",
-      "@nuxt/schema": "^4.0.0-alpha.2",
       "convex-vue": "npm:@namesmt/convex-vue@^0.1.1",
       "is-arguments": "npm:@nolyfill/is-arguments@^1.0.44",
       "is-core-module": "npm:@nolyfill/is-core-module@^1.0.39",

@@ -26,9 +26,9 @@
     "@hono/zod-validator": "^0.7.0",
     "@openrouter/ai-sdk-provider": "^0.7.2",
     "ai": "^4.3.16",
-    "convex-helpers": "^0.1.94",
+    "convex-helpers": "^0.1.95",
     "destr": "^2.0.5",
-    "hono": "^4.8.0",
+    "hono": "^4.8.3",
     "zod": "^3.25.67"
   },
   "devDependencies": {
@@ -36,7 +36,7 @@
     "@local/locales": "workspace:*",
     "@local/tsconfig": "workspace:*",
     "@namesmt/utils": "^0.5.14",
-    "convex": "^1.24.8",
+    "convex": "^1.25.0",
     "kontroll": "^1.1.1",
     "vitest": "^3.2.4"
   }
