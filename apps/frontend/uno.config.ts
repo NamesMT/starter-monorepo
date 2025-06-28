@@ -38,14 +38,12 @@ function colorIndexer(num: number) {
  */
 function commonColorVarsGen(varName: string, additionalVars?: Array<string>) {
   return {
-    [varName]: {
-      DEFAULT: `hsl(var(--${varName}))`,
-      foreground: `hsl(var(--${varName}-foreground))`,
-      ...(additionalVars && additionalVars.reduce((acc, cur) => {
-        acc[cur] = `hsl(var(--${varName}-${cur}))`
-        return acc
-      }, {} as Record<string, string>)),
-    },
+    [varName]: `hsl(var(--${varName}))`,
+    [`${varName}-foreground`]: `hsl(var(--${varName}-foreground))`,
+    ...(additionalVars && additionalVars.reduce((acc, cur) => {
+      acc[`${varName}-${cur}`] = `hsl(var(--${varName}-${cur}))`
+      return acc
+    }, {} as Record<string, string>)),
   }
 }
 
@@ -81,9 +79,6 @@ export default defineConfig({
         'border',
         'ring',
       ]),
-      // Ref: https://github.com/unocss/unocss/issues/4770
-      'sidebar-primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-      'sidebar-accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
     },
   },
   safelist: [
