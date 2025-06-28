@@ -11,7 +11,6 @@ import {
 import presetAnimations from 'unocss-preset-animations'
 import { presetShadcn } from 'unocss-preset-shadcn'
 import { parseColor } from 'unocss/preset-mini'
-import { codeIconMap } from './app/components/mdc/config'
 
 const colorPalettePresets = ['primary', 'secondary', 'surface']
 const colorsPaletteMap: Record<string, string> = {}
@@ -81,9 +80,6 @@ export default defineConfig({
       ]),
     },
   },
-  safelist: [
-    ...Object.values(codeIconMap).map(i => `i-${i}`),
-  ],
   shortcuts: [
     ['bg-mainGradient', 'bg-gradient-to-b from-primary via-primary to-violet-400'],
     ['text-mainGradient', 'bg-mainGradient bg-clip-text text-transparent transition-color duration-200'],

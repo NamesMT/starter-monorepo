@@ -1,13 +1,10 @@
 import type { LocaleObject } from '@nuxtjs/i18n'
 import { localcertKeyPath, localcertPath } from '@local/common/dev/cert'
-import { getConvexEnvs } from 'backend-convex/dev'
 import { config } from 'dotenv'
-import { type BundledLanguage, bundledLanguagesInfo } from 'shiki/bundle/full'
 import optimizeExclude from 'vite-plugin-optimize-exclude'
 
 if (import.meta.env.NODE_ENV === 'development') {
   config({ path: ['.env.dev.local', '.env.dev'] })
-  import.meta.env.NUXT_PUBLIC_CONVEX_URL ||= (await getConvexEnvs()).CONVEX_URL || ''
 }
 else {
   config({ path: ['.env.prod.local', '.env.prod'] })
@@ -16,7 +13,6 @@ else {
 const siteConfig = {
   url: import.meta.env.NUXT_PUBLIC_FRONTEND_URL,
   backend: import.meta.env.NUXT_PUBLIC_BACKEND_URL,
-  convex: import.meta.env.NUXT_PUBLIC_CONVEX_URL,
   name: 'starter-monorepo',
   description: 'Monorepo with 🤖 AI initialize and localize | 🔥Hono + OpenAPI & RPC, Nuxt, Convex, SST Ion, Kinde Auth, Tanstack Query, Shadcn, UnoCSS, Spreadsheet I18n, Lingo.dev',
 }
@@ -68,8 +64,6 @@ export default defineNuxtConfig({
     public: {
       frontendUrl: siteConfig.url,
       backendUrl: siteConfig.backend,
-      convexUrl: siteConfig.convex,
-      convexApiUrl: siteConfig.convex.replace('.convex.cloud', '.convex.site'),
     },
   },
 
@@ -134,24 +128,7 @@ export default defineNuxtConfig({
     'nuxt-svgo',
     'nuxt-llms',
     // 'nuxt-booster',
-    'shadcn-nuxt',
-    'convex-nuxt',
-    '@nuxtjs/mdc',
   ],
-
-  mdc: {
-    highlight: {
-      wrapperStyle: true,
-      noApiRoute: true,
-      langs: bundledLanguagesInfo.map(l => l.id) as BundledLanguage[],
-    },
-    keepComments: true,
-  },
-
-  convex: {
-    url: siteConfig.convex,
-    manualInit: true,
-  },
 
   site: siteConfig,
 
@@ -209,11 +186,6 @@ export default defineNuxtConfig({
   // booster: {
   //   disableNuxtFontaine: true,
   // },
-
-  shadcn: {
-    prefix: '',
-    componentDir: './app/lib/shadcn/components/ui',
-  },
 
   css: [
     '~/assets/css/main.scss',
