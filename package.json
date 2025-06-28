@@ -42,8 +42,6 @@
   },
   "pnpm": {
     "overrides": {
-      "@nuxt/kit": "4.0.0-alpha.3",
-      "@nuxt/schema": "4.0.0-alpha.3",
       "convex-vue": "npm:@namesmt/convex-vue@^0.1.1",
       "is-arguments": "npm:@nolyfill/is-arguments@^1.0.44",
       "is-core-module": "npm:@nolyfill/is-core-module@^1.0.39",
