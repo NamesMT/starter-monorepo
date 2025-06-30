@@ -47,8 +47,8 @@ importers:
         specifier: 1.11.4
         version: 1.11.4
       '@namesmt/utils':
-        specifier: ^0.5.14
-        version: 0.5.14
+        specifier: ^0.5.15
+        version: 0.5.15
       '@types/aws-lambda':
         specifier: ^8.10.150
         version: 8.10.150
@@ -102,8 +102,8 @@ importers:
         specifier: workspace:*
         version: link:../../locals/tsconfig
       '@namesmt/utils':
-        specifier: ^0.5.14
-        version: 0.5.14
+        specifier: ^0.5.15
+        version: 0.5.15
       '@scalar/hono-api-reference':
         specifier: ^0.9.7
         version: 0.9.7(hono@4.8.3)
@@ -117,8 +117,8 @@ importers:
         specifier: workspace:*
         version: link:../backend-convex
       convex:
-        specifier: ^1.25.0
-        version: 1.25.0(react@19.1.0)
+        specifier: ^1.25.1
+        version: 1.25.1(react@19.1.0)
       hono:
         specifier: ^4.8.3
         version: 4.8.3
@@ -160,10 +160,10 @@ importers:
         version: 1.3.22(zod@3.25.67)
       '@convex-dev/rate-limiter':
         specifier: ^0.2.10
-        version: 0.2.10(convex@1.25.0(react@19.1.0))(react@19.1.0)
+        version: 0.2.10(convex@1.25.1(react@19.1.0))(react@19.1.0)
       '@convex-dev/sharded-counter':
         specifier: ^0.1.8
-        version: 0.1.8(convex@1.25.0(react@19.1.0))
+        version: 0.1.8(convex@1.25.1(react@19.1.0))
       '@hono/zod-validator':
         specifier: ^0.7.0
         version: 0.7.0(hono@4.8.3)(zod@3.25.67)
@@ -175,7 +175,7 @@ importers:
         version: 4.3.16(react@19.1.0)(zod@3.25.67)
       convex-helpers:
         specifier: ^0.1.95
-        version: 0.1.95(convex@1.25.0(react@19.1.0))(hono@4.8.3)(react@19.1.0)(typescript@5.8.3)(zod@3.25.67)
+        version: 0.1.95(convex@1.25.1(react@19.1.0))(hono@4.8.3)(react@19.1.0)(typescript@5.8.3)(zod@3.25.67)
       destr:
         specifier: ^2.0.5
         version: 2.0.5
@@ -196,11 +196,11 @@ importers:
         specifier: workspace:*
         version: link:../../locals/tsconfig
       '@namesmt/utils':
-        specifier: ^0.5.14
-        version: 0.5.14
+        specifier: ^0.5.15
+        version: 0.5.15
       convex:
-        specifier: ^1.25.0
-        version: 1.25.0(react@19.1.0)
+        specifier: ^1.25.1
+        version: 1.25.1(react@19.1.0)
       kontroll:
         specifier: ^1.1.1
         version: 1.1.1
@@ -242,8 +242,8 @@ importers:
         specifier: workspace:*
         version: link:../../locals/tsconfig
       '@namesmt/vue-query-nuxt':
-        specifier: ^0.3.6
-        version: 0.3.6(@tanstack/vue-query@5.81.5(vue@3.5.17(typescript@5.8.3)))(nuxt@4.0.0-alpha.3(@parcel/watcher@2.5.1)(@types/node@22.15.34)(db0@0.3.2)(eslint@9.30.0(jiti@2.4.2))(idb-keyval@6.2.2)(ioredis@5.6.1)(magicast@0.3.5)(optionator@0.9.4)(rolldown@1.0.0-beta.21)(rollup@4.44.1)(sass@1.89.2)(terser@5.43.1)(tsx@4.20.3)(typescript@5.8.3)(vite@7.0.0(@types/node@22.15.34)(jiti@2.4.2)(sass@1.89.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vue-tsc@2.2.10(typescript@5.8.3))(xml2js@0.6.2)(yaml@2.8.0))
+        specifier: ^0.3.7
+        version: 0.3.7(@tanstack/vue-query@5.81.5(vue@3.5.17(typescript@5.8.3)))(nuxt@4.0.0-alpha.3(@parcel/watcher@2.5.1)(@types/node@22.15.34)(db0@0.3.2)(eslint@9.30.0(jiti@2.4.2))(idb-keyval@6.2.2)(ioredis@5.6.1)(magicast@0.3.5)(optionator@0.9.4)(rolldown@1.0.0-beta.21)(rollup@4.44.1)(sass@1.89.2)(terser@5.43.1)(tsx@4.20.3)(typescript@5.8.3)(vite@7.0.0(@types/node@22.15.34)(jiti@2.4.2)(sass@1.89.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vue-tsc@2.2.10(typescript@5.8.3))(xml2js@0.6.2)(yaml@2.8.0))
       '@nuxt/eslint':
         specifier: ^1.4.1
         version: 1.4.1(@typescript-eslint/utils@8.35.0(eslint@9.30.0(jiti@2.4.2))(typescript@5.8.3))(@vue/compiler-sfc@3.5.17)(eslint@9.30.0(jiti@2.4.2))(magicast@0.3.5)(typescript@5.8.3)(vite@7.0.0(@types/node@22.15.34)(jiti@2.4.2)(sass@1.89.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))
@@ -299,11 +299,11 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       convex:
-        specifier: ^1.25.0
-        version: 1.25.0(react@19.1.0)
+        specifier: ^1.25.1
+        version: 1.25.1(react@19.1.0)
       convex-nuxt:
         specifier: 0.0.7
-        version: 0.0.7(patch_hash=5a49714fb8604c183f49f3f0587c4aa16b4a49649f0015873ba11bd0bd6d2641)(convex@1.25.0(react@19.1.0))(magicast@0.3.5)(vue@3.5.17(typescript@5.8.3))
+        version: 0.0.7(patch_hash=5a49714fb8604c183f49f3f0587c4aa16b4a49649f0015873ba11bd0bd6d2641)(convex@1.25.1(react@19.1.0))(magicast@0.3.5)(vue@3.5.17(typescript@5.8.3))
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
@@ -1607,12 +1607,12 @@ packages:
     resolution: {integrity: sha512-rVust3SSeCaFu118IW2cFWmFr9ZgmrYiNTVt2pwlAoZv/c0INMR1FAXy2xGB3WtWLSiIGbpaXl8kh+dUvsrQ6g==}
     engines: {node: '>=20.13.1'}
 
-  '@namesmt/utils@0.5.14':
-    resolution: {integrity: sha512-Af1l6RWr08mNqE+c3+7a2ATmBHOapGyVtEv4KVpFwHkfEepWh/IV0nn+/iUWeAskdjG5Dktu5uBgvh0/a7HS7g==}
+  '@namesmt/utils@0.5.15':
+    resolution: {integrity: sha512-2kEmziuE19d3jbjSzsyG5v7S/gnB58FFAx7TYo2kNHeO6FqRzXzv9V017pCwVUeFz6PG3Wy1BNBUGyOazVAZ/w==}
     engines: {node: '>=18.0.0'}
 
-  '@namesmt/vue-query-nuxt@0.3.6':
-    resolution: {integrity: sha512-s9ZgINEhcLYCadnTQXP1TDYTxhAmVBbn+4Vrg2wKog/qLyXILc5O0k1a5Hd46xJ+JJsQJqswu9atzROHmMeg6Q==}
+  '@namesmt/vue-query-nuxt@0.3.7':
+    resolution: {integrity: sha512-HnZ+2AmqT1AYpSmsHyurWGN5LN0cSLnIijKmrNbl3TYL3zthk8+z+LBtT54Bg5p14IbYGG0/zfagFM3shRDZFg==}
     peerDependencies:
       '@tanstack/vue-query': ^5.28.9
       nuxt: '>=3.11.1'
@@ -4198,8 +4198,8 @@ packages:
   convex-nuxt@0.0.7:
     resolution: {integrity: sha512-kF0LyxtwgdQLeQsnDekUqAwuH4vkaOCpj/TXtritY7uP1kv9ZRKYRIlDYt1SXXzbl6+ZfKoCHHe9s9Fjfree+Q==}
 
-  convex@1.25.0:
-    resolution: {integrity: sha512-oMeO4Em1sSvUL5wRuFfR2qA98RN2lSyiFGMhnpuyobO3KsYBemVoACgd0OR5tuk1Vo8Qh2rg9O7mXkgFELZGug==}
+  convex@1.25.1:
+    resolution: {integrity: sha512-JvMmeZSXEM+Hv9nJz8pEe3p6YlPIBuuwRyprMXbWkCbhtP2RbgjDvSql4fr3MOWkKaA0lKx31sZCxERe6ZA/Cw==}
     engines: {node: '>=18.0.0', npm: '>=7.0.0'}
     hasBin: true
     peerDependencies:
@@ -9243,15 +9243,15 @@ snapshots:
 
   '@colors/colors@1.6.0': {}
 
-  '@convex-dev/rate-limiter@0.2.10(convex@1.25.0(react@19.1.0))(react@19.1.0)':
+  '@convex-dev/rate-limiter@0.2.10(convex@1.25.1(react@19.1.0))(react@19.1.0)':
     dependencies:
-      convex: 1.25.0(react@19.1.0)
+      convex: 1.25.1(react@19.1.0)
     optionalDependencies:
       react: 19.1.0
 
-  '@convex-dev/sharded-counter@0.1.8(convex@1.25.0(react@19.1.0))':
+  '@convex-dev/sharded-counter@0.1.8(convex@1.25.1(react@19.1.0))':
     dependencies:
-      convex: 1.25.0(react@19.1.0)
+      convex: 1.25.1(react@19.1.0)
 
   '@dabh/diagnostics@2.0.3':
     dependencies:
@@ -9899,17 +9899,17 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@namesmt/convex-vue@0.1.1(convex@1.25.0(react@19.1.0))(vue@3.5.17(typescript@5.8.3))':
+  '@namesmt/convex-vue@0.1.1(convex@1.25.1(react@19.1.0))(vue@3.5.17(typescript@5.8.3))':
     dependencies:
       consola: 3.4.2
-      convex: 1.25.0(react@19.1.0)
+      convex: 1.25.1(react@19.1.0)
       std-env: 3.9.0
       vue: 3.5.17(typescript@5.8.3)
 
   '@namesmt/utils-lambda@0.1.4':
     dependencies:
       '@aws-sdk/client-lambda': 3.839.0
-      '@namesmt/utils': 0.5.14
+      '@namesmt/utils': 0.5.15
       '@types/aws-lambda': 8.10.150
       consola: 3.4.2
       destr: 2.0.5
@@ -9918,12 +9918,12 @@ snapshots:
     transitivePeerDependencies:
       - aws-crt
 
-  '@namesmt/utils@0.5.14':
+  '@namesmt/utils@0.5.15':
     dependencies:
       '@antfu/utils': 9.2.0
       dequal: 2.0.3
 
-  '@namesmt/vue-query-nuxt@0.3.6(@tanstack/vue-query@5.81.5(vue@3.5.17(typescript@5.8.3)))(nuxt@4.0.0-alpha.3(@parcel/watcher@2.5.1)(@types/node@22.15.34)(db0@0.3.2)(eslint@9.30.0(jiti@2.4.2))(idb-keyval@6.2.2)(ioredis@5.6.1)(magicast@0.3.5)(optionator@0.9.4)(rolldown@1.0.0-beta.21)(rollup@4.44.1)(sass@1.89.2)(terser@5.43.1)(tsx@4.20.3)(typescript@5.8.3)(vite@7.0.0(@types/node@22.15.34)(jiti@2.4.2)(sass@1.89.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vue-tsc@2.2.10(typescript@5.8.3))(xml2js@0.6.2)(yaml@2.8.0))':
+  '@namesmt/vue-query-nuxt@0.3.7(@tanstack/vue-query@5.81.5(vue@3.5.17(typescript@5.8.3)))(nuxt@4.0.0-alpha.3(@parcel/watcher@2.5.1)(@types/node@22.15.34)(db0@0.3.2)(eslint@9.30.0(jiti@2.4.2))(idb-keyval@6.2.2)(ioredis@5.6.1)(magicast@0.3.5)(optionator@0.9.4)(rolldown@1.0.0-beta.21)(rollup@4.44.1)(sass@1.89.2)(terser@5.43.1)(tsx@4.20.3)(typescript@5.8.3)(vite@7.0.0(@types/node@22.15.34)(jiti@2.4.2)(sass@1.89.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vue-tsc@2.2.10(typescript@5.8.3))(xml2js@0.6.2)(yaml@2.8.0))':
     dependencies:
       '@nuxt/kit': 4.0.0-alpha.3(magicast@0.3.5)
       '@tanstack/vue-query': 5.81.5(vue@3.5.17(typescript@5.8.3))
@@ -13026,25 +13026,25 @@ snapshots:
 
   convert-source-map@2.0.0: {}
 
-  convex-helpers@0.1.95(convex@1.25.0(react@19.1.0))(hono@4.8.3)(react@19.1.0)(typescript@5.8.3)(zod@3.25.67):
+  convex-helpers@0.1.95(convex@1.25.1(react@19.1.0))(hono@4.8.3)(react@19.1.0)(typescript@5.8.3)(zod@3.25.67):
     dependencies:
-      convex: 1.25.0(react@19.1.0)
+      convex: 1.25.1(react@19.1.0)
     optionalDependencies:
       hono: 4.8.3
       react: 19.1.0
       typescript: 5.8.3
       zod: 3.25.67
 
-  convex-nuxt@0.0.7(patch_hash=5a49714fb8604c183f49f3f0587c4aa16b4a49649f0015873ba11bd0bd6d2641)(convex@1.25.0(react@19.1.0))(magicast@0.3.5)(vue@3.5.17(typescript@5.8.3)):
+  convex-nuxt@0.0.7(patch_hash=5a49714fb8604c183f49f3f0587c4aa16b4a49649f0015873ba11bd0bd6d2641)(convex@1.25.1(react@19.1.0))(magicast@0.3.5)(vue@3.5.17(typescript@5.8.3)):
     dependencies:
       '@nuxt/kit': 4.0.0-alpha.3(magicast@0.3.5)
-      convex-vue: '@namesmt/convex-vue@0.1.1(convex@1.25.0(react@19.1.0))(vue@3.5.17(typescript@5.8.3))'
+      convex-vue: '@namesmt/convex-vue@0.1.1(convex@1.25.1(react@19.1.0))(vue@3.5.17(typescript@5.8.3))'
     transitivePeerDependencies:
       - convex
       - magicast
       - vue
 
-  convex@1.25.0(react@19.1.0):
+  convex@1.25.1(react@19.1.0):
     dependencies:
       esbuild: 0.25.4
       jwt-decode: 4.0.0
