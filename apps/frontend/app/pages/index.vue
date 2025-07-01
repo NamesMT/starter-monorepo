@@ -87,6 +87,7 @@ const { isPending, isError, data, error } = useQuery({
         <div class="flex items-center gap-2">
           <p>{{ $t('pages.home.dateDisplay.label') }}:</p>
           <span :key="$li18n.renderKey" class="font-semibold">{{ dayjs().format('dddd') }}</span>
+          <!-- Note: You should use the newly added <NuxtTime/> component for day formatting btw, dayjs is kept here for demo reference -->
         </div>
       </div>
     </div>
