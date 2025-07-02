@@ -4,7 +4,9 @@
     "composite": true,
     "types": [
       "vitest"
-    ]
+    ],
+    "emitDeclarationOnly": true,
+    "outDir": ".output/tsc"
   },
   "include": [
     "./convex/**/*",

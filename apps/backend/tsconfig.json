@@ -5,7 +5,9 @@
     "types": [
       "vitest",
       "@ark/schema"
-    ]
+    ],
+    "emitDeclarationOnly": true,
+    "outDir": ".output/tsc"
   },
   "references": [
     {
