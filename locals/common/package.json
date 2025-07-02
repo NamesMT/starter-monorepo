@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "@local/tsconfig": "workspace:*",
-    "dotenv": "^16.6.1"
+    "dotenv": "^16.6.1",
+    "type-fest": "^4.41.0"
   }
 }

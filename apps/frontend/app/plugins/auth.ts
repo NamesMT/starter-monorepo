@@ -1,6 +1,4 @@
-// eslint-disable-next-line ts/ban-ts-comment
-// @ts-ignore TS6305: `backend/src/app` has not been built yet
-import type { UserProfileType } from 'backend/src/types'
+import type { UserProfileType } from '@local/common/src/types/user'
 import type { Reactive } from 'vue'
 
 export type AuthState = (

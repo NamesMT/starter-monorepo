@@ -2,7 +2,7 @@
  * This file contains routes and sample routes for possible APIs usecases with Kinde.
  */
 
-import type { UserProfileType } from '#src/types.js'
+import type { UserProfileType } from '@local/common/src/types/user'
 // import type { ClaimTokenType, FlagType } from '@kinde-oss/kinde-typescript-sdk'
 import { appFactory } from '#src/helpers/factory.js'
 import { getSessionManager } from '#src/helpers/kinde.js'
@@ -18,8 +18,8 @@ export const authRoutesApp = appFactory.createApp()
     const kindeClient = await getKindeClient()
     const sessionManager = getSessionManager(c)
 
-    const [profile, token]: [UserProfileType | null, string | null] = await Promise.all([
-      kindeClient.getUserProfile(sessionManager).catch(() => null),
+    const [profile, token] = await Promise.all([
+      kindeClient.getUserProfile(sessionManager).catch(() => null) as Promise<UserProfileType>,
       kindeClient.getToken(sessionManager).catch(() => null),
     ])
 

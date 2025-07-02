@@ -9,7 +9,7 @@ const nicknameRef = useChatNickname()
     <div class="h-9 flex items-center gap-2 truncate text-sm leading-tight">
       <template v-if="$auth.loggedIn">
         <Avatar shape="square" size="sm" class="size-9" alt="User avatar">
-          <AvatarImage :src="$auth.user.picture" alt="Avatar image" />
+          <AvatarImage v-if="$auth.user.picture" :src="$auth.user.picture" alt="Avatar image" />
           <AvatarFallback>👤</AvatarFallback>
         </Avatar>
         <div class="truncate">
