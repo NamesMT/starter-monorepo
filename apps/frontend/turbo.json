@@ -9,6 +9,12 @@
         "backend#deploy",
         "backend-convex#deploy"
       ]
+    },
+    // Waits for dependency project to emit tsc first
+    "quickcheck": {
+      "dependsOn": [
+        "^quickcheck"
+      ]
     }
   }
 }
