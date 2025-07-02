@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import type { ListboxFilterProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
 import { reactiveOmit } from '@vueuse/core'
 import { Slash } from 'lucide-vue-next'
-import { ListboxFilter, type ListboxFilterProps, useForwardProps } from 'reka-ui'
+import { ListboxFilter, useForwardProps } from 'reka-ui'
 import { cn } from '@/lib/shadcn/utils'
 import { useCommand } from '~/lib/shadcn/components/ui/command'
 import { useCSDContext } from '../ChatSearchDialog.vue'

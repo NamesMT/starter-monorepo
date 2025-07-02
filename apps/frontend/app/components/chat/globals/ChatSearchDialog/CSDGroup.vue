@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { ListboxGroupProps } from 'reka-ui'
+import type { HTMLAttributes } from 'vue'
 import { reactiveOmit } from '@vueuse/core'
 import { ListboxGroup, ListboxGroupLabel, useId } from 'reka-ui'
-import { computed, type HTMLAttributes, onMounted, onUnmounted } from 'vue'
+import { computed, onMounted, onUnmounted } from 'vue'
 import { cn } from '@/lib/shadcn/utils'
 import { provideCommandGroupContext, useCommand } from '~/lib/shadcn/components/ui/command'
 

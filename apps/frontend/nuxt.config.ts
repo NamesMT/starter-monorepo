@@ -1,8 +1,9 @@
 import type { LocaleObject } from '@nuxtjs/i18n'
+import type { BundledLanguage } from 'shiki/bundle/full'
 import { localcertKeyPath, localcertPath } from '@local/common/dev/cert'
 import { getConvexEnvs } from 'backend-convex/dev'
 import { config } from 'dotenv'
-import { type BundledLanguage, bundledLanguagesInfo } from 'shiki/bundle/full'
+import { bundledLanguagesInfo } from 'shiki/bundle/full'
 import optimizeExclude from 'vite-plugin-optimize-exclude'
 
 if (import.meta.env.NODE_ENV === 'development') {
@@ -105,7 +106,7 @@ export default defineNuxtConfig({
 
   vite: {
     plugins: [
-      optimizeExclude(),
+      optimizeExclude() as any,
     ],
     optimizeDeps: {
       exclude: [

@@ -1,3 +1,4 @@
+import { ConvexError } from 'convex/values'
 import { destr } from 'destr'
 
 export function normalizePossibleSDKError(error: any) {
@@ -11,8 +12,6 @@ export function normalizePossibleSDKError(error: any) {
 
   return error
 }
-
-import { ConvexError } from 'convex/values'
 
 export function getErrorMessage(error: Error | null) {
   if (error instanceof ConvexError)
