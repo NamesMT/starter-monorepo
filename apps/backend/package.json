@@ -9,7 +9,7 @@
   "scripts": {
     "lint": "eslint .",
     "test": "vitest",
-    "test:types": "tsc --noEmit --skipLibCheck",
+    "test:types": "tsc",
     "quickcheck": "pnpm run lint && pnpm run test:types",
     "check": "pnpm lint && pnpm test:types && vitest run --coverage",
     "dev": "dotenvx run -f .env.dev.local -f .env.dev -f .env -- tsx watch src/dev.ts",
