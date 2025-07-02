@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { Doc } from 'backend-convex/convex/_generated/dataModel'
 import { api } from 'backend-convex/convex/_generated/api'
 import { useToast } from '~/lib/shadcn/components/ui/toast'
 
@@ -27,7 +28,10 @@ async function testConvexViaBackendTasksCTA() {
   isFetchingTasks.value = true
 
   await hcParse($apiClient.api.dummy.convexTasks.$get())
-    .then(r => toast({ description: r.map(t => t.text).join('\n') }))
+    // Explicit type cast is needed here because `vue-tsc` does not yet work with
+    // deep-nested TS reference (`frontend` => `backend` => `backend-convex`)
+    // https://github.com/vuejs/language-tools/issues/5419
+    .then((r: Doc<'tasks'>[]) => toast({ description: r.map(t => t.text).join('\n') }))
     .catch(e => toast({ variant: 'destructive', description: e.message }))
 
   isFetchingTasks.value = false
