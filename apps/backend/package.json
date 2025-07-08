@@ -17,25 +17,25 @@
     "deploy": "dotenvx run -f .env.prod.local -f .env.prod -f .env -- sh scripts/deploy.sh"
   },
   "dependencies": {
-    "srvx": "^0.8.1"
+    "srvx": "^0.8.2"
   },
   "devDependencies": {
     "@hono/arktype-validator": "^2.0.1",
-    "@kinde-oss/kinde-typescript-sdk": "^2.11.1",
+    "@kinde-oss/kinde-typescript-sdk": "^2.12.0",
     "@local/common": "workspace:*",
     "@local/locales": "workspace:*",
     "@local/tsconfig": "workspace:*",
-    "@namesmt/utils": "^0.5.15",
-    "@scalar/hono-api-reference": "^0.9.7",
+    "@namesmt/utils": "^0.5.16",
+    "@scalar/hono-api-reference": "^0.9.9",
     "@vitest/coverage-v8": "^3.2.4",
     "arktype": "^2.1.20",
     "backend-convex": "workspace:*",
     "convex": "^1.25.2",
-    "hono": "^4.8.3",
+    "hono": "^4.8.4",
     "hono-adapter-aws-lambda": "^1.3.3",
     "hono-openapi": "^0.4.8",
     "hono-sessions": "^0.7.3",
-    "petite-vue-i18n": "^11.1.7",
+    "petite-vue-i18n": "^11.1.9",
     "std-env": "^3.9.0",
     "tsdown": "^0.12.9",
     "vitest": "^3.2.4"
