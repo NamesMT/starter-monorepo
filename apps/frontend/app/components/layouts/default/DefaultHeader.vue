@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import type { ConvexVueContext } from 'convex-vue'
+
 // const theme = useTheme()
+const convexVueContext = inject<ConvexVueContext>('convex-vue')
 </script>
 
 <template>
@@ -28,6 +31,7 @@
       </NuxtLink>
 
       <NuxtLink
+        v-if="convexVueContext?.clientRef?.value"
         to="/chat" class="group flex items-center"
         active-class="text-accent-foreground font-semibold border-t-2px border-primary bg-gradient-to-b from-primary/20"
       >
