@@ -1,7 +1,13 @@
+import RateLimiter, { MINUTE } from '@convex-dev/rate-limiter'
 import { ConvexError, v } from 'convex/values'
+import { components } from '../../convex/_generated/api'
 import { mutation } from '../../convex/_generated/server'
 import { singleShardCounter } from '../../utils/counters'
 import { assertThreadAccess } from './utils'
+
+const rateLimiter = new RateLimiter(components.rateLimiter, {
+  branchThread: { kind: 'token bucket', rate: 10, period: MINUTE, capacity: 3 },
+})
 
 export const create = mutation({
   args: {
@@ -53,6 +59,10 @@ export const branchThreadFromMessage = mutation({
     lockerKey: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    const userIdentity = await ctx.auth.getUserIdentity()
+
+    rateLimiter.limit(ctx, 'branchThread', { key: userIdentity?.subject ?? args.lockerKey, throws: true })
+
     const message = await ctx.db.get(args.messageId)
     if (!message)
       throw new ConvexError('Message not found')
@@ -61,7 +71,6 @@ export const branchThreadFromMessage = mutation({
     if (!thread)
       throw new ConvexError('Thread not found')
 
-    const userIdentity = await ctx.auth.getUserIdentity()
     await assertThreadAccess(ctx, { thread, lockerKey: args.lockerKey, userIdentity })
 
     const messages = await ctx.db.query('messages')

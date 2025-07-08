@@ -1,11 +1,15 @@
+import RateLimiter, { MINUTE } from '@convex-dev/rate-limiter'
 import { simpleMessagesToString } from '@local/common/src/chat'
 import { openrouter } from '@openrouter/ai-sdk-provider'
 import { generateText } from 'ai'
 import { v } from 'convex/values'
-import { api, internal } from '../../convex/_generated/api'
+import { api, components, internal } from '../../convex/_generated/api'
 import { action } from '../../convex/_generated/server'
 
-// Todo: maybe rate limit
+const rateLimiter = new RateLimiter(components.rateLimiter, {
+  generateTitle: { kind: 'token bucket', rate: 10, period: MINUTE, capacity: 3 },
+})
+
 export const generateTitle = action({
   args: {
     threadId: v.id('threads'),
@@ -13,6 +17,10 @@ export const generateTitle = action({
     apiKey: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    const userIdentity = await ctx.auth.getUserIdentity()
+
+    rateLimiter.limit(ctx, 'generateTitle', { key: userIdentity?.subject ?? args.lockerKey, throws: true })
+
     const thread = await ctx.runQuery(api.threads.get, { threadId: args.threadId, lockerKey: args.lockerKey })
 
     const messages = await ctx.runQuery(api.messages.listByThread, { threadId: args.threadId, lockerKey: args.lockerKey })
