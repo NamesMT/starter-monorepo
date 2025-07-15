@@ -107,7 +107,6 @@ A super efficient and powerful, yet friendly LLM Chat system, featuring:
 #### [`backend`](./apps/backend): a [Hono🔥](https://hono.dev/) app.
 
 #### [`backend-convex`](./apps/backend-convex): a [Convex](https://convex.dev/) app.
-  * By default, the Convex app is not enabled in development, to enable it, change the root `dev` script from `dev:noConvex` to `dev:full`.
 
 ### Local packages
 
@@ -133,6 +132,8 @@ To build all apps and packages, run the following command:
 `pnpm run build`
 
 ### Develop
+
+If you just want a quick check out, without having to set up anything, you can use `pnpm run dev:noConvex`, this will skips `backend-convex` and which is the only component that have initial set ups, though this of course means related features are disabled.
 
 To develop all apps and packages, run the following command:  
 `pnpm run dev`
