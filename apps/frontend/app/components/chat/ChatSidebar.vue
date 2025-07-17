@@ -34,8 +34,8 @@ const isFetching = ref(false)
 
 // Subscribe to Convex to sync threads
 if ($auth.loggedIn) {
-  const { data: threadsFromConvex, isLoading: fetchingFromConvex } = useConvexQuery(api.threads.listByUser)
-  watch(threadsFromConvex, _mergeToLocalThreads)
+  const { data: threadsFromConvex, isPending: fetchingFromConvex } = useConvexQuery(api.threads.listByUser)
+  watch(threadsFromConvex, tFC => tFC && _mergeToLocalThreads(tFC))
   watch(fetchingFromConvex, (fFC) => {
     isFetching.value = fFC
   })
@@ -57,8 +57,8 @@ if ($auth.loggedIn) {
 }
 // For anonymous users, subscribe to threads via sessionId
 else {
-  const { data: threadsFromConvex, isLoading: fetchingFromConvex } = useConvexQuery(api.threads.listBySessionId, { sessionId: $init.sessionId })
-  watch(threadsFromConvex, _mergeToLocalThreads)
+  const { data: threadsFromConvex, isPending: fetchingFromConvex } = useConvexQuery(api.threads.listBySessionId, { sessionId: $init.sessionId })
+  watch(threadsFromConvex, tFC => tFC && _mergeToLocalThreads(tFC))
   watch(fetchingFromConvex, (fFC) => {
     isFetching.value = fFC
   })

@@ -3,7 +3,7 @@
   "type": "module",
   "version": "3.0.0",
   "private": true,
-  "packageManager": "pnpm@10.12.4",
+  "packageManager": "pnpm@10.13.1",
   "engines": {
     "node": ">=20.13.1"
   },
@@ -25,23 +25,23 @@
     "std-env": "^3.9.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^4.16.2",
+    "@antfu/eslint-config": "^4.17.0",
     "@dotenvx/dotenvx": "1.11.4",
     "@namesmt/utils": "^0.5.16",
     "@types/aws-lambda": "^8.10.150",
-    "@types/node": "^22.16.0",
+    "@types/node": "^22.16.4",
     "@unocss/eslint-plugin": "^66.3.3",
-    "eslint": "^9.30.1",
+    "eslint": "^9.31.0",
     "frontend": "workspace:*",
     "lint-staged": "^16.1.2",
     "simple-git-hooks": "^2.13.0",
     "tsx": "^4.20.3",
-    "turbo": "^2.5.4",
+    "turbo": "^2.5.5",
     "typescript": "^5.8.3"
   },
   "pnpm": {
     "overrides": {
-      "convex-vue": "npm:@namesmt/convex-vue@^0.1.1",
+      "convex-vue": "npm:@namesmt/convex-vue@^0.1.5-fix",
       "is-arguments": "npm:@nolyfill/is-arguments@^1.0.44",
       "is-core-module": "npm:@nolyfill/is-core-module@^1.0.39",
       "is-generator-function": "npm:@nolyfill/is-generator-function@^1.0.44",
@@ -53,7 +53,6 @@
       "which-typed-array": "npm:@nolyfill/which-typed-array@^1.0.44"
     },
     "patchedDependencies": {
-      "convex-nuxt": "patches/convex-nuxt.patch",
       "hono-sessions": "patches/hono-sessions.patch"
     }
   },
