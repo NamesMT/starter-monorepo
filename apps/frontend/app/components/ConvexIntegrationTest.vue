@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { Doc } from 'backend-convex/convex/_generated/dataModel'
 import { api } from 'backend-convex/convex/_generated/api'
 import { useToast } from '~/lib/shadcn/components/ui/toast'
 
@@ -14,11 +13,8 @@ const { mutate: mutateAddTask } = useConvexMutation(api.tasks.add)
 const taskInputRef = ref('')
 async function addTask() {
   await mutateAddTask({ text: taskInputRef.value })
-    .then((r) => {
-      if ('error' in r && r.error) {
-        return toast({ variant: 'destructive', description: getConvexErrorMessage(r.error) })
-      }
-
+    .catch((e) => { toast({ variant: 'destructive', description: getConvexErrorMessage(e) }) })
+    .then(() => {
       taskInputRef.value = ''
     })
 }
@@ -28,10 +24,7 @@ async function testConvexViaBackendTasksCTA() {
   isFetchingTasks.value = true
 
   await hcParse($apiClient.api.dummy.convexTasks.$get())
-    // Explicit type cast is needed here because `vue-tsc` does not yet work with
-    // deep-nested TS reference (`frontend` => `backend` => `backend-convex`)
-    // https://github.com/vuejs/language-tools/issues/5419
-    .then((r: Doc<'tasks'>[]) => toast({ description: r.map(t => t.text).join('\n') }))
+    .then(r => toast({ description: r.map(t => t.text).join('\n') }))
     .catch(e => toast({ variant: 'destructive', description: e.message }))
 
   isFetchingTasks.value = false

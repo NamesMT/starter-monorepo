@@ -193,9 +193,6 @@ export default defineNuxtConfig({
         name: '中文',
       }),
     ],
-    bundle: {
-      optimizeTranslationDirective: false,
-    },
     langDir: '../../../locals/locales/dist',
   },
 

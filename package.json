@@ -41,7 +41,6 @@
   },
   "pnpm": {
     "overrides": {
-      "convex-vue": "npm:@namesmt/convex-vue@^0.1.5-fix",
       "is-arguments": "npm:@nolyfill/is-arguments@^1.0.44",
       "is-core-module": "npm:@nolyfill/is-core-module@^1.0.39",
       "is-generator-function": "npm:@nolyfill/is-generator-function@^1.0.44",

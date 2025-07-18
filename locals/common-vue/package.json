@@ -14,6 +14,6 @@
   },
   "devDependencies": {
     "@local/tsconfig": "workspace:*",
-    "vue-tsc": "^3.0.1"
+    "vue-tsc": "^3.0.2"
   }
 }

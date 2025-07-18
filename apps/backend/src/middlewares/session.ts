@@ -104,7 +104,7 @@ export async function headerSession(options: Record<string, any> = {}) {
         throw new HTTPException(400, { res })
       }
 
-      inputValue = match[1]
+      inputValue = match[1]!
     }
 
     const sessionId = await resolver(inputValue, c)
