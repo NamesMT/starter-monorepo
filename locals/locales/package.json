@@ -11,9 +11,9 @@
     "postinstall": "tsx entry.ts"
   },
   "dependencies": {
-    "petite-vue-i18n": "^11.1.10",
+    "petite-vue-i18n": "^11.1.11",
     "spreadsheet-i18n": "^0.3.8",
-    "vue": "^3.5.17"
+    "vue": "^3.5.18"
   },
   "devDependencies": {
     "@local/tsconfig": "workspace:*"

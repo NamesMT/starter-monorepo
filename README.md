@@ -139,7 +139,6 @@ To develop all apps and packages, run the following command:
 `pnpm run dev`
 
 For local development environment variables / secrets, create a copy of `.env.dev` to `.env.dev.local`.
-  - AI Agent will help you creating the `.env.dev.local` files if you use the AI initialization prompt.
 
 ### Deploy
 

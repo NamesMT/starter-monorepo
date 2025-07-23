@@ -25,11 +25,11 @@
     "std-env": "^3.9.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^4.17.0",
+    "@antfu/eslint-config": "^4.18.0",
     "@dotenvx/dotenvx": "1.11.4",
     "@namesmt/utils": "^0.5.16",
-    "@types/aws-lambda": "^8.10.150",
-    "@types/node": "^22.16.4",
+    "@types/aws-lambda": "^8.10.152",
+    "@types/node": "^22.16.5",
     "@unocss/eslint-plugin": "^66.3.3",
     "eslint": "^9.31.0",
     "frontend": "workspace:*",
