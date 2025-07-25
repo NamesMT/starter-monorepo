@@ -5,7 +5,7 @@ Below are examples showing how you can provide configuration values directly in 
 ```
 # Example 1: Keeping demo apps, removing SST only
 MONOREPO_ROOT_NAME="demo-eval-project"
-REMOVE_DEMO_FULLSTACK="keep_both"
+REMOVE_DEMO_APPS=
 TARGET_PROJECT_GOAL_AND_DESCRIPTION="""
 Learn the monorepo structure and app interaction using the demos, without SST deployment complexity.
 """
@@ -18,7 +18,7 @@ REMOVE_SST="true"
 
 # Example 2: Removing demo apps and SST
 MONOREPO_ROOT_NAME="my-cli-tool"
-REMOVE_DEMO_FULLSTACK="remove_both"
+REMOVE_DEMO_APPS="frontend,backend"
 TARGET_PROJECT_GOAL_AND_DESCRIPTION="""
 Build a cool CLI tool.
 """
@@ -33,7 +33,7 @@ REMOVE_SST="true"
 
 # Example 3: Removing demo apps, target is a non-Vue frontend + Go backend, no SST
 MONOREPO_ROOT_NAME="my-react-go-fullstack"
-REMOVE_DEMO_FULLSTACK="remove_both"
+REMOVE_DEMO_APPS="frontend,backend"
 TARGET_PROJECT_GOAL_AND_DESCRIPTION="""
 Build a fullstack that uses React frontend and Go backend.
 """
@@ -50,7 +50,7 @@ REMOVE_SST="true"
 
 # Example 4: Keeping demo backend (uses SST), replacing demo frontend with own Vue app
 MONOREPO_ROOT_NAME="my-custom-vue-fullstack"
-REMOVE_DEMO_FULLSTACK="remove_frontend"
+REMOVE_DEMO_APPS="frontend"
 TARGET_PROJECT_GOAL_AND_DESCRIPTION="""
 Build a fullstack that uses simple Vue
 """

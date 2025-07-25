@@ -21,7 +21,7 @@ During cleanup steps, DO NOT remove these dependencies, they are core configurat
 
 If, during any removal or modification step, you are not completely certain whether a specific file, code block, configuration entry, or dependency should be removed/modified based on the user's choices and the preservation rules, DO NOT proceed automatically. Instead, ask the user for clarification before taking action. Prioritize avoiding unintended removals.
 
-### CLEANUP HANDLING CONSISTENCY:
+### REMOVAL / CLEANUP HANDLING CONSISTENCY:
 
 When cleaning up contents (e.g., removing demo apps, frontend configs, SST), do double-check and ensure that all corresponding references, descriptions and related codes throughout the project and Memory Bank (`memory-bank/`) (if present) are removed.
 
@@ -38,7 +38,7 @@ Welcome! Use this template to configure your new project based on the `starter-m
 1. **Additional interactive steps**:
    1. From inputted `TARGET_PROJECT_GOAL_AND_DESCRIPTION` and `REFINE_TGD`, the AI Agent will help you process it and update, populate, refine, and beautify it into a markdown-compatible format, confirming the revised version with you.
 2. **Updating the repo**:
-   1. **Demo apps removal (optional):** Based on your `REMOVE_DEMO_FULLSTACK` selection, the demo `frontend` and/or `backend` applications and their references and related codes throughout the project and Memory Bank will be removed.
+   1. **Demo apps removal (optional):** Based on your `REMOVE_DEMO_APPS` selection, the demo `frontend` and/or `backend` applications and their references and related codes throughout the project and Memory Bank will be removed.
    2. **Frontend config cleanup (optional):** If applicable based on `TARGET_HAVE_FRONTEND` and `FRONTEND_HAVE_VUE`, unused frontend configurations (UnoCSS, Vue ESLint) and `locals/common-vue` might be removed.
    3. **SST removal (optional):** If `REMOVE_SST` is true, SST files, scripts, dependencies, and references will be removed.
      <!-- + Context for Agent: when doing SST Removal, these are SST's files: (`sst.config.ts`, `.env.sst`), also remove the `pathe` and `@types/aws-lambda` dependency, they are only used by SST -->
@@ -47,7 +47,8 @@ Welcome! Use this template to configure your new project based on the `starter-m
 3. **Finalizing steps**:
   <!-- + Context for Agent: ONLY START THIS STEP IF PRIOR STEPS IS DONE -->
    1. **INIT_PROMPT cleanup:** `INIT_PROMPT.md` and its related files (`INIT_PROMPT-EXAMPLES.md`) will be removed.
-   2. **Planning phase:** Agent will ask if you want to enter a feedback loop to make plans, create goals, and break down your project goals into actionable steps.
+   2. **Prepare the project:** Help the user run `pnpm install`.
+   3. **Planning phase:** Agent will ask if you want to enter a feedback loop to make plans, create goals, and break down your project goals into actionable steps.
      <!-- + Context for Agent: If the user wants to enter the planning feedback loop, start the task in a clean new (blank) task / context if possible for token efficiency (like `new_task` tool for Roo Code Agent) -->
 
 **Required Information:**
@@ -64,17 +65,29 @@ MONOREPO_ROOT_NAME="<your-project-name-here>"
 
 ---
 
-**2. Remove Demo Applications? (`REMOVE_DEMO_FULLSTACK`)**
+**2. Remove Demo Applications? (`REMOVE_DEMO_APPS`)**
 
-* > This template includes a demo full-stack setup (`apps/frontend` and `apps/backend`). Do you want remove one, or both?
-  * **Options**:
-    * `keep_both`: Keep both frontend and backend demo apps.
-    * `remove_frontend`: Remove `apps/frontend`.
-    * `remove_backend`: Remove `apps/backend`.
-    * `remove_both`: Remove both `apps/frontend` and `apps/backend`.
+* > This template includes the following demo apps and libraries: `apps/frontend`, `apps/backend`, `apps/backend-convex`.  
+  > Input the name of the apps that you want to remove.
+  * **Options**: should be a comma-separated list of choices, e.g., `frontend, backend, backend-convex` will removes the 3 listed apps.
+  <!-- Context for Agent:
+    Here is some additional instructions to help you remove the apps:
+    * `frontend`:
+      * Remove `frontend` from `package.json`.
+      * Remove `frontendNuxtConfig` from `eslint.config.js`.
+    * `backend`:
+      * Remove `backend` from `apps/frontend/package.json`, `apps/backend-convex/package.json`, `apps/frontend/tsconfig.json`.
+      * Remove the config block for `apps/backend/**` in `eslint.config.js`.
+    * `backend-convex`:
+      * Remove `backend-convex` from `apps/frontend/package.json`, `apps/backend/package.json`, `apps/frontend/tsconfig.json`.
+      * Remove the config block for `apps/backend-convex/convex/**` in `eslint.config.js`.
+    * **ANY APP**: apply to removal of every app.
+      * Remove sections related to it in `README.md` and `Memory Bank` (if present).
+      * Remove its dedicated locales directory, e.g.: `locals/locales/src/sheets/<app-name>`.
+   -->
 
 ```text
-REMOVE_DEMO_FULLSTACK="<your-choice-here>"
+REMOVE_DEMO_APPS="<list-or-empty>"
 ```
 
 ---
