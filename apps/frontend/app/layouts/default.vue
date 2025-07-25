@@ -1,10 +1,10 @@
-<script setup>
+<script setup lang="ts">
 const route = useRoute()
 const { t } = useI18n()
 const head = useLocaleHead({
-  key: 'id',
 })
-const title = computed(() => route.meta.title && t(route.meta.title))
+
+const title = computed(() => route.meta.title && t(route.meta.title as string))
 
 const windowsScroll = useWindowScroll()
 useEventListener('resize', () => { windowsScroll.measure() })
@@ -15,7 +15,9 @@ watch(() => route.name, () => { windowsScroll.measure() })
   <div>
     <Html :lang="head.htmlAttrs.lang" :dir="head.htmlAttrs.dir" class="font-sans">
       <Head>
-        <Title>{{ title }}</Title>
+        <Title>
+          {{ title }}
+        </Title>
         <template v-for="link in head.link" :key="link.id">
           <Link :id="link.id" :rel="link.rel" :href="link.href" :hreflang="link.hreflang" />
         </template>
@@ -32,7 +34,7 @@ watch(() => route.name, () => { windowsScroll.measure() })
             class="fixed w-full pr-[--scrollbar-width] transition-top"
             :class="windowsScroll.arrivedState.top ? 'top-0' : '-top-20'"
           >
-            <DefaultHeader />
+            <DefaultHeader class="px-5 2xl:px-20 lg:px-10 xl:px-15" />
           </div>
 
           <!-- NuxtPage -->

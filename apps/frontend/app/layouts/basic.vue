@@ -11,7 +11,9 @@ const title = computed(() => route.meta.title && t(route.meta.title))
   <div>
     <Html :lang="head.htmlAttrs.lang" :dir="head.htmlAttrs.dir" class="font-sans">
       <Head>
-        <Title>{{ title }}</Title>
+        <Title>
+          {{ title }}
+        </Title>
         <template v-for="link in head.link" :key="link.id">
           <Link :id="link.id" :rel="link.rel" :href="link.href" :hreflang="link.hreflang" />
         </template>

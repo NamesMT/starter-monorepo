@@ -54,7 +54,7 @@ const [DefineShortcutLi, ReuseShortcutLi] = createReusableTemplate<{ title: stri
             <div class="flex items-center gap-2">
               <Button class="w-fit uppercase" variant="outline" @pointerdown="setLocale(computedNextLocale)">
                 <div class="flex items-center text-mainGradient">
-                  <div i-hugeicons:translate class="bg-mainGradient" />: <p class="ml-1">
+                  <div class="i-hugeicons:translate bg-mainGradient" />: <p class="ml-1">
                     {{ locale.substring(0, 2) }}
                   </p>
                 </div>

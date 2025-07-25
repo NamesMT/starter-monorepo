@@ -1,6 +1,5 @@
 import {
   defineConfig,
-  presetAttributify,
   presetIcons,
   presetTypography,
   presetWebFonts,
@@ -49,6 +48,17 @@ function commonColorVarsGen(varName: string, additionalVars?: Array<string>) {
 
 export default defineConfig({
   theme: {
+    fontSize: {
+      'h-1': ['40px', '48px'],
+      'h-2': ['32px', '40px'],
+      'h-3': ['24px', '32px'],
+      'h-4': ['20px', '28px'],
+
+      'body-1': ['18px', '26px'],
+      'body-2': ['16px', '24px'],
+      'body-3': ['14px', '20px'],
+      'body-4': ['12px', '16px'],
+    },
     ringWidth: {
       DEFAULT: '3px',
     },
@@ -81,11 +91,22 @@ export default defineConfig({
       ]),
     },
   },
+  extendTheme: (theme) => {
+    return {
+      ...theme,
+      breakpoints: {
+        ...theme.breakpoints,
+        xs: '380px',
+        fhd: '1920px',
+        qhd: '2560px',
+      },
+    }
+  },
   safelist: [
     ...Object.values(codeIconMap).map(i => `i-${i}`),
   ],
   shortcuts: [
-    ['bg-mainGradient', 'bg-gradient-to-b from-primary via-primary to-violet-400'],
+    ['bg-mainGradient', 'bg-gradient-to-b from-primary via-primary to-secondary'],
     ['text-mainGradient', 'bg-mainGradient bg-clip-text text-transparent transition-color duration-200'],
   ],
   rules: [
@@ -122,7 +143,6 @@ export default defineConfig({
   ],
   presets: [
     presetWind3(),
-    presetAttributify(),
     presetIcons({
       scale: 1.2,
       cdn: 'https://esm.sh/',

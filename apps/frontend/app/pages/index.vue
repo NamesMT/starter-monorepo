@@ -34,7 +34,7 @@ const { isPending, isError, data, error } = useQuery({
 </script>
 
 <template>
-  <div class="w-full flex flex-col items-center justify-center gap-6 px-4 py-8 text-center">
+  <div class="w-full flex flex-col items-center justify-center gap-6 text-center">
     <!-- GridMaker Section -->
     <div class="max-w-2xl w-full border rounded-lg p-4 shadow">
       <h2 class="mb-3 text-xl font-semibold">

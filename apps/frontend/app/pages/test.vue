@@ -9,7 +9,7 @@ const convexVueContext = inject<ConvexVueContext>('convex-vue')
 </script>
 
 <template>
-  <div class="w-full flex flex-col items-center justify-center gap-6 px-4 py-8 text-center">
+  <div class="w-full flex flex-col items-center justify-center gap-6 text-center">
     <div class="max-w-2xl w-full border rounded-lg p-4 shadow">
       <h2 class="mb-2 text-2xl font-semibold">
         {{ $t('pages.test.title') }}
