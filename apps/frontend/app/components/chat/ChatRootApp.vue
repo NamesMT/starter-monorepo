@@ -11,7 +11,7 @@ const { data: pinnedThreadIds, isFinished: pinnedThreadIdsLoaded } = useIDBKeyva
 const { data: agentsSettings, isFinished: agentsSettingsLoaded } = useIDBKeyval<AgentsSettings>('chat/agentsSettings', {
   providers: {
   },
-  selectedAgent: 'hosted/qwen3-32b',
+  selectedAgent: 'hosted/qwen3-235b-a22b:free',
 })
 
 await until(computed(() =>
@@ -36,7 +36,10 @@ useHead({
 const hostedProvider = computed<HostedProvider>(() => ({
   enabled: true,
   models: {
-    'qwen3-32b': {
+    'qwen3-235b-a22b:free': {
+      enabled: true,
+    },
+    'kimi-k2:free': {
       enabled: true,
     },
     'deepseek-v3': {
@@ -49,11 +52,11 @@ const hostedProvider = computed<HostedProvider>(() => ({
       enabled: true,
     },
     'gemini-2.0-flash-exp': {
-      enabled: true,
+      enabled: false,
       attachments: ['image/png', 'image/jpeg', 'image/webp', 'application/pdf', 'text/plain'],
     },
   },
-  default: 'qwen3-32b',
+  default: 'qwen3-235b-a22b:free',
 }))
 
 const activeAgent = computed(() => {
