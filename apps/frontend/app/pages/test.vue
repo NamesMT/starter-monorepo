@@ -27,7 +27,7 @@ const convexVueContext = inject<ConvexVueContext>('convex-vue')
       <div class="flex flex-col items-center gap-4">
         <template v-if="!convexVueContext?.clientRef?.value">
           <div class="text-xl text-red-500">
-            {{ $t('pages.test.convex.status.notFound') }}
+            {{ $t('pages.test.section.convex.status.notFound') }}
           </div>
         </template>
         <ConvexIntegrationTest v-else />

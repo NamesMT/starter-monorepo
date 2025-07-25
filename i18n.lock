@@ -109,7 +109,7 @@ checksums:
     pages.home.tanstackQuery.staleButton: 2faf7a33dd56f8a104c30ec5d5141edc
     pages.home.themeSwitcher.label: 21fe00b7a518089576fb83c08631107a
     pages.home.title: 104a3db3b671c04e167eafbe21e57881
-    pages.test.convex.status.notFound: bf748ab28ff084adb68a5d24bcd95909
+    pages.test.section.convex.status.notFound: bf748ab28ff084adb68a5d24bcd95909
     pages.test.description: 2bb0336cb31d10a1bfb6164e4035207e
     pages.test.intro: 04c375b5393d5f318fd11c5c372122a9
     pages.test.section.convex.title: 39fdc104ff14fba826033e998c762a84

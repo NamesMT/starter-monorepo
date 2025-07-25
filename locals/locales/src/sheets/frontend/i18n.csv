@@ -129,10 +129,10 @@ pages.home.tanstackQuery.loading,,Loading...,Cargando...,Chargement...,Загр�
 pages.home.tanstackQuery.staleButton,,Make stale (refetch),Marcar como obsoleto (recargar),Rendre obsolète (recharger),Сделать устаревшим (обновить),Đánh dấu là cũ (tải lại),标记为过时 (重新获取)
 pages.home.themeSwitcher.label,,Theme,Tema,Thème,Тема,Chủ đề,主题
 pages.home.title,,Home,Inicio,Accueil,Главная,Trang chủ,首页
-pages.test.convex.status.notFound,,Convex integration: not found,Integración de Convex: no encontrada,Intégration Convex : non trouvée,Интеграция Convex: не найдена,Tích hợp Convex: không tìm thấy,Convex 集成：未找到
+pages.test.section.convex.status.notFound,,Convex integration: not found,Integración de Convex: no encontrada,Intégration Convex : non trouvée,Интеграция Convex: не найдена,Tích hợp Convex: không tìm thấy,Convex 集成：未找到
+pages.test.section.convex.title,,Convex Integration Test,Prueba de Integración de Convex,Test d'Intégration Convex,Тест интеграции Convex,Kiểm tra Tích hợp Convex,Convex 集成测试
 pages.test.description,,A page for testing various components and integrations.,Una página para probar varios componentes e integraciones.,Une page pour tester divers composants et intégrations.,Страница для тестирования различных компонентов и интеграций.,Một trang để thử nghiệm các thành phần và tích hợp khác nhau.,用于测试各种组件和集成的页面。
 pages.test.intro,,This is just a simple page to test stuff.,Esta es solo una página simple para probar cosas.,Ceci est juste une page simple pour tester des choses.,Это просто простая страница для тестирования.,Đây chỉ là một trang đơn giản để thử nghiệm mọi thứ.,这只是一个用于测试的简单页面。
-pages.test.section.convex.title,,Convex Integration Test,Prueba de Integración de Convex,Test d'Intégration Convex,Тест интеграции Convex,Kiểm tra Tích hợp Convex,Convex 集成测试
 pages.test.title,,Test,Prueba,Test,Тест,Kiểm tra,测试
 pinned,,Pinned,Fijados,Épinglé,Закреплено,Đã ghim,已固定
 recent,,Recent,Recientes,Récent,Недавние,Gần đây,最近
