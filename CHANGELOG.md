@@ -1,6 +1,32 @@
 # Changelog
 
 
+## v3.1.0
+
+[compare changes](https://github.com/NamesMT/starter-monorepo/compare/v3.0.0...v3.1.0)
+
+### 💅 Refactors
+
+- Update layouts, add font size tokens ([3fe8d3f](https://github.com/NamesMT/starter-monorepo/commit/3fe8d3f))
+
+### 🏡 Chore
+
+- Opt-in into new nuxt v4 `TS Project References` ([26b00e8](https://github.com/NamesMT/starter-monorepo/commit/26b00e8))
+- Set default dev script to full dev instead of `dev:noConvex` ([b00308e](https://github.com/NamesMT/starter-monorepo/commit/b00308e))
+- Housekeeping ([98116e7](https://github.com/NamesMT/starter-monorepo/commit/98116e7))
+- Housekeeping ([d312a05](https://github.com/NamesMT/starter-monorepo/commit/d312a05))
+- Update deps ([eb36121](https://github.com/NamesMT/starter-monorepo/commit/eb36121))
+- Add `launch.json` so you can start dev with debug easily ([9174350](https://github.com/NamesMT/starter-monorepo/commit/9174350))
+- Update deps ([88a89ee](https://github.com/NamesMT/starter-monorepo/commit/88a89ee))
+- Minor ([8db23cf](https://github.com/NamesMT/starter-monorepo/commit/8db23cf))
+- Update free models ([42c8b84](https://github.com/NamesMT/starter-monorepo/commit/42c8b84))
+- Update INIT_PROMPT ([af05eb6](https://github.com/NamesMT/starter-monorepo/commit/af05eb6))
+- Update INIT_PROMPT ([6d81f03](https://github.com/NamesMT/starter-monorepo/commit/6d81f03))
+
+### ❤️ Contributors
+
+- NamesMT ([@NamesMT](https://github.com/NamesMT))
+
 ## v3.0.0
 
 [compare changes](https://github.com/NamesMT/starter-monorepo/compare/v2.0.0...v3.0.0)
