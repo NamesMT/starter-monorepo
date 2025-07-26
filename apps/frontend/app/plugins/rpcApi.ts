@@ -1,5 +1,3 @@
-// eslint-disable-next-line ts/ban-ts-comment
-// @ts-ignore TS6305: `backend/src/app` has not been built yet
 import type { app } from 'backend/src/app'
 import type { ClientRequestOptions } from 'hono/client'
 import { hc } from 'hono/client'
