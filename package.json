@@ -31,7 +31,7 @@
     "@types/aws-lambda": "^8.10.152",
     "@types/node": "^22.16.5",
     "@unocss/eslint-plugin": "^66.3.3",
-    "eslint": "^9.31.0",
+    "eslint": "^9.32.0",
     "frontend": "workspace:*",
     "lint-staged": "^16.1.2",
     "simple-git-hooks": "^2.13.0",
