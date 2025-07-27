@@ -1,8 +1,9 @@
 import type { Awaitable } from '@vueuse/core'
 import type { ClientResponse } from 'hono/client'
+import { fetchRP } from 'fetch-result-please'
 
 /**
- * Shortcut for (await hc()).text()
+ * Shortcut for (await api()).text(), with types inference.
  */
 export async function hcText<T extends ClientResponse<any>>(fetchRes: Awaitable<T>): Promise<Awaited<ReturnType<T['text']>>> {
   const res = await fetchRes
@@ -12,7 +13,7 @@ export async function hcText<T extends ClientResponse<any>>(fetchRes: Awaitable<
 }
 
 /**
- * Shortcut for (await hc()).json()
+ * Shortcut for (await api()).json(), with types inference.
  */
 export async function hcJson<T extends ClientResponse<any>>(fetchRes: Awaitable<T>): Promise<Awaited<ReturnType<T['json']>>> {
   const res = await fetchRes
@@ -22,12 +23,10 @@ export async function hcJson<T extends ClientResponse<any>>(fetchRes: Awaitable<
 }
 
 /**
- * Shortcut for omFetch(await hc())
+ * Shortcut for fetchRP(api()), with types inference.
  *
  * Smartly parse the response data, and automatically throw an error if the response is not ok.
  */
 export async function hcParse<T extends ClientResponse<any>>(fetchRes: Awaitable<T>): Promise<T extends ClientResponse<infer RT> ? RT : never> {
-  const res = await fetchRes
-
-  return omFetch(res)
+  return fetchRP(fetchRes)
 }

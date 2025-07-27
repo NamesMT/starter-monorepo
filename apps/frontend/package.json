@@ -50,6 +50,7 @@
     "convex-nuxt": "^0.1.5",
     "dayjs": "^1.11.13",
     "destr": "^2.0.5",
+    "fetch-result-please": "^0.2.0",
     "h3-proxy": "^1.13.0",
     "hono": "^4.8.9",
     "idb-keyval": "^6.2.2",

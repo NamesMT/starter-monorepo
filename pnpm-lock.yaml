@@ -304,6 +304,9 @@ importers:
       destr:
         specifier: ^2.0.5
         version: 2.0.5
+      fetch-result-please:
+        specifier: ^0.2.0
+        version: 0.2.0
       h3-proxy:
         specifier: ^1.13.0
         version: 1.13.0(h3@1.15.3)
@@ -5223,6 +5226,10 @@ packages:
   fetch-blob@3.2.0:
     resolution: {integrity: sha512-7yAQpD2UMJzLi1Dqv7qFYnPbaPx7ZfFK6PiIxQ4PfkGPyNyl2Ugx+a/umUonmKqjhM4DnfbMvdX6otXq83soQQ==}
     engines: {node: ^12.20 || >= 14.13}
+
+  fetch-result-please@0.2.0:
+    resolution: {integrity: sha512-j6usAJi3FmbvgHk1896YnQ2nUs1L3iPRghq6TO99SaTyuTbGhdRqdHcu0HROLzWtMkzJlGRJlCE0QPftdDceFA==}
+    engines: {node: '>=22.14.0'}
 
   fflate@0.7.4:
     resolution: {integrity: sha512-5u2V/CDW15QM1XbbgS+0DfPxVB+jUKhWEKuuFuHncbk3tEEqzmoXL+2KyOFuKGqOnmdIy0/davWF1CkuwtibCw==}
@@ -14310,6 +14317,10 @@ snapshots:
     dependencies:
       node-domexception: 1.0.0
       web-streams-polyfill: 3.3.3
+
+  fetch-result-please@0.2.0:
+    dependencies:
+      destr: 2.0.5
 
   fflate@0.7.4: {}
 
