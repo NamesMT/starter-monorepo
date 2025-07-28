@@ -23,6 +23,7 @@
     * [Utilities](#utilities)
     * [Build](#build)
     * [Develop](#develop)
+      * [Wrangler / Cloudflare Workers](#wrangler--cloudflare-workers)
     * [Deploy](#deploy)
     * [Notes](#notes)
       * [`import` ordering](#import-ordering)
@@ -121,6 +122,7 @@ A super efficient and powerful, yet friendly LLM Chat system, featuring:
 
 This Turborepo has some additional tools already setup for you:
 + 🧐 ESLint + stylistic formatting rules ([antfu](https://github.com/antfu/eslint-config))
++ 📦📢 [`repo-release`](https://github.com/namesmt/repo-release) script, easily generates changelog, bump version, create GitHub release, and publish your packages to npm.
 + 📚 A few more goodies like:
   + [lint-staged](https://github.com/lint-staged/lint-staged) pre-commit hook
   + 🤖 Initialization prompt for AI Agents to modify the monorepo according to your needs.
