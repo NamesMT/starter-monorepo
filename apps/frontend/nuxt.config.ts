@@ -6,7 +6,13 @@ import { config } from 'dotenv'
 import { bundledLanguagesInfo } from 'shiki/bundle/full'
 import optimizeExclude from 'vite-plugin-optimize-exclude'
 
-if (import.meta.env.NODE_ENV === 'development') {
+import.meta.env.TARGET ??= import.meta.env.NODE_ENV
+
+if (import.meta.env.TARGET === 'workerdLocal') {
+  config({ path: ['.env.workerd.dev.local', '.env.workerd.dev'] })
+  import.meta.env.NUXT_PUBLIC_CONVEX_URL ||= (await getConvexEnvs()).CONVEX_URL || ''
+}
+else if (import.meta.env.TARGET === 'development') {
   config({ path: ['.env.dev.local', '.env.dev'] })
   import.meta.env.NUXT_PUBLIC_CONVEX_URL ||= (await getConvexEnvs()).CONVEX_URL || ''
 }

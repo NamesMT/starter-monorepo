@@ -140,6 +140,18 @@ To develop all apps and packages, run the following command:
 
 For local development environment variables / secrets, create a copy of `.env.dev` to `.env.dev.local`.
 
+#### Wrangler / Cloudflare Workers
+
+Guide to setup local development for Cloudflare `workerd` runtime testing:
+* (Optional) Run the convex dev server if you use convex.
+* Config `wrangler.jsonc`, specfically, the `vars` block, so that it properly targets the local env.
+* (Optional) Config [`apps/frontend/.env.workerd.dev`](apps/frontend/.env.workerd.dev) if you use convex or use different ip/port.
+* Build a new static dist for local dev:
+  * Start the local `backend` server
+  * Run `build:workerdLocal` script for `frontend`.
+* Run `pnpm dlx wrangler dev` to start wrangler dev server.
+  * `workerd` does not work with Alpine Linux, so if you use the included Dev Container, change the base image to some other distro.
+
 ### Deploy
 
 * You can add your custom deploy instructions in `deploy` script and `scripts/deploy.sh` in each app, it could be a full script that deploys to a platform, or necessary actions before for some platform integration deploys it, `frontend` will only start [build and deploy after all backends are deployed](./apps/frontend/turbo.json), to have context for SSG.

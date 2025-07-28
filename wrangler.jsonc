@@ -16,6 +16,11 @@
     "directory": "./apps/frontend/.output/public/"
   },
   "upload_source_maps": true,
+  "dev": {
+    "ip": "127.0.0.1",
+    "port": 3310,
+    "local_protocol": "https"
+  },
 
   /**
    * Smart Placement
@@ -46,6 +51,14 @@
     "KINDE_REDIRECT_URI": "https://starter-monorepo.isthe.top/api/auth/callback",
     "FRONTEND_URL": "https://starter-monorepo.isthe.top",
     "CONVEX_URL": "https://amiable-octopus-367.convex.cloud",
+
+    // The block below is intended for local development
+    // "KINDE_DOMAIN": "https://topnames-dev.eu.kinde.com",
+    // "KINDE_LOGOUT_REDIRECT_URI": "https://127.0.0.1:3310",
+    // "KINDE_REDIRECT_URI": "https://127.0.0.1:3310/api/auth/callback",
+    // "FRONTEND_URL": "https://127.0.0.1:3310",
+    // "CONVEX_URL": "https://dazzling-panther-382.convex.cloud",
+
     "NO_COLOR": "true"
   },
 
