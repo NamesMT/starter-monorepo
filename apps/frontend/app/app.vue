@@ -13,6 +13,7 @@ onMounted(async () => {
 </script>
 
 <template>
+  <NuxtRouteAnnouncer />
   <TooltipProvider :delay-duration="500">
     <div>
       <template v-if="!$init.mounted">
