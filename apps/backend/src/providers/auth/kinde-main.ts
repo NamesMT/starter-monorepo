@@ -21,12 +21,20 @@ export async function initKindeClient() {
   if (!isNonSharingPlatforms && cachedClient)
     console.warn('Already initialized')
 
-  const client = createKindeServerClient(GrantType.AUTHORIZATION_CODE, {
+  const requiredEnvs = {
     authDomain: env.KINDE_DOMAIN!,
     clientId: env.KINDE_CLIENT_ID!,
     clientSecret: env.KINDE_CLIENT_SECRET!,
     redirectURL: env.KINDE_REDIRECT_URI!,
     logoutRedirectURL: env.KINDE_LOGOUT_REDIRECT_URI!,
+  }
+
+  const missingEnvs = Object.entries(requiredEnvs).flatMap(([key, value]) => value ? [] : key)
+  if (missingEnvs.length)
+    throw new Error(`Missing required env: ${missingEnvs.join(', ')}`)
+
+  const client = createKindeServerClient(GrantType.AUTHORIZATION_CODE, {
+    ...requiredEnvs,
   })
 
   cacheProvider('kinde-main--client', client)
