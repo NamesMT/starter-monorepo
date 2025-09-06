@@ -1,5 +1,5 @@
-import type { Message } from '@ai-sdk/vue'
 import type { AgentObject, AgentsSettings, HostedProvider } from '@local/common/src/chat'
+import type { UIMessage } from 'ai'
 import type { Doc, Id } from 'backend-convex/convex/_generated/dataModel'
 import { createContext } from 'reka-ui'
 
@@ -93,8 +93,8 @@ export interface CustomMessage extends Doc<'messages'> {
    */
   id: string
 }
-// Extending from AI SDK causes lag and infinite deep, using this to check compatibility instead
-export type _AISDKMessageCompatCheck = CustomMessage & Message
+// Extending from AI SDK causes lag and infinite deep, using this to check compatibility instead for now
+export type _AISDKMessageCompatCheck = CustomMessage & UIMessage
 
 export function customMessageTransform(message: Doc<'messages'>): CustomMessage {
   return {

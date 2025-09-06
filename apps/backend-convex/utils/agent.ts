@@ -1,12 +1,12 @@
+import type { LanguageModelV2 } from '@ai-sdk/provider'
 import type { AgentObject } from '@local/common/src/chat'
-import type { LanguageModelV1 } from '@openrouter/ai-sdk-provider'
 import { createAnthropic } from '@ai-sdk/anthropic'
 import { createGoogleGenerativeAI } from '@ai-sdk/google'
 import { createGroq } from '@ai-sdk/groq'
 import { createOpenAI } from '@ai-sdk/openai'
 import { createOpenRouter, openrouter } from '@openrouter/ai-sdk-provider'
 
-export function getAgentModel({ provider, model, apiKey }: AgentObject): LanguageModelV1 {
+export function getAgentModel({ provider, model, apiKey }: AgentObject): LanguageModelV2 {
   if (provider === 'hosted') {
     switch (model) {
       case 'qwen3-235b-a22b:free':
