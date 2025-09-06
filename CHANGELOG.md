@@ -1,6 +1,43 @@
 # Changelog
 
 
+## v4.0.0
+
+[compare changes](https://github.com/NamesMT/starter-monorepo/compare/v3.1.0...v4.0.0)
+
+### 🚀 Enhancements
+
+- **devContainer/postCreate:** Auto install pnpm via corepack ([4646033](https://github.com/NamesMT/starter-monorepo/commit/4646033))
+- Local workerd dev setup and guide ([d0d67c4](https://github.com/NamesMT/starter-monorepo/commit/d0d67c4))
+- Add `repo-release` script ([ddf137f](https://github.com/NamesMT/starter-monorepo/commit/ddf137f))
+- Tailwind v4 compat ([1fb0e38](https://github.com/NamesMT/starter-monorepo/commit/1fb0e38))
+
+### 🩹 Fixes
+
+- Shadcn-vue with Nuxt 4 ([10b6c82](https://github.com/NamesMT/starter-monorepo/commit/10b6c82))
+
+### 💅 Refactors
+
+- Fetch util now published as `fetch-result-please` ([78dbc65](https://github.com/NamesMT/starter-monorepo/commit/78dbc65))
+
+### 🏡 Chore
+
+- Update deps ([05583c9](https://github.com/NamesMT/starter-monorepo/commit/05583c9))
+- Remove unnecessary `@ts-ignore` ([64ecb06](https://github.com/NamesMT/starter-monorepo/commit/64ecb06))
+- Add `NuxtRouteAnnouncer` ([2decf00](https://github.com/NamesMT/starter-monorepo/commit/2decf00))
+- Update deps ([ad30b2f](https://github.com/NamesMT/starter-monorepo/commit/ad30b2f))
+- Update deps, use official `parseResponse` from hono ([6c536ad](https://github.com/NamesMT/starter-monorepo/commit/6c536ad))
+- **p/kinde-main:** Should report when required envs are missing ([b074f36](https://github.com/NamesMT/starter-monorepo/commit/b074f36))
+- Update deps ([53229b7](https://github.com/NamesMT/starter-monorepo/commit/53229b7))
+- Update deps ([2feee9c](https://github.com/NamesMT/starter-monorepo/commit/2feee9c))
+- Update major `hono-openapi` ([19bafc4](https://github.com/NamesMT/starter-monorepo/commit/19bafc4))
+- Upgrade to `ai-sdk@5` ([93e267a](https://github.com/NamesMT/starter-monorepo/commit/93e267a))
+- Update default model ([8de484e](https://github.com/NamesMT/starter-monorepo/commit/8de484e))
+
+### ❤️ Contributors
+
+- NamesMT ([@NamesMT](https://github.com/NamesMT))
+
 ## v3.1.0
 
 [compare changes](https://github.com/NamesMT/starter-monorepo/compare/v3.0.0...v3.1.0)
