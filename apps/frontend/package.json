@@ -13,7 +13,7 @@
     "deploy": "pnpm run build && sh scripts/deploy.sh",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "shad-add": "pnpm dlx shadcn-vue@^1 add"
+    "shad-add": "pnpm dlx shadcn-vue@2 add"
   },
   "dependencies": {
     "embla-carousel": "^8.6.0",
@@ -62,12 +62,12 @@
     "nuxt-svgo": "4.2.2",
     "ohash": "^2.0.11",
     "sass": "^1.92.1",
-    "shadcn-nuxt": "^1.0.3",
-    "tailwind-merge": "^2.6.0",
+    "shadcn-nuxt": "^2.2.0",
+    "tailwind-merge": "^3.3.1",
     "ufo": "^1.6.1",
     "unocss": "^66.5.0",
     "unocss-preset-animations": "^1.2.1",
-    "unocss-preset-shadcn": "^0.5.0",
+    "unocss-preset-shadcn": "^1.0.1",
     "vite-plugin-optimize-exclude": "^0.0.1",
     "vue": "^3.5.21",
     "vue-router": "^4.5.1"

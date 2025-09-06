@@ -6,7 +6,7 @@ const { locale, locales, setLocale } = useI18n()
   <DropdownMenu :modal="true">
     <DropdownMenuTrigger>
       <Button
-        class="h-fit w-11.5 px-2 py-1 font-medium uppercase text-h-4!"
+        class="font-medium px-2 py-1 h-fit w-11.5 uppercase text-h4!"
         variant="ghost"
       >
         {{ locale.substring(0, 2) }}

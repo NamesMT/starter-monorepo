@@ -83,7 +83,7 @@
   }
 }
 
-@layer base {
+@layer default {
   * {
     @apply border-border;
   }

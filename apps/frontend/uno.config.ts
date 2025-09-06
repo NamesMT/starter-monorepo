@@ -3,7 +3,7 @@ import {
   presetIcons,
   presetTypography,
   presetWebFonts,
-  presetWind3,
+  presetWind4,
   transformerDirectives,
   transformerVariantGroup,
 } from 'unocss'
@@ -47,17 +47,41 @@ function commonColorVarsGen(varName: string, additionalVars?: Array<string>) {
 }
 
 export default defineConfig({
+  outputToCssLayers: true,
   theme: {
-    fontSize: {
-      'h-1': ['40px', '48px'],
-      'h-2': ['32px', '40px'],
-      'h-3': ['24px', '32px'],
-      'h-4': ['20px', '28px'],
-
-      'body-1': ['18px', '26px'],
-      'body-2': ['16px', '24px'],
-      'body-3': ['14px', '20px'],
-      'body-4': ['12px', '16px'],
+    text: {
+      h1: {
+        fontSize: '40px',
+        lineHeight: '48px',
+      },
+      h2: {
+        fontSize: '32px',
+        lineHeight: '40px',
+      },
+      h3: {
+        fontSize: '24px',
+        lineHeight: '32px',
+      },
+      h4: {
+        fontSize: '20px',
+        lineHeight: '28px',
+      },
+      body1: {
+        fontSize: '18px',
+        lineHeight: '26px',
+      },
+      body2: {
+        fontSize: '16px',
+        lineHeight: '24px',
+      },
+      body3: {
+        fontSize: '14px',
+        lineHeight: '20px',
+      },
+      body4: {
+        fontSize: '12px',
+        lineHeight: '16px',
+      },
     },
     ringWidth: {
       DEFAULT: '3px',
@@ -142,7 +166,11 @@ export default defineConfig({
     },
   ],
   presets: [
-    presetWind3(),
+    presetWind4({
+      preflights: {
+        reset: false, // We import the preflight reset ourself in main.scss
+      },
+    }),
     presetIcons({
       scale: 1.2,
       cdn: 'https://esm.sh/',
