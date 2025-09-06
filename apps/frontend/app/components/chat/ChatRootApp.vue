@@ -56,14 +56,20 @@ const hostedProvider = computed<HostedProvider>(() => ({
       attachments: ['image/png', 'image/jpeg', 'image/webp', 'application/pdf', 'text/plain'],
     },
   },
-  default: 'qwen3-235b-a22b:free',
+  default: 'kimi-k2:free',
 }))
 
 const activeAgent = computed(() => {
   let [provider, model]: [string, string] = agentsSettings.value.selectedAgent?.split(/\/(.*)/) as any
 
-  if (!provider || !model || (provider !== 'hosted' && !agentsSettings.value.providers[provider]))
+  if (
+    !provider
+    || !model
+    || (provider !== 'hosted' && !agentsSettings.value.providers[provider])
+    || !agentsSettings.value.providers[provider]?.models[model]
+  ) {
     [provider, model] = ['hosted', hostedProvider.value.default!]
+  }
 
   return {
     provider,
