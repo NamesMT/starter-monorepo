@@ -26,13 +26,13 @@
     "std-env": "^3.9.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^5.2.1",
+    "@antfu/eslint-config": "^5.2.2",
     "@dotenvx/dotenvx": "1.11.4",
     "@namesmt/utils": "^0.5.17",
     "@types/aws-lambda": "^8.10.152",
-    "@types/node": "^24.3.0",
+    "@types/node": "^24.3.1",
     "@unocss/eslint-plugin": "^66.5.0",
-    "eslint": "^9.34.0",
+    "eslint": "^9.35.0",
     "frontend": "workspace:*",
     "lint-staged": "^16.1.6",
     "simple-git-hooks": "^2.13.1",
