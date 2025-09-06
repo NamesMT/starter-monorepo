@@ -1,14 +1,18 @@
 import type { Hono } from 'hono'
 import { Scalar } from '@scalar/hono-api-reference'
-import { openAPISpecs } from 'hono-openapi'
+import { openAPIRouteHandler } from 'hono-openapi'
 
 export function setupOpenAPI(app: Hono<any, any>, prefix = '/openapi') {
   // OpenAPI spec
   app.get(
-    `${prefix}/spec`,
-    openAPISpecs(app, {
+    `${prefix}/spec.json`,
+    openAPIRouteHandler(app, {
       documentation: {
-        info: { title: `starter-monorepo's backend`, version: '1.0.0', description: 'My amazing API' },
+        info: {
+          title: `starter-monorepo's backend`,
+          version: '1.0.0',
+          description: 'My amazing API',
+        },
       },
     }),
   )
@@ -18,7 +22,7 @@ export function setupOpenAPI(app: Hono<any, any>, prefix = '/openapi') {
     `${prefix}/ui`,
     Scalar({
       theme: 'deepSpace',
-      url: `${prefix}/spec`,
+      url: `${prefix}/spec.json`,
     }),
   )
 }

@@ -2,8 +2,7 @@ import { customArktypeValidator } from '#src/helpers/arktype.js'
 import { appFactory } from '#src/helpers/factory.js'
 import { i18nComposer } from '#src/helpers/i18n.js'
 import { type } from 'arktype'
-import { describeRoute } from 'hono-openapi'
-import { resolver } from 'hono-openapi/arktype'
+import { describeRoute, resolver } from 'hono-openapi'
 
 export const dummyGreetRouteApp = appFactory.createApp()
   .get(
