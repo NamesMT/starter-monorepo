@@ -18,7 +18,7 @@ for (const color of colorPalettePresets) {
   // length 12 = 0-950
   Array.from({ length: 12 }, (_, i) => i).forEach((num) => {
     const key = `${color}-${colorIndexer(num)}`
-    colorsPaletteMap[key] = `hsl(var(--${key}))`
+    colorsPaletteMap[key] = `var(--${key})`
   })
 }
 // Generates color index following the pattern: 0 50 100 200..900 950 1000
@@ -37,10 +37,10 @@ function colorIndexer(num: number) {
  */
 function commonColorVarsGen(varName: string, additionalVars?: Array<string>) {
   return {
-    [varName]: `hsl(var(--${varName}))`,
-    [`${varName}-foreground`]: `hsl(var(--${varName}-foreground))`,
+    [varName]: `var(--${varName})`,
+    [`${varName}-foreground`]: `var(--${varName}-foreground)`,
     ...(additionalVars && additionalVars.reduce((acc, cur) => {
-      acc[`${varName}-${cur}`] = `hsl(var(--${varName}-${cur}))`
+      acc[`${varName}-${cur}`] = `var(--${varName}-${cur})`
       return acc
     }, {} as Record<string, string>)),
   }
@@ -88,13 +88,13 @@ export default defineConfig({
     },
     colors: {
       ...colorsPaletteMap,
-      'mono': 'hsl(var(--mono))',
-      'mono-i': 'hsl(var(--mono-i))',
-      'background': 'hsl(var(--background))',
-      'foreground': 'hsl(var(--foreground))',
-      'border': 'hsl(var(--border))',
-      'input': 'hsl(var(--input))',
-      'ring': 'hsl(var(--ring))',
+      'mono': 'var(--mono)',
+      'mono-i': 'var(--mono-i)',
+      'background': 'var(--background)',
+      'foreground': 'var(--foreground)',
+      'border': 'var(--border)',
+      'input': 'var(--input)',
+      'ring': 'var(--ring)',
       ...colorPalettePresets.reduce((acc, cur) => {
         Object.assign(acc, commonColorVarsGen(cur))
         return acc

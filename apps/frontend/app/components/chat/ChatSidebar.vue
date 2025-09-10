@@ -126,7 +126,7 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
 <template>
   <Sidebar>
     <SidebarHeader class="px-4 py-2">
-      <div class="absolute right-3 top-3">
+      <div class="right-3 top-3 absolute">
         <Button
           variant="ghost" size="icon" class="size-7"
           @click="colorMode.preference = (colorMode.value === 'dark') ? 'light' : 'dark'"
@@ -160,7 +160,7 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
     </SidebarHeader>
     <SidebarContent class="p-2">
       <SidebarGroup v-if="!threads?.length">
-        <div class="py-4 text-center text-gray-500 dark:text-gray-400">
+        <div class="text-gray-500 py-4 text-center dark:text-gray-400">
           {{ isFetching
             ? $t('chat.sidebar.threads.loading')
             : $t('chat.sidebar.threads.empty') }}
@@ -184,11 +184,11 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
                   <!-- Using [&.active] instead of :active-class because of reactivity bug -->
                   <NuxtLink
                     :to="`/chat/${thread._id}`"
-                    class="group/thread relative block flex items-center gap-2 overflow-hidden rounded-md p-2 px-3 text-sm $BGCOLOR=$primary-200 [&.router-link-exact-active]:(bg-[hsl(var(--BGCOLOR)/0.3)]) hover:(bg-[hsl(var(--BGCOLOR)/0.7)]) dark:$BGCOLOR=$primary-800"
+                    class="group/thread text-sm p-2 px-3 rounded-md flex gap-2 items-center relative overflow-hidden $BGCOLOR=$primary-200 [&.router-link-exact-active]:(bg-$BGCOLOR/30) hover:bg-$BGCOLOR/70] dark:$BGCOLOR=$primary-800"
                     @mousedown.left="navigateTo(`/chat/${thread._id}`);"
                     @click="navigateTo(`/chat/${thread._id}`); sidebarContext.setOpenMobile(false)"
                   >
-                    <div class="h-4 flex items-center gap-1">
+                    <div class="flex gap-1 h-4 items-center">
                       <BranchIconButton v-if="thread.parentThread" :thread />
                       <FrozenIconButton v-if="thread.frozen" :thread />
                     </div>
@@ -205,10 +205,10 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
                     </Tooltip>
 
                     <div
-                      class="right-0 top-0 h-full flex translate-x-[calc(100%+1rem)] items-center gap-1 bg-[hsl(var(--BGCOLOR))] px-2 pr-1 transition-transform will-change-transform absolute! group-hover/thread:translate-x-0"
+                      class="px-2 pr-1 will-change-transform bg-$BGCOLOR flex gap-1 h-full translate-x-[calc(100%+1rem)] transition-transform items-center right-0 top-0 group-hover/thread:translate-x-0 absolute!"
                       @click.stop.prevent
                     >
-                      <div class="pointer-events-none absolute bottom-0 right-[100%] top-0 h-12 w-8 from-[hsl(var(--BGCOLOR))] to-transparent bg-gradient-to-l opacity-0 transition-opacity group-hover/thread:opacity-100" />
+                      <div class="opacity-0 h-12 w-8 pointer-events-none transition-opacity bottom-0 right-[100%] top-0 absolute from-$BGCOLOR to-transparent bg-gradient-to-l group-hover/thread:opacity-100" />
                       <Tooltip>
                         <TooltipTrigger as-child>
                           <Button
@@ -256,7 +256,7 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
         </div>
 
         <SidebarGroup v-show="threadsPartitioned[1].length" class="flex flex-col gap-2">
-          <h4 class="mx-1 flex gap-1 text-xs text-primary">
+          <h4 class="text-xs text-primary mx-1 flex gap-1">
             <div class="i-hugeicons:pin" /><div>{{ $t('pinned') }}</div>
           </h4>
           <ul class="space-y-1">
@@ -265,7 +265,7 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
         </SidebarGroup>
 
         <SidebarGroup v-show="filteredThreads.length" class="flex flex-col gap-2">
-          <h4 class="mx-1 flex gap-1 text-xs text-primary">
+          <h4 class="text-xs text-primary mx-1 flex gap-1">
             <div>{{ $t('recent') }}</div>
           </h4>
           <ul class="space-y-1">

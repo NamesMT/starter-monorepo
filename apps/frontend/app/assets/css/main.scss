@@ -22,12 +22,12 @@ code {
 .spinner {
   border: 4px solid rgba(0, 0, 0, 0.1);
   border-radius: 50%;
-  border-left-color: hsl(var(--primary-500));
+  border-left-color: var(--primary-500);
   animation: spin 1s ease infinite;
 }
 
 .dark .spinner {
-  border-left-color: hsl(var(--primary-400));
+  border-left-color: var(--primary-400);
 }
 
 @keyframes spin {

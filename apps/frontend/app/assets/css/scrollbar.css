@@ -5,11 +5,11 @@
 
 ::-webkit-scrollbar-thumb:hover {
   border: 2px solid transparent;
-  background: hsl(var(--primary) /.45);
+  background: var(--primary) /.45;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--primary) /.34);
+  background: var(--primary) /.34;
   border-radius: 4px;
   border: 1px solid transparent;
   background-clip: content-box;
@@ -17,6 +17,6 @@
 }
 
 /* ::-webkit-scrollbar-track {
-  background: hsl(var(--accent)/.2);
+  background: var(--accent)/.2;
   border-radius: 4px;
 } */
