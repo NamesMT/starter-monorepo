@@ -26,12 +26,12 @@
     "std-env": "^3.9.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^5.2.2",
+    "@antfu/eslint-config": "^5.3.0",
     "@dotenvx/dotenvx": "1.11.4",
     "@namesmt/utils": "^0.5.17",
     "@types/aws-lambda": "^8.10.152",
     "@types/node": "^24.3.1",
-    "@unocss/eslint-plugin": "^66.5.0",
+    "@unocss/eslint-plugin": "^66.5.1",
     "eslint": "^9.35.0",
     "frontend": "workspace:*",
     "lint-staged": "^16.1.6",
