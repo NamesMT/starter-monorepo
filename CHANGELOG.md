@@ -1,6 +1,26 @@
 # Changelog
 
 
+## v4.1.0
+
+[compare changes](https://github.com/NamesMT/starter-monorepo/compare/v4.0.0...v4.1.0)
+
+### 🏡 Chore
+
+- Update deps ([db2f47d](https://github.com/NamesMT/starter-monorepo/commit/db2f47d))
+
+### 🎨 Styles
+
+- ⚠️  Oklch colors, some syntax fixes ([234bdd2](https://github.com/NamesMT/starter-monorepo/commit/234bdd2))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Oklch colors, some syntax fixes ([234bdd2](https://github.com/NamesMT/starter-monorepo/commit/234bdd2))
+
+### ❤️ Contributors
+
+- NamesMT ([@NamesMT](https://github.com/NamesMT))
+
 ## v4.0.0
 
 [compare changes](https://github.com/NamesMT/starter-monorepo/compare/v3.1.0...v4.0.0)
