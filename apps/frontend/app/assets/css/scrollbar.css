@@ -5,11 +5,11 @@
 
 ::-webkit-scrollbar-thumb:hover {
   border: 2px solid transparent;
-  background: var(--primary) /.45;
+  --at-apply: "bg-primary/45"
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--primary) /.34;
+  --at-apply: "bg-primary/34"
   border-radius: 4px;
   border: 1px solid transparent;
   background-clip: content-box;
