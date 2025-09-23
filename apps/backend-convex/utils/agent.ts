@@ -11,8 +11,6 @@ export function getAgentModel({ provider, model, apiKey }: AgentObject): Languag
     switch (model) {
       case 'qwen3-235b-a22b:free':
         return openrouter('qwen/qwen3-235b-a22b:free')
-      case 'kimi-k2:free':
-        return openrouter('moonshotai/kimi-k2:free')
       case 'deepseek-v3.1':
         return openrouter('deepseek/deepseek-chat-v3.1:free')
       case 'devstral-small-2505':

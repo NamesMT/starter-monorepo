@@ -39,9 +39,6 @@ const hostedProvider = computed<HostedProvider>(() => ({
     'qwen3-235b-a22b:free': {
       enabled: true,
     },
-    'kimi-k2:free': {
-      enabled: true,
-    },
     'deepseek-v3.1': {
       enabled: true,
     },
@@ -56,7 +53,7 @@ const hostedProvider = computed<HostedProvider>(() => ({
       attachments: ['image/png', 'image/jpeg', 'image/webp', 'application/pdf', 'text/plain'],
     },
   },
-  default: 'kimi-k2:free',
+  default: 'deepseek-v3.1',
 }))
 
 const activeAgent = computed(() => {
