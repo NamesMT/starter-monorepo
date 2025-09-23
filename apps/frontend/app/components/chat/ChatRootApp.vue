@@ -42,7 +42,7 @@ const hostedProvider = computed<HostedProvider>(() => ({
     'kimi-k2:free': {
       enabled: true,
     },
-    'deepseek-v3': {
+    'deepseek-v3.1': {
       enabled: true,
     },
     'devstral-small-2505': {
@@ -65,8 +65,8 @@ const activeAgent = computed(() => {
   if (
     !provider
     || !model
-    || (provider !== 'hosted' && !agentsSettings.value.providers[provider])
-    || !agentsSettings.value.providers[provider]?.models[model]
+    || (provider !== 'hosted' && !agentsSettings.value.providers[provider]?.models[model])
+    || (provider === 'hosted' && !hostedProvider.value.models[model])
   ) {
     [provider, model] = ['hosted', hostedProvider.value.default!]
   }
@@ -102,7 +102,7 @@ provideChatContext({
       <ChatHotkeysHook />
       <ChatSidebar class="z-5" />
       <ChatInterface class="h-full w-full" />
-      <ChatFloatingMenu class="absolute left-2 top-2 z-10" />
+      <ChatFloatingMenu class="left-2 top-2 absolute z-10" />
     </ChatGlobalsProvider>
   </SidebarProvider>
 </template>
