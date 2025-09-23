@@ -26,7 +26,7 @@ export const generateTitle = action({
     const messages = await ctx.runQuery(api.messages.listByThread, { threadId: args.threadId, lockerKey: args.lockerKey })
 
     const { text } = await generateText({
-      model: openrouter('qwen/qwen3-8b:free'),
+      model: openrouter('google/gemma-3-12b-it:free'),
       system: `You are a helpful assistant, generating concise, informative, and clear titles for a given context, keep the generated title under 40 characters, do not use any quotes and markdown syntax.`,
       prompt: `Generate a new title for this thread, infer the language from the thread's detail, here is the structured thread detail: \n${[
         `Title: "${thread.title}"`,
