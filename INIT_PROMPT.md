@@ -37,7 +37,7 @@ Welcome! Use this template to configure your new project based on the `starter-m
 
 1. **Additional interactive steps**:
    1. From inputted `TARGET_PROJECT_GOAL_AND_DESCRIPTION` and `REFINE_TGD`, the AI Agent will help you process it and update, populate, refine, and beautify it into a markdown-compatible format, confirming the revised version with you.
-2. **Updating the repo**:
+2. **Evaluating necessary actions**: The agent will analyze the choices you made and make a list of actions to perform in batch, to optimize on token count and calls.
    1. **Demo apps removal (optional):** Based on your `REMOVE_DEMO_APPS` selection, the demo `frontend` and/or `backend` applications and their references and related codes throughout the project and Memory Bank will be removed.
    2. **Frontend config cleanup (optional):** If applicable based on `TARGET_HAVE_FRONTEND` and `FRONTEND_HAVE_VUE`, unused frontend configurations (UnoCSS, Vue ESLint) and `locals/common-vue` might be removed.
    3. **Lingo.dev** removal (optional): If `REMOVE_LINGODOTDEV` is true, Lingo.dev setup will be removed.
@@ -53,10 +53,11 @@ Welcome! Use this template to configure your new project based on the `starter-m
    5. **Project context update & renaming:** The agent will update all related documents like `README.md` and Memory Bank with your (revised) goals and descriptions, as well as replace `starter-monorepo` with `MONOREPO_ROOT_NAME` throughout project/Memory Bank.
    6. **Initialize local secret env files:** Scan the project for `.env.dev` files and duplicate them as `.env.dev.local` for each that exists.
 3. **Finalizing steps**:
-  <!-- + Context for Agent: ONLY START THIS STEP IF PRIOR STEPS IS DONE -->
-   1. **INIT_PROMPT cleanup:** `INIT_PROMPT.md` and its related files (`INIT_PROMPT-EXAMPLES.md`) will be removed.
-   2. **Prepare the project:** Help the user run `pnpm install`.
-   3. **Planning phase:** Agent will ask if you want to enter a feedback loop to make plans, create goals, and break down your project goals into actionable steps.
+   <!-- + Context for Agent: ONLY START THIS STEP IF PRIOR STEPS IS DONE -->
+   1. **Perform evaluated actions:** Perform the actions evaluated in 2. **Evaluating necessary actions**
+   2. **INIT_PROMPT cleanup:** `INIT_PROMPT.md` and its related files (`INIT_PROMPT-EXAMPLES.md`) will be removed.
+   3. **Prepare the project:** Help the user run `pnpm install`.
+   4. **Planning phase:** Agent will ask if you want to enter a feedback loop to make plans, create goals, and break down your project goals into actionable steps.
      <!-- + Context for Agent: If the user wants to enter the planning feedback loop, start the task in a clean new (blank) task / context if possible for token efficiency (like `new_task` tool for Roo Code Agent) -->
 
 **Required Information:**
