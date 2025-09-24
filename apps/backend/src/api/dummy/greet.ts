@@ -4,7 +4,7 @@ import { i18nComposer } from '#src/helpers/i18n.js'
 import { type } from 'arktype'
 import { describeRoute, resolver } from 'hono-openapi'
 
-export const dummyGreetRouteApp = appFactory.createApp()
+export const dummyGreetRoute = appFactory.createApp()
   .get(
     '',
     describeRoute({

@@ -37,7 +37,7 @@ Again, the recommended structure is to mirror the api url path, but, if for some
 
 #### Hono `app` export naming conventions:
 * Root and main app entries (app.ts, $.ts) should be named as: `<Name>App`, and it should only `.route` other instances or `.use` middlewares, do not define routes on the `App` instance.
-* For other app entries, a.k.a routes defines, it should be named as: `<Name>RouteApp`, i.e: `/api/dummy/hello.ts` should be named as `dummyHelloRouteApp`/`helloRouteApp`.
+* For other app entries, a.k.a routes defines, it should be named as: `<Name>Route`, i.e: `/api/dummy/hello.ts` should be named as `dummyHelloRoute`/`helloRoute`.
 
 ## Notes & Guides
 

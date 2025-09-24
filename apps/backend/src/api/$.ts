@@ -1,21 +1,21 @@
 import { appFactory } from '#src/helpers/factory.js'
-import { apiRouteApp } from './$$'
+import { apiRoute } from './$$'
 import { authApp } from './auth/$'
-import { dummyConvexTasksRouteApp } from './dummy/convexTasks'
-import { dummyGreetRouteApp } from './dummy/greet'
-import { dummyHelloRouteApp } from './dummy/hello'
+import { dummyConvexTasksRoute } from './dummy/convexTasks'
+import { dummyGreetRoute } from './dummy/greet'
+import { dummyHelloRoute } from './dummy/hello'
 
 export const apiApp = appFactory.createApp()
   // Simple health check route
-  .route('', apiRouteApp)
+  .route('', apiRoute)
 
   // Auth app - you'll need to setup Kinde environment variables.
   .route('/auth', authApp)
 
   // Some example routes
-  .route('/dummy/convexTasks', dummyConvexTasksRouteApp)
-  .route('/dummy/hello', dummyHelloRouteApp)
-  .route('/dummy/greet', dummyGreetRouteApp)
+  .route('/dummy/convexTasks', dummyConvexTasksRoute)
+  .route('/dummy/hello', dummyHelloRoute)
+  .route('/dummy/greet', dummyGreetRoute)
 
 // ### This block contains the sample code for streaming APIs,
 // import type { TypedResponse } from 'hono'

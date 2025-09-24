@@ -4,7 +4,7 @@ import { type } from 'arktype'
 import { api } from 'backend-convex/convex/_generated/api'
 import { describeRoute, resolver } from 'hono-openapi'
 
-export const dummyConvexTasksRouteApp = appFactory.createApp()
+export const dummyConvexTasksRoute = appFactory.createApp()
   .get(
     '',
     describeRoute({
