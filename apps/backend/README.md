@@ -8,6 +8,11 @@
 - Shared i18n with `frontend` via [`@local/locales`]((../../locals/locales/README.md)) (using [petite-vue-i18n](./src/helpers/i18n.ts)).
 - [Arktype](https://arktype.io/) validation setup.
 - [Session management](./src/middlewares/session.ts).
+- Multi-platform support, one codebase that works for Node, Cloudflare Workers, AWS Lambda, and more.
+- Efficient providers management pattern, auto-optimize depends on platforms, with on-demand initialization support, sample providers includes:
+  - Kinde auth
+  - Convex
+  - grammY telegram bot
 - And more minor goodies!
 
 *You can view the OpenAPI UI live demo [HERE](https://4yjbmxiunrnigwewec4twf4zl40izfde.lambda-url.ap-southeast-1.on.aws/openapi/ui).*
