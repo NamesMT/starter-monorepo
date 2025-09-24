@@ -1,6 +1,46 @@
 # Changelog
 
 
+## v4.2.0
+
+[compare changes](https://github.com/NamesMT/starter-monorepo/compare/v4.1.0...v4.2.0)
+
+### 🚀 Enhancements
+
+- Add sample `grammy` telegram bot implement ([d0e5bbd](https://github.com/NamesMT/starter-monorepo/commit/d0e5bbd))
+
+### 🩹 Fixes
+
+- `activeAgent` compute ([c6e5cdb](https://github.com/NamesMT/starter-monorepo/commit/c6e5cdb))
+
+### 💅 Refactors
+
+- ⚠️  Reword: `RouteApp` => `Route` ([55c7fdd](https://github.com/NamesMT/starter-monorepo/commit/55c7fdd))
+
+### 📖 Documentation
+
+- **backend:** Update README ([5f4a082](https://github.com/NamesMT/starter-monorepo/commit/5f4a082))
+
+### 🏡 Chore
+
+- Update deps ([17b0497](https://github.com/NamesMT/starter-monorepo/commit/17b0497))
+- Update INIT_PROMPT ([8b47fd2](https://github.com/NamesMT/starter-monorepo/commit/8b47fd2))
+- Update free agents ([2fb5a2e](https://github.com/NamesMT/starter-monorepo/commit/2fb5a2e))
+- Update free agents ([bd53ef7](https://github.com/NamesMT/starter-monorepo/commit/bd53ef7))
+- More readable validation error ([0156b80](https://github.com/NamesMT/starter-monorepo/commit/0156b80))
+
+### 🎨 Styles
+
+- Fix scrollbar visibility ([7befd19](https://github.com/NamesMT/starter-monorepo/commit/7befd19))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Reword: `RouteApp` => `Route` ([55c7fdd](https://github.com/NamesMT/starter-monorepo/commit/55c7fdd))
+
+### ❤️ Contributors
+
+- NamesMT ([@NamesMT](https://github.com/NamesMT))
+
 ## v4.1.0
 
 [compare changes](https://github.com/NamesMT/starter-monorepo/compare/v4.0.0...v4.1.0)
