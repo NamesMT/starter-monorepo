@@ -2,6 +2,7 @@ import { appFactory } from '#src/helpers/factory.js'
 import { apiRoute } from './$$'
 import { authApp } from './auth/$'
 import { dummyConvexTasksRoute } from './dummy/convexTasks'
+import { dummyGrammyRoute } from './dummy/grammy'
 import { dummyGreetRoute } from './dummy/greet'
 import { dummyHelloRoute } from './dummy/hello'
 
@@ -16,6 +17,7 @@ export const apiApp = appFactory.createApp()
   .route('/dummy/convexTasks', dummyConvexTasksRoute)
   .route('/dummy/hello', dummyHelloRoute)
   .route('/dummy/greet', dummyGreetRoute)
+  .route('/dummy/grammy', dummyGrammyRoute)
 
 // ### This block contains the sample code for streaming APIs,
 // import type { TypedResponse } from 'hono'
