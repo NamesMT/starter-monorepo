@@ -4,7 +4,7 @@ import { env } from 'std-env'
 import { cacheProvider, getCachedProvider, isNonSharingPlatforms } from '..'
 
 export function getCachedGrammy(): Awaited<ReturnType<typeof initGrammy>> | undefined {
-  return getCachedProvider('grammy-main--bot')
+  return getCachedProvider('grammy-main--grammy')
 }
 
 export async function getGrammy() {
