@@ -37,7 +37,7 @@ This is a base monorepo starter template to kick-start your beautifully organize
 
 Out-of-the-box with the included apps, we have a fullstack project: with a `frontend` Nuxt 4 app, a main `backend` using Hono, and a `backend-convex` Convex app.
   * General APIs, such as authentication, are handled by the main `backend`, which is designed to be serverless-compatible and can be deployed anywhere, allowing for the best possible latency, performance, and cost, according to your needs.
-  * `backend-convex` is a modular, add-in `backend`, utilized to power components like `AI Chat`.
+  * `backend-convex` is an optional, modular/add-in backend, utilized to power components like `AI Chat`.
 
 It is recommended to use an AI Agent ([`Roo Code`](https://github.com/RooVetGit/Roo-Code) recommended) to help you setup the monorepo according to your needs, see [Utilities](#utilities)
 
@@ -94,7 +94,7 @@ A super efficient and powerful, yet friendly LLM Chat system, featuring:
     * Any AI provider that is compatible with `@ai-sdk` interface can be added in a few words of code, I just don't want to bloat the UI by adding all of them.
 
 `*1`: currently the "stream" received when resuming or for other real-time users in the same thread is implemented via a custom polling mechanism, and not SSE. it is intentionally chosed to be this way for more minimal infrastructure setup and wider hosting support, so smaller user groups can host their own version easily, it is still very performant and efficient.
-  * There is boilerplate code for SSE resume support, you can simply add a pub-sub to the backend and switch to using SSE resume in `ChatInterface`.
+  * There is boilerplate code for SSE resume support, you can simply add a pub-sub to the backend and switch to using SSE resume in `ChatInterface` component.
 
 ### Apps and Libraries
 
@@ -135,14 +135,14 @@ To build all apps and packages, run the following command:
 
 ### Develop
 
-If you just want a quick check out, without having to set up anything, you can use `pnpm run dev:noConvex`, this will skips `backend-convex` and which is the only component that have initial set ups, though this of course means related features are disabled.
+If you just want a quick check out, without having to set up anything, you can use `pnpm run dev:noConvex`, this will skips `backend-convex`, which is the only component that have initial set ups, though, this of course means related features are disabled (AI Chat).
 
 To develop all apps and packages, run the following command:  
 `pnpm run dev`
 
 For local development environment variables / secrets, create a copy of `.env.dev` to `.env.dev.local`.
 
-#### Wrangler / Cloudflare Workers
+#### Wrangler / Cloudflare Workers (Local dev via workerd)
 
 Guide to setup local development for Cloudflare `workerd` runtime testing:
 * (Optional) Run the convex dev server if you use convex.
@@ -173,9 +173,9 @@ Imports should not be separated by empty lines, and should be sorted automatical
 
 #### Dev with SSL
 
-The project comes with a `localcert` SSL at `locals/common/dev` to enable HTTPS for local development, generated with [mkcert](https://github.com/FiloSottile/mkcert), you can install mkcert, generate your own certificate and replace it, or install the `localcert.crt` to your trusted CA to remove the untrusted SSL warning.
+The project comes with a `localcert` SSL at `locals/common/dev` to enable HTTPS for local development (because some 3rd-party services require local dev to have HTTPS, so I enable it by default), generated with [mkcert](https://github.com/FiloSottile/mkcert), you can install mkcert, generate your own certificate and replace it, or install the `localcert.crt` to your trusted CA to remove the untrusted SSL warning.
 
-### Remote Caching
+### Turborepo Remote Caching
 
 Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
 
@@ -195,7 +195,9 @@ npx turbo link
 
 ## Useful Links
 
-Learn more about the power of Turborepo:
+Learn more about the tech of the repo:
+
+### Turborepo
 
 - [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
 - [Caching](https://turbo.build/repo/docs/core-concepts/caching)
@@ -203,3 +205,7 @@ Learn more about the power of Turborepo:
 - [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
 - [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
 - [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+
+### grammY
+
+[https://grammy.dev](https://grammy.dev)
