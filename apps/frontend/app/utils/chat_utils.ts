@@ -22,10 +22,10 @@ export function getChatNickname() {
 
   const lSNickname = destr<string>(localStorage.getItem('chat/user-nickname') ?? '').trim()
 
-  return lSNickname || $auth?.user?.name || 'Anonymous'
+  return lSNickname || $auth?.user?.fullName || 'Anonymous'
 }
 
 export function getChatFallbackNickname() {
   const { $auth } = useNuxtApp()
-  return $auth?.user?.name || 'Anonymous'
+  return $auth?.user?.fullName || 'Anonymous'
 }

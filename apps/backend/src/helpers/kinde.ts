@@ -1,34 +1,32 @@
+import type { HonoEnv } from '#src/types.js'
 import type { SessionManager } from '@kinde-oss/kinde-typescript-sdk'
 import type { Context } from 'hono'
-import type { Session } from 'hono-sessions'
+import type { CookieState } from 'hono-cookie-state'
 import { HTTPException } from 'hono/http-exception'
 
 /**
- * This is a wrapper on top of hono-sessions for Kinde compatibility
+ * This is a wrapper on top of `hono-cookie-state` for Kinde compatibility
  */
-export function toKindeSessionManager(session: Session): SessionManager {
-  if (!session)
-    throw new HTTPException(400, { message: 'SessionManager requires a session' })
+export function toKindeSessionManager(cs: CookieState<any>): SessionManager {
+  if (!cs)
+    throw new HTTPException(400, { message: 'SessionManager requires a CookieState' })
 
   return {
     async getSessionItem(key: string) {
-      return session.get(key)
+      return cs.data[key]
     },
     async setSessionItem(key: string, value: unknown) {
-      session.set(key, value)
+      cs.data[key] = value
     },
     async removeSessionItem(key: string) {
-      delete session.getCache()._data[key]
+      delete cs.data[key]
     },
     async destroySession() {
-      session.deleteSession()
+      cs.data = {}
     },
   }
 }
 
-/**
- * A simple shortcut for `toKindeSessionManager(c.get('session'))`
- */
-export function getSessionManager(c: Context) {
-  return toKindeSessionManager(c.get('session'))
+export function getSessionManager(c: Context<HonoEnv>) {
+  return toKindeSessionManager(c.get('authVendorSession'))
 }

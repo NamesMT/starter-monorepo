@@ -12,7 +12,7 @@ const activeAgentDisplay = computed(() => displayActiveAgent(chatContext.activeA
     <Tooltip>
       <TooltipTrigger as-child>
         <DropdownMenuTrigger as-child>
-          <Button variant="ghost" size="sm" class="h-fit w-40 flex items-center justify-between gap-1 border-x-3px border-primary border-opacity-80 px-2 py-1 -ml-1.5 light:border-primary-600 hover:bg-accent/30">
+          <Button variant="ghost" size="sm" class="px-2 py-1 border-x-3px border-primary border-opacity-80 flex gap-1 h-fit w-40 items-center justify-between -ml-1.5 light:border-primary-600 hover:bg-accent/30">
             <div class="truncate">
               {{ activeAgentDisplay }}
             </div>

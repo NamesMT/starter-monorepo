@@ -120,7 +120,6 @@ export default defineNuxtConfig({
         'embla-carousel-vue',
       ],
       include: [
-        'secure-json-parse',
         'debug',
         'shiki',
         'remark-emoji',

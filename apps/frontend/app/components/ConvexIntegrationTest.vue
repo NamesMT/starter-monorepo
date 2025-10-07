@@ -32,19 +32,19 @@ async function testConvexViaBackendTasksCTA() {
 </script>
 
 <template>
-  <div class="mb-4 w-full text-xl">
+  <div class="text-xl mb-4 w-full">
     <div>
       {{ $t('components.convexIntegrationTest.configuredUrl') }}: <code
-        class="rounded bg-gray-100 px-1 py-0.5 text-base dark:bg-gray-800"
+        class="text-base px-1 py-0.5 rounded bg-gray-100 dark:bg-gray-800"
       >{{ convexClient.client.url }}</code>
     </div>
     <div>
       {{ $t('components.convexIntegrationTest.authenticated') }}: <code
-        class="rounded bg-gray-100 px-1 py-0.5 text-base dark:bg-gray-800"
+        class="text-base px-1 py-0.5 rounded bg-gray-100 dark:bg-gray-800"
       >{{ Boolean(authInfo) }}</code>
     </div>
   </div>
-  <div class="max-w-md w-full flex flex-col gap-5">
+  <div class="flex flex-col gap-5 max-w-md w-full">
     <VanishingInput
       v-model="taskInputRef"
       :placeholders="getThoughtPlaceholders()"
@@ -53,12 +53,12 @@ async function testConvexViaBackendTasksCTA() {
   </div>
 
   <div class="max-w-md w-full">
-    <h3 class="mb-2 text-lg font-semibold">
+    <h3 class="text-lg font-semibold mb-2">
       {{ $t('components.convexIntegrationTest.tasksList.title') }}
     </h3>
     <ul
       v-if="tasks && tasks.length > 0"
-      class="list-disc rounded-md bg-gray-50 p-3 pl-5 text-left space-y-1 dark:bg-gray-800"
+      class="p-3 pl-5 text-left list-disc rounded-md bg-gray-50 space-y-1 dark:bg-gray-800"
     >
       <li v-for="task in tasks" :key="task._id" class="text-sm">
         {{ task.text }}

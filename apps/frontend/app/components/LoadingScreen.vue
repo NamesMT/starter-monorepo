@@ -3,15 +3,15 @@ const isDev = import.meta.dev
 </script>
 
 <template>
-  <div class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-surface-0 dark:bg-surface-900">
+  <div class="bg-surface-0 flex flex-col items-center inset-0 justify-center fixed z-50 dark:bg-surface-900">
     <div class="spinner mb-4 h-9 w-9" />
     <p class="text-lg text-primary-500 font-medium dark:text-primary-400">
       {{ $t('components.loadingScreen.loadingText') }}
     </p>
 
     <!-- IsSST Section -->
-    <div v-if="isDev" class="mt-20 max-w-2xl w-full border rounded-lg p-4 shadow">
-      <h2 class="mb-3 text-xl font-semibold">
+    <div v-if="isDev" class="mt-20 p-4 border rounded-lg max-w-2xl w-full shadow">
+      <h2 class="text-xl font-semibold mb-3">
         {{ $t('pages.home.section.sst.title') }}
       </h2>
       <div class="flex justify-center">

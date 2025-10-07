@@ -3,7 +3,7 @@
   "type": "module",
   "version": "4.2.0",
   "private": true,
-  "packageManager": "pnpm@10.17.1",
+  "packageManager": "pnpm@10.18.1",
   "engines": {
     "node": ">=20.13.1"
   },
@@ -28,17 +28,17 @@
   "devDependencies": {
     "@antfu/eslint-config": "^5.4.1",
     "@dotenvx/dotenvx": "1.11.4",
-    "@namesmt/utils": "^0.5.17",
-    "@types/aws-lambda": "^8.10.152",
-    "@types/node": "^24.5.2",
+    "@namesmt/utils": "^0.5.18",
+    "@types/aws-lambda": "^8.10.155",
+    "@types/node": "^24.7.0",
     "@unocss/eslint-plugin": "^66.5.2",
-    "eslint": "^9.36.0",
+    "eslint": "^9.37.0",
     "frontend": "workspace:*",
-    "lint-staged": "^16.2.0",
+    "lint-staged": "^16.2.3",
     "simple-git-hooks": "^2.13.1",
-    "tsx": "^4.20.5",
-    "turbo": "^2.5.6",
-    "typescript": "^5.9.2"
+    "tsx": "^4.20.6",
+    "turbo": "^2.5.8",
+    "typescript": "^5.9.3"
   },
   "pnpm": {
     "overrides": {
@@ -51,9 +51,6 @@
       "side-channel": "npm:@nolyfill/side-channel@^1.0.44",
       "string.prototype.codepointat": "npm:@nolyfill/string.prototype.codepointat@^1.0.44",
       "which-typed-array": "npm:@nolyfill/which-typed-array@^1.0.44"
-    },
-    "patchedDependencies": {
-      "hono-sessions": "patches/hono-sessions.patch"
     }
   },
   "simple-git-hooks": {

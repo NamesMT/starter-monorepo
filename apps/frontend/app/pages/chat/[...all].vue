@@ -8,7 +8,7 @@ definePageMeta({
 </script>
 
 <template>
-  <div class="w-full flex items-center justify-center">
+  <div class="flex w-full items-center justify-center">
     <!-- <div v-if="!$auth.loggedIn" class="h-full w-full flex items-center justify-center text-xl">
       {{ $t('pages.chat.loginPrompt') }}
     </div> -->

@@ -30,11 +30,11 @@ function _newChat() {
 </script>
 
 <template>
-  <div class="relative flex items-center border-b px-3" cmdk-input-wrapper>
+  <div class="px-3 border-b flex items-center relative" cmdk-input-wrapper>
     <div class="mr-3 flex items-center">
-      <div class="i-hugeicons:search-01 h-4 w-4 shrink-0 opacity-50" />
-      <Slash class="shrink-0 skew-x-[30deg] opacity-20 size-3!" />
-      <div class="i-hugeicons:comment-add-02 h-4 w-4 shrink-0 opacity-50" />
+      <div class="i-hugeicons:search-01 opacity-50 shrink-0 h-4 w-4" />
+      <Slash class="opacity-20 shrink-0 skew-x-[30deg] size-3!" />
+      <div class="i-hugeicons:comment-add-02 opacity-50 shrink-0 h-4 w-4" />
     </div>
     <ListboxFilter
       v-bind="{ ...forwardedProps, ...$attrs }"
@@ -46,10 +46,10 @@ function _newChat() {
           _newChat()
       }"
     />
-    <div class="absolute right-3 -bottom-6">
-      <div v-show="filterState.search" class="flex items-center gap-1 text-xs text-muted-foreground">
-        <kbd v-if="filterState.filtered.count" class="rounded bg-muted-foreground px-2 text-muted font-sans">Ctrl</kbd>
-        <kbd class="rounded bg-muted-foreground px-2 text-muted font-sans">↵</kbd>
+    <div class="right-3 absolute -bottom-6">
+      <div v-show="filterState.search" class="text-xs text-muted-foreground flex gap-1 items-center">
+        <kbd v-if="filterState.filtered.count" class="text-muted font-sans px-2 rounded bg-muted-foreground">Ctrl</kbd>
+        <kbd class="text-muted font-sans px-2 rounded bg-muted-foreground">↵</kbd>
         <div>{{ $t('chat.components.chatSearchDialog.enterToSend.p2') }}</div>
       </div>
     </div>

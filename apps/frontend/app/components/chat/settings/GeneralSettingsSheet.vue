@@ -51,9 +51,9 @@ const [DefineShortcutLi, ReuseShortcutLi] = createReusableTemplate<{ title: stri
       <div class="flex grow flex-col gap-4">
         <div class="flex flex-col gap-3">
           <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
+            <div class="flex gap-2 items-center">
               <Button class="w-fit uppercase" variant="outline" @pointerdown="setLocale(computedNextLocale)">
-                <div class="flex items-center text-mainGradient">
+                <div class="text-mainGradient flex items-center">
                   <div class="i-hugeicons:translate bg-mainGradient" />: <p class="ml-1">
                     {{ locale.substring(0, 2) }}
                   </p>
@@ -72,15 +72,15 @@ const [DefineShortcutLi, ReuseShortcutLi] = createReusableTemplate<{ title: stri
             </div>
           </div>
 
-          <div class="flex items-center gap-2">
+          <div class="flex gap-2 items-center">
             <div class="shrink-0">
               {{ $t('nickname') }}:
             </div>
             <Input
               v-model="nicknameRef"
-              :placeholder="$auth.loggedIn ? $auth.user.name : 'Anonymous'"
+              :placeholder="$auth.loggedIn ? $auth.user.fullName : 'Anonymous'"
               type="text"
-              class="h-9 px-2 py-1"
+              class="px-2 py-1 h-9"
               @update:model-value="nicknameRef = nicknameRef.trim()"
             />
           </div>
@@ -98,13 +98,13 @@ const [DefineShortcutLi, ReuseShortcutLi] = createReusableTemplate<{ title: stri
           <div
             v-for="[provider, setting] of supportedProvidersCommon.map((p) => [p, agentsSettings.providers[p]!] as const)"
             :key="provider"
-            class="flex items-center justify-between gap-2"
+            class="flex gap-2 items-center justify-between"
           >
             <div class="shrink-0">
               {{ $t(`chat.provider.${provider}`) }}
             </div>
 
-            <div class="flex items-center gap-2">
+            <div class="flex gap-2 items-center">
               <Switch v-model="setting.enabled" :disabled="!Object.keys(setting.models).length">
                 <template #thumb>
                   <div class="i-hugeicons:zap" />
@@ -121,11 +121,11 @@ const [DefineShortcutLi, ReuseShortcutLi] = createReusableTemplate<{ title: stri
       </div>
 
       <SheetFooter>
-        <div class="w-full flex flex-col gap-3 rounded-md bg-primary-50 p-4 text-sm dark:bg-primary-950">
+        <div class="text-sm p-4 rounded-md bg-primary-50 flex flex-col gap-3 w-full dark:bg-primary-950">
           <!-- Define locally reusable components -->
           <div class="hidden">
             <DefineKbd v-slot="{ k }">
-              <kbd class="rounded bg-background px-2 py-1 text-sm font-sans">{{ k }}</kbd>
+              <kbd class="text-sm font-sans px-2 py-1 rounded bg-background">{{ k }}</kbd>
             </DefineKbd>
 
             <DefineShortcutLi v-slot="{ title, keys }">

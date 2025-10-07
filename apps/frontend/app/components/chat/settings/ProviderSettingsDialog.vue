@@ -48,13 +48,13 @@ watch(modelsRef, () => {
           {{ $t('chat.settings.providerDialog.description') }}
         </DialogDescription>
       </DialogHeader>
-      <div class="grid gap-4 py-4">
-        <div class="grid items-center gap-1.5">
+      <div class="py-4 gap-4 grid">
+        <div class="gap-1.5 grid items-center">
           <Label for="provider-settings-dialog_apiKey">{{ $t('chat.settings.providerDialog.form.apiKey') }}</Label>
           <!-- eslint-disable-next-line vue/no-mutating-props -->
           <Input id="provider-settings-dialog_apiKey" v-model="settings.apiKey" type="password" />
         </div>
-        <div class="grid items-center gap-1.5">
+        <div class="gap-1.5 grid items-center">
           <Label for="provider-settings-dialog_apiKey">{{ $t('chat.settings.providerDialog.form.models') }}</Label>
           <!-- eslint-disable-next-line vue/no-mutating-props -->
           <TagsInput v-model="modelsRef">

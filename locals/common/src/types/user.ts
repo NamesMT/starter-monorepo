@@ -1,7 +1,11 @@
-import type { UserType } from '@kinde-oss/kinde-typescript-sdk'
+export interface UserAuthState {
+  id: string
+  firstName: string
+  fullName: string
+  email: string
+  avatar?: string
 
-export interface UserProfileType extends UserType {
-  // Note: `name` and `sub` exists in Kinde UserType but is not typed
-  name: string
-  sub: string
+  tokens: {
+    accessToken: string
+  }
 }

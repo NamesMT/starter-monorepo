@@ -42,20 +42,20 @@ function handleSubmit({ confirmMultiStream = false }) {
 </script>
 
 <template>
-  <LiquidGlassDiv class="bottom-0 left-0 z-3 max-w-full w-full border-t border-secondary $c-radius=0px absolute!">
-    <div v-if="isDev" class="absolute bottom-100%">
+  <LiquidGlassDiv class="border-t border-secondary max-w-full w-full bottom-0 left-0 z-3 $c-radius=0px absolute!">
+    <div v-if="isDev" class="bottom-100% absolute">
       <!-- {{ props.nearTopBottom }} -->
     </div>
 
-    <div class="absolute bottom-100% right-6 mb-2 flex flex-col gap-2">
+    <div class="mb-2 flex flex-col gap-2 bottom-100% right-6 absolute">
       <Button
-        variant="outline" size="icon" class="rounded-xl p-1 opacity-100 transition-opacity duration-500"
+        variant="outline" size="icon" class="p-1 rounded-xl opacity-100 transition-opacity duration-500"
         :class="props.nearTopBottom[0] && 'invisible opacity-0'" @click="props.lenisRef!.lenis.scrollTo('top')"
       >
         <div class="i-hugeicons:circle-arrow-up-03 h-full w-full" />
       </Button>
       <Button
-        variant="outline" size="icon" class="rounded-xl p-1 opacity-100 transition-opacity duration-500"
+        variant="outline" size="icon" class="p-1 rounded-xl opacity-100 transition-opacity duration-500"
         :class="props.nearTopBottom[1] && 'invisible opacity-0'" @click="props.lenisRef!.lenis.scrollTo('bottom')"
       >
         <div class="i-hugeicons:circle-arrow-down-03 h-full w-full" />
@@ -63,13 +63,13 @@ function handleSubmit({ confirmMultiStream = false }) {
     </div>
 
     <div>
-      <form class="mx-auto max-w-2xl flex flex-col gap-2 border-x-6px border-rose/80 bg-rose/20 p-3 pb-2 text-secondary-950 backdrop-blur-sm dark:text-secondary-50" @submit.prevent>
+      <form class="text-secondary-950 mx-auto p-3 pb-2 border-x-6px border-rose/80 bg-rose/20 flex flex-col gap-2 max-w-2xl backdrop-blur-sm dark:text-secondary-50" @submit.prevent>
         <textarea
           ref="chatTextarea"
           :key="chatContext.interfaceSRK.value"
           v-model="chatInputTA"
           :placeholder="chatPlaceholder"
-          class="min-h-12 resize-none bg-transparent outline-none placeholder-secondary-700/60 dark:placeholder-secondary-300/60"
+          class="outline-none bg-transparent min-h-12 resize-none placeholder-secondary-700/60 dark:placeholder-secondary-300/60"
           @keydown.enter.exact="(e) => {
             if (!sidebarContext.isMobile.value) {
               e.preventDefault()
@@ -80,11 +80,11 @@ function handleSubmit({ confirmMultiStream = false }) {
         />
         <div
           v-if="attachments.length"
-          class="max-w-full flex flex-nowrap gap-2 truncate p-2"
+          class="p-2 flex flex-nowrap gap-2 max-w-full truncate"
         >
           <div
             v-for="(file, index) of attachments" :key="index"
-            class="flex items-center gap-2 truncate rounded-md bg-surface-200/50 p-1 px-2 text-xs"
+            class="text-xs p-1 px-2 rounded-md bg-surface-200/50 flex gap-2 truncate items-center"
           >
             <p class="truncate">
               {{ file.name }}
@@ -95,12 +95,12 @@ function handleSubmit({ confirmMultiStream = false }) {
           </div>
         </div>
         <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2">
+          <div class="flex gap-2 items-center">
             <AgentSelector />
 
-            <div v-if="chatContext.activeAgent.value.modelSettings?.attachments?.length" class="flex items-center gap-2">
+            <div v-if="chatContext.activeAgent.value.modelSettings?.attachments?.length" class="flex gap-2 items-center">
               <Button
-                variant="ghost" size="icon" class="size-7 rounded-full p-1"
+                variant="ghost" size="icon" class="p-1 rounded-full size-7"
                 @click="() => ($refs.fileInput as HTMLInputElement).click()"
               >
                 <div class="i-hugeicons:attachment-01 h-5 w-5" />

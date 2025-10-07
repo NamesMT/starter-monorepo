@@ -21,7 +21,7 @@ provideChatGlobalsContext({
 <template>
   <slot />
 
-  <div class="absolute hidden">
+  <div class="hidden absolute">
     <ChatSearchDialog v-model:open="searchDialogOpen" />
     <GeneralSettingsSheet />
   </div>

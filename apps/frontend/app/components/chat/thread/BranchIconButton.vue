@@ -21,7 +21,7 @@ if (!thread.parentThread)
         :to="`/chat/${thread.parentThread}`"
         class="size-4"
       >
-        <Button variant="link" size="icon" class="size-4 text-current opacity-40 transition-opacity hover:(text-primary opacity-100)">
+        <Button variant="link" size="icon" class="text-current opacity-40 size-4 transition-opacity hover:(text-primary opacity-100)">
           <Split />
         </Button>
       </NuxtLink>

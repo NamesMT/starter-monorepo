@@ -36,7 +36,7 @@ onUnmounted(() => {
     :class="cn('overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground', props.class)"
     :hidden="isRender ? undefined : true"
   >
-    <ListboxGroupLabel v-if="heading || $slots.heading" class="px-2 py-1.5 text-xs text-muted-foreground font-medium">
+    <ListboxGroupLabel v-if="heading || $slots.heading" class="text-xs text-muted-foreground font-medium px-2 py-1.5">
       <slot v-if="$slots.heading" name="heading" />
       <template v-else>
         {{ heading }}

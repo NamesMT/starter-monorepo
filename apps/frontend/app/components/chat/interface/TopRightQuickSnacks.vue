@@ -3,7 +3,7 @@ const chatContext = useChatContext()
 </script>
 
 <template>
-  <div class="absolute right-3 top-3 hidden items-center lg:flex">
+  <div class="hidden items-center right-3 top-3 absolute lg:flex">
     <Tooltip>
       <TooltipTrigger as-child>
         <Button

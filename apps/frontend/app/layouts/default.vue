@@ -27,24 +27,24 @@ watch(() => route.name, () => { windowsScroll.measure() })
       </Head>
 
       <Body>
-        <div class="w-full flex flex-col min-h-dvh">
+        <div class="flex flex-col w-full min-h-dvh">
           <!-- Header -->
           <div
             v-motion-slide-visible-once-left
-            class="fixed w-full pr-[--scrollbar-width] transition-top"
+            class="pr-[--scrollbar-width] w-full transition-top fixed"
             :class="windowsScroll.arrivedState.top ? 'top-0' : '-top-20'"
           >
             <DefaultHeader class="px-5 2xl:px-20 lg:px-10 xl:px-15" />
           </div>
 
           <!-- NuxtPage -->
-          <div id="app-body" class="flex grow px-5 py-15 pt-20 2xl:px-20 lg:px-10 xl:px-15">
+          <div id="app-body" class="px-5 py-15 pt-20 flex grow 2xl:px-20 lg:px-10 xl:px-15">
             <slot />
           </div>
 
           <!-- Footer -->
           <DefaultFooter
-            class="fixed w-full transition-bottom"
+            class="w-full transition-bottom fixed"
             :class="windowsScroll.arrivedState.bottom ? 'bottom-0' : '-bottom-20'"
           />
         </div>

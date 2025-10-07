@@ -421,7 +421,7 @@ function doScrollBottom({ smooth = true, maybe = false, tries = 0, lastScrollTop
 
 <template>
   <div class="relative overflow-hidden">
-    <VueLenis ref="lenisRef" class="overflow-y-scroll px-4 h-dvh">
+    <VueLenis ref="lenisRef" class="px-4 overflow-y-scroll h-dvh">
       <ChatInterfaceBackground v-bind="{ messages, isFetching }" />
       <div class="mx-auto h-full max-w-full lg:max-w-4xl">
         <div v-if="messages.length" class="relative z-2 space-y-4">
@@ -438,7 +438,7 @@ function doScrollBottom({ smooth = true, maybe = false, tries = 0, lastScrollTop
 
           <IUIMaybeGlassCard
             v-if="isThreadFrozen"
-            class="mx-auto w-fit flex items-center gap-1 border p-2 px-7 text-lg font-medium tracking-wide"
+            class="text-lg tracking-wide font-medium mx-auto p-2 px-7 border flex gap-1 w-fit items-center"
           >
             <div class="i-hugeicons:snow text-primary" />
             <div>{{ $t('chat.thread.frozenWithDescription') }}</div>

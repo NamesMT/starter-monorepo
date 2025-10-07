@@ -42,12 +42,12 @@ async function _deleteThread() {
 <template>
   <AlertDialog>
     <Tooltip>
-      <AlertDialogTrigger v-show="!thread.userId || (thread.userId === $auth?.user?.sub)" as-child>
+      <AlertDialogTrigger v-show="!thread.userId || (thread.userId === $auth?.user?.id)" as-child>
         <TooltipTrigger as-child @pointerdown.stop.prevent @click.shift.stop.prevent="_deleteThread()">
           <slot />
         </TooltipTrigger>
         <TooltipContent side="bottom" :side-offset="6">
-          <p class="whitespace-pre-line text-center">
+          <p class="text-center whitespace-pre-line">
             {{ tipOnly
               ? $t('tip.holdShift')
               : `${$t('chat.thread.delete')}\n${$t('tip.holdShift')}` }}

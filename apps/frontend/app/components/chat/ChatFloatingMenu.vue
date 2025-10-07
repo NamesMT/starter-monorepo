@@ -21,7 +21,7 @@ if (firstTimeOpen.value) {
 
 <template>
   <div
-    class="flex rounded-md p-1 transition-background-color"
+    class="p-1 rounded-md flex transition-background-color"
     :class="[
       isExpanded ? 'bg-transparent' : 'bg-muted-foreground/30',
     ]"

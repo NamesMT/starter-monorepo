@@ -56,7 +56,7 @@ async function _shareCopyToast() {
 <template>
   <AlertDialog v-model:open="open">
     <Tooltip>
-      <AlertDialogTrigger v-show="!thread.userId || (thread.userId === $auth?.user?.sub)" as-child>
+      <AlertDialogTrigger v-show="!thread.userId || (thread.userId === $auth?.user?.id)" as-child>
         <TooltipTrigger
           as-child
           @pointerdown.stop.prevent
@@ -65,7 +65,7 @@ async function _shareCopyToast() {
           <slot />
         </TooltipTrigger>
         <TooltipContent side="bottom" :side-offset="6">
-          <p class="whitespace-pre-line text-center">
+          <p class="text-center whitespace-pre-line">
             {{ tipOnly
               ? $t('tip.holdShift')
               : `${$t('chat.thread.share')}\n${$t('tip.holdShift')}` }}
@@ -86,7 +86,7 @@ async function _shareCopyToast() {
       </AlertDialogHeader>
       <div v-show="linkRef" class="relative">
         <Input v-model="linkRef" disabled />
-        <CodeCopy :code="linkRef" class="absolute right-0 top-0 size-10! rounded-md! hover:text-accent-foreground hover:bg-accent!" />
+        <CodeCopy :code="linkRef" class="right-0 top-0 absolute hover:text-accent-foreground rounded-md! size-10! hover:bg-accent!" />
       </div>
       <AlertDialogFooter>
         <template v-if="!linkRef">

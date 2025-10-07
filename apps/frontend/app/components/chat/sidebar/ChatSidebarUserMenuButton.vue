@@ -5,16 +5,16 @@ const nicknameRef = useChatNickname()
 </script>
 
 <template>
-  <SidebarMenuButton class="h-auto w-full flex items-center justify-between">
-    <div class="h-9 flex items-center gap-2 truncate text-sm leading-tight">
+  <SidebarMenuButton class="flex h-auto w-full items-center justify-between">
+    <div class="text-sm leading-tight flex gap-2 h-9 truncate items-center">
       <template v-if="$auth.loggedIn">
         <Avatar shape="square" size="sm" class="size-9" alt="User avatar">
-          <AvatarImage v-if="$auth.user.picture" :src="$auth.user.picture" alt="Avatar image" />
+          <AvatarImage v-if="$auth.user.avatar" :src="$auth.user.avatar" alt="Avatar image" />
           <AvatarFallback>👤</AvatarFallback>
         </Avatar>
         <div class="truncate">
-          <p>{{ $auth.user.name }} <span v-show="nicknameRef" aria-label="User nickname" class="text-xs">({{ nicknameRef || getChatFallbackNickname() }})</span></p>
-          <p class="truncate text-xs">
+          <p>{{ $auth.user.fullName }} <span v-show="nicknameRef" aria-label="User nickname" class="text-xs">({{ nicknameRef || getChatFallbackNickname() }})</span></p>
+          <p class="text-xs truncate">
             {{ $auth.user.email }}
           </p>
         </div>
@@ -25,12 +25,12 @@ const nicknameRef = useChatNickname()
         </Avatar>
         <div class="truncate">
           <p>{{ $t('guest') }} <span aria-label="User nickname" class="text-xs">({{ nicknameRef || getChatFallbackNickname() }})</span></p>
-          <p class="truncate text-xs">
+          <p class="text-xs truncate">
             {{ $t('loginToEnjoyMore') }}
           </p>
         </div>
       </template>
     </div>
-    <div class="i-hugeicons:dashboard-square-setting size-5 shrink-0" />
+    <div class="i-hugeicons:dashboard-square-setting shrink-0 size-5" />
   </SidebarMenuButton>
 </template>

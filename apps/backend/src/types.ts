@@ -1,5 +1,6 @@
+import type { UserAuthState } from '@local/common/src/types/user'
 import type { LambdaContext, LambdaEvent } from 'hono-adapter-aws-lambda'
-import type { Session } from 'hono-sessions'
+import type { CookieState } from 'hono-cookie-state'
 
 export interface HonoEnv {
   Bindings: {
@@ -12,7 +13,7 @@ export interface HonoEnv {
     ASSETS: { fetch: (reqOrUrl: Request | string) => Promise<Response> }
   }
   Variables: {
-    session: Session
-    session_key_rotation: boolean
+    session: CookieState<{ userAuth?: UserAuthState } & Record<string, any>>
+    authVendorSession: CookieState<any>
   }
 }

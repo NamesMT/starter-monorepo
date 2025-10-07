@@ -2,11 +2,11 @@
  * This file contains routes and sample routes for possible APIs usecases with Kinde.
  */
 
-import type { UserProfileType } from '@local/common/src/types/user'
 // import type { ClaimTokenType, FlagType } from '@kinde-oss/kinde-typescript-sdk'
 import { appFactory } from '#src/helpers/factory.js'
 import { getSessionManager } from '#src/helpers/kinde.js'
 import { getKindeClient } from '#src/providers/auth/kinde-main.js'
+import { objectOmit } from '@local/common/src/utils/general'
 import { env } from 'std-env'
 
 export const authRoutesApp = appFactory.createApp()
@@ -14,25 +14,24 @@ export const authRoutesApp = appFactory.createApp()
     return c.text('Good', 200)
   })
 
+  // This endpoint returns the current auth state
   .get('/authState', async (c) => {
-    const kindeClient = await getKindeClient()
-    const sessionManager = getSessionManager(c)
+    const session = c.get('session')
 
-    const [profile, token] = await Promise.all([
-      kindeClient.getUserProfile(sessionManager).catch(() => null) as Promise<UserProfileType>,
-      kindeClient.getToken(sessionManager).catch(() => null),
-    ])
+    const userAuth = session.data.userAuth
+    const tokens = userAuth?.tokens ?? null
 
-    return c.json({ profile, token })
+    return c.json({ userAuth: userAuth ? objectOmit(userAuth, ['tokens']) : null, tokens })
   })
 
   .get('/login', async (c) => {
     const kindeClient = await getKindeClient()
     const org_code = c.req.query('org_code')
+    const session = c.get('session')
 
     const loginUrl = await kindeClient.login(getSessionManager(c), { org_code })
 
-    c.get('session').set('backToPath', c.req.query('path'))
+    session.data.backToPath = c.req.query('path')
 
     return c.redirect(loginUrl.toString())
   })
@@ -48,12 +47,29 @@ export const authRoutesApp = appFactory.createApp()
 
   .get('/callback', async (c) => {
     const kindeClient = await getKindeClient()
+    const session = c.get('session')
+    const sessionManager = getSessionManager(c)
 
-    await kindeClient.handleRedirectToApp(getSessionManager(c), new URL(c.req.url))
+    await kindeClient.handleRedirectToApp(sessionManager, new URL(c.req.url))
 
-    let backToPath = c.get('session').get('backToPath') as string || '/'
+    let backToPath = session.data.backToPath as string || '/'
     if (!backToPath.startsWith('/'))
       backToPath = `/${backToPath}`
+
+    const kindeProfile = await kindeClient.getUserProfile(sessionManager)
+
+    session.data.userAuth = {
+      id: kindeProfile.id,
+      avatar: kindeProfile.picture || undefined,
+      email: kindeProfile.email,
+      firstName: kindeProfile.given_name,
+      // @ts-expect-error Kinde SDK is dumb
+      fullName: kindeProfile.name,
+
+      tokens: {
+        accessToken: await kindeClient.getToken(sessionManager),
+      },
+    }
 
     return c.redirect(`${env.FRONTEND_URL!}${backToPath}`)
   })
@@ -66,13 +82,14 @@ export const authRoutesApp = appFactory.createApp()
     return c.redirect(logoutUrl.toString())
   })
 
-// .get('/isAuth', async (c) => {
-//   const kindeClient = await getKindeClient()
+  // This endpoint checks if kinde session is authenticated
+  .get('/isAuth', async (c) => {
+    const kindeClient = await getKindeClient()
 
-//   const isAuthenticated = await kindeClient.isAuthenticated(getSessionManager(c)) // Boolean: true or false
+    const isAuthenticated = await kindeClient.isAuthenticated(getSessionManager(c))
 
-//   return c.json(isAuthenticated)
-// })
+    return c.json(isAuthenticated)
+  })
 
 // .get('/profile', async (c) => {
 //   const kindeClient = await getKindeClient()

@@ -16,7 +16,7 @@ const chatContext = useChatContext()
 
 <template>
   <div
-    class="group/message relative flex"
+    class="group/message flex relative"
     :class="message.role === 'user' ? 'justify-end' : 'justify-start pb-10'"
   >
     <component
@@ -44,7 +44,7 @@ const chatContext = useChatContext()
           <MDC v-else :key="String(message.isStreaming)" :value="message.content" class="only-child:[&>.prose-p]:my-0" />
           <div class="hidden first:block">
             <Skeleton
-              class="h-5 max-w-full w-$c-W rounded-full bg-muted-foreground" :style="{
+              class="rounded-full bg-muted-foreground h-5 max-w-full w-$c-W" :style="{
                 '--c-W': `${(Math.floor(Math.random() * (300 - 100 + 1)) + 100) * (message.role === 'user' ? 1 : 2)}px`,
               }"
             />
@@ -55,20 +55,20 @@ const chatContext = useChatContext()
 
     <div
       v-if="message.role === 'user'"
-      class="absolute top-100% flex gap-1 opacity-0 transition-opacity group-hover/message:opacity-100"
+      class="opacity-0 flex gap-1 transition-opacity top-100% absolute group-hover/message:opacity-100"
     >
-      <div v-if="message.context?.from" class="mr-2 text-xs">
+      <div v-if="message.context?.from" class="text-xs mr-2">
         {{ message.context.from }}
       </div>
     </div>
 
     <div
       v-else
-      class="absolute bottom-2 left-2 flex gap-1 opacity-0 transition-opacity group-hover/message:opacity-100"
+      class="opacity-0 flex gap-1 transition-opacity bottom-2 left-2 absolute group-hover/message:opacity-100"
     >
       <CardCopyButton :message />
       <CardBranchOffButton v-show="message.isStreaming === false" :message @click="emit('branchOffClicked')" />
-      <div class="ml-4 text-xs">
+      <div class="text-xs ml-4">
         {{ message.model }}
       </div>
     </div>

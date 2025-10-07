@@ -46,7 +46,7 @@ if ($auth.loggedIn) {
       if (thread && !thread.userId) {
         // eslint-disable-next-line no-console
         console.info(`Migrating thread: ${thread._id} to user account`)
-        thread.userId = $auth.user.sub
+        thread.userId = $auth.user.id
         migrateThreadToUser(convex, { threadId: thread._id, lockerKey: getLockerKey(thread._id) })
           .catch(async () => {
             await refreshThread(convex, { threadId: thread._id, chatContext })

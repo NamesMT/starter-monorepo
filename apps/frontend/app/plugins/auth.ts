@@ -1,14 +1,14 @@
-import type { UserProfileType } from '@local/common/src/types/user'
+import type { UserAuthState } from '@local/common/src/types/user'
 import type { Reactive } from 'vue'
 
 export type AuthState = (
-  { loggedIn: true, user: UserProfileType, token: string }
+  { loggedIn: true, user: Omit<UserAuthState, 'tokens'>, token: string }
   | { loggedIn: false, user: null, token: null }
 )
 
 // The current plugin targets SSG and CSR, if you use SSR, you need to converts it to useState and useAsyncData for optimized performance
 
-// Note: token is passed down for use 3rd party integrations like Convex, if you only use `frontend` and `backend`, you can remove it to be more secure.
+// Note: token is passed down for use with 3rd party integrations like Convex, if you only use `frontend` and `backend`, you can remove it to be more secure.
 
 export default defineNuxtPlugin({
   name: 'local-auth',
@@ -29,10 +29,10 @@ export default defineNuxtPlugin({
     async function refreshAuth() {
       const authState = await hcParse(authApi.authState.$get()).catch(() => null)
 
-      if (authState?.profile) {
+      if (authState?.userAuth) {
         auth.loggedIn = true
-        auth.user = authState.profile
-        auth.token = authState.token
+        auth.user = authState.userAuth
+        auth.token = authState.tokens!.accessToken!
       }
       else {
         auth.loggedIn = false

@@ -14,7 +14,7 @@ if (!thread.frozen)
 <template>
   <Tooltip>
     <TooltipTrigger as-child>
-      <Button variant="link" size="icon" class="size-4 text-current opacity-40 transition-color hover:(text-primary opacity-100)">
+      <Button variant="link" size="icon" class="text-current opacity-40 size-4 transition-color hover:(text-primary opacity-100)">
         <div class="i-hugeicons:snow" />
       </Button>
     </TooltipTrigger>

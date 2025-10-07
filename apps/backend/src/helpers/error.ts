@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import type { HonoEnv } from '#src/types.js'
+import type { DetailedError } from '@namesmt/utils'
 import type { ErrorHandler } from 'hono'
 import type { ContentfulStatusCode } from 'hono/utils/http-status'
-import { DetailedError } from '@namesmt/utils'
 import { HTTPException } from 'hono/http-exception'
 
 export const errorHandler: ErrorHandler<HonoEnv> = (err, c) => {
@@ -26,10 +26,13 @@ export const errorHandler: ErrorHandler<HonoEnv> = (err, c) => {
     })
   }
 
-  if (err instanceof DetailedError) {
+  // Handling of custom DetailedError (DetailedError can comes from multiple sources (hono's parseResponse, @namesmt/utils))
+  // So we're using a `.name` check here.
+  if (err.name === 'DetailedError') {
+    const _e = err as DetailedError
     return _makeErrorRes({
-      body: { message: err.message, code: err.code ?? err.name, detail: err.detail },
-      status: err.statusCode ?? 500,
+      body: { message: _e.message, code: _e.code ?? _e.name, detail: _e.detail },
+      status: _e.statusCode ?? 500,
     })
   }
 

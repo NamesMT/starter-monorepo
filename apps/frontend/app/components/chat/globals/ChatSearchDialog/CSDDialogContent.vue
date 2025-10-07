@@ -19,7 +19,7 @@ const { open } = useCSDContext()
     <CommandEmpty>{{ $t('chat.components.chatSearchDialog.noResultsFound') }}</CommandEmpty>
     <CommandGroup>
       <template #heading>
-        <div class="flex gap-1 text-sm">
+        <div class="text-sm flex gap-1">
           <div class="i-hugeicons:clock-01" />
           <div>{{ $t('recent') }}</div>
         </div>

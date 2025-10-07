@@ -1,6 +1,6 @@
 import { errorHandler } from '#src/helpers/error.js'
 import { appFactory, triggerFactory } from '#src/helpers/factory.js'
-import { cookieSession } from '#src/middlewares/session.js'
+import { createCookieState } from 'hono-cookie-state'
 import { cors } from 'hono/cors'
 import { logger as loggerMiddleware } from 'hono/logger'
 import { env, isWorkerd } from 'std-env'
@@ -38,8 +38,30 @@ export const app = appFactory.createApp()
     credentials: true,
   }))
 
-  // Session management middleware, configure and see all available managers in `src/middlewares/session.ts`
-  .use(await cookieSession())
+  // Main cookie session for the app
+  .use(createCookieState({
+    key: 'session',
+    secret: 'password_at_least_32_characters!',
+    cookieOptions: {
+      maxAge: 90 * 60, // 90 mins
+      sameSite: 'None',
+      secure: true,
+      path: '/',
+      httpOnly: true,
+    },
+  }))
+  // auth vendor's session data
+  .use(createCookieState({
+    key: 'authVendorSession',
+    secret: 'password_at_least_32_characters!',
+    cookieOptions: {
+      maxAge: 90 * 60, // 90 mins
+      sameSite: 'None',
+      secure: true,
+      path: '/',
+      httpOnly: true,
+    },
+  }))
 
   // Register API routes
   .route('/api', apiApp)

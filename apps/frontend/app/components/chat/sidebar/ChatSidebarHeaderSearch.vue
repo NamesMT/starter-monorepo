@@ -3,10 +3,10 @@ const searchInput = defineModel<string>({ required: true })
 </script>
 
 <template>
-  <div class="flex items-center gap-2 border-b px-2 py-1">
+  <div class="px-2 py-1 border-b flex gap-2 items-center">
     <div class="i-hugeicons:bubble-chat-search shrink-0" />
-    <input v-model="searchInput" type="text" :placeholder="$t('chat.sidebar.search.placeholder')" class="w-full bg-transparent outline-none">
-    <Button v-show="searchInput" class="size-6 shrink-0" variant="ghost" size="icon" @click="searchInput = ''">
+    <input v-model="searchInput" type="text" :placeholder="$t('chat.sidebar.search.placeholder')" class="outline-none bg-transparent w-full">
+    <Button v-show="searchInput" class="shrink-0 size-6" variant="ghost" size="icon" @click="searchInput = ''">
       <div class="i-hugeicons:cancel-01" />
     </Button>
   </div>
