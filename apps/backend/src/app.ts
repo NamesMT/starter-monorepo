@@ -41,7 +41,6 @@ export const app = appFactory.createApp()
   // Main cookie session for the app
   .use(createCookieState({
     key: 'session',
-    secret: 'password_at_least_32_characters!',
     cookieOptions: {
       maxAge: 90 * 60, // 90 mins
       sameSite: 'None',
@@ -53,7 +52,6 @@ export const app = appFactory.createApp()
   // auth vendor's session data
   .use(createCookieState({
     key: 'authVendorSession',
-    secret: 'password_at_least_32_characters!',
     cookieOptions: {
       maxAge: 90 * 60, // 90 mins
       sameSite: 'None',
