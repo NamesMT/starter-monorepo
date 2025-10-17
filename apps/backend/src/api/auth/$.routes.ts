@@ -6,7 +6,7 @@
 import { appFactory } from '#src/helpers/factory.js'
 import { getSessionManager } from '#src/helpers/kinde.js'
 import { getKindeClient } from '#src/providers/auth/kinde-main.js'
-import { objectOmit } from '@local/common/src/utils/general'
+import { objectOmit } from '@namesmt/utils'
 import { env } from 'std-env'
 
 export const authRoutesApp = appFactory.createApp()
