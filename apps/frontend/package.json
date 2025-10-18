@@ -53,7 +53,7 @@
     "destr": "^2.0.5",
     "fetch-result-please": "^0.2.0",
     "h3-proxy": "^1.13.0",
-    "hono": "^4.10.0",
+    "hono": "^4.10.1",
     "idb-keyval": "^6.2.2",
     "kontroll": "^1.1.1",
     "nuxt": "^4.1.3",

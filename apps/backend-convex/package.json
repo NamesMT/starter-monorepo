@@ -17,7 +17,7 @@
     "_deploy": "convex deploy -y"
   },
   "dependencies": {
-    "@ai-sdk/anthropic": "^2.0.31",
+    "@ai-sdk/anthropic": "^2.0.33",
     "@ai-sdk/google": "^2.0.23",
     "@ai-sdk/groq": "^2.0.24",
     "@ai-sdk/openai": "^2.0.52",
@@ -29,7 +29,7 @@
     "ai": "^5.0.76",
     "convex-helpers": "^0.1.104",
     "destr": "^2.0.5",
-    "hono": "^4.10.0",
+    "hono": "^4.10.1",
     "zod": "^4.1.12"
   },
   "devDependencies": {
