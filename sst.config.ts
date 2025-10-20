@@ -36,11 +36,9 @@ export default $config({
       architecture: 'arm64',
       environment: {
         ...objectPick(env, [
-          'KINDE_CLIENT_ID',
-          'KINDE_CLIENT_SECRET',
-          'KINDE_DOMAIN',
-          'KINDE_REDIRECT_URI',
-          'KINDE_LOGOUT_REDIRECT_URI',
+          'WORKOS_CLIENT_ID',
+          'WORKOS_API_KEY',
+          'WORKOS_REDIRECT_URI',
           'FRONTEND_URL',
         ]),
       },

@@ -23,13 +23,15 @@
     * [Utilities](#utilities)
     * [Build](#build)
     * [Develop](#develop)
-      * [Wrangler / Cloudflare Workers](#wrangler--cloudflare-workers)
+      * [Wrangler / Cloudflare Workers (Local dev via workerd)](#wrangler--cloudflare-workers-local-dev-via-workerd)
     * [Deploy](#deploy)
     * [Notes](#notes)
       * [`import` ordering](#import-ordering)
       * [Dev with SSL](#dev-with-ssl)
-    * [Remote Caching](#remote-caching)
+    * [Turborepo Remote Caching](#turborepo-remote-caching)
   * [Useful Links](#useful-links)
+    * [Turborepo](#turborepo)
+    * [grammY](#grammy)
 
 ## Overview
 
@@ -56,10 +58,10 @@ It is recommended to use an AI Agent ([`Roo Code`](https://github.com/RooVetGit/
   simply remove `sst` dependency and `sst.config.ts` if you want to use another solution.
 - *currently only `backend` app is configured, which will deploy a Lambda with Function URL enabled*
 
-🔐 Comes with starter-kit for [**Kinde**](https://kinde.com/) [typescript-sdk](https://github.com/kinde-oss/kinde-typescript-sdk), see: `/apps/backend/api/auth`
-- *Add your env variables, activate the auth routes, profit$*
+🔐 Comes with authentication boilerplate via [**WorkOS AuthKit**](https://workos.com/), see: `/apps/backend/api/auth`
+- *Add your env variables, DONE!*
 - Please note that by default `backend` comes with a cookies-based session manager, which have great DX, security and does not require an external database (which also means great performance), but as the `backend` is decoupled with the Nuxt's SSR server, it will not work well with SSR (the session/auth state is not shared).  
-So if you use SSR, you could use the official [Nuxt Kinde](https://nuxt.com/modules/kinde) module or implement your own way to manage the session at `apps/backend/src/middlewares/session.ts`.
+So, if you use SSR, you should implement another auth solution.
   - If you have a good session manager implementation, a PR is greatly appreciated!
 
 💯 JS is always [**TypeScript**](https://www.typescriptlang.org/) where possible.

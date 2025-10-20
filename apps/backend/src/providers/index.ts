@@ -1,7 +1,7 @@
 import { env as honoEnv } from 'hono/adapter'
 import { createMiddleware } from 'hono/factory'
 import { runtime } from 'std-env'
-import { initKindeClient } from './auth/kinde-main'
+import { initWorkOS } from './auth/workos-main'
 import { initConvexClient } from './baas/convex-main'
 
 export const nonSharingPlatforms = new Set(['workerd'])
@@ -31,7 +31,7 @@ export const providersInit = createMiddleware(async (c, next) => {
   else {
     if (!providersState.initialized) {
       await Promise.all([
-        initKindeClient(),
+        initWorkOS(),
         // WARN: allows Convex to fail initializing, in case template user does not opt-in for Convex, please remove the catch or this whole line depends on your need in production
         initConvexClient().catch(() => { }),
       ])

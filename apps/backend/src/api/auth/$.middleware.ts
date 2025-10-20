@@ -1,28 +1,31 @@
 import { appFactory } from '#src/helpers/factory.js'
-import { getSessionManager } from '#src/helpers/kinde.js'
-import { getKindeClient } from '#src/providers/auth/kinde-main.js'
+import { getWorkOS, getWorkOSJwks } from '#src/providers/auth/workos-main.js'
 import { DetailedError } from '@namesmt/utils'
-import { decode } from 'hono/jwt'
+import { decode, verifyWithJwks } from 'hono/jwt'
 
 export function keepAuthFresh() {
   return appFactory.createMiddleware(async (c, next) => {
-    const kindeClient = await getKindeClient()
-    const session = c.get('session')
-    const sessionManager = getSessionManager(c)
+    const workos = await getWorkOS()
+    const auth = c.get('backend-auth')
+    const userAuth = auth.data.userAuth
 
-    const userAuth = session.data.userAuth
     if (!userAuth)
       return await next()
 
-    const accessToken = await kindeClient.getToken(getSessionManager(c))
-
     // If token will expire in less than 20 minutes, refresh it
-    if ((decode(accessToken)?.payload?.exp || 0) * 1000 < Date.now() + 1000 * 60 * 20) {
-      const tokenRefresh = await kindeClient.refreshTokens(sessionManager, true)
+    if ((decode(userAuth.private.accessToken)?.payload?.exp || 0) * 1000 < Date.now() + 1000 * 60 * 20) {
+      const { accessToken, refreshToken } = await workos.userManagement.authenticateWithRefreshToken({
+        clientId: workos.clientId!,
+        refreshToken: userAuth.private.refreshToken,
+      })
 
-      session.data.userAuth = {
+      auth.data.userAuth = {
         ...userAuth,
-        tokens: { accessToken: tokenRefresh.access_token },
+        private: {
+          accessToken,
+          refreshToken,
+          sessionId: decode(accessToken).payload.sid as string,
+        },
       }
     }
 
@@ -32,22 +35,39 @@ export function keepAuthFresh() {
 
 export type checkAuthParams = {
   /**
-   * If false, will only throw if user is authenticated but token verification fails.
+   * Throws when the user is simply not authenticated yet (expired/revoked is still valid).
    *
    * @default true
    */
   throwOnUnauthenticated?: boolean
+
+  /**
+   * Throws when user is authenticated but the token fails to verify (including expired/revoked, etc).
+   *
+   * @default true
+   */
+  throwOnBadToken?: boolean
 }
-export function checkAuth({ throwOnUnauthenticated = true }: checkAuthParams = {}) {
+export function checkAuth({ throwOnUnauthenticated = true, throwOnBadToken = true }: checkAuthParams = {}) {
   return appFactory.createMiddleware(async (c, next) => {
-    const session = c.get('session')
-    const userAuth = session.data.userAuth
+    const auth = c.get('backend-auth')
+    const userAuth = auth.data.userAuth
+
     if (!userAuth) {
       if (throwOnUnauthenticated)
         throw new DetailedError('user is not authenticated', { statusCode: 401 })
 
       return await next()
     }
+
+    const _wosPayload = userAuth && await verifyWithJwks(userAuth.private.accessToken, await getWorkOSJwks())
+      .catch((e) => {
+        // Clears `userAuth` if token is bad
+        auth.data.userAuth = undefined
+
+        if (throwOnBadToken)
+          throw e
+      })
 
     // TODO: permission tokens system here
 

@@ -1,174 +1,98 @@
-/**
- * This file contains routes and sample routes for possible APIs usecases with Kinde.
- */
-
-// import type { ClaimTokenType, FlagType } from '@kinde-oss/kinde-typescript-sdk'
 import { appFactory } from '#src/helpers/factory.js'
-import { getSessionManager } from '#src/helpers/kinde.js'
-import { getKindeClient } from '#src/providers/auth/kinde-main.js'
-import { objectOmit } from '@namesmt/utils'
+import { getWorkOS } from '#src/providers/auth/workos-main.js'
+import { objectOmit, objectPick } from '@namesmt/utils'
+import { decode } from 'hono/jwt'
 import { env } from 'std-env'
+import { checkAuth } from './$.middleware'
 
 export const authRoutesApp = appFactory.createApp()
-  .get('/health', async (c) => {
-    return c.text('Good', 200)
-  })
-
   // This endpoint returns the current auth state
-  .get('/authState', async (c) => {
-    const session = c.get('session')
+  .get(
+    '/authState',
+    checkAuth({
+      throwOnBadToken: false,
+      throwOnUnauthenticated: false,
+    }),
+    async (c) => {
+      const auth = c.get('backend-auth')
 
-    const userAuth = session.data.userAuth
-    const tokens = userAuth?.tokens ?? null
+      const userAuth = auth.data.userAuth
+      if (!userAuth) {
+        return c.json({
+          userAuth: null,
+          tokens: null,
+        })
+      }
 
-    return c.json({ userAuth: userAuth ? objectOmit(userAuth, ['tokens']) : null, tokens })
-  })
+      return c.json({
+        userAuth: objectOmit(userAuth, ['private']),
+        tokens: objectPick(userAuth.private, ['accessToken', 'refreshToken']),
+      })
+    },
+  )
 
   .get('/login', async (c) => {
-    const kindeClient = await getKindeClient()
-    const org_code = c.req.query('org_code')
-    const session = c.get('session')
+    const workos = await getWorkOS()
+    const auth = c.get('backend-auth')
 
-    const loginUrl = await kindeClient.login(getSessionManager(c), { org_code })
+    const authorizationUrl = workos.userManagement.getAuthorizationUrl({
+    // Specify that we'd like AuthKit to handle the authentication flow
+      provider: 'authkit',
+      clientId: workos.clientId!,
+      redirectUri: env.WORKOS_REDIRECT_URI!,
+    })
 
-    session.data.backToPath = c.req.query('path')
+    auth.data.backToPath = c.req.query('path')
 
-    return c.redirect(loginUrl.toString())
-  })
-
-  .get('/register', async (c) => {
-    const kindeClient = await getKindeClient()
-    const org_code = c.req.query('org_code')
-
-    const registerUrl = await kindeClient.register(getSessionManager(c), { org_code })
-
-    return c.redirect(registerUrl.toString())
+    // Redirect the user to the AuthKit sign-in page
+    return c.redirect(authorizationUrl)
   })
 
   .get('/callback', async (c) => {
-    const kindeClient = await getKindeClient()
-    const session = c.get('session')
-    const sessionManager = getSessionManager(c)
+    const workos = await getWorkOS()
+    const auth = c.get('backend-auth')
 
-    await kindeClient.handleRedirectToApp(sessionManager, new URL(c.req.url))
+    const code = c.req.query('code')
+    if (!code)
+      return c.text('No code provided', 400)
 
-    let backToPath = session.data.backToPath as string || '/'
-    if (!backToPath.startsWith('/'))
-      backToPath = `/${backToPath}`
+    const { user, accessToken, refreshToken } = await workos.userManagement.authenticateWithCode({
+      clientId: workos.clientId!,
+      code,
+      session: { sealSession: false }, // We will manage the session ourselves via `hono-cookie-state`, no need to seal here.
+    })
 
-    const kindeProfile = await kindeClient.getUserProfile(sessionManager)
+    auth.data.userAuth = {
+      id: user.id,
+      avatar: user.profilePictureUrl || undefined,
+      email: user.email,
+      firstName: user.firstName || 'N/A',
+      fullName: `${user.firstName || 'N/A'} ${user.lastName || 'N/A'}`,
 
-    session.data.userAuth = {
-      id: kindeProfile.id,
-      avatar: kindeProfile.picture || undefined,
-      email: kindeProfile.email,
-      firstName: kindeProfile.given_name,
-      // @ts-expect-error Kinde SDK is dumb
-      fullName: kindeProfile.name,
-
-      tokens: {
-        accessToken: await kindeClient.getToken(sessionManager),
+      private: {
+        accessToken,
+        refreshToken,
+        sessionId: decode(accessToken).payload.sid as string,
       },
     }
 
+    let backToPath = auth.data.backToPath as string || '/'
+    if (!backToPath.startsWith('/'))
+      backToPath = `/${backToPath}`
     return c.redirect(`${env.FRONTEND_URL!}${backToPath}`)
   })
 
   .get('/logout', async (c) => {
-    const kindeClient = await getKindeClient()
+    const workos = await getWorkOS()
+    const auth = c.get('backend-auth')
+    if (!auth.data.userAuth)
+      return c.redirect('/')
 
-    const logoutUrl = await kindeClient.logout(getSessionManager(c))
+    const url = workos.userManagement.getLogoutUrl({
+      sessionId: auth.data.userAuth.private.sessionId,
+    })
 
-    return c.redirect(logoutUrl.toString())
+    auth.data = {}
+
+    return c.redirect(url)
   })
-
-  // This endpoint checks if kinde session is authenticated
-  .get('/isAuth', async (c) => {
-    const kindeClient = await getKindeClient()
-
-    const isAuthenticated = await kindeClient.isAuthenticated(getSessionManager(c))
-
-    return c.json(isAuthenticated)
-  })
-
-// .get('/profile', async (c) => {
-//   const kindeClient = await getKindeClient()
-
-//   const profile = await kindeClient.getUserProfile(getSessionManager(c))
-
-//   return c.json(profile)
-// })
-
-// .get('/createOrg', async (c) => {
-//   const kindeClient = await getKindeClient()
-//   const org_name = c.req.query('org_name')?.toString()
-
-//   const createUrl = await kindeClient.createOrg(getSessionManager(c), { org_name })
-
-//   return c.redirect(createUrl.toString())
-// })
-
-// .get('/getOrg', async (c) => {
-//   const kindeClient = await getKindeClient()
-
-//   const org = await kindeClient.getOrganization(getSessionManager(c))
-
-//   return c.json(org)
-// })
-
-// .get('/getOrgs', async (c) => {
-//   const kindeClient = await getKindeClient()
-
-//   const orgs = await kindeClient.getUserOrganizations(getSessionManager(c))
-
-//   return c.json(orgs)
-// })
-
-// .get('/getPerm/:perm', async (c) => {
-//   const kindeClient = await getKindeClient()
-
-//   const perm = await kindeClient.getPermission(getSessionManager(c), c.req.param('perm'))
-
-//   return c.json(perm)
-// })
-
-// .get('/getPerms', async (c) => {
-//   const kindeClient = await getKindeClient()
-
-//   const perms = await kindeClient.getPermissions(getSessionManager(c))
-
-//   return c.json(perms)
-// })
-
-// // Try: /api/auth/getClaim/aud, /api/auth/getClaim/email/id_token
-// .get('/getClaim/:claim', async (c) => {
-//   const kindeClient = await getKindeClient()
-//   const type = (c.req.query('type') ?? 'access_token') as ClaimTokenType
-
-//   if (!/^(?:access_token|id_token)$/.test(type))
-//     return c.text('Bad request: type', 400)
-
-//   const claim = await kindeClient.getClaim(getSessionManager(c), c.req.param('claim'), type)
-//   return c.json(claim)
-// })
-
-// .get('/getFlag/:code', async (c) => {
-//   const kindeClient = await getKindeClient()
-
-//   const claim = await kindeClient.getFlag(
-//     getSessionManager(c),
-//     c.req.param('code'),
-//     c.req.query('default'),
-//     c.req.query('flagType') as keyof FlagType | undefined,
-//   )
-
-//   return c.json(claim)
-// })
-
-// .get('/getToken', async (c) => {
-//   const kindeClient = await getKindeClient()
-
-//   const accessToken = await kindeClient.getToken(getSessionManager(c))
-
-//   return c.text(accessToken)
-// })

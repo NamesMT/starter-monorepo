@@ -2,7 +2,7 @@ import type { UserAuthState } from '@local/common/src/types/user'
 import type { Reactive } from 'vue'
 
 export type AuthState = (
-  { loggedIn: true, user: Omit<UserAuthState, 'tokens'>, token: string }
+  { loggedIn: true, user: Omit<UserAuthState, 'private'>, token: string }
   | { loggedIn: false, user: null, token: null }
 )
 

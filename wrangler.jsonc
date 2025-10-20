@@ -44,18 +44,14 @@
    *
    */
   "vars": {
-    // "KINDE_CLIENT_ID": "secret",
-    // "KINDE_CLIENT_SECRET": "secret",
-    "KINDE_DOMAIN": "https://topnames-dev.eu.kinde.com",
-    "KINDE_LOGOUT_REDIRECT_URI": "https://starter-monorepo.isthe.top",
-    "KINDE_REDIRECT_URI": "https://starter-monorepo.isthe.top/api/auth/callback",
+    // "WORKOS_CLIENT_ID": "secret",
+    // "WORKOS_API_KEY": "secret",
+    "WORKOS_REDIRECT_URI": "https://starter-monorepo.isthe.top/api/auth/callback",
     "FRONTEND_URL": "https://starter-monorepo.isthe.top",
     "CONVEX_URL": "https://amiable-octopus-367.convex.cloud",
 
     // The block below is intended for local development
-    // "KINDE_DOMAIN": "https://topnames-dev.eu.kinde.com",
-    // "KINDE_LOGOUT_REDIRECT_URI": "https://127.0.0.1:3310",
-    // "KINDE_REDIRECT_URI": "https://127.0.0.1:3310/api/auth/callback",
+    // "WORKOS_REDIRECT_URI": "https://127.0.0.1:3310/api/auth/callback",
     // "FRONTEND_URL": "https://127.0.0.1:3310",
     // "CONVEX_URL": "https://dazzling-panther-382.convex.cloud",
 

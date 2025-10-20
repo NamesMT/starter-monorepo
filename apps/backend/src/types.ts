@@ -13,7 +13,7 @@ export interface HonoEnv {
     ASSETS: { fetch: (reqOrUrl: Request | string) => Promise<Response> }
   }
   Variables: {
-    session: CookieState<{ userAuth?: UserAuthState } & Record<string, any>>
-    authVendorSession: CookieState<any>
+    'session': CookieState<any>
+    'backend-auth': CookieState<{ userAuth?: UserAuthState } & Record<string, any>>
   }
 }

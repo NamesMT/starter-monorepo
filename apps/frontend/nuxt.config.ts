@@ -25,7 +25,7 @@ const siteConfig = {
   backend: import.meta.env.NUXT_PUBLIC_BACKEND_URL,
   convex: import.meta.env.NUXT_PUBLIC_CONVEX_URL,
   name: 'starter-monorepo',
-  description: 'Monorepo with 🤖 AI initialize and localize | 🔥Hono + OpenAPI & RPC, Nuxt, Convex, SST Ion, Kinde Auth, Tanstack Query, Shadcn, UnoCSS, Spreadsheet I18n, Lingo.dev',
+  description: 'Monorepo with 🤖 AI initialize and localize | 🔥Hono + OpenAPI & RPC, Nuxt, Convex, SST Ion, WorkOS AuthKit, Tanstack Query, Shadcn, UnoCSS, Spreadsheet I18n, Lingo.dev',
 }
 
 interface GenFrontendLocaleProps {

@@ -10,7 +10,7 @@
 - [Session management](./src/middlewares/session.ts).
 - Multi-platform support, one codebase that works for Node, Cloudflare Workers, AWS Lambda, and more.
 - Efficient providers management pattern, auto-optimize depends on platforms, with on-demand initialization support, sample providers includes:
-  - Kinde auth
+  - WorkOS AuthKit
   - Convex
   - grammY telegram bot
 - And more minor goodies!
@@ -19,7 +19,7 @@
 
 ## Structuring cookbook:
 #### Root level:
-Things like 3rd party APIs, DBs, Storages connectors, etc, should be placed in `#src/providers` folder, grouped by their purpose if possible, e.g: `#src/providers/auth/kinde-main.ts`, `#src/providers/db/neon-main.ts`.
+Things like 3rd party APIs, DBs, Storages connectors, etc, should be placed in `#src/providers` folder, grouped by their purpose if possible, e.g: `#src/providers/auth/workos-main.ts`, `#src/providers/db/neon-main.ts`.
 
 Things that interact with `#src/providers` should be placed in `#src/services` folder. (like an `user` service)
 

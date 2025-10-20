@@ -1,18 +1,4 @@
 {
-  // ############# KNOWN ENV VARIABLES #############
-  //   // apps/frontend
-  //   "NUXT_PUBLIC_FRONTEND_URL", // For SEO
-  //   "NUXT_PUBLIC_BACKEND_URL", // To connect with backend
-
-  //   // apps/backend
-  //   "FRONTEND_URL", // To allow cors from frontend and redirections
-  //   "KINDE_DOMAIN",
-  //   "KINDE_CLIENT_ID",
-  //   "KINDE_CLIENT_SECRET",
-  //   "KINDE_REDIRECT_URI",
-  //   "KINDE_LOGOUT_REDIRECT_URI"
-  // ],
-  // ###############################################
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
   "globalDependencies": [

@@ -5,7 +5,9 @@ export interface UserAuthState {
   email: string
   avatar?: string
 
-  tokens: {
+  private: {
     accessToken: string
+    refreshToken: string
+    sessionId: string
   }
 }

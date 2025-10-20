@@ -10,7 +10,7 @@ export const apiApp = appFactory.createApp()
   // Simple health check route
   .route('', apiRoute)
 
-  // Auth app - you'll need to setup Kinde environment variables.
+  // Auth app - you'll need to setup WorkOS environment variables.
   .route('/auth', authApp)
 
   // Some example routes

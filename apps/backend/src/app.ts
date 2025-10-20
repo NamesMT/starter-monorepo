@@ -5,6 +5,7 @@ import { cors } from 'hono/cors'
 import { logger as loggerMiddleware } from 'hono/logger'
 import { env, isWorkerd } from 'std-env'
 import { apiApp } from './api/$'
+import { keepAuthFresh } from './api/auth/$.middleware'
 import { setupOpenAPI } from './openAPI'
 import { providersInit } from './providers'
 
@@ -38,28 +39,30 @@ export const app = appFactory.createApp()
     credentials: true,
   }))
 
-  // Main cookie session for the app
+  // Main cookie session for general use
   .use(createCookieState({
     key: 'session',
     cookieOptions: {
       maxAge: 90 * 60, // 90 mins
-      sameSite: 'None',
+      sameSite: 'Lax',
       secure: true,
       path: '/',
       httpOnly: true,
     },
   }))
-  // auth vendor's session data
+  // Auth-related cookie session
   .use(createCookieState({
-    key: 'authVendorSession',
+    key: 'backend-auth',
     cookieOptions: {
       maxAge: 90 * 60, // 90 mins
-      sameSite: 'None',
+      sameSite: 'Lax',
       secure: true,
       path: '/',
       httpOnly: true,
     },
   }))
+  // Automatically keeps the auth session fresh (refresh when near-expired)
+  .use(keepAuthFresh())
 
   // Register API routes
   .route('/api', apiApp)
