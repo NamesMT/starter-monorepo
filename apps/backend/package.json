@@ -38,7 +38,7 @@
     "hono-openapi": "^1.1.0",
     "petite-vue-i18n": "^11.1.12",
     "std-env": "^3.10.0",
-    "tsdown": "^0.15.7",
+    "tsdown": "^0.15.8",
     "vitest": "^3.2.4"
   }
 }
