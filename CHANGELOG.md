@@ -1,6 +1,42 @@
 # Changelog
 
 
+## v4.3.0
+
+[compare changes](https://github.com/NamesMT/starter-monorepo/compare/v4.2.0...v4.3.0)
+
+### 🚀 Enhancements
+
+- ⚠️  Auth improvements, refactors (desc) ([df03a02](https://github.com/NamesMT/starter-monorepo/commit/df03a02))
+- ⚠️  Migrate to `WorkOS` as hosted auth, polish auth middlewares, fix logout ([1dac7e0](https://github.com/NamesMT/starter-monorepo/commit/1dac7e0))
+
+### 🩹 Fixes
+
+- Provider cache key typo ([b02c8e4](https://github.com/NamesMT/starter-monorepo/commit/b02c8e4))
+
+### 📖 Documentation
+
+- **README:** Update ([6486ceb](https://github.com/NamesMT/starter-monorepo/commit/6486ceb))
+
+### 🏡 Chore
+
+- Set `ArkType` vscode settings ([b68ddea](https://github.com/NamesMT/starter-monorepo/commit/b68ddea))
+- Update deps ([75aaa12](https://github.com/NamesMT/starter-monorepo/commit/75aaa12))
+- `objectOmit` now available in `@antfu/utils` ([499f097](https://github.com/NamesMT/starter-monorepo/commit/499f097))
+- Remove constant secret so it alerts you to set one ([dfbb123](https://github.com/NamesMT/starter-monorepo/commit/dfbb123))
+- Update deps ([0717bfd](https://github.com/NamesMT/starter-monorepo/commit/0717bfd))
+- Update deps ([1594fba](https://github.com/NamesMT/starter-monorepo/commit/1594fba))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Auth improvements, refactors (desc) ([df03a02](https://github.com/NamesMT/starter-monorepo/commit/df03a02))
+- ⚠️  Migrate to `WorkOS` as hosted auth, polish auth middlewares, fix logout ([1dac7e0](https://github.com/NamesMT/starter-monorepo/commit/1dac7e0))
+
+### ❤️ Contributors
+
+- NamesMT ([@NamesMT](https://github.com/NamesMT))
+- Trung Dang ([@NamesMT](https://github.com/NamesMT))
+
 ## v4.2.0
 
 [compare changes](https://github.com/NamesMT/starter-monorepo/compare/v4.1.0...v4.2.0)
