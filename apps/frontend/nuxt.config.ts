@@ -55,6 +55,7 @@ export default defineNuxtConfig({
   experimental: {
     viewTransition: true,
     watcher: 'parcel',
+    typescriptPlugin: true,
     componentIslands: true,
   },
 

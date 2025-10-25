@@ -24,6 +24,7 @@
     * [Build](#build)
     * [Develop](#develop)
       * [Wrangler / Cloudflare Workers (Local dev via workerd)](#wrangler--cloudflare-workers-local-dev-via-workerd)
+      * [IMPORTANT:](#important)
     * [Deploy](#deploy)
     * [Notes](#notes)
       * [`import` ordering](#import-ordering)
@@ -155,6 +156,10 @@ Guide to setup local development for Cloudflare `workerd` runtime testing:
   * Run `build:workerdLocal` script for `frontend`.
 * Run `pnpm dlx wrangler dev` to start wrangler dev server.
   * `workerd` does not work with Alpine Linux, so if you use the included Dev Container, change the base image to some other distro.
+
+#### IMPORTANT:
+
+For the best development experience, for VSCode and its forks, you should use the workspace's TypeScript version instead of VSCode's shipped version, to do this, open any file with TypeScript support like `.ts`, `.vue`, then, from the IDE's command palette, run the "TypeScript: Select TypeScript Version" and choose "Use Workspace Version".
 
 ### Deploy
 

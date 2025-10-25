@@ -17,7 +17,7 @@
     "_deploy": "convex deploy -y"
   },
   "dependencies": {
-    "@ai-sdk/anthropic": "^2.0.33",
+    "@ai-sdk/anthropic": "^2.0.37",
     "@ai-sdk/google": "^2.0.23",
     "@ai-sdk/groq": "^2.0.24",
     "@ai-sdk/openai": "^2.0.53",
@@ -26,10 +26,10 @@
     "@convex-dev/sharded-counter": "^0.1.8",
     "@hono/zod-validator": "^0.7.4",
     "@openrouter/ai-sdk-provider": "^1.2.0",
-    "ai": "^5.0.76",
+    "ai": "^5.0.78",
     "convex-helpers": "^0.1.104",
     "destr": "^2.0.5",
-    "hono": "^4.10.1",
+    "hono": "^4.10.3",
     "zod": "^4.1.12"
   },
   "devDependencies": {
@@ -39,6 +39,6 @@
     "@namesmt/utils": "^0.5.18",
     "convex": "^1.28.0",
     "kontroll": "^1.1.1",
-    "vitest": "^3.2.4"
+    "vitest": "^4.0.3"
   }
 }

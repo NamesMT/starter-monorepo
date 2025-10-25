@@ -3,7 +3,7 @@
   "type": "module",
   "version": "4.3.0",
   "private": true,
-  "packageManager": "pnpm@10.18.3",
+  "packageManager": "pnpm@10.19.0",
   "engines": {
     "node": ">=20.13.1"
   },
@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "pathe": "^2.0.3",
-    "sst": "^3.17.19",
+    "sst": "^3.17.21",
     "std-env": "^3.10.0"
   },
   "devDependencies": {
@@ -30,11 +30,11 @@
     "@dotenvx/dotenvx": "1.11.4",
     "@namesmt/utils": "^0.5.18",
     "@types/aws-lambda": "^8.10.156",
-    "@types/node": "^24.8.1",
+    "@types/node": "^24.9.1",
     "@unocss/eslint-plugin": "^66.5.4",
     "eslint": "^9.38.0",
     "frontend": "workspace:*",
-    "lint-staged": "^16.2.4",
+    "lint-staged": "^16.2.6",
     "simple-git-hooks": "^2.13.1",
     "tsx": "^4.20.6",
     "turbo": "^2.5.8",
