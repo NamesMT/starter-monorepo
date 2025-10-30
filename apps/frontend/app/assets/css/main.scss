@@ -1,4 +1,4 @@
-@layer reset, base;
+@layer reset, base; // , una-base, fonts, properties, theme, preflights, icons, typography, shortcuts, default;
 @import '@unocss/reset/tailwind.css' layer(reset);
 
 @import './palette.css';
