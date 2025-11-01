@@ -92,13 +92,12 @@ export default defineNuxtConfig({
     },
   },
 
-  // TODO: investigate why this is not working, prob Nuxt 4 alpha bug.
-  // imports: {
-  //   dirs: [
-  //     '~/composables/**',
-  //     '~/utils/**',
-  //   ],
-  // },
+  imports: {
+    dirs: [
+      '~/composables/**',
+      '~/utils/**',
+    ],
+  },
 
   components: [
     {
