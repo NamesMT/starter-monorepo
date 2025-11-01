@@ -14,19 +14,25 @@ export function keepAuthFresh() {
 
     // If token will expire in less than 20 minutes, refresh it
     if ((decode(userAuth.private.accessToken)?.payload?.exp || 0) * 1000 < Date.now() + 1000 * 60 * 20) {
-      const { accessToken, refreshToken } = await workos.userManagement.authenticateWithRefreshToken({
+      await workos.userManagement.authenticateWithRefreshToken({
         clientId: workos.clientId!,
         refreshToken: userAuth.private.refreshToken,
       })
-
-      auth.data.userAuth = {
-        ...userAuth,
-        private: {
-          accessToken,
-          refreshToken,
-          sessionId: decode(accessToken).payload.sid as string,
-        },
-      }
+        .then(({ accessToken, refreshToken }) => {
+          auth.data.userAuth = {
+            ...userAuth,
+            private: {
+              accessToken,
+              refreshToken,
+              sessionId: decode(accessToken).payload.sid as string,
+            },
+          }
+        })
+        .catch((e) => {
+          console.error(e)
+          // Clears `userAuth` if there is trouble refreshing
+          auth.data.userAuth = undefined
+        })
     }
 
     await next()
