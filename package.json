@@ -26,18 +26,18 @@
     "std-env": "^3.10.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^6.1.0",
+    "@antfu/eslint-config": "^6.2.0",
     "@dotenvx/dotenvx": "1.11.4",
     "@namesmt/utils": "^0.5.18",
     "@types/aws-lambda": "^8.10.157",
     "@types/node": "^24.9.2",
     "@unocss/eslint-plugin": "^66.5.4",
-    "eslint": "^9.38.0",
+    "eslint": "^9.39.0",
     "frontend": "workspace:*",
     "lint-staged": "^16.2.6",
     "simple-git-hooks": "^2.13.1",
     "tsx": "^4.20.6",
-    "turbo": "^2.5.8",
+    "turbo": "^2.6.0",
     "typescript": "^5.9.3"
   },
   "pnpm": {

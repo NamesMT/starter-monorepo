@@ -17,7 +17,7 @@
     "deploy": "dotenvx run -f .env.prod.local -f .env.prod -f .env -- sh scripts/deploy.sh"
   },
   "dependencies": {
-    "srvx": "^0.9.2"
+    "srvx": "^0.9.4"
   },
   "devDependencies": {
     "@hono/standard-validator": "^0.1.5",
@@ -26,7 +26,7 @@
     "@local/tsconfig": "workspace:*",
     "@namesmt/utils": "^0.5.18",
     "@scalar/hono-api-reference": "^0.9.22",
-    "@vitest/coverage-v8": "^4.0.5",
+    "@vitest/coverage-v8": "^4.0.6",
     "@workos-inc/node": "^7.72.1",
     "arktype": "^2.1.25",
     "backend-convex": "workspace:*",
@@ -39,6 +39,6 @@
     "petite-vue-i18n": "^11.1.12",
     "std-env": "^3.10.0",
     "tsdown": "^0.15.12",
-    "vitest": "^4.0.5"
+    "vitest": "^4.0.6"
   }
 }
