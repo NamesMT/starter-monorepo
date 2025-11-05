@@ -67,6 +67,7 @@
     "locals/locales/dist/backend",
     "locals/locales/dist"
   ],
+  "i18n-ally.regex.key": "[\\w\\d\\. \\-\\[\\]{}]*?",
 
   "errorLens.followCursor": "allLines"
 }
