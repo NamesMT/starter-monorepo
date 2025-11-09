@@ -51,8 +51,7 @@ It is recommended to use an AI Agent ([`Roo Code`](https://github.com/RooVetGit/
 ⏩ This template is powered by [Turborepo](https://turbo.build/repo).
 
 😊 Out-of-the-box, this repo is configured for an SSG `frontend` Nuxt app, and a `backend` Hono app that will be the main API, to optimize on cost and simplicity.
-- The starter kit is still configured for 100% SSR support,  
-  Simply change the `apps/frontend`'s build script to `nuxt build` to enable SSR building
+- You can change the `apps/frontend`'s `build` script to `nuxt build` to enable SSR bundle, but some features like authentication will require manual upgrade by you.
 
 🌩️ [SST Ion](https://ion.sst.dev/), an Infrastructure-as-Code solution, with powerful [Live](https://ion.sst.dev/docs/live/) development.  
 - SST is 100% opt-in, by using `sst` CLI commands yourself, like `sst dev`,  
