@@ -70,12 +70,12 @@ So, if you use SSR, you should implement another auth solution.
 
 #### AI / LLM Chat
 
-> Work started in 2025-06-12 for [**T3 Chat Cloneathon**](https://cloneathon.t3.chat/) competition, with no prior AI SDK and chat streams experience, but I think I did an amazing job 🫡!
+> Done as an application for [**T3 Chat Cloneathon**](https://cloneathon.t3.chat/) competition in 1 week, with no prior AI SDK and chat streams experience, but I think I did an amazing job 🫡!
 > 
-> The focus of the project is for broader adoption, prioritizing easy-to-access UI/UX, bleeding-edge features like workflows are a low prio, though, advanced capabilities per-model capabilities and fine-tuning are still expected to be elegantly supported via the model's interface. #48
+> The focus of the project is for broad, group-use adoption, prioritizing easy-to-access UI/UX, bleeding-edge features like workflows are a low prio, though, advanced capabilities per-model capabilities and fine-tuning are still expected to be elegantly supported via the model's interface. #48
 
-A super efficient and powerful, yet friendly LLM Chat system, featuring:
-  * Business-ready, support `hosted` provider that you can control the billing of.
+A simple & friendly LLM Chat system, but still packing some powers, featuring:
+  * `hosted` provider that you can control the billing of.
   * Supports other add-in **BYOK** providers, like `OpenAI`, `OpenRouter`,...
   * Seamless authentication integration with the main `backend`.
   * Beautiful syntax highlighting 🌈.
@@ -89,13 +89,12 @@ A super efficient and powerful, yet friendly LLM Chat system, featuring:
   * Easy and private: guest, anonymous usage supported.
     * Your dad can just join and chat with just a link share 😉, no setup needed.
   * Mobile-friendly.
-  * Fully internalized, with AI-powered translations and smooth switching between languages.
-  * Blazingly fast ⚡ with local caching and optimistic updates.
+  * Fast ⚡ with local caching and optimistic updates.
   * Designed to be scalable
     * > Things are isolated and common interfaces are defined and utilized where possible, there's no tightly coupled-hacks that prevents future scaling, things just works, elegantly.
     * Any AI provider that is compatible with `@ai-sdk` interface can be added in a few words of code, I just don't want to bloat the UI by adding all of them.
 
-`*1`: currently the "stream" received when resuming or for other real-time users in the same thread is implemented via a custom polling mechanism, and not SSE. it is intentionally chosed to be this way for more minimal infrastructure setup and wider hosting support, so smaller user groups can host their own version easily, it is still very performant and efficient.
+`*1`: currently the "stream" received when resuming or for other real-time users in the same thread is implemented via a polling, not SSE. it is intentionally chosed to be this way for more minimal infrastructure setup and wider hosting support, so smaller user groups can host their own version easily, it is still very performant and efficient.
   * There is boilerplate code for SSE resume support, you can simply add a pub-sub to the backend and switch to using SSE resume in `ChatInterface` component.
 
 ### Apps and Libraries
