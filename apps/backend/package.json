@@ -17,6 +17,8 @@
     "deploy": "dotenvx run -f .env.prod.local -f .env.prod -f .env -- sh scripts/deploy.sh"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.927.0",
+    "@aws-sdk/lib-dynamodb": "^3.927.0",
     "srvx": "^0.9.4"
   },
   "devDependencies": {
