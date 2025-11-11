@@ -74,7 +74,9 @@ So, if you use SSR, you should implement another auth solution.
 > 
 > The focus of the project is for broad, group-use adoption, prioritizing easy-to-access UI/UX, bleeding-edge features like workflows are a low prio, though, advanced capabilities per-model capabilities and fine-tuning are still expected to be elegantly supported via the model's interface. #48
 
-A simple & friendly LLM Chat system, but still packing some powers, featuring:
+<details>
+  <summary>A simple & friendly LLM Chat system, but still packing some powers, featuring:</summary>
+
   * `hosted` provider that you can control the billing of.
   * Supports other add-in **BYOK** providers, like `OpenAI`, `OpenRouter`,...
   * Seamless authentication integration with the main `backend`.
@@ -96,6 +98,7 @@ A simple & friendly LLM Chat system, but still packing some powers, featuring:
 
 `*1`: currently the "stream" received when resuming or for other real-time users in the same thread is implemented via a polling, not SSE. it is intentionally chosed to be this way for more minimal infrastructure setup and wider hosting support, so smaller user groups can host their own version easily, it is still very performant and efficient.
   * There is boilerplate code for SSE resume support, you can simply add a pub-sub to the backend and switch to using SSE resume in `ChatInterface` component.
+</details>
 
 ### Apps and Libraries
 
