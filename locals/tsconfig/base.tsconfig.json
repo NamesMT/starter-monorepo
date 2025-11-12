@@ -4,14 +4,21 @@
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["ESNext"],
+    "moduleDetection": "force",
     "module": "ESNext",
     "moduleResolution": "Bundler",
+    "types": [
+      "node"
+    ],
     "strict": true,
+    "noUncheckedSideEffectImports": true,
+    "noUncheckedIndexedAccess": true,
     "declaration": true,
     "inlineSources": false,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
+    "verbatimModuleSyntax": true,
     "preserveWatchOutput": true,
     "skipLibCheck": true
   },

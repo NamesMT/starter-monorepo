@@ -1,8 +1,9 @@
 {
-  "extends": "@local/tsconfig/base.json",
+  "extends": "@local/tsconfig/base.tsconfig.json",
   "compilerOptions": {
     "composite": true,
     "types": [
+      "node",
       "vitest",
       "@ark/schema"
     ],
