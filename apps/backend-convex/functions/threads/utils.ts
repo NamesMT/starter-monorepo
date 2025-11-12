@@ -1,6 +1,5 @@
-import type { UserIdentity } from 'convex/server'
+import type { GenericActionCtx, GenericMutationCtx, GenericQueryCtx, UserIdentity } from 'convex/server'
 import type { Doc } from '../../convex/_generated/dataModel'
-import type { GenericCtx } from '../../convex/_generated/server'
 import { ConvexError } from 'convex/values'
 
 export interface AssertThreadAccessArgs {
@@ -8,7 +7,7 @@ export interface AssertThreadAccessArgs {
   lockerKey?: Doc<'threads'>['lockerKey']
   userIdentity?: UserIdentity | null
 }
-export async function assertThreadAccess(ctx: GenericCtx, { thread, lockerKey, userIdentity }: AssertThreadAccessArgs) {
+export async function assertThreadAccess(ctx: GenericActionCtx<any> | GenericQueryCtx<any> | GenericMutationCtx<any>, { thread, lockerKey, userIdentity }: AssertThreadAccessArgs) {
   // Check permission by lockerKey
   if (lockerKey && thread.lockerKey === lockerKey) {
     ;
