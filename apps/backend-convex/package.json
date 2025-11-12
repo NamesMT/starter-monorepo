@@ -17,19 +17,19 @@
     "_deploy": "convex deploy -y"
   },
   "dependencies": {
-    "@ai-sdk/anthropic": "^2.0.40",
-    "@ai-sdk/google": "^2.0.26",
-    "@ai-sdk/groq": "^2.0.27",
-    "@ai-sdk/openai": "^2.0.59",
+    "@ai-sdk/anthropic": "^2.0.44",
+    "@ai-sdk/google": "^2.0.31",
+    "@ai-sdk/groq": "^2.0.29",
+    "@ai-sdk/openai": "^2.0.65",
     "@ai-sdk/provider": "^2.0.0",
-    "@convex-dev/rate-limiter": "^0.2.14",
+    "@convex-dev/rate-limiter": "^0.3.0",
     "@convex-dev/sharded-counter": "^0.1.8",
     "@hono/zod-validator": "^0.7.4",
-    "@openrouter/ai-sdk-provider": "^1.2.0",
-    "ai": "^5.0.86",
+    "@openrouter/ai-sdk-provider": "^1.2.1",
+    "ai": "^5.0.92",
     "convex-helpers": "^0.1.104",
     "destr": "^2.0.5",
-    "hono": "^4.10.4",
+    "hono": "^4.10.5",
     "zod": "^4.1.12"
   },
   "devDependencies": {
@@ -37,8 +37,8 @@
     "@local/locales": "workspace:*",
     "@local/tsconfig": "workspace:*",
     "@namesmt/utils": "^0.5.18",
-    "convex": "^1.28.0",
+    "convex": "^1.29.0",
     "kontroll": "^1.1.1",
-    "vitest": "^4.0.6"
+    "vitest": "^4.0.8"
   }
 }

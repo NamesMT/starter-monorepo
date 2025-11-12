@@ -13,7 +13,7 @@
   "dependencies": {
     "petite-vue-i18n": "^11.1.12",
     "spreadsheet-i18n": "^0.3.8",
-    "vue": "^3.5.22"
+    "vue": "^3.5.24"
   },
   "devDependencies": {
     "@local/tsconfig": "workspace:*"

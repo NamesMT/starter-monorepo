@@ -228,12 +228,6 @@ export default defineNuxtConfig({
     defaultImport: 'component',
   },
 
-  // @nuxtjs/color-mode
-  // Removing classSuffix to match UnoCSS default selectors
-  colorMode: {
-    classSuffix: '',
-  },
-
   // @nuxt/eslint
   eslint: {
     config: {
