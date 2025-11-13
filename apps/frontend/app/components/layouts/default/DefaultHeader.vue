@@ -6,9 +6,9 @@ const convexVueContext = inject<ConvexVueContext>('convex-vue')
 </script>
 
 <template>
-  <header class="text-h4 grid grid-cols-12 h-73px items-center view-transition-header xl:gap-10">
+  <header class="text-xl grid grid-cols-12 h-73px items-center view-transition-header xl:gap-10">
     <div class="text-xl py-4 flex gap-2 col-span-3 h-full items-center justify-start">
-      <NuxtLink to="https://github.com/NamesMT/starter-monorepo" external target="_blank" class="text-h3 font-black flex gap-3 h-full items-center">
+      <NuxtLink to="https://github.com/NamesMT/starter-monorepo" external target="_blank" class="text-2xl font-black flex gap-3 h-full items-center">
         <Logo class="text-surface-900 h-full dark:text-surface-0" />
         <h1 class="whitespace-nowrap max-sm:hidden">
           starter-monorepo
@@ -23,20 +23,20 @@ const convexVueContext = inject<ConvexVueContext>('convex-vue')
         to="/" class="group flex items-center"
         exact-active-class="text-secondary border-b-2px border-secondary"
       >
-        <span class="transition-all group-hover:text-h3 group-hover:text-accent-foreground">{{ $t('pages.home.title') }}</span>
+        <span class="transition-all group-hover:text-2xl group-hover:text-accent-foreground">{{ $t('pages.home.title') }}</span>
       </NuxtLink>
       <NuxtLink
         to="/test" class="group flex items-center"
         exact-active-class="text-secondary border-b-2px border-secondary"
       >
-        <span class="transition-all group-hover:text-h3 group-hover:text-accent-foreground">{{ $t('pages.test.title') }}</span>
+        <span class="transition-all group-hover:text-2xl group-hover:text-accent-foreground">{{ $t('pages.test.title') }}</span>
       </NuxtLink>
       <NuxtLink
         v-if="convexVueContext?.clientRef?.value"
         to="/chat" class="group flex items-center"
         exact-active-class="text-secondary border-b-2px border-secondary"
       >
-        <span class="transition-all group-hover:text-h3 group-hover:text-accent-foreground">{{ $t('pages.chat.title') }}</span>
+        <span class="transition-all group-hover:text-2xl group-hover:text-accent-foreground">{{ $t('pages.chat.title') }}</span>
       </NuxtLink>
     </div>
 

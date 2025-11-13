@@ -49,40 +49,40 @@ function commonColorVarsGen(varName: string, additionalVars?: Array<string>) {
 export default defineConfig({
   outputToCssLayers: true,
   theme: {
-    text: {
-      h1: {
-        fontSize: '40px',
-        lineHeight: '48px',
-      },
-      h2: {
-        fontSize: '32px',
-        lineHeight: '40px',
-      },
-      h3: {
-        fontSize: '24px',
-        lineHeight: '32px',
-      },
-      h4: {
-        fontSize: '20px',
-        lineHeight: '28px',
-      },
-      body1: {
-        fontSize: '18px',
-        lineHeight: '26px',
-      },
-      body2: {
-        fontSize: '16px',
-        lineHeight: '24px',
-      },
-      body3: {
-        fontSize: '14px',
-        lineHeight: '20px',
-      },
-      body4: {
-        fontSize: '12px',
-        lineHeight: '16px',
-      },
-    },
+    // text: {
+    //   h1: {
+    //     fontSize: '40px',
+    //     lineHeight: '48px',
+    //   },
+    //   h2: {
+    //     fontSize: '32px',
+    //     lineHeight: '40px',
+    //   },
+    //   h3: {
+    //     fontSize: '24px',
+    //     lineHeight: '32px',
+    //   },
+    //   h4: {
+    //     fontSize: '20px',
+    //     lineHeight: '28px',
+    //   },
+    //   body1: {
+    //     fontSize: '18px',
+    //     lineHeight: '26px',
+    //   },
+    //   body2: {
+    //     fontSize: '16px',
+    //     lineHeight: '24px',
+    //   },
+    //   body3: {
+    //     fontSize: '14px',
+    //     lineHeight: '20px',
+    //   },
+    //   body4: {
+    //     fontSize: '12px',
+    //     lineHeight: '16px',
+    //   },
+    // },
     ringWidth: {
       DEFAULT: '3px',
     },
