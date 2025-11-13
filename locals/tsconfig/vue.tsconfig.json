@@ -1,5 +1,5 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "Vue",
-  "extends": ["./base.json", "@vue/tsconfig/tsconfig.dom.json"]
+  "extends": ["./base.tsconfig.json", "@vue/tsconfig/tsconfig.dom.json"]
 }
