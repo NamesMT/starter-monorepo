@@ -4,8 +4,7 @@
     "composite": true,
     "types": [
       "node",
-      "vitest",
-      "@ark/schema"
+      "vitest"
     ],
     "emitDeclarationOnly": true,
     "outDir": ".output/tsc"
