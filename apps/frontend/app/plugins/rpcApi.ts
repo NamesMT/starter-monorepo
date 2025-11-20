@@ -8,7 +8,8 @@ export default defineNuxtPlugin({
   parallel: true,
   async setup() {
     const requestUrl = useRequestURL()
-    const backendUrl = useRuntimeConfig().public.backendUrl
+    const runtimeConfig = useRuntimeConfig()
+    const backendUrl = runtimeConfig.public.backendUrl
     const urlBackend = new URL(backendUrl)
     const enableProxy = useAppConfig().enableProxy
     // `auto`: if the frontend and backend domain are on the same domain, we will call the proxy instead of the backendUrl directly
@@ -16,7 +17,7 @@ export default defineNuxtPlugin({
       ? urlBackend.hostname === requestUrl.hostname
       : enableProxy
     const apiUrl = callProxy
-      ? requestUrl.origin
+      ? requestUrl.origin + ((runtimeConfig.app.baseURL && runtimeConfig.app.baseURL !== '/') ? runtimeConfig.app.baseURL : '')
       : backendUrl
 
     // this wrappedFetch calculates the sha256 hash of the request body and adds it to the headers, it is necessary for AWS Lambda + OAC on POST/PUT requests.
