@@ -16,7 +16,7 @@ export default defineNuxtPlugin({
     const callProxy = enableProxy === 'auto'
       ? urlBackend.hostname === requestUrl.hostname
       : enableProxy
-    const apiUrl = callProxy
+    const apiUrl = import.meta.dev && callProxy
       ? requestUrl.origin + ((runtimeConfig.app.baseURL && runtimeConfig.app.baseURL !== '/') ? runtimeConfig.app.baseURL : '')
       : backendUrl
 
