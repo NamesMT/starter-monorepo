@@ -9,11 +9,11 @@
     "quickcheck": "pnpm run lint && pnpm run test:types"
   },
   "dependencies": {
-    "pathe": "^2.0.3"
+    "pathe": "catalog:"
   },
   "devDependencies": {
     "@local/tsconfig": "workspace:*",
-    "dotenv": "^16.6.1",
-    "type-fest": "^5.2.0"
+    "dotenv": "catalog:",
+    "type-fest": "catalog:"
   }
 }

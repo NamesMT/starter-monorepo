@@ -17,28 +17,28 @@
     "_deploy": "convex deploy -y"
   },
   "dependencies": {
-    "@ai-sdk/anthropic": "^2.0.44",
-    "@ai-sdk/google": "^2.0.32",
-    "@ai-sdk/groq": "^2.0.29",
-    "@ai-sdk/openai": "^2.0.67",
-    "@ai-sdk/provider": "^2.0.0",
-    "@convex-dev/rate-limiter": "^0.3.0",
-    "@convex-dev/sharded-counter": "^0.2.0",
-    "@hono/zod-validator": "^0.7.4",
-    "@openrouter/ai-sdk-provider": "^1.2.3",
-    "ai": "^5.0.93",
-    "convex-helpers": "^0.1.104",
-    "destr": "^2.0.5",
-    "hono": "^4.10.6",
-    "zod": "^4.1.12"
+    "@ai-sdk/anthropic": "catalog:",
+    "@ai-sdk/google": "catalog:",
+    "@ai-sdk/groq": "catalog:",
+    "@ai-sdk/openai": "catalog:",
+    "@ai-sdk/provider": "catalog:",
+    "@convex-dev/rate-limiter": "catalog:",
+    "@convex-dev/sharded-counter": "catalog:",
+    "@hono/zod-validator": "catalog:",
+    "@openrouter/ai-sdk-provider": "catalog:",
+    "ai": "catalog:",
+    "convex-helpers": "catalog:",
+    "destr": "catalog:",
+    "hono": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@local/common": "workspace:*",
     "@local/locales": "workspace:*",
     "@local/tsconfig": "workspace:*",
-    "@namesmt/utils": "^0.5.18",
-    "convex": "^1.29.1",
-    "kontroll": "^1.1.1",
-    "vitest": "^4.0.9"
+    "@namesmt/utils": "catalog:",
+    "convex": "catalog:",
+    "kontroll": "catalog:",
+    "vitest": "catalog:"
   }
 }

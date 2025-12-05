@@ -9,11 +9,11 @@
     "quickcheck": "pnpm run lint && pnpm run test:types"
   },
   "dependencies": {
-    "unocss": "^66.5.6",
-    "vue": "^3.5.24"
+    "unocss": "catalog:",
+    "vue": "catalog:"
   },
   "devDependencies": {
     "@local/tsconfig": "workspace:*",
-    "vue-tsc": "^3.1.4"
+    "vue-tsc": "catalog:"
   }
 }

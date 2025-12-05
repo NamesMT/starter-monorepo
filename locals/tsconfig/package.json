@@ -4,6 +4,6 @@
   "version": "0.0.0",
   "private": true,
   "devDependencies": {
-    "@vue/tsconfig": "^0.8.1"
+    "@vue/tsconfig": "catalog:"
   }
 }

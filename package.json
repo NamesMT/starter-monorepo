@@ -3,7 +3,7 @@
   "type": "module",
   "version": "4.3.0",
   "private": true,
-  "packageManager": "pnpm@10.22.0",
+  "packageManager": "pnpm@10.24.0",
   "engines": {
     "node": ">=20.13.1"
   },
@@ -21,37 +21,24 @@
     "prepare": "simple-git-hooks"
   },
   "dependencies": {
-    "pathe": "^2.0.3",
-    "sst": "^3.17.23",
-    "std-env": "^3.10.0"
+    "pathe": "catalog:",
+    "sst": "catalog:",
+    "std-env": "catalog:"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^6.2.0",
-    "@dotenvx/dotenvx": "1.51.1",
-    "@namesmt/utils": "^0.5.18",
-    "@types/aws-lambda": "^8.10.158",
-    "@types/node": "^24.10.1",
-    "@unocss/eslint-plugin": "^66.5.6",
-    "eslint": "^9.39.1",
+    "@antfu/eslint-config": "catalog:",
+    "@dotenvx/dotenvx": "catalog:",
+    "@namesmt/utils": "catalog:",
+    "@types/aws-lambda": "catalog:",
+    "@types/node": "catalog:",
+    "@unocss/eslint-plugin": "catalog:",
+    "eslint": "catalog:",
     "frontend": "workspace:*",
-    "lint-staged": "^16.2.6",
-    "simple-git-hooks": "^2.13.1",
-    "tsx": "^4.20.6",
-    "turbo": "^2.6.1",
-    "typescript": "^5.9.3"
-  },
-  "pnpm": {
-    "overrides": {
-      "is-arguments": "npm:@nolyfill/is-arguments@^1.0.44",
-      "is-core-module": "npm:@nolyfill/is-core-module@^1.0.39",
-      "is-generator-function": "npm:@nolyfill/is-generator-function@^1.0.44",
-      "is-typed-array": "npm:@nolyfill/is-typed-array@^1.0.44",
-      "isarray": "npm:@nolyfill/isarray@^1.0.44",
-      "safer-buffer": "npm:@nolyfill/safer-buffer@^1.0.44",
-      "side-channel": "npm:@nolyfill/side-channel@^1.0.44",
-      "string.prototype.codepointat": "npm:@nolyfill/string.prototype.codepointat@^1.0.44",
-      "which-typed-array": "npm:@nolyfill/which-typed-array@^1.0.44"
-    }
+    "lint-staged": "catalog:",
+    "simple-git-hooks": "catalog:",
+    "tsx": "catalog:",
+    "turbo": "catalog:",
+    "typescript": "catalog:"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
