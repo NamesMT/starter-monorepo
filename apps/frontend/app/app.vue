@@ -13,24 +13,20 @@ onMounted(async () => {
 </script>
 
 <template>
-  <NuxtRouteAnnouncer />
-  <TooltipProvider :delay-duration="500">
+  <GlobalProvider>
     <div>
       <template v-if="!$init.mounted">
         <NuxtLayout name="basic">
-          <!-- `name="loading"` prop is unusable, but Nuxt warns when there's no NuxtPage, so we put this -->
+          <!-- Named NuxtPage prop is unusable, but Nuxt warns when there's no NuxtPage, so we put this, $dummy renders nothing -->
           <NuxtPage name="$dummy" />
           <LoadingScreen />
         </NuxtLayout>
       </template>
-
       <template v-else>
-        <GlobalRegister />
-
         <NuxtLayout>
           <NuxtPage :page-key="(route) => (route.name as string)" />
         </NuxtLayout>
       </template>
     </div>
-  </TooltipProvider>
+  </GlobalProvider>
 </template>
