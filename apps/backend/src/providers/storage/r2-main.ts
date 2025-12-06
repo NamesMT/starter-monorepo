@@ -59,5 +59,10 @@ export async function setupR2(config: SetupR2Config) {
     },
   })
 
-  return { s3Client }
+  // const r2Client = ((globalThis as any).__env__ as HonoEnv['Bindings'])['r2-main']
+
+  return {
+    s3Client,
+    // r2Client
+  }
 }
