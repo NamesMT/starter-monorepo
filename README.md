@@ -16,7 +16,7 @@
     * [Highlight Features / Components](#highlight-features--components)
       * [AI / LLM Chat](#ai--llm-chat)
     * [Apps and Libraries](#apps-and-libraries)
-      * [`frontend`: a Nuxt app, compatible with v4 structure.](#frontend-a-nuxt-app-compatible-with-v4-structure)
+      * [`frontend`: a Nuxt 4 app.](#frontend-a-nuxt-4-app)
       * [`backend`: a Hono🔥 app.](#backend-a-hono-app)
       * [`backend-convex`: a Convex app.](#backend-convex-a-convex-app)
     * [Local packages](#local-packages)
@@ -24,6 +24,8 @@
     * [Build](#build)
     * [Develop](#develop)
       * [Wrangler / Cloudflare Workers (Local dev via workerd)](#wrangler--cloudflare-workers-local-dev-via-workerd)
+        * [API-only setup `workerd` for Workers bindings:](#api-only-setup-workerd-for-workers-bindings)
+        * [**Full** setup (everything behaves like `workerd`) for 100% Cloudflare `workerd` runtime testing:](#full-setup-everything-behaves-like-workerd-for-100-cloudflare-workerd-runtime-testing)
       * [IMPORTANT:](#important)
     * [Deploy](#deploy)
     * [Notes](#notes)
@@ -72,7 +74,7 @@ So, if you use SSR, you should implement another auth solution.
 
 > Done as an application for [**T3 Chat Cloneathon**](https://cloneathon.t3.chat/) competition in 1 week, with no prior AI SDK and chat streams experience, but I think I did an amazing job 🫡!
 > 
-> The focus of the project is for broad, group-use adoption, prioritizing easy-to-access UI/UX, bleeding-edge features like workflows are a low prio, though, advanced capabilities per-model capabilities and fine-tuning are still expected to be elegantly supported via the model's interface. #48
+> The focus of the project is for broad, easy personal self-host and family/friends group-use adoption, prioritizing easy-to-access UI/UX.
 
 <details>
   <summary>A simple & friendly LLM Chat system, but still packing some powers, featuring:</summary>
@@ -92,9 +94,6 @@ So, if you use SSR, you should implement another auth solution.
     * Your dad can just join and chat with just a link share 😉, no setup needed.
   * Mobile-friendly.
   * Fast ⚡ with local caching and optimistic updates.
-  * Designed to be scalable
-    * > Things are isolated and common interfaces are defined and utilized where possible, there's no tightly coupled-hacks that prevents future scaling, things just works, elegantly.
-    * Any AI provider that is compatible with `@ai-sdk` interface can be added in a few words of code, I just don't want to bloat the UI by adding all of them.
 
 `*1`: currently the "stream" received when resuming or for other real-time users in the same thread is implemented via a polling, not SSE. it is intentionally chosed to be this way for more minimal infrastructure setup and wider hosting support, so smaller user groups can host their own version easily, it is still very performant and efficient.
   * There is boilerplate code for SSE resume support, you can simply add a pub-sub to the backend and switch to using SSE resume in `ChatInterface` component.
@@ -102,7 +101,7 @@ So, if you use SSR, you should implement another auth solution.
 
 ### Apps and Libraries
 
-#### [`frontend`](./apps/frontend): a [Nuxt](https://nuxt.com/) app, compatible with v4 structure.
+#### [`frontend`](./apps/frontend): a [Nuxt 4](https://nuxt.com/) app.
   * By default, the frontend `/api/*` routes is proxied to the `backendUrl`.
   * The `rpcApi` plugin will call the `/api/*` proxy if they're on the same domain but different ports (e.g: 127.0.0.1)
     * > this mimics a production environment where the static frontend and the backend lives on the same domain at /api, which is the most efficient configuration for Cloudfront + Lambda Function Url, or Cloudflare Workers.
@@ -144,18 +143,30 @@ If you just want a quick check out, without having to set up anything, you can u
 To develop all apps and packages, run the following command:  
 `pnpm run dev`
 
+By default, the access URL is set to: `127.0.0.1:3300`
+
 For local development environment variables / secrets, create a copy of `.env.dev` to `.env.dev.local`.
 
 #### Wrangler / Cloudflare Workers (Local dev via workerd)
 
-Guide to setup local development for Cloudflare `workerd` runtime testing:
-* (Optional) Run the convex dev server if you use convex.
-* Config `wrangler.jsonc`, specfically, the `vars` block, so that it properly targets the local env.
-* (Optional) Config [`apps/frontend/.env.workerd.dev`](apps/frontend/.env.workerd.dev) if you use convex or use different ip/port.
-* Build a new static dist for local dev:
+##### API-only setup `workerd` for Workers bindings:
+
+* Initial one-time setup:
+  * Config enviroment variables and secrets for `wrangler` (refer to Cloudflare's docs).
+  * Config `frontend/.env.dev.local`: set `NUXT_PUBLIC_BACKEND_URL=https://127.0.0.1:3310`
+  * Run `mkdir -p apps/frontend/.output/public` so that wrangler does not error about assets folder not found
+* Run `pnpm dlx wrangler dev` in one terminal, and `pnpm run dev` in another terminal, you can develop with HMR just like normal! (`127.0.0.1:3300`).
+
+##### **Full** setup (everything behaves like `workerd`) for 100% Cloudflare `workerd` runtime testing:
+* Initial one-time setup:
+  * Config enviroment variables and secrets for `wrangler` (refer to Cloudflare's docs).
+  * (Optional) Config [`apps/frontend/.env.workerd.dev`](apps/frontend/.env.workerd.dev) if you use convex or use different ip/port.
+* When your `frontend` change, manually build a new static dist:
   * Start the local `backend` server
-  * Run `build:workerdLocal` script for `frontend`.
-* Run `pnpm dlx wrangler dev` to start wrangler dev server.
+  * Run `build:workerdLocal` script for `frontend` to generate SSG assets
+  * Close the `backend` server
+* (Optional) Run the convex dev server if you use convex.
+* Run `pnpm dlx wrangler dev` to start wrangler dev server, and you can connect via `127.0.0.1:3310`.
   * `workerd` does not work with Alpine Linux, so if you use the included Dev Container, change the base image to some other distro.
 
 #### IMPORTANT:
@@ -166,12 +177,14 @@ For the best development experience, for VSCode and its forks, you should use th
 
 * You can add your custom deploy instructions in `deploy` script and `scripts/deploy.sh` in each app, it could be a full script that deploys to a platform, or necessary actions before for some platform integration deploys it, `frontend` will only start [build and deploy after all backends are deployed](./apps/frontend/turbo.json), to have context for SSG.
 * The repo also contains some deployment presets samples:
-  + [Action to deploy frontend to GitHub Pages](./.github/workflows/frontend-to-gh-pages.yml)
+  + [GitHub Action to deploy frontend to GitHub Pages](./.github/workflows/frontend-to-gh-pages.yml)
   + [Wrangler configured to deploy fullstack to Cloudflare](./wrangler.jsonc), just run `npx wrangler deploy` or connect and deploy it through the Cloudflare Dashboard.
     + Wrangler will deploy `backend` and `frontend` at the same time, which might cause `frontend` to have old context for SSG, you should trigger a redeploy in such case.
   + [Deploy backend to Lambda via SST](./sst.config.ts)
 + Some more deploying notes:
-  + To enable deploy with Convex in production, simply rename `_deploy` script to `deploy` in `backend-convex` app, run the deploy script once manually to get the Convex's production url, set it to `NUXT_PUBLIC_CONVEX_URL` env in `frontend`'s `.env.prod` file or CI / build machine env variable.
+  + `backend-convex` is disabled by default, to enable:
+    + rename `_deploy` script to `deploy` in `backend-convex/package.json`
+    + Run the `deploy` script once manually to get Convex's production url, set it to `NUXT_PUBLIC_CONVEX_URL` in `frontend/.env.prod` or CI / build machine env var.
 
 ### Notes
 
