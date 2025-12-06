@@ -1,6 +1,50 @@
 # Changelog
 
 
+## v4.4.0
+
+[compare changes](https://github.com/NamesMT/starter-monorepo/compare/v4.3.0...v4.4.0)
+
+### 🚀 Enhancements
+
+- Add DynamoDB provider sample ([da8c998](https://github.com/NamesMT/starter-monorepo/commit/da8c998))
+- Add Cloudflare R2 with S3Client provider sample ([820dcff](https://github.com/NamesMT/starter-monorepo/commit/820dcff))
+
+### 🩹 Fixes
+
+- Css layering ([204ce95](https://github.com/NamesMT/starter-monorepo/commit/204ce95))
+- **keepAuthFresh:** Deadlock if cannot refresh ([2739ac5](https://github.com/NamesMT/starter-monorepo/commit/2739ac5))
+- Convex is now dumber ([4e15837](https://github.com/NamesMT/starter-monorepo/commit/4e15837))
+- Tsconfig resolve ([d959e26](https://github.com/NamesMT/starter-monorepo/commit/d959e26))
+- Should only call proxy on local ([0ff3694](https://github.com/NamesMT/starter-monorepo/commit/0ff3694))
+
+### 📖 Documentation
+
+- Revise SSR note in README ([95b03c1](https://github.com/NamesMT/starter-monorepo/commit/95b03c1))
+- Simplify README for LLM Chat ([3f4a3f3](https://github.com/NamesMT/starter-monorepo/commit/3f4a3f3))
+- Collapsible LLM Chat description ([9c088fb](https://github.com/NamesMT/starter-monorepo/commit/9c088fb))
+- **README:** Docs maintenance ([1406838](https://github.com/NamesMT/starter-monorepo/commit/1406838))
+
+### 🏡 Chore
+
+- Update deps and opt-in to nuxt `typescriptPlugin` ([17a18c1](https://github.com/NamesMT/starter-monorepo/commit/17a18c1))
+- Update deps ([c18fe19](https://github.com/NamesMT/starter-monorepo/commit/c18fe19))
+- Nested autoimport fixed ([ef30b78](https://github.com/NamesMT/starter-monorepo/commit/ef30b78))
+- Update deps ([215b7b3](https://github.com/NamesMT/starter-monorepo/commit/215b7b3))
+- Update i18n key template syntax ([7301439](https://github.com/NamesMT/starter-monorepo/commit/7301439))
+- Update deps ([d769824](https://github.com/NamesMT/starter-monorepo/commit/d769824))
+- Update tsconfigs ([0582b46](https://github.com/NamesMT/starter-monorepo/commit/0582b46))
+- Remove custom text tokens ([390b016](https://github.com/NamesMT/starter-monorepo/commit/390b016))
+- `@ark/schema` ref not necessary anymore ([ea2e059](https://github.com/NamesMT/starter-monorepo/commit/ea2e059))
+- Update deps ([70eb7af](https://github.com/NamesMT/starter-monorepo/commit/70eb7af))
+- Support app with `baseURL` ([c16898d](https://github.com/NamesMT/starter-monorepo/commit/c16898d))
+- Update deps, apply lint fixes (use pm catalog) ([f1f59c4](https://github.com/NamesMT/starter-monorepo/commit/f1f59c4))
+
+### ❤️ Contributors
+
+- NamesMT ([@NamesMT](https://github.com/NamesMT))
+- Trung Dang ([@NamesMT](https://github.com/NamesMT))
+
 ## v4.3.0
 
 [compare changes](https://github.com/NamesMT/starter-monorepo/compare/v4.2.0...v4.3.0)
