@@ -38,7 +38,7 @@
 
 ## Overview
 
-This is a base monorepo starter template to kick-start your beautifully organized project, whether its a fullstack project, monorepo of multiple libraries and applications, or even just one API server and its related infrastructure deployment and utilities.
+This is an **opinionated, heavily tweaked** monorepo starter template to kick-start a project, whether its a fullstack project, monorepo of multiple libraries and applications, or even just one API server and its related infrastructure deployment and utilities.
 
 Out-of-the-box with the included apps, we have a fullstack project: with a `frontend` Nuxt 4 app, a main `backend` using Hono, and a `backend-convex` Convex app.
   * General APIs, such as authentication, are handled by the main `backend`, which is designed to be serverless-compatible and can be deployed anywhere, allowing for the best possible latency, performance, and cost, according to your needs.
