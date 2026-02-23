@@ -66,7 +66,7 @@ export function checkAuth({ throwOnUnauthenticated = true, throwOnBadToken = tru
       return await next()
     }
 
-    const _wosPayload = userAuth && await verifyWithJwks(userAuth.private.accessToken, await getWorkOSJwks())
+    const _wosPayload = userAuth && await verifyWithJwks(userAuth.private.accessToken, { ...await getWorkOSJwks(), allowedAlgorithms: ['RS256'] })
       .catch((e) => {
         // Clears `userAuth` if token is bad
         auth.data.userAuth = undefined
