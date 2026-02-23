@@ -9,16 +9,8 @@ import { createOpenRouter, openrouter } from '@openrouter/ai-sdk-provider'
 export function getAgentModel({ provider, model, apiKey }: AgentObject): LanguageModelV2 {
   if (provider === 'hosted') {
     switch (model) {
-      case 'qwen3-235b-a22b:free':
-        return openrouter('qwen/qwen3-235b-a22b:free')
-      case 'deepseek-v3.1':
-        return openrouter('deepseek/deepseek-chat-v3.1:free')
-      case 'devstral-small-2505':
-        return openrouter('mistralai/devstral-small:free')
-      case 'llama-4-scout':
-        return openrouter('meta-llama/llama-4-scout:free')
-      case 'gemini-2.0-flash-exp':
-        return openrouter('google/gemini-2.0-flash-exp:free')
+      case 'openrouter/free':
+        return openrouter('openrouter/free')
       default:
         throw new Error(`Invalid model for hosted provider`)
     }
