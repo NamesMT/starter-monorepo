@@ -4,4 +4,5 @@ export default defineConfig({
   entry: ['./src/aws.ts'],
   external: [/^@aws-sdk/],
   dts: false,
+  inlineOnly: false,
 })
