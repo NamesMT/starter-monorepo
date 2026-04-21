@@ -55,6 +55,7 @@
 
   // Use workspace version of typescript
   "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
 
   "i18n-ally.keystyle": "flat",
   "i18n-ally.enabledFrameworks": [

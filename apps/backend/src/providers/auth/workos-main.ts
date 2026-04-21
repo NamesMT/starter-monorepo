@@ -43,7 +43,10 @@ export async function initWorkOS() {
 
 export async function getWorkOSJwks() {
   const workos = await getWorkOS()
-  const jwks = workos.userManagement.jwks!
+  const jwks = await workos.userManagement.getJWKS()
+
+  if (!jwks)
+    throw new Error('Cannot initialize JWKS client')
 
   if (!jwks.jwks())
     await jwks.reload()
