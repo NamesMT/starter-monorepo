@@ -7,6 +7,7 @@
       "vitest"
     ],
     "emitDeclarationOnly": true,
+    "noEmit": false,
     "outDir": ".output/tsc"
   },
   "include": [
