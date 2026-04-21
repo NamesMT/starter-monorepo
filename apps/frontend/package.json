@@ -16,6 +16,8 @@
     "shad-add": "pnpm dlx shadcn-vue@2 add"
   },
   "dependencies": {
+    "@takumi-rs/core": "catalog:",
+    "@takumi-rs/wasm": "catalog:",
     "embla-carousel": "catalog:",
     "embla-carousel-vue": "catalog:",
     "lenis": "catalog:",

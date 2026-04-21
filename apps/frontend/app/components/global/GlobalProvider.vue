@@ -5,7 +5,8 @@
   <div>
     <TooltipProvider :delay-duration="500">
       <NuxtRouteAnnouncer />
-      <NuxtLoadingIndicator />
+      <!-- LoadingIndicator is bugged for some reason -->
+      <!-- <NuxtLoadingIndicator /> -->
       <GlobalRegister />
       <slot />
     </TooltipProvider>

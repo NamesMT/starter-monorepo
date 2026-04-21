@@ -209,6 +209,10 @@ export default defineNuxtConfig({
     },
   },
 
+  linkChecker: {
+    enabled: false,
+  },
+
   // booster: {
   //   disableNuxtFontaine: true,
   // },

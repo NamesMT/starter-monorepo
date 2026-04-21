@@ -23,3 +23,7 @@ whenever(keys['Ctrl+g']!, () => {
   chatGlobalsContext.generalSettingsOpen.value = !chatGlobalsContext.generalSettingsOpen.value
 })
 </script>
+
+<template>
+  <slot />
+</template>

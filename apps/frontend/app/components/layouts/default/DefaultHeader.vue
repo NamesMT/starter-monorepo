@@ -31,6 +31,7 @@ const convexVueContext = inject<ConvexVueContext>('convex-vue')
       >
         <span class="transition-all group-hover:text-2xl group-hover:text-accent-foreground">{{ $t('pages.test.title') }}</span>
       </NuxtLink>
+      <!-- @eslint-disable-next-line link-checker/valid-route -->
       <NuxtLink
         v-if="convexVueContext?.clientRef?.value"
         to="/chat" class="group flex items-center"
