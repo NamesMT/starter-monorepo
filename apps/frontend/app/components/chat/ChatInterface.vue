@@ -155,7 +155,7 @@ async function handleSubmit({ input, files }: HandleSubmitArgs) {
     return
 
   if (isThreadFrozen.value) {
-    const lastMessage = messages.value[messages.value.length - 1]
+    const lastMessage = messages.value.at(-1)
     if (!lastMessage)
       throw new Error(`Can't branch off empty thread`)
 
@@ -182,7 +182,7 @@ async function handleSubmit({ input, files }: HandleSubmitArgs) {
   } as any as CustomMessage)
 
   // For some reason creating object reference first does not work, so we push and then get last message
-  const targetMessage = messages.value[messages.value.length - 1]!
+  const targetMessage = messages.value.at(-1)!
   chatInput.value = ''
 
   nextTick(() => { doScrollBottom({ tries: 2 }) })
@@ -326,6 +326,7 @@ async function streamToMessage({ message, content, attachments, streamId, resume
         const prefix = chunk.substring(0, 3)
         const part = chunk.substring(3)
 
+        // eslint-disable-next-line e18e/prefer-static-regex
         if (!/o: /.test(prefix))
           console.warn('Unknown data:', chunk)
 

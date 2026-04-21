@@ -15,6 +15,7 @@ const metaSymbol = ref('Ctrl')
 
 onMounted(() => {
   metaSymbol.value
+    // eslint-disable-next-line e18e/prefer-static-regex
     = navigator && navigator.userAgent && /Macintosh;/.test(navigator.userAgent) ? '⌘' : 'Ctrl'
 })
 

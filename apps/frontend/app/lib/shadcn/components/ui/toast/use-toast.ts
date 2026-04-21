@@ -79,7 +79,8 @@ const state = ref<State>({
 function dispatch(action: Action) {
   switch (action.type) {
     case actionTypes.ADD_TOAST:
-      state.value.toasts = [action.toast, ...state.value.toasts].slice(0, TOAST_LIMIT)
+      // @ts-ignore
+      state.value.toasts = ([action.toast, ...state.value.toasts] as ToasterToast[]).slice(0, TOAST_LIMIT)
       break
 
     case actionTypes.UPDATE_TOAST:

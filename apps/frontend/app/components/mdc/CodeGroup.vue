@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, ref, useSlots } from '#imports'
 import { objectEntries } from '@vueuse/core'
+import { computed, ref, useSlots } from '#imports'
 import { codeIconMap } from './config'
 
 type SlotVNodeProps = {

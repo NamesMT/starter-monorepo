@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { BuiltinLanguage } from 'shiki'
-import { computed, onUnmounted, ref, toRef, useIntersectionObserver } from '#imports'
 import { objectEntries } from '@vueuse/core'
 import { ChevronDown, ChevronUp } from 'lucide-vue-next'
+import { computed, onUnmounted, ref, toRef, useIntersectionObserver } from '#imports'
 import { codeBlockConfig, codeIconMap } from '../config'
 
 const props = withDefaults(

@@ -1,6 +1,6 @@
-import { cacheProvider, getCachedProvider, isNonSharingPlatforms } from '#src/providers/index.js'
 import { S3Client } from '@aws-sdk/client-s3'
 import { env } from 'std-env'
+import { cacheProvider, getCachedProvider, isNonSharingPlatforms } from '#src/providers/index.js'
 
 export const PROVIDER_NAME = 'r2-main'
 

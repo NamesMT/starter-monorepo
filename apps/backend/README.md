@@ -18,7 +18,7 @@
 *You can view the OpenAPI UI live demo [HERE](https://4yjbmxiunrnigwewec4twf4zl40izfde.lambda-url.ap-southeast-1.on.aws/openapi/ui).*
 
 ## Structuring cookbook:
-#### Root level:
+### Root level:
 Things like 3rd party APIs, DBs, Storages connectors, etc, should be placed in `#src/providers` folder, grouped by their purpose if possible, e.g: `#src/providers/auth/workos-main.ts`, `#src/providers/db/neon-main.ts`.
 
 Things that interact with `#src/providers` should be placed in `#src/services` folder. (like an `user` service)

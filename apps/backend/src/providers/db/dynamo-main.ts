@@ -1,7 +1,7 @@
-import { cacheProvider, getCachedProvider, isNonSharingPlatforms } from '#src/providers/index.js'
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb'
 import { env } from 'std-env'
+import { cacheProvider, getCachedProvider, isNonSharingPlatforms } from '#src/providers/index.js'
 
 export const PROVIDER_NAME = 'dynamo-main'
 

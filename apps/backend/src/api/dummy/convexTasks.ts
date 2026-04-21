@@ -1,8 +1,8 @@
-import { appFactory } from '#src/helpers/factory.js'
-import { getConvexClient } from '#src/providers/baas/convex-main.js'
 import { type } from 'arktype'
 import { api } from 'backend-convex/convex/_generated/api'
 import { describeRoute, resolver } from 'hono-openapi'
+import { appFactory } from '#src/helpers/factory.js'
+import { getConvexClient } from '#src/providers/baas/convex-main.js'
 
 export const dummyConvexTasksRoute = appFactory.createApp()
   .get(

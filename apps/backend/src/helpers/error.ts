@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
-import type { HonoEnv } from '#src/types.js'
 import type { DetailedError } from '@namesmt/utils'
 import type { ErrorHandler } from 'hono'
 import type { ContentfulStatusCode } from 'hono/utils/http-status'
+import type { HonoEnv } from '#src/types.js'
 import { HTTPException } from 'hono/http-exception'
 
 export const errorHandler: ErrorHandler<HonoEnv> = (err, c) => {

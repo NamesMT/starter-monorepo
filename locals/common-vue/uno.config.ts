@@ -6,6 +6,8 @@ import {
 } from 'unocss'
 import { parseColor } from 'unocss/preset-mini'
 
+const nthChildMatcher = /^nth-\[(.+?)\]:/
+
 export default defineConfig({
   shortcuts: [
   ],
@@ -20,7 +22,7 @@ export default defineConfig({
       // nth-[]:class
       name: ':nth-child()',
       match: (matcher) => {
-        const match = matcher.match(/^nth-\[(.+?)\]:/)
+        const match = matcher.match(nthChildMatcher)
         if (!match)
           return matcher
         return {

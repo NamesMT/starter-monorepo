@@ -46,6 +46,8 @@ function commonColorVarsGen(varName: string, additionalVars?: Array<string>) {
   }
 }
 
+const nthChildMatcher = /^nth-\[(.+?)\]:/
+
 export default defineConfig({
   outputToCssLayers: true,
   theme: {
@@ -153,7 +155,7 @@ export default defineConfig({
       // nth-[]:class
       name: ':nth-child()',
       match: (matcher) => {
-        const match = matcher.match(/^nth-\[(.+?)\]:/)
+        const match = matcher.match(nthChildMatcher)
         if (!match)
           return matcher
         return {

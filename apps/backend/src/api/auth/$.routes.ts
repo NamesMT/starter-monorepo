@@ -1,8 +1,8 @@
-import { appFactory } from '#src/helpers/factory.js'
-import { getWorkOS } from '#src/providers/auth/workos-main.js'
 import { objectOmit, objectPick } from '@namesmt/utils'
 import { decode } from 'hono/jwt'
 import { env } from 'std-env'
+import { appFactory } from '#src/helpers/factory.js'
+import { getWorkOS } from '#src/providers/auth/workos-main.js'
 import { checkAuth } from './$.middleware'
 
 export const authRoutesApp = appFactory.createApp()

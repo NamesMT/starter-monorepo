@@ -1,7 +1,7 @@
-import { appFactory } from '#src/helpers/factory.js'
-import { getWorkOS, getWorkOSJwks } from '#src/providers/auth/workos-main.js'
 import { DetailedError } from '@namesmt/utils'
 import { decode, verifyWithJwks } from 'hono/jwt'
+import { appFactory } from '#src/helpers/factory.js'
+import { getWorkOS, getWorkOSJwks } from '#src/providers/auth/workos-main.js'
 
 export function keepAuthFresh() {
   return appFactory.createMiddleware(async (c, next) => {

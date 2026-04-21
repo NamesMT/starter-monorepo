@@ -1,8 +1,8 @@
+import { type } from 'arktype'
+import { env } from 'std-env'
 import { customArktypeValidator } from '#src/helpers/arktype.js'
 import { appFactory } from '#src/helpers/factory.js'
 import { getCachedGrammy, initGrammy } from '#src/providers/telegram/grammy-main.js'
-import { type } from 'arktype'
-import { env } from 'std-env'
 
 export const dummyGrammyRoute = appFactory.createApp()
   /**

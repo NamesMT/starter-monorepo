@@ -44,6 +44,7 @@ const hostedProvider = computed<HostedProvider>(() => ({
 }))
 
 const activeAgent = computed(() => {
+  // eslint-disable-next-line e18e/prefer-static-regex
   let [provider, model]: [string, string] = agentsSettings.value.selectedAgent?.split(/\/(.*)/) as any
 
   if (

@@ -50,13 +50,13 @@ function handleSubmit({ confirmMultiStream = false }) {
     <div class="mb-2 flex flex-col gap-2 bottom-100% right-6 absolute">
       <Button
         variant="outline" size="icon" class="p-1 rounded-xl opacity-100 transition-opacity duration-500"
-        :class="props.nearTopBottom[0] && 'invisible opacity-0'" @click="props.lenisRef!.lenis.scrollTo('top')"
+        :class="props.nearTopBottom[0] ? 'invisible opacity-0' : ''" @click="props.lenisRef!.lenis.scrollTo('top')"
       >
         <div class="i-hugeicons:circle-arrow-up-03 h-full w-full" />
       </Button>
       <Button
         variant="outline" size="icon" class="p-1 rounded-xl opacity-100 transition-opacity duration-500"
-        :class="props.nearTopBottom[1] && 'invisible opacity-0'" @click="props.lenisRef!.lenis.scrollTo('bottom')"
+        :class="props.nearTopBottom[1] ? 'invisible opacity-0' : ''" @click="props.lenisRef!.lenis.scrollTo('bottom')"
       >
         <div class="i-hugeicons:circle-arrow-down-03 h-full w-full" />
       </Button>
