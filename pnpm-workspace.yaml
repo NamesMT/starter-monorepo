@@ -1,6 +1,7 @@
 catalogMode: prefer
 cleanupUnusedCatalogs: true
 
+shamefullyHoist: true
 shellEmulator: true
 trustPolicy: no-downgrade
 trustPolicyExclude:
@@ -53,7 +54,7 @@ catalog:
   '@tanstack/query-persist-client-core': ^5.99.2
   '@tanstack/vue-query': ^5.99.2
   '@types/aws-lambda': ^8.10.161
-  '@types/node': ^24.12.2
+  '@types/node': ^24.13.3
   '@unocss/eslint-plugin': ^66.6.8
   '@unocss/nuxt': ^66.6.8
   '@vitest/coverage-v8': ^4.1.4
@@ -120,15 +121,12 @@ catalog:
   vue-router: ^5.0.4
   vue-tsc: ^3.2.7
   zod: ^4.3.6
-
-ignoredBuiltDependencies:
-  - '@namesmt/vue-query-nuxt'
-  - aws-sdk
-
-onlyBuiltDependencies:
-  - '@parcel/watcher'
-  - esbuild
-  - sharp
-  - simple-git-hooks
-  - unrs-resolver
-  - vue-demi
+allowBuilds:
+  '@namesmt/vue-query-nuxt': false
+  '@parcel/watcher': true
+  aws-sdk: false
+  esbuild: true
+  sharp: true
+  simple-git-hooks: true
+  unrs-resolver: true
+  vue-demi: true
