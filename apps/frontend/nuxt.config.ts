@@ -1,6 +1,8 @@
+import type { LocaleMeta } from '@local/locales/src/index'
 import type { LocaleObject } from '@nuxtjs/i18n'
 import type { BundledLanguage } from 'shiki/bundle/full'
 import { localcertKeyPath, localcertPath } from '@local/common/dev/cert'
+import { defaultLocaleCode, locales } from '@local/locales/src/index'
 import { getConvexEnvs } from 'backend-convex/dev'
 import { config } from 'dotenv'
 import { bundledLanguagesInfo } from 'shiki/bundle/full'
@@ -28,19 +30,12 @@ const siteConfig = {
   description: 'Monorepo with 🤖 AI initialize and localize | 🔥Hono + OpenAPI & RPC, Nuxt, Convex, SST Ion, WorkOS AuthKit, Tanstack Query, Shadcn, UnoCSS, Spreadsheet I18n, Lingo.dev',
 }
 
-interface GenFrontendLocaleProps {
-  code: string
-  languageISO: string
-  name?: string
-  dir?: LocaleObject<string>['dir']
-}
-function genFrontendLocale({ code, languageISO, name, dir }: GenFrontendLocaleProps): LocaleObject<string> {
+function genFrontendLocale({ code, languageISO, name }: LocaleMeta): LocaleObject<string> {
   return {
     code,
     language: languageISO,
     files: [`${code}.json`, `frontend/${code}.json`],
     name,
-    dir,
   }
 }
 
@@ -165,39 +160,8 @@ export default defineNuxtConfig({
     baseUrl: siteConfig.url,
     vueI18n: 'i18n.config.ts',
     strategy: 'no_prefix',
-    defaultLocale: 'en',
-    locales: [
-      genFrontendLocale({
-        code: 'en',
-        languageISO: 'en-US',
-        name: 'English',
-      }),
-      genFrontendLocale({
-        code: 'es',
-        languageISO: 'es-ES',
-        name: 'Español',
-      }),
-      genFrontendLocale({
-        code: 'fr',
-        languageISO: 'fr-FR',
-        name: 'Français',
-      }),
-      genFrontendLocale({
-        code: 'ru',
-        languageISO: 'ru-RU',
-        name: 'Русский',
-      }),
-      genFrontendLocale({
-        code: 'vi',
-        languageISO: 'vi-VN',
-        name: 'Tiếng Việt',
-      }),
-      genFrontendLocale({
-        code: 'zh-CN',
-        languageISO: 'zh-CN',
-        name: '中文',
-      }),
-    ],
+    defaultLocale: defaultLocaleCode,
+    locales: locales.map(genFrontendLocale),
     langDir: '../../../locals/locales/dist',
   },
 

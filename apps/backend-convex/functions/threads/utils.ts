@@ -8,17 +8,19 @@ export interface AssertThreadAccessArgs {
   userIdentity?: UserIdentity | null
 }
 export async function assertThreadAccess(ctx: GenericActionCtx<any> | GenericQueryCtx<any> | GenericMutationCtx<any>, { thread, lockerKey, userIdentity }: AssertThreadAccessArgs) {
-  // Check permission by lockerKey
-  if (lockerKey && thread.lockerKey === lockerKey) {
-    ;
-  }
-  // Check permission by other means (JWT)
-  else {
+  // Authorize by lockerKey
+  const authorizedByLockerKey = !!(lockerKey && thread.lockerKey === lockerKey)
+
+  // Otherwise authorize by user identity (JWT)
+  if (!authorizedByLockerKey) {
     userIdentity ??= await ctx.auth.getUserIdentity()
-    if (!userIdentity || (thread.userId !== userIdentity.subject)) {
-      if (lockerKey)
-        console.error(`"lockerKey" available but incorrect`)
-      throw new ConvexError('You are not authorized to view this thread')
-    }
+
+    if (userIdentity && thread.userId === userIdentity.subject)
+      return
+
+    if (lockerKey)
+      console.error('"lockerKey" available but incorrect')
+
+    throw new ConvexError('You are not authorized to view this thread')
   }
 }

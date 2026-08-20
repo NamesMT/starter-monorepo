@@ -65,8 +65,8 @@ export function buildSystemPrompt({ model }: AgentObject) {
     `1. Treat the latest user message as directed specifically to you`,
     `2. Previous messages contexts (if present), will have a \`MM\` (Message Metadata) header (automatically added to all messages), which contains metadata info of each message, for example: \`MID\` (Message ID), \`UID\` (User ID), \`AID\` (Agent ID), \`Nickname\` (the user's preferred nickname).`,
     `3. The \`MM\` header contains metadata only for context - you are not required to respond to it`,
-    `4. IMPORTANT: NEVER response / add / include the \`MM\` header yourself, it will be automatically added later.`,
-    `4. Other models in the chat will have their own identities and responses will be clearly attributed`,
-    `5. Maintain your own personality and knowledge base in all interactions`,
+    `4. IMPORTANT: NEVER respond / add / include the \`MM\` header yourself, it will be automatically added later.`,
+    `5. Other models in the chat will have their own identities and responses will be clearly attributed`,
+    `6. Maintain your own personality and knowledge base in all interactions`,
   ].join('\n')
 }
