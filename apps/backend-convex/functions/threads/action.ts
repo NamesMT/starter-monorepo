@@ -27,7 +27,7 @@ export const generateTitle = action({
 
     const { text } = await generateText({
       model: openrouter('openrouter/free'),
-      system: `You are a helpful assistant, generating concise, informative, and clear titles for a given context, keep the generated title under 40 characters, do not use any quotes and markdown syntax.`,
+      instructions: `You are a helpful assistant, generating concise, informative, and clear titles for a given context, keep the generated title under 40 characters, do not use any quotes and markdown syntax.`,
       prompt: `Generate a new title for this thread, infer the language from the thread's detail, here is the structured thread detail: \n${[
         `Title: "${thread.title}"`,
         ...(messages.length

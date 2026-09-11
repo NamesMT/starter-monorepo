@@ -1,8 +1,9 @@
+import type { StandardSchemaV1 } from '@standard-schema/spec'
+import type { ValidationTargets } from 'hono'
 import { DetailedError } from '@namesmt/utils'
 import { validator as arktypeValidator } from 'hono-openapi'
 
-type arktypeValidatorArguments = Parameters<typeof arktypeValidator>
-export function customArktypeValidator<Target extends arktypeValidatorArguments[0], Schema extends arktypeValidatorArguments[1]>(target: Target, schema: Schema) {
+export function customArktypeValidator<Target extends keyof ValidationTargets, Schema extends StandardSchemaV1>(target: Target, schema: Schema) {
   return arktypeValidator(target, schema, (result) => {
     if (result.success === false) {
       throw new DetailedError('Validation failed', {

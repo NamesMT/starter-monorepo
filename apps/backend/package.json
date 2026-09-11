@@ -29,6 +29,7 @@
     "@local/tsconfig": "workspace:*",
     "@namesmt/utils": "catalog:",
     "@scalar/hono-api-reference": "catalog:",
+    "@standard-schema/spec": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "@workos-inc/node": "catalog:",
     "arktype": "catalog:",

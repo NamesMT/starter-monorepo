@@ -45,6 +45,7 @@
     "@vueuse/motion": "catalog:",
     "@vueuse/nuxt": "catalog:",
     "@vueuse/router": "catalog:",
+    "ai": "catalog:",
     "backend": "workspace:*",
     "backend-convex": "workspace:*",
     "class-variance-authority": "catalog:",

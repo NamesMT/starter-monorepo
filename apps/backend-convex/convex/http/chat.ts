@@ -10,7 +10,7 @@ import { ConvexError } from 'convex/values'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { throttle } from 'kontroll'
-import { z } from 'zod/v3'
+import { z } from 'zod'
 import { getAgentModel } from '../../utils/agent'
 import { getErrorMessage, normalizePossibleSDKError } from '../../utils/error'
 import { buildAiSdkMessage, buildSystemPrompt } from '../../utils/message'
@@ -157,8 +157,9 @@ chatApp
           for (const file of attachments) {
             const buffer = await file.arrayBuffer()
             newUserMessageContent.push({
-              type: 'image',
-              image: buffer,
+              type: 'file',
+              data: buffer,
+              mediaType: file.type || 'application/octet-stream',
             })
           }
           lastMessage.content = newUserMessageContent
@@ -208,7 +209,7 @@ chatApp
 
             const aiStream = streamText({
               model: getAgentModel({ provider, model, apiKey }),
-              system: buildSystemPrompt({ provider, model }),
+              instructions: buildSystemPrompt({ provider, model }),
               messages: messagesContext,
               onError: (ev) => { throw ev.error },
             })

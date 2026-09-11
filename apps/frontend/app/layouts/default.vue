@@ -19,10 +19,10 @@ watch(() => route.name, () => { windowsScroll.measure() })
           {{ title }}
         </Title>
         <template v-for="link in head.link" :key="link.id">
-          <Link :id="link.id" :rel="link.rel" :href="link.href" :hreflang="link.hreflang" />
+          <Link :id="link.id" :rel="link.rel" :href="link.href" :hreflang="'hreflang' in link ? link.hreflang : undefined" />
         </template>
         <template v-for="meta in head.meta" :key="meta.id">
-          <Meta :id="meta.id" :property="meta.property" :content="meta.content" />
+          <Meta :id="meta.id" :property="meta.property" :content="String(meta.content)" />
         </template>
       </Head>
 

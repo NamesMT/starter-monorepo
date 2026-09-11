@@ -1,7 +1,7 @@
 import type { AgentObject } from '@local/common/src/chat'
 import type { LanguageModel } from 'ai'
 import { createAnthropic } from '@ai-sdk/anthropic'
-import { createGoogleGenerativeAI } from '@ai-sdk/google'
+import { createGoogle } from '@ai-sdk/google'
 import { createGroq } from '@ai-sdk/groq'
 import { createOpenAI } from '@ai-sdk/openai'
 import { createOpenRouter, openrouter } from '@openrouter/ai-sdk-provider'
@@ -23,7 +23,7 @@ export function getAgentModel({ provider, model, apiKey }: AgentObject): Languag
         case 'openai':
           return createOpenAI({ apiKey })(model)
         case 'google':
-          return createGoogleGenerativeAI({ apiKey })(model)
+          return createGoogle({ apiKey })(model)
         case 'anthropic':
           return createAnthropic({ apiKey })(model)
         case 'groq':

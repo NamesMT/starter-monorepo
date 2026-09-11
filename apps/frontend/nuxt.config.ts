@@ -81,8 +81,7 @@ export default defineNuxtConfig({
     head: {
       link: [
         { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' },
-        { rel: 'icon', href: '/favicon.svg', type: 'image/svg' },
-        { rel: 'mask-icon', href: '/favicon.svg', type: 'image/svg+xml' },
+        { rel: 'mask-icon', href: '/favicon.svg', color: '#333' },
       ],
     },
   },
