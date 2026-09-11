@@ -62,15 +62,19 @@ export async function postChatStream(args: PostChatStreamArgs) {
   const { $auth } = useNuxtApp()
 
   const formData = new FormData()
-  for (const [key, value] of Object.entries(args)) {
-    if (key === 'attachments' && value) {
-      for (const file of value as File[])
-        formData.append('attachments', file)
-    }
-    else if (value !== undefined) {
+
+  // Listed explicitly rather than iterating `args`: callers spread an `AgentObject` in,
+  // which also carries `modelSettings`, and `String()`-ing that posts "[object Object]".
+  const textFields = ['threadId', 'provider', 'model', 'apiKey', 'content', 'streamId', 'resumeStreamId', 'finishOnly'] as const satisfies ReadonlyArray<keyof PostChatStreamArgs>
+  for (const key of textFields) {
+    const value = args[key]
+    if (value !== undefined)
       formData.append(key, String(value))
-    }
   }
+
+  for (const file of args.attachments ?? [])
+    formData.append('attachments', file)
+
   formData.append('context', JSON.stringify({ from: getChatNickname() }))
   formData.append('lockerKey', getLockerKey(args.threadId) ?? '')
 

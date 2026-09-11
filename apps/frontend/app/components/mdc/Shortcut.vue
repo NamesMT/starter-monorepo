@@ -14,9 +14,7 @@ const props = withDefaults(
 const metaSymbol = ref('Ctrl')
 
 onMounted(() => {
-  metaSymbol.value
-    // eslint-disable-next-line e18e/prefer-static-regex
-    = navigator && navigator.userAgent && /Macintosh;/.test(navigator.userAgent) ? '⌘' : 'Ctrl'
+  metaSymbol.value = /Macintosh;/.test(navigator.userAgent) ? '⌘' : 'Ctrl'
 })
 
 const computedValue = computed(() => (props.value === 'meta' ? metaSymbol : props.value))

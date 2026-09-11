@@ -184,7 +184,7 @@ const [DefineThreadLiItem, ReuseThreadLiItem] = createReusableTemplate<{ thread:
                   <!-- Using [&.active] instead of :active-class because of reactivity bug -->
                   <NuxtLink
                     :to="`/chat/${thread._id}`"
-                    class="group/thread text-sm p-2 px-3 rounded-md flex gap-2 items-center relative overflow-hidden $BGCOLOR=$primary-200 [&.router-link-exact-active]:(bg-$BGCOLOR/30) hover:bg-$BGCOLOR/70] dark:$BGCOLOR=$primary-800"
+                    class="group/thread text-sm p-2 px-3 rounded-md flex gap-2 items-center relative overflow-hidden $BGCOLOR=$primary-200 [&.router-link-exact-active]:(bg-$BGCOLOR/30) hover:bg-$BGCOLOR/70 dark:$BGCOLOR=$primary-800"
                     @mousedown.left="navigateTo(`/chat/${thread._id}`);"
                     @click="navigateTo(`/chat/${thread._id}`); sidebarContext.setOpenMobile(false)"
                   >

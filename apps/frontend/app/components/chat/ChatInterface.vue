@@ -326,7 +326,6 @@ async function streamToMessage({ message, content, attachments, streamId, resume
         const prefix = chunk.substring(0, 3)
         const part = chunk.substring(3)
 
-        // eslint-disable-next-line e18e/prefer-static-regex
         if (!/o: /.test(prefix))
           console.warn('Unknown data:', chunk)
 
