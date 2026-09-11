@@ -1,8 +1,22 @@
 <script setup lang="ts">
+import type { RouteLocationNormalizedLoaded } from 'vue-router'
+
 defineOgImage('Frame.takumi', {
   title: `Hello! I'm starter-monorepo 👋`,
   description: 'Monorepo with 🤖 AI initialize and localize | 🔥Hono + OpenAPI & RPC, Nuxt, Convex, SST Ion, WorkOS AuthKit, Tanstack Query, Shadcn, UnoCSS, Spreadsheet I18n, Lingo.dev',
 })
+
+/**
+ * Must be a stable reference, not an inline arrow.
+ *
+ * `NuxtPage` watches `props.pageKey` and fires `page:loading:start` whenever its identity
+ * changes. An inline arrow gets a fresh identity every time this slot is re-invoked (which
+ * happens on any layout re-render), and the matching `page:loading:end` only fires once per
+ * real navigation - so `NuxtLoadingIndicator` would appear and then stay stuck.
+ */
+function pageKey(route: RouteLocationNormalizedLoaded) {
+  return route.name as string
+}
 
 const { $init } = useNuxtApp()
 onMounted(async () => {
@@ -23,7 +37,7 @@ onMounted(async () => {
       </template>
       <template v-else>
         <NuxtLayout>
-          <NuxtPage :page-key="(route) => (route.name as string)" />
+          <NuxtPage :page-key="pageKey" />
         </NuxtLayout>
       </template>
     </div>
