@@ -125,7 +125,7 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@vueuse/nuxt',
     '@vueuse/motion/nuxt',
-    '@namesmt/vue-query-nuxt',
+    '@peterbud/nuxt-query',
     '@nuxtjs/i18n',
     '@nuxtjs/seo',
     '@unocss/nuxt',
@@ -138,6 +138,10 @@ export default defineNuxtConfig({
     'convex-nuxt',
     '@nuxtjs/mdc',
   ],
+
+  nuxtQuery: {
+    autoImports: true,
+  },
 
   mdc: {
     highlight: {

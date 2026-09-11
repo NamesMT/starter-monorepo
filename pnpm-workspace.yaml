@@ -40,7 +40,6 @@ catalog:
   '@hono/standard-validator': ^0.4.0
   '@hono/zod-validator': ^0.9.1
   '@namesmt/utils': ^0.5.18
-  '@namesmt/vue-query-nuxt': ^0.3.7
   '@nuxt/eslint': ^1.17.0
   '@nuxt/image': ^2.1.0
   '@nuxtjs/color-mode': ^4.0.1
@@ -48,6 +47,7 @@ catalog:
   '@nuxtjs/mdc': 0.23.1
   '@nuxtjs/seo': ^5.3.14
   '@openrouter/ai-sdk-provider': ^3.0.0
+  '@peterbud/nuxt-query': ^1.11.0
   '@scalar/hono-api-reference': ^0.12.1
   '@standard-schema/spec': ^1.1.0
   '@takumi-rs/core': ^2.13.7
@@ -123,7 +123,6 @@ catalog:
   vue-tsc: ^3.3.11
   zod: ^4.6.1
 allowBuilds:
-  '@namesmt/vue-query-nuxt': false
   '@parcel/watcher': true
   aws-sdk: false
   esbuild: true
