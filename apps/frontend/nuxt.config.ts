@@ -1,5 +1,5 @@
 import type { LocaleMeta } from '@local/locales/src/index'
-import type { LocaleObject } from '@nuxtjs/i18n'
+import type { Locale } from 'nuxt-i18n-micro'
 import type { BundledLanguage } from 'shiki/bundle/full'
 import { localcertKeyPath, localcertPath } from '@local/common/dev/cert'
 import { defaultLocaleCode, locales } from '@local/locales/src/index'
@@ -30,12 +30,12 @@ const siteConfig = {
   description: 'Monorepo with 🤖 AI initialize and localize | 🔥Hono + OpenAPI & RPC, Nuxt, Convex, SST Ion, WorkOS AuthKit, Tanstack Query, Shadcn, UnoCSS, Spreadsheet I18n, Lingo.dev',
 }
 
-function genFrontendLocale({ code, languageISO, name }: LocaleMeta): LocaleObject<string> {
+function genFrontendLocale({ code, languageISO, name }: LocaleMeta): Locale {
   return {
     code,
-    language: languageISO,
-    files: [`${code}.json`, `frontend/${code}.json`],
-    name,
+    iso: languageISO,
+    dir: 'ltr',
+    displayName: name,
   }
 }
 
@@ -126,7 +126,7 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     '@vueuse/motion/nuxt',
     '@peterbud/nuxt-query',
-    '@nuxtjs/i18n',
+    'nuxt-i18n-micro',
     '@nuxtjs/seo',
     '@unocss/nuxt',
     '@nuxtjs/color-mode',
@@ -160,12 +160,13 @@ export default defineNuxtConfig({
   site: siteConfig,
 
   i18n: {
-    baseUrl: siteConfig.url,
-    vueI18n: 'i18n.config.ts',
+    metaBaseUrl: siteConfig.url,
     strategy: 'no_prefix',
     defaultLocale: defaultLocaleCode,
     locales: locales.map(genFrontendLocale),
-    langDir: '../../../locals/locales/dist',
+    // `frontend/` already contains the shared (global) bucket merged in, see `@local/locales/entry.ts`.
+    translationDir: '../../locals/locales/dist/frontend',
+    meta: true,
   },
 
   image: {

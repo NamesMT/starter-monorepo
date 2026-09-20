@@ -13,7 +13,7 @@ const { $auth } = useNuxtApp()
 const convex = useConvexClient()
 const chatContext = useChatContext()
 const { toast } = useToast()
-const { t } = useI18n()
+const { ts } = useI18n()
 
 // Lenis have bug with useTemplateRef
 const lenisRef = ref<{ $el: HTMLElement, lenis: Lenis }>()
@@ -94,7 +94,7 @@ const { ignoreUpdates: ignorePathUpdate } = watchIgnorable(
           // If the owner have deleted the thread, remove it locally
           // (or the demo crons cleaned it)
           if (getConvexErrorMessage(e) === 'Thread not found') {
-            toast({ variant: 'destructive', description: t('chat.toast.threadRemovedExternal') })
+            toast({ variant: 'destructive', description: ts('chat.toast.threadRemovedExternal') })
 
             const foundAt = chatContext.threads.value.findIndex(t => t._id === threadId)
             if (foundAt !== -1)
@@ -380,7 +380,7 @@ async function _branchThreadFromMessage({ messageId, lockerKey }: BranchThreadFr
       if (lockerKey)
         setLockerKey(threadId, lockerKey)
 
-      toast({ description: t('chat.toast.threadBranched') })
+      toast({ description: ts('chat.toast.threadBranched') })
     })
 }
 

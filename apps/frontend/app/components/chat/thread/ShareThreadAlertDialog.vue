@@ -30,7 +30,7 @@ const {
 const { $auth } = useNuxtApp()
 const convex = useConvexClient()
 const { toast } = useToast()
-const { t } = useI18n()
+const { ts } = useI18n()
 const { copy } = useClipboard({ legacy: true })
 
 const open = ref(false)
@@ -49,7 +49,7 @@ async function _shareThread() {
 async function _shareCopyToast() {
   await _shareThread()
   await copy(`${window.location.origin}/chat/${thread._id}?lockerKey=${getLockerKey(thread._id)}`)
-  toast({ description: t('chat.toast.threadShareLinkCopied') })
+  toast({ description: ts('chat.toast.threadShareLinkCopied') })
 }
 </script>
 

@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@hono/standard-validator": "catalog:",
+    "@i18n-micro/core": "catalog:",
     "@local/common": "workspace:*",
     "@local/locales": "workspace:*",
     "@local/tsconfig": "workspace:*",
@@ -40,7 +41,6 @@
     "hono-adapter-aws-lambda": "catalog:",
     "hono-cookie-state": "catalog:",
     "hono-openapi": "catalog:",
-    "petite-vue-i18n": "catalog:",
     "std-env": "catalog:",
     "tsdown": "catalog:",
     "vitest": "catalog:"

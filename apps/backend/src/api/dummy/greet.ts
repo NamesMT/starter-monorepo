@@ -2,7 +2,7 @@ import { type } from 'arktype'
 import { describeRoute, resolver } from 'hono-openapi'
 import { customArktypeValidator } from '#src/helpers/arktype.js'
 import { appFactory } from '#src/helpers/factory.js'
-import { i18nComposer } from '#src/helpers/i18n.js'
+import { translate } from '#src/helpers/i18n.js'
 
 export const dummyGreetRoute = appFactory.createApp()
   .get(
@@ -24,6 +24,6 @@ export const dummyGreetRoute = appFactory.createApp()
     })),
     async (c) => {
       const { name, locale } = c.req.valid('query')
-      return c.text(`${i18nComposer.t('hello', 1, { locale })} ${name}!`)
+      return c.text(`${translate('hello', { locale })} ${name}!`)
     },
   )

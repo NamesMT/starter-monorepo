@@ -5,7 +5,8 @@ export default defineNuxtPlugin({
     'local-auth',
   ],
   async setup() {
-    const { $i18n, $init } = useNuxtApp()
+    const { $init } = useNuxtApp()
+    const { locale } = useI18nLocale()
 
     const li18n = reactive({
       renderKey: 0,
@@ -13,8 +14,11 @@ export default defineNuxtPlugin({
 
     until(() => $init.mounted).toBeTruthy().then(() => {
       watchImmediate(
-        () => $i18n.locale.value,
+        locale,
         async (locale) => {
+          if (!locale)
+            return
+
           await setDayjsLocale(locale)
 
           ++li18n.renderKey

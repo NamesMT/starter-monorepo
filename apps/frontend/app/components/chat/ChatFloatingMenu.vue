@@ -3,7 +3,7 @@ import { useSidebar } from '@/lib/shadcn/components/ui/sidebar/utils'
 import { useToast } from '~/lib/shadcn/components/ui/toast'
 
 const { toast } = useToast()
-const { t } = useI18n()
+const { ts } = useI18n()
 const firstTimeOpen = useLocalState('chat/firstTimeOpen', () => true)
 
 // `state` does not apply to mobile, so we uses 3 props instead
@@ -13,7 +13,7 @@ const isExpanded = computed(() => isMobile.value ? openMobile.value : open.value
 
 if (firstTimeOpen.value) {
   until(isExpanded).toBeTruthy().then(() => {
-    toast({ description: t('chat.toast.menuOpenedFirstTime') })
+    toast({ description: ts('chat.toast.menuOpenedFirstTime') })
     firstTimeOpen.value = false
   })
 }

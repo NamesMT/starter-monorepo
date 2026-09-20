@@ -5,7 +5,7 @@
 ## Features
 - Easy cross-function calls / Lambda triggers support with [hono-adapter-aws-lambda](https://github.com/NamesMT/hono-adapter-aws-lambda).
 - [RPC](https://hono.dev/docs/guides/rpc) & [OpenAPI](https://github.com/rhinobase/hono-openapi): You can access the OpenAPI specs and Scalar UI at: https://127.0.0.1:3301/openapi/ui.
-- Shared i18n with `frontend` via [`@local/locales`]((../../locals/locales/README.md)) (using [petite-vue-i18n](./src/helpers/i18n.ts)).
+- Shared i18n with `frontend` via [`@local/locales`](../../locals/locales/README.md) (using [@i18n-micro/core](./src/helpers/i18n.ts)).
 - [Arktype](https://arktype.io/) validation setup.
 - [Session management](./src/middlewares/session.ts).
 - Multi-platform support, one codebase that works for Node, Cloudflare Workers, AWS Lambda, and more.

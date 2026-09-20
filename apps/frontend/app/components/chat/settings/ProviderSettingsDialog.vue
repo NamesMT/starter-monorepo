@@ -63,7 +63,7 @@ watch(modelsRef, () => {
               <TagsInputItemDelete />
             </TagsInputItem>
 
-            <TagsInputInput :placeholder="$t('form.tagsInput.placeholder')" />
+            <TagsInputInput :placeholder="$ts('form.tagsInput.placeholder')" />
           </TagsInput>
         </div>
       </div>

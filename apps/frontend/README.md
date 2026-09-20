@@ -27,9 +27,9 @@
   * Support for loading SVGs and optimizing them.
 * [Nuxt Booster](https://basics.github.io/nuxt-booster/)
   * Lighthouse score optimizations
-* [NuxtI18n](https://i18n.nuxtjs.org/)
-  * Internationalization (i18n) module for Nuxt.js + SEO headers.
-  * With [`@local/locales`](../../locals/locales/README.md) as shared localization source.
+* [nuxt-i18n-micro](https://s00d.github.io/nuxt-i18n-micro/)
+  * Lightweight internationalization (i18n) for Nuxt, with SEO headers.
+  * With [`@local/locales`](../../locals/locales/README.md) as the shared localization source.
 * [Nuxt SEO](https://nuxtseo.com/)
   * All the boring SEO work for Nuxt done.
 * [Nuxt LLMs](https://github.com/nuxtlabs/nuxt-llms)

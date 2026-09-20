@@ -14,10 +14,12 @@ const { $auth } = useNuxtApp()
 const sidebarContext = useSidebar()
 const { agentsSettings } = useChatContext()
 const { generalSettingsOpen } = useChatGlobalsContext()
-const { locale, locales, setLocale } = useI18n()
+const { locale } = useI18nLocale()
+const { getLocales, switchLocale } = useI18n()
+const locales = getLocales()
 const computedNextLocale = computed(() => {
-  const currentLocaleIndex = locales.value.findIndex(lO => lO.code === locale.value)
-  return locales.value[(currentLocaleIndex + 1) % locales.value.length]!.code
+  const currentLocaleIndex = locales.findIndex(lO => lO.code === locale.value)
+  return locales[(currentLocaleIndex + 1) % locales.length]!.code
 })
 
 // Providers that are supported through `Common` interface
@@ -52,10 +54,10 @@ const [DefineShortcutLi, ReuseShortcutLi] = createReusableTemplate<{ title: stri
         <div class="flex flex-col gap-3">
           <div class="flex items-center justify-between">
             <div class="flex gap-2 items-center">
-              <Button class="w-fit uppercase" variant="outline" @pointerdown="setLocale(computedNextLocale)">
+              <Button class="w-fit uppercase" variant="outline" @pointerdown="switchLocale(computedNextLocale)">
                 <div class="text-mainGradient flex items-center">
                   <div class="i-hugeicons:translate bg-mainGradient" />: <p class="ml-1">
-                    {{ locale.substring(0, 2) }}
+                    {{ locale?.substring(0, 2) }}
                   </p>
                 </div>
               </Button>
@@ -147,25 +149,25 @@ const [DefineShortcutLi, ReuseShortcutLi] = createReusableTemplate<{ title: stri
           <ul class="flex flex-col gap-4">
             <ReuseShortcutLi
               v-bind="{
-                title: $t('chat.settings.general.shortcuts.search'),
+                title: $ts('chat.settings.general.shortcuts.search'),
                 keys: ['Ctrl', 'K'],
               }"
             />
             <ReuseShortcutLi
               v-bind="{
-                title: $t('chat.settings.general.shortcuts.newChat'),
+                title: $ts('chat.settings.general.shortcuts.newChat'),
                 keys: ['Ctrl', 'Shift', 'O'],
               }"
             />
             <ReuseShortcutLi
               v-bind="{
-                title: $t('chat.settings.general.shortcuts.toggleSidebar'),
+                title: $ts('chat.settings.general.shortcuts.toggleSidebar'),
                 keys: ['Ctrl', 'B'],
               }"
             />
             <ReuseShortcutLi
               v-bind="{
-                title: $t('chat.settings.general.shortcuts.toggleSettings'),
+                title: $ts('chat.settings.general.shortcuts.toggleSettings'),
                 keys: ['Ctrl', 'G'],
               }"
             />

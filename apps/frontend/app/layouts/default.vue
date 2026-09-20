@@ -1,15 +1,12 @@
 <script setup lang="ts">
 const route = useRoute()
-const { t } = useI18n()
-const localeHead = useLocaleHead()
+const { ts } = useI18n()
 
-const title = computed(() => route.meta.title ? t(route.meta.title as string) : undefined)
+const title = computed(() => route.meta.title ? ts(route.meta.title as string) : undefined)
 
 useHead(() => ({
-  htmlAttrs: { ...localeHead.value.htmlAttrs, class: 'font-sans' },
+  htmlAttrs: { class: 'font-sans' },
   title: title.value,
-  link: localeHead.value.link,
-  meta: localeHead.value.meta,
 }))
 
 const windowsScroll = useWindowScroll()

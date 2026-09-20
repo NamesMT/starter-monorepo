@@ -1,18 +1,18 @@
 import { sample } from '@namesmt/utils'
 
 export function getThoughtPlaceholders() {
-  const { $i18n } = useNuxtApp()
+  const { ts } = useI18n()
 
   return [
-    $i18n.t('getInputThoughtsPlaceholders.0'),
-    $i18n.t('getInputThoughtsPlaceholders.1'),
-    $i18n.t('getInputThoughtsPlaceholders.2'),
-    $i18n.t('getInputThoughtsPlaceholders.3'),
-    $i18n.t('getInputThoughtsPlaceholders.4'),
-    $i18n.t('getInputThoughtsPlaceholders.5'),
-    $i18n.t('getInputThoughtsPlaceholders.6'),
-    $i18n.t('getInputThoughtsPlaceholders.7'),
-    $i18n.t('getInputThoughtsPlaceholders.8'),
+    ts('getInputThoughtsPlaceholders.0'),
+    ts('getInputThoughtsPlaceholders.1'),
+    ts('getInputThoughtsPlaceholders.2'),
+    ts('getInputThoughtsPlaceholders.3'),
+    ts('getInputThoughtsPlaceholders.4'),
+    ts('getInputThoughtsPlaceholders.5'),
+    ts('getInputThoughtsPlaceholders.6'),
+    ts('getInputThoughtsPlaceholders.7'),
+    ts('getInputThoughtsPlaceholders.8'),
   ]
 }
 

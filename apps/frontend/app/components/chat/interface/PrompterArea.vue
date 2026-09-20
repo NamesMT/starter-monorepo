@@ -18,12 +18,12 @@ const attachments = ref<File[]>([])
 const isDev = import.meta.dev
 const sidebarContext = useSidebar()
 const chatContext = useChatContext()
-const { t } = useI18n()
+const { ts } = useI18n()
 
 const multiStreamConfirmDialogOpen = ref(false)
 const { textarea: chatTextarea, input: chatInputTA } = useTextareaAutosize()
 const chatPlaceholder = computedWithControl(chatContext.interfaceSRK, () =>
-  `${t('chat.typeYourMessageHere')}\n${getRandomThoughtPlaceholder()}`)
+  `${ts('chat.typeYourMessageHere')}\n${getRandomThoughtPlaceholder()}`)
 syncRef(chatInput, chatInputTA)
 
 function handleSubmit({ confirmMultiStream = false }) {

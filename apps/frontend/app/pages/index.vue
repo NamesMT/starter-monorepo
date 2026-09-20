@@ -5,14 +5,16 @@ definePageMeta({
   title: 'pages.home.title',
 })
 
-const { locale, locales, setLocale } = useI18n()
+const { locale } = useI18nLocale()
+const { getLocales, switchLocale } = useI18n()
+const locales = getLocales()
 const runtimeConfig = useRuntimeConfig()
 const colorMode = useColorMode()
 const { $apiClient, $auth } = useNuxtApp()
 
 const computedNextLocale = computed(() => {
-  const currentLocaleIndex = locales.value.findIndex(lO => lO.code === locale.value)
-  return locales.value[(currentLocaleIndex + 1) % locales.value.length]!.code
+  const currentLocaleIndex = locales.findIndex(lO => lO.code === locale.value)
+  return locales[(currentLocaleIndex + 1) % locales.length]!.code
 })
 
 // API
@@ -79,8 +81,8 @@ const { isPending, isError, data, error } = useQuery({
 
         <div class="flex gap-2 items-center">
           <p>{{ $t('language') }}:</p>
-          <Button @pointerdown="setLocale(computedNextLocale)">
-            {{ locale.substring(0, 2) }}
+          <Button @pointerdown="switchLocale(computedNextLocale)">
+            {{ locale?.substring(0, 2) }}
           </Button>
         </div>
 

@@ -27,7 +27,7 @@ if (!thread.parentThread)
       </NuxtLink>
     </TooltipTrigger>
     <TooltipContent side="bottom" :side-offset="6">
-      <p>{{ $t('chat.thread.branchedFrom', { title: threadsKeyed[thread.parentThread!]?.title }) }}</p>
+      <p>{{ $t('chat.thread.branchedFrom', { title: threadsKeyed[thread.parentThread!]?.title ?? '' }) }}</p>
     </TooltipContent>
   </Tooltip>
 </template>
