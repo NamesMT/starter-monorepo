@@ -30,29 +30,25 @@ const messages = {
   },
 } as Record<string, Record<string, unknown>>
 
-/**
- * Interpolation values for {@link translate}, plus an optional `locale`, e.g.
- * `translate('hello', { locale })` or `translate('hello-from-{x}', { x: 'me' })`.
- */
-export type TranslateParams = Record<string, string | number | boolean | undefined> & { locale?: string }
+/** Values interpolated into the translation for a key. */
+export type TranslateParams = Record<string, string | number | boolean>
+
+/** Options for {@link translate}. */
+export interface TranslateOptions {
+  /** Target locale code; defaults to `defaultLocaleCode`. */
+  locale?: string
+}
 
 /**
- * Translate a key, optionally in a specific locale.
+ * Translate a key, interpolating `params`, optionally in a specific locale, e.g.
+ * `translate('hello', {}, { locale: 'en' })` or `translate('hello-from-{x}', { x: 'me' })`.
  *
  * Vue-free on purpose (see #55): `petite-vue-i18n` pulled `vue` into the Workers bundle.
  * Falls back to the default locale, then to the raw key when the translation is missing.
  */
-export function translate(key: string, params: TranslateParams = {}): string {
-  const { locale, ...values } = params
-  const target = locale ?? defaultLocaleCode
+export function translate(key: string, params: TranslateParams = {}, options: TranslateOptions = {}): string {
+  const target = options.locale ?? defaultLocaleCode
   const message = getByPath(messages[target], key) ?? getByPath(messages[defaultLocaleCode], key)
 
-  // `interpolate` takes defined values only; skipping `undefined`s leaves the `{placeholder}` as-is.
-  const interpolationParams: Record<string, string | number | boolean> = {}
-  for (const [name, value] of Object.entries(values)) {
-    if (value !== undefined)
-      interpolationParams[name] = value
-  }
-
-  return interpolate(typeof message === 'string' ? message : key, interpolationParams)
+  return interpolate(typeof message === 'string' ? message : key, params)
 }

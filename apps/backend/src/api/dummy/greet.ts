@@ -24,6 +24,6 @@ export const dummyGreetRoute = appFactory.createApp()
     })),
     async (c) => {
       const { name, locale } = c.req.valid('query')
-      return c.text(`${translate('hello', { locale })} ${name}!`)
+      return c.text(`${translate('hello', {}, { locale })} ${name}!`)
     },
   )
