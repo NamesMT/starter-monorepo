@@ -26,6 +26,8 @@ const siteConfig = {
   url: import.meta.env.NUXT_PUBLIC_FRONTEND_URL,
   backend: import.meta.env.NUXT_PUBLIC_BACKEND_URL,
   convex: import.meta.env.NUXT_PUBLIC_CONVEX_URL,
+  // Fallback metadata: the i18n setup also defines translatable `nuxtSiteConfig.name` /
+  // `nuxtSiteConfig.description` keys (`@local/locales`), which take precedence.
   name: 'starter-monorepo',
   description: 'Monorepo with 🤖 AI initialize and localize | 🔥Hono + OpenAPI & RPC, Nuxt, Convex, SST Ion, WorkOS AuthKit, Tanstack Query, Shadcn, UnoCSS, Spreadsheet I18n, Lingo.dev',
 }
