@@ -23,11 +23,3 @@
   border-collapse: collapse;
 }
 </style>
-
-<style>
-*,
-*::before,
-*::after {
-  border: 0px solid var(--mdc-border);
-}
-</style>
