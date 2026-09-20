@@ -472,12 +472,16 @@ function respondWithAiStream({
   const uiStream = toUIMessageStream({
     stream: result.stream,
     sendReasoning: false,
-    messageMetadata: () => ({
-      messageId: streamingMessageId,
-      userMessageId,
-      streamId,
-      resuming: false,
-    } satisfies ChatStreamMetadata),
+    // Only `start`/`finish` carry metadata. Returning it for every part made the SDK
+    // emit a redundant `message-metadata` chunk after each token, bloating the stream.
+    messageMetadata: ({ part }) => part.type === 'start' || part.type === 'finish'
+      ? {
+        messageId: streamingMessageId,
+        userMessageId,
+        streamId,
+        resuming: false,
+      } satisfies ChatStreamMetadata
+      : undefined,
     onError: (error) => {
       const normalized = normalizePossibleSDKError(error)
       const errorMessage = getErrorMessage(normalized) ?? 'Unknown error'

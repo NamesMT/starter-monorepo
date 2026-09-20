@@ -417,6 +417,8 @@ function upsertToolInvocation(target: CustomMessage, patch: ToolInvocationPatch)
 
 async function streamToMessage({ message, userMessage, content, attachments, streamId, resumeStreamId }: StreamToMessageArgs) {
   const streamKey = (streamId ?? resumeStreamId)!
+  /** Pending throttled render timer, cleared once the stream settles. */
+  let flushTimer: ReturnType<typeof setTimeout> | undefined
 
   try {
     streamingMessagesMap[streamKey] = true
@@ -447,6 +449,35 @@ async function streamToMessage({ message, userMessage, content, attachments, str
     // Accumulate locally so switching the resolved target (e.g. after a server
     // reconciliation) never loses already-streamed text.
     let streamedText = ''
+
+    // Re-parsing the whole markdown (including shiki-highlighted code) on every token is
+    // what made long streams janky. Flush the accumulated text on a throttle instead and
+    // let the interval grow with the message so the per-flush render cost stays bounded.
+    let lastFlushAt = 0
+
+    function flushStreamedText() {
+      if (flushTimer) {
+        clearTimeout(flushTimer)
+        flushTimer = undefined
+      }
+
+      lastFlushAt = Date.now()
+      resolveStreamingMessage(message).content = streamedText
+      nextTick(() => { doScrollBottom({ maybe: true }) })
+    }
+
+    function scheduleStreamFlush() {
+      const interval = Math.min(250, 60 + Math.floor(streamedText.length / 120))
+      const elapsed = Date.now() - lastFlushAt
+
+      if (elapsed >= interval) {
+        flushStreamedText()
+        return
+      }
+
+      if (!flushTimer)
+        flushTimer = setTimeout(flushStreamedText, interval - elapsed)
+    }
 
     // `parseJsonEventStream` handles SSE framing/decoding for us, so we no longer need
     // to assume anything about chunk boundaries.
@@ -515,8 +546,13 @@ async function streamToMessage({ message, userMessage, content, attachments, str
           break
       }
 
-      resolveStreamingMessage(message).content = streamedText
-      nextTick(() => { doScrollBottom({ maybe: true }) })
+      scheduleStreamFlush()
+    }
+
+    // Final, unthrottled render with the complete text.
+    if (flushTimer) {
+      clearTimeout(flushTimer)
+      flushTimer = undefined
     }
 
     const target = resolveStreamingMessage(message)
@@ -525,6 +561,12 @@ async function streamToMessage({ message, userMessage, content, attachments, str
   }
   catch (error) {
     console.error('Failed to send message:', error)
+
+    if (flushTimer) {
+      clearTimeout(flushTimer)
+      flushTimer = undefined
+    }
+
     const target = resolveStreamingMessage(message)
     target.content += `\nError: ${(error as Error).message}`
     target.isStreaming = false
