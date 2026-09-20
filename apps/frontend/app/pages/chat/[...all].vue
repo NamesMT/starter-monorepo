@@ -2,6 +2,7 @@
 import ChatRootApp from '~/components/chat/ChatRootApp.vue'
 
 definePageMeta({
+  title: 'pages.chat.title',
   layout: 'basic',
   middleware: ['accept-shared-thread'],
 })
