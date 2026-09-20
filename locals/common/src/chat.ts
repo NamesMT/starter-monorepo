@@ -9,8 +9,54 @@ export async function simpleMessagesToString(messages: {
 export interface AgentObject {
   provider: string
   model: string
-  modelSettings?: CommonProviderAgentsSettings['models'][string]
+  modelSettings?: CommonModelSettings
   apiKey?: string
+}
+
+/**
+ * Generation parameters applied to a model call (issue #43 — control profiles).
+ */
+export interface CommonModelGenerationSettings {
+  temperature?: number
+  topP?: number
+  maxOutputTokens?: number
+}
+
+/**
+ * Per-model configuration: what the model can do (capabilities) and how it should
+ * be called (generation profile, persona traits).
+ */
+export interface CommonModelSettings extends CommonModelGenerationSettings {
+  enabled: boolean
+  /** File attachment accept list; empty/undefined means the model takes no files. */
+  attachments?: string[]
+  /** Persona / behaviour notes appended to the system prompt (issue #44). */
+  traits?: string
+  /** Whether the built-in tools are offered to this model (issues #41/#42). */
+  tools?: boolean
+}
+
+/**
+ * A tool invocation made by the model, surfaced for display and persisted with the
+ * assistant message (issues #41/#42).
+ */
+export interface ChatToolInvocation {
+  id: string
+  name: string
+  input?: unknown
+  output?: unknown
+  error?: string
+  state: 'call' | 'result' | 'error'
+}
+
+/**
+ * Personal context about the user, injected into the system prompt (issue #44).
+ */
+export interface PersonalContext {
+  /** "About you" — who the user is, their background and preferences. */
+  aboutYou?: string
+  /** Free-form personal custom instructions the assistant should always follow. */
+  customInstructions?: string
 }
 
 export interface AgentsSettings {
@@ -28,6 +74,8 @@ export interface AgentsSettings {
    * which model is used, bad config will fallback to default hosted model.
    */
   selectedAgent: string
+  /** Personal context shared across all providers/models. */
+  personalContext?: PersonalContext
 }
 
 export interface HostedProvider extends CommonProviderAgentsSettings {
@@ -39,10 +87,7 @@ export interface CommonProviderAgentsSettings {
   enabled: boolean
   apiKey?: string
   models: {
-    [key: string]: {
-      enabled: boolean
-      attachments?: string[]
-    }
+    [key: string]: CommonModelSettings
   }
   default?: string
 }

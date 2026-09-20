@@ -1,4 +1,4 @@
-import type { AgentObject } from '@local/common/src/chat'
+import type { PersonalContext } from '@local/common/src/chat'
 import type { Doc } from '../convex/_generated/dataModel'
 
 export interface BuiltMessage {
@@ -58,7 +58,14 @@ export function buildAssistantMessageContent({ _id, content, model, provider, is
   return builtContent.join('\n')
 }
 
-export function buildSystemPrompt({ model }: AgentObject) {
+export function buildSystemPrompt(
+  { model, modelSettings }: { model: string, modelSettings?: { traits?: string } },
+  personalContext?: PersonalContext,
+) {
+  const aboutYou = personalContext?.aboutYou?.trim()
+  const customInstructions = personalContext?.customInstructions?.trim()
+  const traits = modelSettings?.traits?.trim()
+
   return [
     `You are "${model}", a distinct AI assistant in a multi-model, multi-user chat room.`,
     `Key rules:`,
@@ -68,5 +75,26 @@ export function buildSystemPrompt({ model }: AgentObject) {
     `4. IMPORTANT: NEVER respond / add / include the \`MM\` header yourself, it will be automatically added later.`,
     `5. Other models in the chat will have their own identities and responses will be clearly attributed`,
     `6. Maintain your own personality and knowledge base in all interactions`,
+    ...(traits
+      ? [
+          ``,
+          `Your persona and traits (this defines how you should behave):`,
+          traits,
+        ]
+      : []),
+    ...(aboutYou
+      ? [
+          ``,
+          `About the user you are talking to:`,
+          aboutYou,
+        ]
+      : []),
+    ...(customInstructions
+      ? [
+          ``,
+          `The user asked you to always follow these personal instructions:`,
+          customInstructions,
+        ]
+      : []),
   ].join('\n')
 }

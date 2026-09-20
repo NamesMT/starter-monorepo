@@ -396,6 +396,8 @@ async function streamToMessage({ message, userMessage, content, attachments, str
     const { response, abortController } = await postChatStream({
       threadId: currentThreadId as Id<'threads'>,
       ...chatContext.activeAgent.value,
+      attachmentAccept: chatContext.activeAgent.value.modelSettings?.attachments,
+      personalContext: chatContext.agentsSettings.value.personalContext,
       content,
       attachments,
       streamId,

@@ -45,15 +45,39 @@ chat.provider.anthropic,,Anthropic,Anthropic,Anthropic,Anthropic,Anthropic,Anthr
 chat.provider.hosted,,Hosted,Alojado (H),Hébergé,Управляемый (H),Được cung cấp (H),托管 (H)
 chat.provider.openai,,OpenAI,OpenAI,OpenAI,OpenAI,OpenAI,OpenAI
 chat.provider.openrouter,,OpenRouter,OpenRouter,OpenRouter,OpenRouter,OpenRouter,OpenRouter
+chat.settings.general.personalContext.aboutYou,,About you,Sobre ti,À propos de vous,О вас,Về bạn,关于你
+chat.settings.general.personalContext.aboutYouPlaceholder,,"Your background, role, preferences...","Tu formación, rol, preferencias...","Votre parcours, rôle, préférences...","Ваш опыт, роль, предпочтения...","Nền tảng, vai trò, sở thích của bạn...","你的背景、角色、偏好……"
+chat.settings.general.personalContext.customInstructions,,Custom instructions,Instrucciones personalizadas,Instructions personnalisées,Пользовательские инструкции,Hướng dẫn tùy chỉnh,自定义指令
+chat.settings.general.personalContext.customInstructionsPlaceholder,,"Always answer in..., Always be concise...","Responde siempre en..., Sé siempre conciso...","Réponds toujours en..., Sois toujours concis...","Всегда отвечай на..., Будь кратким...","Luôn trả lời bằng..., Luôn ngắn gọn...","始终用……回答，保持简洁……"
+chat.settings.general.personalContext.description,,Shared with every model to personalize answers.,Compartido con todos los modelos para personalizar las respuestas.,Partagé avec tous les modèles pour personnaliser les réponses.,Передаётся всем моделям для персонализации ответов.,Được chia sẻ với mọi mô hình để cá nhân hóa câu trả lời.,与所有模型共享，用于个性化回答。
+chat.settings.general.personalContext.title,,Personal Context,Contexto personal,Contexte personnel,Личный контекст,Ngữ cảnh cá nhân,个人背景
 chat.settings.general.shortcuts.newChat,,New Chat,Nuevo chat,Nouvelle conversation,Новый чат,Cuộc trò chuyện mới,新建聊天
 chat.settings.general.shortcuts.search,,Search,Buscar,Rechercher,Поиск,Tìm kiếm,搜索
 chat.settings.general.shortcuts.toggleSettings,,Toggle Settings,Alternar configuración,Afficher/masquer les paramètres,Переключить настройки,Bật/tắt cài đặt,切换设置
 chat.settings.general.shortcuts.toggleSidebar,,Toggle Sidebar,Alternar barra lateral,Afficher/masquer la barre latérale,Переключить боковую панель,Bật/tắt thanh bên,切换侧边栏
 chat.settings.general.title,,General Settings,Configuración general,Paramètres généraux,Общие настройки,Cài đặt chung,常规设置
 chat.settings.providers.title,,Providers Settings,Configuración de proveedores,Paramètres des fournisseurs,Настройки провайдеров,Cài đặt nhà cung cấp,服务提供商设置
+chat.settings.providerDialog.addModel.button,,Add,Añadir,Ajouter,Добавить,Thêm,添加
+chat.settings.providerDialog.addModel.placeholder,,Add a model id (e.g. gpt-4o),Añade el id de un modelo (ej: gpt-4o),Ajouter un id de modèle (ex. gpt-4o),Добавьте id модели (например gpt-4o),Thêm id mô hình (ví dụ gpt-4o),添加模型 ID（例如 gpt-4o）
+chat.settings.providerDialog.capability.audio,,Audio,Audio,Audio,Аудио,Âm thanh,音频
+chat.settings.providerDialog.capability.image,,Images,Imágenes,Images,Изображения,Hình ảnh,图片
+chat.settings.providerDialog.capability.pdf,,PDF,PDF,PDF,PDF,PDF,PDF
+chat.settings.providerDialog.capability.text,,Text,Texto,Texte,Текст,Văn bản,文本
+chat.settings.providerDialog.capability.tools,,Tools,Herramientas,Outils,Инструменты,Công cụ,工具
+chat.settings.providerDialog.capability.video,,Video,Vídeo,Vidéo,Видео,Video,视频
 chat.settings.providerDialog.description,,"Changes are automatically saved, just close!","Los cambios se guardan automáticamente, ¡solo cierra!","Les modifications sont automatiquement enregistrées, il suffit de fermer !","Изменения сохраняются автоматически, просто закройте!","Các thay đổi được tự động lưu, chỉ cần đóng lại!",更改会自动保存，直接关闭即可！
 chat.settings.providerDialog.form.apiKey,,API Key,Clave API,Clé API,Ключ API,Khóa API,API 密钥
 chat.settings.providerDialog.form.models,,Models,Modelos,Modèles,Модели,Các mô hình,模型
+chat.settings.providerDialog.model.acceptsPlaceholder,,"Add MIME type, wildcard or extension","Añade tipo MIME, comodín o extensión","Ajouter un type MIME, un joker ou une extension","Добавьте MIME-тип, шаблон или расширение","Thêm loại MIME, ký tự đại diện hoặc phần mở rộng","添加 MIME 类型、通配符或扩展名"
+chat.settings.providerDialog.model.capabilities,,Capabilities,Capacidades,Capacités,Возможности,Khả năng,能力
+chat.settings.providerDialog.model.generation,,Generation,Generación,Génération,Генерация,Tạo sinh,生成
+chat.settings.providerDialog.model.maxOutputTokens,,Max output tokens,Tokens de salida máx.,Tokens de sortie max.,Макс. выходных токенов,Token đầu ra tối đa,最大输出 token
+chat.settings.providerDialog.model.remove,,Remove model,Eliminar modelo,Supprimer le modèle,Удалить модель,Xóa mô hình,移除模型
+chat.settings.providerDialog.model.temperature,,Temperature,Temperatura,Température,Температура,Nhiệt độ,温度
+chat.settings.providerDialog.model.topP,,Top P,Top P,Top P,Top P,Top P,Top P
+chat.settings.providerDialog.model.traits,,Traits / persona,Rasgos / persona,Traits / persona,Черты / персона,Đặc điểm / cá tính,特质 / 人设
+chat.settings.providerDialog.model.traitsPlaceholder,,How this agent should behave...,Cómo debe comportarse este agente...,Comment cet agent doit se comporter...,Как должен вести себя этот агент...,Cách tác nhân này nên hành xử...,该智能体应如何表现……
+chat.settings.providerDialog.models.hint,,Enable a model and choose the capabilities it supports. Models without file capabilities hide the attach button.,Activa un modelo y elige las capacidades que admite. Los modelos sin capacidad de archivos ocultan el botón de adjuntar.,Activez un modèle et choisissez les capacités prises en charge. Les modèles sans capacité de fichiers masquent le bouton de pièce jointe.,Включите модель и выберите поддерживаемые возможности. У моделей без поддержки файлов кнопка вложения скрыта.,Bật một mô hình và chọn các khả năng được hỗ trợ. Mô hình không hỗ trợ tệp sẽ ẩn nút đính kèm.,启用模型并选择其支持的能力。不支持文件的模型会隐藏附件按钮。
 chat.sidebar.newChat,,New Chat,Nuevo chat,Nouvelle conversation,Новый чат,Cuộc trò chuyện mới,新建聊天
 chat.sidebar.search.placeholder,,Search chats...,Buscar chats...,Rechercher des conversations...,Поиск чатов...,Tìm kiếm cuộc trò chuyện...,搜索聊天...
 chat.sidebar.threads.empty,,No chats yet.,No hay chats todavía.,Pas encore de conversations.,Чатов пока нет.,Chưa có cuộc trò chuyện nào.,尚无聊天记录。

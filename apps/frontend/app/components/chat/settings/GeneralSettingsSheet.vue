@@ -5,6 +5,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/lib/shadcn/components/ui/sheet'
+import { Textarea } from '@/lib/shadcn/components/ui/textarea'
 import { useChatGlobalsContext } from '~/components/chat/ChatGlobalsProvider.vue'
 import Input from '~/lib/shadcn/components/ui/input/Input.vue'
 import { useSidebar } from '~/lib/shadcn/components/ui/sidebar'
@@ -38,6 +39,10 @@ for (const provider of supportedProvidersCommon) {
 }
 
 const nicknameRef = useChatNickname()
+
+// Personal context is persisted alongside the rest of the agents settings (issue #44).
+agentsSettings.value.personalContext ??= {}
+const personalContext = computed(() => agentsSettings.value.personalContext!)
 
 const [DefineKbd, ReuseKbd] = createReusableTemplate()
 const [DefineShortcutLi, ReuseShortcutLi] = createReusableTemplate<{ title: string, keys: string[] }>()
@@ -85,6 +90,31 @@ const [DefineShortcutLi, ReuseShortcutLi] = createReusableTemplate<{ title: stri
               class="px-2 py-1 h-9"
               @update:model-value="nicknameRef = nicknameRef.trim()"
             />
+          </div>
+
+          <div class="gap-2 grid">
+            <div class="font-medium">
+              {{ $t('chat.settings.general.personalContext.title') }}
+            </div>
+            <p class="text-xs opacity-70">
+              {{ $t('chat.settings.general.personalContext.description') }}
+            </p>
+
+            <div class="gap-1 grid">
+              <Label class="text-xs">{{ $t('chat.settings.general.personalContext.aboutYou') }}</Label>
+              <Textarea
+                v-model="personalContext.aboutYou" class="text-xs min-h-16"
+                :placeholder="$ts('chat.settings.general.personalContext.aboutYouPlaceholder')"
+              />
+            </div>
+
+            <div class="gap-1 grid">
+              <Label class="text-xs">{{ $t('chat.settings.general.personalContext.customInstructions') }}</Label>
+              <Textarea
+                v-model="personalContext.customInstructions" class="text-xs min-h-16"
+                :placeholder="$ts('chat.settings.general.personalContext.customInstructionsPlaceholder')"
+              />
+            </div>
           </div>
         </div>
 

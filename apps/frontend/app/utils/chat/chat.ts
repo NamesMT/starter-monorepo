@@ -1,4 +1,4 @@
-import type { AgentObject, AgentsSettings, ChatAttachment, HostedProvider } from '@local/common/src/chat'
+import type { AgentObject, AgentsSettings, ChatAttachment, CommonModelSettings, HostedProvider, PersonalContext } from '@local/common/src/chat'
 import type { UIMessage } from 'ai'
 import type { Doc, Id } from 'backend-convex/convex/_generated/dataModel'
 import { createContext } from 'reka-ui'
@@ -48,6 +48,15 @@ export interface PostChatStreamArgs {
   apiKey?: string
   content?: string
   attachments?: ChatAttachment[]
+  /**
+   * The per-model attachment accept list, forwarded so the server can enforce the same
+   * capabilities the user configured for a BYOK model.
+   */
+  attachmentAccept?: string[]
+  /** The selected model's settings, forwarded as the generation profile + traits. */
+  modelSettings?: CommonModelSettings
+  /** Personal context about the user, injected into the system prompt. */
+  personalContext?: PersonalContext
   streamId?: string
   resumeStreamId?: string
   finishOnly?: boolean
@@ -74,6 +83,17 @@ export async function postChatStream(args: PostChatStreamArgs) {
 
   if (args.attachments?.length)
     formData.append('attachments', JSON.stringify(args.attachments))
+
+  if (args.attachmentAccept?.length)
+    formData.append('attachmentAccept', JSON.stringify(args.attachmentAccept))
+
+  if (args.modelSettings) {
+    const { temperature, topP, maxOutputTokens, traits, tools } = args.modelSettings
+    formData.append('modelOptions', JSON.stringify({ temperature, topP, maxOutputTokens, traits, tools }))
+  }
+
+  if (args.personalContext)
+    formData.append('personalContext', JSON.stringify(args.personalContext))
 
   formData.append('context', JSON.stringify({ from: getChatNickname() }))
   formData.append('lockerKey', getLockerKey(args.threadId) ?? '')

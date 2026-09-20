@@ -1,4 +1,4 @@
-import type { ChatAttachment, ChatStreamMetadata } from '@local/common/src/chat'
+import type { ChatAttachment, ChatStreamMetadata, PersonalContext } from '@local/common/src/chat'
 import type { UserContent } from 'ai'
 import type { HonoWithConvex } from 'convex-helpers/server/hono'
 import type { Id } from '../_generated/dataModel'
@@ -125,6 +125,74 @@ chatApp
         },
         z.array(attachmentReferenceSchema),
       ),
+      /**
+       * Per-model accept list declared by the client. Only honored for BYOK providers,
+       * where the user owns the model configuration; the hosted provider's capabilities
+       * stay authoritative on the server.
+       */
+      attachmentAccept: z.preprocess(
+        (arg) => {
+          if (arg === undefined || arg === null || arg === '')
+            return []
+          if (typeof arg === 'string') {
+            try {
+              return JSON.parse(arg)
+            }
+            catch {
+              return []
+            }
+          }
+          return arg
+        },
+        z.array(z.string()),
+      ),
+      /**
+       * Generation profile + persona traits for the selected model (issues #43/#44).
+       */
+      modelOptions: z.preprocess(
+        (arg) => {
+          if (arg === undefined || arg === null || arg === '')
+            return {}
+          if (typeof arg === 'string') {
+            try {
+              return JSON.parse(arg)
+            }
+            catch {
+              return {}
+            }
+          }
+          return arg
+        },
+        z.object({
+          temperature: z.optional(z.number().min(0).max(2)),
+          topP: z.optional(z.number().min(0).max(1)),
+          maxOutputTokens: z.optional(z.number().int().positive()),
+          traits: z.optional(z.string()),
+          tools: z.optional(z.boolean()),
+        }),
+      ),
+      /**
+       * Personal context about the user, injected into the system prompt (issue #44).
+       */
+      personalContext: z.preprocess(
+        (arg) => {
+          if (arg === undefined || arg === null || arg === '')
+            return {}
+          if (typeof arg === 'string') {
+            try {
+              return JSON.parse(arg)
+            }
+            catch {
+              return {}
+            }
+          }
+          return arg
+        },
+        z.object({
+          aboutYou: z.optional(z.string()),
+          customInstructions: z.optional(z.string()),
+        }),
+      ),
       streamId: z.optional(z.string()),
       context: z.optional(z.string().transform(val => JSON.parse(val))),
       resumeStreamId: z.optional(z.string()),
@@ -142,6 +210,9 @@ chatApp
         apiKey,
         content,
         attachments: attachmentReferences,
+        attachmentAccept,
+        modelOptions = {},
+        personalContext = {},
         context = {},
         resumeStreamId,
         lockerKey,
@@ -180,8 +251,12 @@ chatApp
         streamId = streamId ?? `stream-${Date.now()}_${randomStr(4)}`
 
         // Validate attachments against the stored blobs + model capabilities before
-        // persisting anything, so a rejected request leaves no trace.
-        const resolvedAttachments = await resolveAttachments(c.env, attachmentReferences, getModelAttachmentAccept({ provider, model }))
+        // persisting anything, so a rejected request leaves no trace. For BYOK models the
+        // user-configured accept list is honored; the hosted model stays server-defined.
+        const accept = provider === 'hosted'
+          ? getModelAttachmentAccept({ provider, model })
+          : (attachmentAccept.length ? attachmentAccept : getModelAttachmentAccept({ provider, model }))
+        const resolvedAttachments = await resolveAttachments(c.env, attachmentReferences, accept)
 
         // Add user message to thread
         userMessageId = await c.env.runMutation(internal.messages.internalAdd, {
@@ -240,6 +315,8 @@ chatApp
           provider,
           model,
           apiKey,
+          modelOptions,
+          personalContext,
           messagesContext,
           streamId,
           streamingMessageId,
@@ -259,6 +336,16 @@ interface RespondWithAiStreamArgs {
   provider: string
   model: string
   apiKey?: string
+  /** Generation profile + persona traits configured for the model (issues #43/#44). */
+  modelOptions?: {
+    temperature?: number
+    topP?: number
+    maxOutputTokens?: number
+    traits?: string
+    tools?: boolean
+  }
+  /** Personal context about the user (issue #44). */
+  personalContext?: PersonalContext
   messagesContext: any[]
   streamId: string
   streamingMessageId: Id<'messages'>
@@ -280,6 +367,8 @@ function respondWithAiStream({
   provider,
   model,
   apiKey,
+  modelOptions = {},
+  personalContext = {},
   messagesContext,
   streamId,
   streamingMessageId,
@@ -317,8 +406,11 @@ function respondWithAiStream({
   const result = streamText({
     // Provider failures are converted to normal text output, see `withProviderErrorAsText`.
     model: withProviderErrorAsText(getAgentModel({ provider, model, apiKey })),
-    instructions: buildSystemPrompt({ provider, model }),
+    instructions: buildSystemPrompt({ model, modelSettings: modelOptions }, personalContext),
     messages: messagesContext,
+    temperature: modelOptions.temperature,
+    topP: modelOptions.topP,
+    maxOutputTokens: modelOptions.maxOutputTokens,
     onChunk: ({ chunk }) => {
       if (chunk.type === 'text-delta' && chunk.text) {
         aiResponse += chunk.text
