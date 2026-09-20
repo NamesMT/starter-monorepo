@@ -1,4 +1,4 @@
-import type { AgentObject, AgentsSettings, HostedProvider } from '@local/common/src/chat'
+import type { AgentObject, AgentsSettings, ChatAttachment, HostedProvider } from '@local/common/src/chat'
 import type { UIMessage } from 'ai'
 import type { Doc, Id } from 'backend-convex/convex/_generated/dataModel'
 import { createContext } from 'reka-ui'
@@ -47,7 +47,7 @@ export interface PostChatStreamArgs {
   model: string
   apiKey?: string
   content?: string
-  attachments?: File[]
+  attachments?: ChatAttachment[]
   streamId?: string
   resumeStreamId?: string
   finishOnly?: boolean
@@ -72,8 +72,8 @@ export async function postChatStream(args: PostChatStreamArgs) {
       formData.append(key, String(value))
   }
 
-  for (const file of args.attachments ?? [])
-    formData.append('attachments', file)
+  if (args.attachments?.length)
+    formData.append('attachments', JSON.stringify(args.attachments))
 
   formData.append('context', JSON.stringify({ from: getChatNickname() }))
   formData.append('lockerKey', getLockerKey(args.threadId) ?? '')
@@ -90,12 +90,87 @@ export async function postChatStream(args: PostChatStreamArgs) {
   return { response, abortController }
 }
 
-export interface CustomMessage extends Doc<'messages'> {
+export interface UploadChatAttachmentArgs {
+  uploadUrl: string
+  file: File
+  onProgress?: (percent: number) => void
+  signal?: AbortSignal
+}
+
+/**
+ * Uploads a file to a Convex file storage upload URL.
+ *
+ * Uses `XMLHttpRequest` instead of `fetch` because only XHR exposes upload progress
+ * events, which the attachment UI needs.
+ */
+export function uploadChatAttachment({ uploadUrl, file, onProgress, signal }: UploadChatAttachmentArgs) {
+  return new Promise<ChatAttachment>((resolve, reject) => {
+    const xhr = new XMLHttpRequest()
+    xhr.open('POST', uploadUrl, true)
+    xhr.responseType = 'json'
+    xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream')
+
+    const onAbort = () => xhr.abort()
+    signal?.addEventListener('abort', onAbort, { once: true })
+
+    const cleanup = () => signal?.removeEventListener('abort', onAbort)
+
+    xhr.upload.addEventListener('progress', (event) => {
+      if (event.lengthComputable)
+        onProgress?.(Math.round((event.loaded / event.total) * 100))
+    })
+
+    xhr.addEventListener('load', () => {
+      cleanup()
+      if (xhr.status < 200 || xhr.status >= 300) {
+        reject(new Error(`Upload failed with status ${xhr.status}`))
+        return
+      }
+
+      const storageId = (xhr.response as { storageId?: string } | null)?.storageId
+      if (!storageId) {
+        reject(new Error('Upload response did not contain a storageId'))
+        return
+      }
+
+      onProgress?.(100)
+      resolve({
+        storageId,
+        name: file.name,
+        type: file.type || 'application/octet-stream',
+        size: file.size,
+      })
+    })
+
+    xhr.addEventListener('error', () => {
+      cleanup()
+      reject(new Error('Upload failed'))
+    })
+
+    xhr.addEventListener('abort', () => {
+      cleanup()
+      reject(new DOMException('Upload aborted', 'AbortError'))
+    })
+
+    xhr.send(file)
+  })
+}
+
+export interface CustomAttachment extends ChatAttachment {
+  /**
+   * Resolved storage URL from the server, or a local `blob:` object URL for
+   * optimistic messages that have not been round-tripped yet.
+   */
+  url?: string | null
+}
+
+export interface CustomMessage extends Omit<Doc<'messages'>, 'attachments'> {
   /**
    * This id should only be used for UI purpose,
    * it could be desynced and holds value of optimistic message
    */
   id: string
+  attachments?: CustomAttachment[]
 }
 // Extending from AI SDK causes lag and infinite deep, using this to check compatibility instead for now
 export type _AISDKMessageCompatCheck = CustomMessage & UIMessage

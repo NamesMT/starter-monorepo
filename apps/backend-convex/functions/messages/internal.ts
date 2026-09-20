@@ -17,12 +17,18 @@ export const internalAdd = internalMutation({
     provider: v.string(),
     model: v.string(),
     lockerKey: v.optional(v.string()),
+    attachments: v.optional(v.array(v.object({
+      storageId: v.id('_storage'),
+      name: v.string(),
+      type: v.string(),
+      size: v.number(),
+    }))),
   },
   handler: async (ctx, args) => {
     await singleShardCounter.inc(ctx, `messages-in-thread_${args.threadId}`)
 
     return await ctx.db.insert('messages', {
-      ...objectPick(args, ['threadId', 'role', 'content', 'context', 'isStreaming', 'streamId', 'provider', 'model']),
+      ...objectPick(args, ['threadId', 'role', 'content', 'context', 'isStreaming', 'streamId', 'provider', 'model', 'attachments']),
       timestamp: Date.now(),
     })
   },

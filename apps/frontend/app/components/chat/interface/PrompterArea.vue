@@ -1,24 +1,27 @@
 <script setup lang="ts">
 import type Lenis from 'lenis'
+import type { ChatAttachmentManager } from '~/utils/chat/attachments'
 import { useSidebar } from '~/lib/shadcn/components/ui/sidebar'
+import { useToast } from '~/lib/shadcn/components/ui/toast'
 
 const props = defineProps<{
   nearTopBottom: Array<null | boolean | number>
   lenisRef: undefined | { $el: HTMLElement, lenis: Lenis }
   streamingMessagesMap: Record<string, true>
+  attachments: ChatAttachmentManager
 }>()
 
 const emit = defineEmits<{
-  submit: [payload: { input: string, files: File[] }]
+  submit: [payload: { input: string }]
 }>()
 
 const chatInput = defineModel<string>('chatInput', { required: true })
-const attachments = ref<File[]>([])
 
 const isDev = import.meta.dev
 const sidebarContext = useSidebar()
 const chatContext = useChatContext()
 const { ts } = useI18n()
+const { toast } = useToast()
 
 const multiStreamConfirmDialogOpen = ref(false)
 const { textarea: chatTextarea, input: chatInputTA } = useTextareaAutosize()
@@ -26,9 +29,53 @@ const chatPlaceholder = computedWithControl(chatContext.interfaceSRK, () =>
   `${ts('chat.typeYourMessageHere')}\n${getRandomThoughtPlaceholder()}`)
 syncRef(chatInput, chatInputTA)
 
-function handleSubmit({ confirmMultiStream = false }) {
+// Derived state from the attachment manager (nested refs are not unwrapped through props).
+const attachmentItems = computed(() => props.attachments.items.value)
+const hasAttachments = computed(() => props.attachments.hasAttachments.value)
+const isUploading = computed(() => props.attachments.isUploading.value)
+const hasErrors = computed(() => props.attachments.hasErrors.value)
+
+const attachmentAccept = computed(() => chatContext.activeAgent.value.modelSettings?.attachments ?? [])
+const canAttach = computed(() => attachmentAccept.value.length > 0)
+
+const fileInput = useTemplateRef<HTMLInputElement>('fileInput')
+const isDragging = ref(false)
+
+function stageFiles(files: Iterable<File>) {
+  if (!canAttach.value)
+    return
+
+  const { errors } = props.attachments.addFiles(files, attachmentAccept.value)
+  for (const description of errors)
+    toast({ variant: 'destructive', description })
+}
+
+function onFileInputChange(event: Event) {
+  const input = event.target as HTMLInputElement
+  stageFiles(Array.from(input.files ?? []))
+  input.value = ''
+}
+
+function onDrop(event: DragEvent) {
+  isDragging.value = false
+  stageFiles(Array.from(event.dataTransfer?.files ?? []))
+}
+
+function onPaste(event: ClipboardEvent) {
+  const files = Array.from(event.clipboardData?.files ?? [])
+  if (!files.length)
+    return
+
+  event.preventDefault()
+  stageFiles(files)
+}
+
+function handleSubmit({ confirmMultiStream = false } = {}) {
   const userInput = chatInputTA.value.trim()
-  if (!userInput && attachments.value.length === 0)
+  if (!userInput && !hasAttachments.value)
+    return
+
+  if (isUploading.value)
     return
 
   if (!confirmMultiStream && Object.keys(props.streamingMessagesMap).length > 0) {
@@ -36,8 +83,7 @@ function handleSubmit({ confirmMultiStream = false }) {
     return
   }
 
-  emit('submit', { input: chatInputTA.value, files: attachments.value })
-  attachments.value = []
+  emit('submit', { input: chatInputTA.value })
 }
 </script>
 
@@ -63,7 +109,14 @@ function handleSubmit({ confirmMultiStream = false }) {
     </div>
 
     <div>
-      <form class="text-secondary-950 mx-auto p-3 pb-2 border-x-6px border-rose/80 bg-rose/20 flex flex-col gap-2 max-w-2xl backdrop-blur-sm dark:text-secondary-50" @submit.prevent>
+      <form
+        class="text-secondary-950 mx-auto p-3 pb-2 border-x-6px border-rose/80 bg-rose/20 flex flex-col gap-2 max-w-2xl backdrop-blur-sm dark:text-secondary-50"
+        :class="isDragging ? 'outline-2 outline-dashed outline-accent' : ''"
+        @submit.prevent
+        @dragover.prevent="canAttach && (isDragging = true)"
+        @dragleave="isDragging = false"
+        @drop.prevent="onDrop"
+      >
         <textarea
           ref="chatTextarea"
           :key="chatContext.interfaceSRK.value"
@@ -77,47 +130,38 @@ function handleSubmit({ confirmMultiStream = false }) {
             }
           }"
           @keydown.enter.ctrl.exact="handleSubmit({})"
+          @paste="onPaste"
         />
-        <div
-          v-if="attachments.length"
-          class="p-2 flex flex-nowrap gap-2 max-w-full truncate"
-        >
-          <div
-            v-for="(file, index) of attachments" :key="index"
-            class="text-xs p-1 px-2 rounded-md bg-surface-200/50 flex gap-2 truncate items-center"
-          >
-            <p class="truncate">
-              {{ file.name }}
-            </p>
-            <button @click="attachments.splice(index, 1)">
-              <div class="i-hugeicons:cancel-01 h-4 w-4" />
-            </button>
-          </div>
-        </div>
+
+        <ChatComposerAttachments
+          :items="attachmentItems"
+          @remove="(id) => props.attachments.remove(id)"
+        />
+
         <div class="flex items-center justify-between">
           <div class="flex gap-2 items-center">
             <AgentSelector />
 
-            <div v-if="chatContext.activeAgent.value.modelSettings?.attachments?.length" class="flex gap-2 items-center">
-              <Button
-                variant="ghost" size="icon" class="p-1 rounded-full size-7"
-                @click="() => ($refs.fileInput as HTMLInputElement).click()"
-              >
-                <div class="i-hugeicons:attachment-01 h-5 w-5" />
-              </Button>
-              <input
-                ref="fileInput" type="file" multiple class="hidden"
-                :accept="chatContext.activeAgent.value.modelSettings?.attachments.join(', ')"
-                @change="(e) => attachments = Array.from((e.target as HTMLInputElement).files ?? [])"
-              >
-            </div>
+            <Button
+              v-if="canAttach"
+              variant="ghost" size="icon" class="p-1 rounded-full size-7"
+              :disabled="!props.attachments.canAddMore.value"
+              @click="() => fileInput?.click()"
+            >
+              <div class="i-hugeicons:attachment-01 h-5 w-5" />
+            </Button>
+            <input
+              ref="fileInput" type="file" multiple class="hidden"
+              :accept="attachmentAccept.join(', ')"
+              @change="onFileInputChange"
+            >
           </div>
           <Button
             variant="default"
             size="icon"
             class="i-hugeicons:upload-square-01 disabled:bg-surface-500 enabled:bg-mainGradient"
             :class="chatContext.insaneUI.value ? 'enabled:animate-spin' : 'motion-safe:enabled:animate-bounce'"
-            :disabled="!chatInputTA && attachments.length === 0"
+            :disabled="(!chatInputTA && !hasAttachments) || isUploading || hasErrors"
             @click="handleSubmit({})"
           />
         </div>

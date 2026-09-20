@@ -1,8 +1,10 @@
 <!-- eslint-disable no-console -->
 <script setup lang="ts">
+import type { ChatAttachment, ChatStreamMetadata } from '@local/common/src/chat'
 import type { Doc, Id } from 'backend-convex/convex/_generated/dataModel'
 import type Lenis from 'lenis'
 import { keyBy, objectPick, randomStr, sleep, uniquePromise } from '@namesmt/utils'
+import { parseJsonEventStream, uiMessageChunkSchema } from 'ai'
 import { api } from 'backend-convex/convex/_generated/api'
 import { useConvexClient } from 'convex-vue'
 import { countdown, debounce, getInstance, throttle } from 'kontroll'
@@ -42,7 +44,7 @@ const sendMessageRef = useRouteQuery<string | undefined>('sendMessage')
 whenever(
   sendMessageRef,
   (v) => {
-    handleSubmit({ input: v, files: [] })
+    handleSubmit({ input: v })
     sendMessageRef.value = undefined
   },
   { immediate: true },
@@ -56,6 +58,48 @@ const messagesKeyed = computed(() => keyBy(messages.value, 'id'))
 const streamingMessagesMap = reactive<Record<string, true>>({ })
 const isFetching = ref(false)
 const chatInput = ref('')
+
+const attachments = useChatAttachments()
+/** Guards against a second submit while a previous one is still uploading/sending. */
+const isSubmitting = ref(false)
+
+/**
+ * Merges server messages into the local list by `_id`.
+ *
+ * This keeps object identity (so a streaming write resolves to the same message the
+ * render layer holds), adds messages created by other users/tabs, and never clobbers
+ * the content of a message that is currently streaming locally.
+ */
+function mergeServerMessages(serverMessages: Doc<'messages'>[]) {
+  const byId = new Map<string, CustomMessage>()
+  for (const message of messages.value) {
+    if (message._id)
+      byId.set(message._id, message)
+  }
+
+  for (const serverMessage of serverMessages) {
+    const existing = byId.get(serverMessage._id)
+
+    if (existing) {
+      if (existing.streamId && streamingMessagesMap[existing.streamId])
+        continue
+
+      // Local object URLs on optimistic attachments are superseded by the server's
+      // resolved URLs, so release them once we overwrite the message.
+      for (const attachment of existing.attachments ?? []) {
+        if (attachment.url?.startsWith('blob:'))
+          URL.revokeObjectURL(attachment.url)
+      }
+
+      Object.assign(existing, customMessageTransform(serverMessage))
+      continue
+    }
+
+    const transformed = customMessageTransform(serverMessage)
+    messages.value.push(transformed)
+    byId.set(serverMessage._id, transformed)
+  }
+}
 
 // Fetch messages as needed and resume streams
 const { ignoreUpdates: ignorePathUpdate } = watchIgnorable(
@@ -74,13 +118,7 @@ const { ignoreUpdates: ignorePathUpdate } = watchIgnorable(
         .then((messagesFromConvex) => {
           if (threadIdRef.value === threadId) {
             if (threadId === oldThreadId) {
-              for (const index in messagesFromConvex) {
-                const m = messagesFromConvex[index]!
-                if (m.streamId && !streamingMessagesMap[m.streamId]) {
-                  messages.value.push(customMessageTransform(messagesFromConvex[+index - 1]!))
-                  messages.value.push(customMessageTransform(m))
-                }
-              }
+              mergeServerMessages(messagesFromConvex)
             }
             else {
               messages.value = messagesFromConvex.map(customMessageTransform)
@@ -147,11 +185,14 @@ watchImmediate(threadIdRef, (threadId) => {
 
 interface HandleSubmitArgs {
   input: string
-  files: File[]
 }
-async function handleSubmit({ input, files }: HandleSubmitArgs) {
+async function handleSubmit({ input }: HandleSubmitArgs) {
   const userInput = input.trim()
-  if (!userInput && !files.length)
+  const hasAttachments = attachments.hasAttachments.value
+  if (!userInput && !hasAttachments)
+    return
+
+  if (isSubmitting.value)
     return
 
   if (isThreadFrozen.value) {
@@ -160,61 +201,107 @@ async function handleSubmit({ input, files }: HandleSubmitArgs) {
       throw new Error(`Can't branch off empty thread`)
 
     return await _branchThreadFromMessage({ messageId: lastMessage._id, lockerKey: getLockerKey(lastMessage.threadId) })
-      .then(() => { sleep(500).then(() => handleSubmit({ input, files })) })
+      .then(() => { sleep(500).then(() => handleSubmit({ input })) })
   }
 
-  const streamId = `stream-${Date.now()}_${randomStr(4)}`
+  isSubmitting.value = true
 
-  // Optimistically add the messages
-  messages.value.push({
-    id: `user-${Date.now()}_${randomStr(4)}`,
-    role: 'user',
-    content: userInput, // TODO: display attachments for user message
-    context: { from: getChatNickname() },
-  } as any as CustomMessage)
-  messages.value.push({
-    id: `assistant-${Date.now()}_${randomStr(4)}`,
-    role: 'assistant',
-    model: chatContext.activeAgent.value.model,
-    content: '',
-    isStreaming: true,
-    streamId,
-  } as any as CustomMessage)
+  try {
+    // Create new thread
+    if (!threadIdRef.value) {
+      // Set lockerKey to maintain permission if user is anonymous
+      const lockerKey = $auth.loggedIn ? undefined : getRandomLockerKey()
+      const newThreadId = await createNewThread(convex, {
+        title: userInput || attachments.items.value[0]?.name || 'New chat',
+        lockerKey,
+      })
+      ignorePathUpdate(() => { threadIdRef.value = newThreadId })
 
-  // For some reason creating object reference first does not work, so we push and then get last message
-  const targetMessage = messages.value.at(-1)!
-  chatInput.value = ''
+      // Store lockerKey locally
+      if (lockerKey)
+        setLockerKey(newThreadId, lockerKey)
 
-  nextTick(() => { doScrollBottom({ tries: 2 }) })
+      // Asynchronously generates a new initial thread title
+      generateThreadTitle(convex, { threadId: newThreadId, lockerKey })
+    }
 
-  // Create new thread
-  if (!threadIdRef.value) {
-    // Set lockerKey to maintain permission if user is anonymous
-    const lockerKey = $auth.loggedIn ? undefined : getRandomLockerKey()
-    const newThreadId = await createNewThread(convex, {
-      title: userInput,
-      lockerKey,
-    })
-    ignorePathUpdate(() => { threadIdRef.value = newThreadId })
+    await until(threadIdRef).toBeTruthy({ timeout: 5000, throwOnTimeout: true })
 
-    // Store lockerKey locally
-    if (lockerKey)
-      setLockerKey(newThreadId, lockerKey)
+    const currentThreadId = threadIdRef.value as Id<'threads'>
 
-    // Asynchronously generates a new initial thread title
-    generateThreadTitle(convex, { threadId: newThreadId, lockerKey })
+    // Upload staged attachments first, so the composer can show real progress and the
+    // chat request only carries lightweight storage references.
+    let uploadedAttachments: ChatAttachment[] = []
+    if (hasAttachments) {
+      try {
+        uploadedAttachments = await attachments.uploadAll({
+          convex,
+          threadId: currentThreadId,
+          lockerKey: getLockerKey(currentThreadId),
+        })
+      }
+      catch (error) {
+        toast({ variant: 'destructive', description: ts('chat.toast.attachmentsUploadFailed') })
+        console.error('Failed to upload attachments:', error)
+        return
+      }
+    }
+
+    // Hand the staged items to the optimistic message. `takeAll` deliberately keeps the
+    // local preview object URLs alive (they are revoked later, once the server-provided
+    // URLs replace them) instead of revoking them here.
+    const optimisticAttachments = attachments.takeAll().map(item => ({
+      storageId: item.storageId!,
+      name: item.name,
+      type: item.type,
+      size: item.size,
+      url: item.previewUrl ?? null,
+    }))
+
+    const streamId = `stream-${Date.now()}_${randomStr(4)}`
+
+    // Optimistically add the messages
+    const userMessage = {
+      id: `user-${Date.now()}_${randomStr(4)}`,
+      role: 'user',
+      content: userInput,
+      context: { from: getChatNickname() },
+      attachments: optimisticAttachments,
+    } as any as CustomMessage
+    const targetMessage = {
+      id: `assistant-${Date.now()}_${randomStr(4)}`,
+      role: 'assistant',
+      model: chatContext.activeAgent.value.model,
+      content: '',
+      isStreaming: true,
+      streamId,
+    } as any as CustomMessage
+
+    messages.value.push(userMessage)
+    messages.value.push(targetMessage)
+
+    chatInput.value = ''
+
+    nextTick(() => { doScrollBottom({ tries: 2 }) })
+
+    targetMessage.threadId = currentThreadId
+
+    // Wraps in a kontroller to make sure there is only one stream on the same message
+    throttle(
+      1,
+      () => streamToMessage({
+        message: targetMessage,
+        userMessage,
+        content: userInput,
+        attachments: uploadedAttachments,
+        streamId,
+      }),
+      { key: `messageStream-${streamId}` },
+    )
   }
-
-  await until(threadIdRef).toBeTruthy({ timeout: 5000, throwOnTimeout: true })
-
-  targetMessage.threadId = threadIdRef.value as Id<'threads'>
-
-  // Wraps in a kontroller to make sure there is only one stream on the same message
-  throttle(
-    1,
-    () => streamToMessage({ message: targetMessage, content: userInput, attachments: files, streamId }),
-    { key: `messageStream-${streamId}` },
-  )
+  finally {
+    isSubmitting.value = false
+  }
 }
 
 async function resumeStreamToMessage(streamSessionId: string, messageId: string) {
@@ -270,14 +357,40 @@ async function pollToMessage({ message, resumeStreamId, threadId = threadIdRef.v
 
 interface StreamToMessageArgs {
   message: CustomMessage
+  /** The optimistic user message, reconciled with its server id from stream metadata. */
+  userMessage?: CustomMessage
   content?: string
-  attachments?: File[]
+  attachments?: ChatAttachment[]
   streamId?: string
   resumeStreamId?: string
 }
-async function streamToMessage({ message, content, attachments, streamId, resumeStreamId }: StreamToMessageArgs) {
+
+/**
+ * Resolves the live object for a message we may have created optimistically.
+ *
+ * The message list is periodically reconciled with the server, which can replace the
+ * array (and therefore the object) while a stream is in flight. Writing through this
+ * resolver keeps streamed text attached to whatever instance is currently rendered.
+ */
+function resolveStreamingMessage(message: CustomMessage) {
+  if (message._id) {
+    const byId = messages.value.find(m => m._id === message._id)
+    if (byId)
+      return byId
+  }
+  if (message.streamId) {
+    const byStream = messages.value.find(m => m.streamId === message.streamId)
+    if (byStream)
+      return byStream
+  }
+  return message
+}
+
+async function streamToMessage({ message, userMessage, content, attachments, streamId, resumeStreamId }: StreamToMessageArgs) {
+  const streamKey = (streamId ?? resumeStreamId)!
+
   try {
-    streamingMessagesMap[(streamId ?? resumeStreamId)!] = true
+    streamingMessagesMap[streamKey] = true
 
     const currentThreadId = threadIdRef.value
     const { response, abortController } = await postChatStream({
@@ -298,67 +411,66 @@ async function streamToMessage({ message, content, attachments, streamId, resume
       throw new Error('Response body is null')
     }
 
-    const reader = response.body?.getReader()
-    const decoder = new TextDecoder()
-
     message.isStreaming = true
 
-    while (true) {
+    // Accumulate locally so switching the resolved target (e.g. after a server
+    // reconciliation) never loses already-streamed text.
+    let streamedText = ''
+
+    // `parseJsonEventStream` handles SSE framing/decoding for us, so we no longer need
+    // to assume anything about chunk boundaries.
+    const parsedStream = parseJsonEventStream({ stream: response.body, schema: uiMessageChunkSchema })
+
+    for await (const event of parsedStream) {
       if (currentThreadId !== threadIdRef.value) {
         console.warn('User changed thread, stopping stream...')
         abortController.abort()
         break
       }
 
-      const { done, value } = await reader.read()
-      if (done)
-        break
-
-      const chunk = decoder.decode(value, { stream: true })
-      const state: Record<string, any> = {
-        content: '',
+      if (!event.success) {
+        console.warn('Failed to parse chat stream event:', event.error)
+        continue
       }
 
-      if (chunk.startsWith('t: ')) {
-        chunk.substring(3).split('t: ').forEach(t => state.content += t)
-      }
-      else {
-        const prefix = chunk.substring(0, 3)
-        const part = chunk.substring(3)
+      const chunk = event.value
 
-        if (!/o: /.test(prefix))
-          console.warn('Unknown data:', chunk)
-
-        switch (prefix[0]) {
-          case 'o':
-            Object.assign(state, JSON.parse(part))
-            break
+      switch (chunk.type) {
+        case 'start':
+        case 'message-metadata': {
+          const metadata = chunk.messageMetadata as ChatStreamMetadata | undefined
+          if (metadata?.messageId)
+            message._id = metadata.messageId as Id<'messages'>
+          if (metadata?.streamId)
+            message.streamId = metadata.streamId
+          if (metadata?.userMessageId && userMessage)
+            userMessage._id = metadata.userMessageId as Id<'messages'>
+          break
         }
-
-        if (state.messageId)
-          message._id = state.messageId
-
-        if (state.sessionId)
-          message.streamId = state.sessionId
-
-        if (state.error)
-          message.content += `\nError: ${state.error}`
+        case 'text-delta':
+          streamedText += chunk.delta
+          break
+        case 'error':
+          streamedText += `\n\nError: ${chunk.errorText}`
+          break
       }
 
-      if (state.content)
-        message.content += state.content
-
+      resolveStreamingMessage(message).content = streamedText
       nextTick(() => { doScrollBottom({ maybe: true }) })
     }
 
-    message.isStreaming = false
+    const target = resolveStreamingMessage(message)
+    target.content = streamedText
+    target.isStreaming = false
   }
   catch (error) {
     console.error('Failed to send message:', error)
-    message!.content += `\nError: ${(error as Error).message}`
+    const target = resolveStreamingMessage(message)
+    target.content += `\nError: ${(error as Error).message}`
+    target.isStreaming = false
   }
   finally {
-    delete streamingMessagesMap[(streamId ?? resumeStreamId)!]
+    delete streamingMessagesMap[streamKey]
   }
 
   console.log('Stream completed')
@@ -450,7 +562,7 @@ function doScrollBottom({ smooth = true, maybe = false, tries = 0, lastScrollTop
     </VueLenis>
 
     <PrompterArea
-      v-bind="{ nearTopBottom, lenisRef, streamingMessagesMap }"
+      v-bind="{ nearTopBottom, lenisRef, streamingMessagesMap, attachments }"
       v-model:chat-input="chatInput"
       @submit="(payload) => handleSubmit(payload)"
     />

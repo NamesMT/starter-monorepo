@@ -42,6 +42,7 @@ const chatContext = useChatContext()
             <div class="spinner h-5 w-5" />
           </div>
           <MDC v-else :key="String(message.isStreaming)" :value="message.content" class="only-child:[&>.prose-p]:my-0" />
+          <ChatMessageAttachments :attachments="message.attachments ?? []" />
           <div class="hidden first:block">
             <Skeleton
               class="rounded-full bg-muted-foreground h-5 max-w-full w-$c-W" :style="{

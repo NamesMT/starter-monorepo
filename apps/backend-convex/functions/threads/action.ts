@@ -25,6 +25,8 @@ export const generateTitle = action({
 
     const messages = await ctx.runQuery(api.messages.listByThread, { threadId: args.threadId, lockerKey: args.lockerKey })
 
+    // Title generation is a nice-to-have: a provider failure must not surface as an
+    // uncaught action error, the thread simply keeps its initial title.
     const { text } = await generateText({
       model: openrouter('openrouter/free'),
       instructions: `You are a helpful assistant, generating concise, informative, and clear titles for a given context, keep the generated title under 40 characters, do not use any quotes and markdown syntax.`,
@@ -38,7 +40,13 @@ export const generateTitle = action({
             })))}`]
           : []),
       ].join('\n')}`,
+    }).catch((error) => {
+      console.error('[threads] failed to generate a title:', error)
+      return { text: '' }
     })
+
+    if (!text.trim())
+      return
 
     await ctx.runMutation(internal.threads.updateThreadInfo, {
       title: text.trim(),

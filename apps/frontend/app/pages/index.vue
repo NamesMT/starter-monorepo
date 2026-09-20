@@ -37,7 +37,7 @@ const { isPending, isError, data, error } = useQuery({
 
 <template>
   <div class="text-center flex flex-col gap-6 w-full items-center justify-center">
-    <!-- GridMaker Section -->
+    <!-- Shared `@common/vue` sample Section -->
     <div class="p-4 border rounded-lg max-w-2xl w-full shadow">
       <h2 class="text-xl font-semibold mb-3">
         {{ $t('pages.home.section.gridMaker.title') }}

@@ -116,6 +116,9 @@ export default defineNuxtConfig({
         'embla-carousel-vue',
       ],
       include: [
+        // `@vercel/oidc` (pulled in by `ai`) advertises an ESM `import` condition but
+        // resolves to a CJS browser build, so it must be pre-bundled for interop.
+        '@vercel/oidc',
         'debug',
         'shiki',
         'remark-emoji',

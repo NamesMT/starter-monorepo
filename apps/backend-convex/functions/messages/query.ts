@@ -2,6 +2,7 @@ import { ConvexError, v } from 'convex/values'
 import { query } from '../../convex/_generated/server'
 import { singleShardCounter } from '../../utils/counters'
 import { assertThreadAccess } from '../threads/utils'
+import { resolveMessageAttachments } from './utils'
 
 export const listByThread = query({
   args: {
@@ -15,11 +16,13 @@ export const listByThread = query({
 
     await assertThreadAccess(ctx, { thread, lockerKey: args.lockerKey })
 
-    return await ctx.db
+    const messages = await ctx.db
       .query('messages')
       .withIndex('by_thread_and_timestamp', q => q.eq('threadId', args.threadId))
       .order('asc')
       .collect()
+
+    return await Promise.all(messages.map(message => resolveMessageAttachments(ctx, message)))
   },
 })
 
@@ -55,6 +58,6 @@ export const get = query({
 
     await assertThreadAccess(ctx, { thread, lockerKey: args.lockerKey })
 
-    return message
+    return await resolveMessageAttachments(ctx, message)
   },
 })

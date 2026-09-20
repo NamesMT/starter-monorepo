@@ -38,6 +38,7 @@ const hostedProvider = computed<HostedProvider>(() => ({
   models: {
     'openrouter/free': {
       enabled: true,
+      attachments: ['image/*', 'application/pdf'],
     },
   },
   default: 'openrouter/free',

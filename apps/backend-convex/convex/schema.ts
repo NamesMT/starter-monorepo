@@ -7,6 +7,14 @@ const tasksTables = {
   }),
 }
 
+/** Metadata for a file stored in Convex file storage and attached to a message. */
+const attachmentValidator = v.object({
+  storageId: v.id('_storage'),
+  name: v.string(),
+  type: v.string(),
+  size: v.number(),
+})
+
 const aiChatTables = {
   threads: defineTable({
     // The initial session ID of the user that created the thread, warning: also used as "password" to list threads for now.
@@ -37,6 +45,11 @@ const aiChatTables = {
     isStreaming: v.optional(v.boolean()),
     provider: v.string(),
     model: v.string(),
+    /**
+     * Files attached to this message. Only user messages currently carry attachments,
+     * the bytes live in Convex file storage and are resolved to URLs by queries.
+     */
+    attachments: v.optional(v.array(attachmentValidator)),
   })
     .index('by_thread', ['threadId'])
     .index('by_thread_and_timestamp', ['threadId', 'timestamp'])
