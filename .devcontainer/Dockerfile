@@ -1,1 +1,1 @@
-FROM namesmt/images-alpine:node-dev
+FROM namesmt/linux-stuff:arch-node-dev

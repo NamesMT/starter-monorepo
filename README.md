@@ -167,7 +167,7 @@ For local development environment variables / secrets, create a copy of `.env.de
   * Close the `backend` server
 * (Optional) Run the convex dev server if you use convex.
 * Run `pnpm dlx wrangler dev` to start wrangler dev server, and you can connect via `127.0.0.1:3310`.
-  * `workerd` does not work with Alpine Linux, so if you use the included Dev Container, change the base image to some other distro.
+  * The included Dev Container uses a glibc-based Arch Linux image (`namesmt/linux-stuff:arch-node-dev`), so `workerd` works out of the box. If you swap in another base image, note that `workerd` does not work with Alpine (musl).
 
 #### IMPORTANT:
 

@@ -1,9 +1,8 @@
 /* eslint-disable jsonc/comma-dangle */
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the
-// README at: https://github.com/devcontainers/templates/tree/main/src/alpine
+// For format details, see https://aka.ms/devcontainer.json.
 {
-  "name": "Alpine-NamesMT",
-  "image": "namesmt/images-alpine:node-dev",
+  "name": "Arch-NamesMT",
+  "image": "namesmt/linux-stuff:arch-node-dev",
   // "build": {
   //   "dockerfile": "Dockerfile"
   // },
