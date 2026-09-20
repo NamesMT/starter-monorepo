@@ -69,7 +69,7 @@ const chatContext = useChatContext()
       class="opacity-0 flex gap-1 transition-opacity bottom-2 left-2 absolute group-hover/message:opacity-100"
     >
       <CardCopyButton :message />
-      <CardBranchOffButton v-show="message.isStreaming === false" :message @click="emit('branchOffClicked')" />
+      <CardBranchOffButton :message @click="emit('branchOffClicked')" />
       <div class="text-xs ml-4">
         {{ message.model }}
       </div>

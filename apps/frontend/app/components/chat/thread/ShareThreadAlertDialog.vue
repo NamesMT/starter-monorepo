@@ -90,14 +90,14 @@ async function _shareCopyToast() {
         >
           <slot />
         </TooltipTrigger>
-        <TooltipContent side="bottom" :side-offset="6">
-          <p class="text-center whitespace-pre-line">
-            {{ tipOnly
-              ? $t('tip.holdShift')
-              : `${$t('chat.thread.share')}\n${$t('tip.holdShift')}` }}
-          </p>
-        </TooltipContent>
       </AlertDialogTrigger>
+      <TooltipContent side="bottom" :side-offset="6">
+        <p class="text-center whitespace-pre-line">
+          {{ tipOnly
+            ? $t('tip.holdShift')
+            : `${$t('chat.thread.share')}\n${$t('tip.holdShift')}` }}
+        </p>
+      </TooltipContent>
     </Tooltip>
     <AlertDialogContent>
       <AlertDialogHeader>

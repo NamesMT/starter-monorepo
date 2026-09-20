@@ -13,9 +13,9 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <Tooltip v-show="message.isStreaming === false">
+  <Tooltip>
     <TooltipTrigger as-child>
-      <Button variant="ghost" size="icon" class="size-7" @click="emit('click')">
+      <Button v-show="message.isStreaming === false" variant="ghost" size="icon" class="size-7" @click="emit('click')">
         <Split />
       </Button>
     </TooltipTrigger>

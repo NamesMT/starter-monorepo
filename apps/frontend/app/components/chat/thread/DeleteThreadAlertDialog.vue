@@ -46,14 +46,14 @@ async function _deleteThread() {
         <TooltipTrigger as-child @pointerdown.stop.prevent @click.shift.stop.prevent="_deleteThread()">
           <slot />
         </TooltipTrigger>
-        <TooltipContent side="bottom" :side-offset="6">
-          <p class="text-center whitespace-pre-line">
-            {{ tipOnly
-              ? $t('tip.holdShift')
-              : `${$t('chat.thread.delete')}\n${$t('tip.holdShift')}` }}
-          </p>
-        </TooltipContent>
       </AlertDialogTrigger>
+      <TooltipContent side="bottom" :side-offset="6">
+        <p class="text-center whitespace-pre-line">
+          {{ tipOnly
+            ? $t('tip.holdShift')
+            : `${$t('chat.thread.delete')}\n${$t('tip.holdShift')}` }}
+        </p>
+      </TooltipContent>
     </Tooltip>
     <AlertDialogContent>
       <AlertDialogHeader>

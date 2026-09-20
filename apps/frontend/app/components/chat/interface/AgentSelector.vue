@@ -19,29 +19,29 @@ const activeAgentDisplay = computed(() => displayActiveAgent(chatContext.activeA
             <div class="i-hugeicons:arrow-up-01" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuLabel>{{ $t('chat.provider.hosted') }}</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <AgentSelectorModelItem
-            v-for="[model, modelSettings] of Object.entries(chatContext.hostedProvider.value.models).filter((([_m, v]) => v.enabled))"
-            :key="model"
-            v-bind="{ provider: 'hosted', model, modelSettings }"
-          />
-          <template v-for="[provider, providerSettings] of enabledProviders" :key="provider">
-            <DropdownMenuSeparator />
-            <DropdownMenuLabel>{{ $t(`chat.provider.${provider}`) }}</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <AgentSelectorModelItem
-              v-for="[model, modelSettings] of Object.entries(providerSettings.models).filter((([_m, v]) => v.enabled))"
-              :key="model"
-              v-bind="{ provider, model, modelSettings }"
-            />
-          </template>
-        </DropdownMenuContent>
       </TooltipTrigger>
       <TooltipContent side="bottom" :side-offset="6">
         <p>{{ activeAgentDisplay }}</p>
       </TooltipContent>
     </Tooltip>
+    <DropdownMenuContent>
+      <DropdownMenuLabel>{{ $t('chat.provider.hosted') }}</DropdownMenuLabel>
+      <DropdownMenuSeparator />
+      <AgentSelectorModelItem
+        v-for="[model, modelSettings] of Object.entries(chatContext.hostedProvider.value.models).filter((([_m, v]) => v.enabled))"
+        :key="model"
+        v-bind="{ provider: 'hosted', model, modelSettings }"
+      />
+      <template v-for="[provider, providerSettings] of enabledProviders" :key="provider">
+        <DropdownMenuSeparator />
+        <DropdownMenuLabel>{{ $t(`chat.provider.${provider}`) }}</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <AgentSelectorModelItem
+          v-for="[model, modelSettings] of Object.entries(providerSettings.models).filter((([_m, v]) => v.enabled))"
+          :key="model"
+          v-bind="{ provider, model, modelSettings }"
+        />
+      </template>
+    </DropdownMenuContent>
   </DropdownMenu>
 </template>
