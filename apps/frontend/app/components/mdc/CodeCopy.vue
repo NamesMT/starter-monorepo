@@ -1,20 +1,48 @@
 <script setup lang="ts">
 import { Check, Copy } from 'lucide-vue-next'
+import { copyTextToClipboard } from '~/utils/clipboard'
 
 const props = defineProps<{
   code: string
 }>()
 
 const bus = useEventBus('mdc:copied')
-const { copy, copied } = useClipboard({ legacy: true })
+const copied = ref(false)
+let resetTimer: ReturnType<typeof setTimeout> | undefined
 
-whenever(copied, () => {
+async function handleCopy() {
+  const succeeded = await copyTextToClipboard(props.code)
+
+  // Never claim success (or animate) when the clipboard write actually failed.
+  if (!succeeded) {
+    console.error('[clipboard] copy failed')
+    return
+  }
+
+  copied.value = true
   bus.emit(props.code)
+
+  if (resetTimer)
+    clearTimeout(resetTimer)
+  resetTimer = setTimeout(() => { copied.value = false }, 1500)
+}
+
+onScopeDispose(() => {
+  if (resetTimer)
+    clearTimeout(resetTimer)
 })
 </script>
 
 <template>
-  <div class="code-copy" @click="copy(props.code)">
+  <div
+    class="code-copy"
+    role="button"
+    tabindex="0"
+    :data-copied="copied"
+    @click="handleCopy"
+    @keydown.enter.prevent="handleCopy"
+    @keydown.space.prevent="handleCopy"
+  >
     <Transition name="copy-fade" mode="out-in">
       <Copy v-if="!copied" class="size-4" />
       <Check v-else class="size-4" />

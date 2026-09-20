@@ -18,6 +18,7 @@ import {
 } from '@/lib/shadcn/components/ui/tooltip'
 import Button from '~/lib/shadcn/components/ui/button/Button.vue'
 import { useToast } from '~/lib/shadcn/components/ui/toast'
+import { copyTextToClipboard } from '~/utils/clipboard'
 
 const {
   thread,
@@ -31,24 +32,49 @@ const { $auth } = useNuxtApp()
 const convex = useConvexClient()
 const { toast } = useToast()
 const { ts } = useI18n()
-const { copy } = useClipboard({ legacy: true })
 
 const open = ref(false)
 const linkRef = ref('')
 
+/**
+ * Ensures a usable locker key exists and then builds the share link.
+ *
+ * The link must always carry a real key: prefer the local one, fall back to the
+ * server-provided one, otherwise create a new key. Failures are surfaced instead of
+ * silently producing a link without a key.
+ */
 async function _shareThread() {
-  if (!thread.lockerKey && !getLockerKey(thread._id)) {
-    const newLockerKey = getRandomLockerKey()
-    await threadSetLockerKey(convex, { threadId: thread._id, newLockerKey })
-    setLockerKey(thread._id, newLockerKey)
-  }
+  try {
+    const currentLockerKey = getLockerKey(thread._id) ?? thread.lockerKey
 
-  linkRef.value = `${window.location.origin}/chat/${thread._id}?lockerKey=${getLockerKey(thread._id)}`
+    if (currentLockerKey) {
+      setLockerKey(thread._id, currentLockerKey)
+    }
+    else {
+      const newLockerKey = getRandomLockerKey()
+      await threadSetLockerKey(convex, { threadId: thread._id, newLockerKey })
+      setLockerKey(thread._id, newLockerKey)
+    }
+
+    linkRef.value = `${window.location.origin}/chat/${thread._id}?lockerKey=${getLockerKey(thread._id)}`
+  }
+  catch (error) {
+    console.error('Failed to prepare the share link:', error)
+    toast({ variant: 'destructive', description: ts('chat.toast.shareLinkFailed') })
+  }
 }
 
 async function _shareCopyToast() {
   await _shareThread()
-  await copy(`${window.location.origin}/chat/${thread._id}?lockerKey=${getLockerKey(thread._id)}`)
+  if (!linkRef.value)
+    return
+
+  const succeeded = await copyTextToClipboard(linkRef.value)
+  if (!succeeded) {
+    toast({ variant: 'destructive', description: ts('chat.toast.copyFailed') })
+    return
+  }
+
   toast({ description: ts('chat.toast.threadShareLinkCopied') })
 }
 </script>

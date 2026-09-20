@@ -6,16 +6,25 @@ export default defineNuxtRouteMiddleware(async (to) => {
   if (import.meta.server)
     return
 
-  const threadIdRef = useThreadIdRef()
-
-  const threadId = threadIdRef.value as Id<'threads'>
+  // Route middleware runs before the navigation is committed, so `useRoute()` (and
+  // therefore `useThreadIdRef()`) can still point at the previous route. Read the
+  // target params instead.
+  const routeAll = to.params.all
+  const threadId = (Array.isArray(routeAll) ? routeAll[0] : routeAll) as Id<'threads'> | undefined
   const lockerKey = to.query.lockerKey?.toString()
-  if (lockerKey && threadId) {
-    if (getLockerKey(threadId) && to.query.force !== 'true')
-      return console.error('Locker key already exists, add `&force=true` to overwrite')
 
-    const convex = useConvexClient()
-    const { data: threads, isFinished } = useIDBKeyval<Doc<'threads'>[]>('chat/threads', [])
+  if (!threadId || !lockerKey)
+    return
+
+  if (getLockerKey(threadId) && to.query.force !== 'true') {
+    console.error('Locker key already exists, add `&force=true` to overwrite')
+    return
+  }
+
+  const convex = useConvexClient()
+  const { data: threads, isFinished } = useIDBKeyval<Doc<'threads'>[]>('chat/threads', [])
+
+  try {
     const thread = await convex.query(api.threads.get, { threadId, lockerKey })
 
     await until(isFinished).toBeTruthy()
@@ -26,6 +35,9 @@ export default defineNuxtRouteMiddleware(async (to) => {
     else
       threads.value.unshift(thread)
 
-    setLockerKey(threadId, String(to.query.lockerKey))
+    setLockerKey(threadId, lockerKey)
+  }
+  catch (error) {
+    console.error('Failed to accept the shared thread:', error)
   }
 })
