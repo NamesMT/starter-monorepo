@@ -39,6 +39,8 @@ const hostedProvider = computed<HostedProvider>(() => ({
     'openrouter/free': {
       enabled: true,
       attachments: ['image/*', 'application/pdf'],
+      // Tools are opt-in per model; enable them for the hosted default.
+      tools: true,
     },
   },
   default: 'openrouter/free',

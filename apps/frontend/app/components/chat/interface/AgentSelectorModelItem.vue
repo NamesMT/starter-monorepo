@@ -15,11 +15,9 @@ const chatContext = useChatContext()
 <template>
   <DropdownMenuItem @select="chatContext.agentsSettings.value.selectedAgent = `${provider}/${model}`">
     <span>{{ model }}</span>
-    <DropdownMenuShortcut
-      v-if="modelSettings?.attachments?.length"
-      class="text-base"
-    >
-      📎
+    <DropdownMenuShortcut class="text-base flex gap-1">
+      <span v-if="modelSettings?.attachments?.length">📎</span>
+      <span v-if="modelSettings?.tools">🔧</span>
     </DropdownMenuShortcut>
   </DropdownMenuItem>
 </template>
