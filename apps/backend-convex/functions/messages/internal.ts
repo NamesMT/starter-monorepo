@@ -40,6 +40,14 @@ export const updateStreamingMessage = internalMutation({
     content: v.string(),
     isStreaming: v.optional(v.boolean()),
     lockerKey: v.optional(v.string()),
+    toolInvocations: v.optional(v.array(v.object({
+      id: v.string(),
+      name: v.string(),
+      input: v.optional(v.any()),
+      output: v.optional(v.any()),
+      error: v.optional(v.string()),
+      state: v.union(v.literal('call'), v.literal('result'), v.literal('error')),
+    }))),
   },
   handler: async (ctx, args) => {
     const message = await ctx.db.get(args.messageId)
@@ -49,6 +57,7 @@ export const updateStreamingMessage = internalMutation({
     await ctx.db.patch(args.messageId, clearUndefined({
       content: args.content,
       isStreaming: args.isStreaming,
+      toolInvocations: args.toolInvocations,
     }))
   },
 })

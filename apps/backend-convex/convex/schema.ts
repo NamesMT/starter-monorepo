@@ -15,6 +15,16 @@ const attachmentValidator = v.object({
   size: v.number(),
 })
 
+/** A tool invocation made by the model while producing an assistant message. */
+const toolInvocationValidator = v.object({
+  id: v.string(),
+  name: v.string(),
+  input: v.optional(v.any()),
+  output: v.optional(v.any()),
+  error: v.optional(v.string()),
+  state: v.union(v.literal('call'), v.literal('result'), v.literal('error')),
+})
+
 const aiChatTables = {
   threads: defineTable({
     // The initial session ID of the user that created the thread, warning: also used as "password" to list threads for now.
@@ -50,6 +60,10 @@ const aiChatTables = {
      * the bytes live in Convex file storage and are resolved to URLs by queries.
      */
     attachments: v.optional(v.array(attachmentValidator)),
+    /**
+     * Tools the model invoked while producing this assistant message (issues #41/#42).
+     */
+    toolInvocations: v.optional(v.array(toolInvocationValidator)),
   })
     .index('by_thread', ['threadId'])
     .index('by_thread_and_timestamp', ['threadId', 'timestamp'])

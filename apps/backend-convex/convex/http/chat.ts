@@ -1,4 +1,4 @@
-import type { ChatAttachment, ChatStreamMetadata, PersonalContext } from '@local/common/src/chat'
+import type { ChatAttachment, ChatStreamMetadata, ChatToolInvocation, PersonalContext } from '@local/common/src/chat'
 import type { UserContent } from 'ai'
 import type { HonoWithConvex } from 'convex-helpers/server/hono'
 import type { Id } from '../_generated/dataModel'
@@ -7,7 +7,7 @@ import RateLimiter, { MINUTE } from '@convex-dev/rate-limiter'
 import { zValidator } from '@hono/zod-validator'
 import { CHAT_ATTACHMENT_LIMITS, matchesAttachmentAccept } from '@local/common/src/chat'
 import { randomStr, sleep } from '@namesmt/utils'
-import { createUIMessageStreamResponse, streamText, toUIMessageStream } from 'ai'
+import { createUIMessageStreamResponse, stepCountIs, streamText, toUIMessageStream } from 'ai'
 import { ConvexError } from 'convex/values'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
@@ -16,11 +16,24 @@ import { z } from 'zod'
 import { getAgentModel, getModelAttachmentAccept, withProviderErrorAsText } from '../../utils/agent'
 import { getErrorMessage, normalizePossibleSDKError } from '../../utils/error'
 import { buildAiSdkMessage, buildSystemPrompt } from '../../utils/message'
+import { chatTools } from '../../utils/tools'
 import { api, components, internal } from '../_generated/api'
 
 const rateLimiter = new RateLimiter(components.rateLimiter, {
   aiChat: { kind: 'token bucket', rate: 10, period: MINUTE, capacity: 3 },
 })
+
+/** Maximum tool-calling steps per response (issue #42). */
+const MAX_TOOL_STEPS = 5
+
+/** Inserts or updates a tool invocation, keyed by its tool call id. */
+function upsertToolInvocation(invocations: ChatToolInvocation[], invocation: ChatToolInvocation) {
+  const existing = invocations.find(entry => entry.id === invocation.id)
+  if (existing)
+    Object.assign(existing, invocation)
+  else
+    invocations.push(invocation)
+}
 
 /** Attachment reference as sent by the client after uploading to Convex file storage. */
 const attachmentReferenceSchema = z.object({
@@ -375,6 +388,7 @@ function respondWithAiStream({
   userMessageId,
 }: RespondWithAiStreamArgs) {
   let aiResponse = ''
+  const toolInvocations: ChatToolInvocation[] = []
 
   let pendingSave = false
   function doSave() {
@@ -385,6 +399,7 @@ function respondWithAiStream({
         await ctx.runMutation(internal.messages.updateStreamingMessage, {
           messageId: streamingMessageId,
           content: aiResponse,
+          toolInvocations: toolInvocations.length ? toolInvocations : undefined,
           lockerKey,
         }).finally(() => {
           pendingSave = false
@@ -411,9 +426,42 @@ function respondWithAiStream({
     temperature: modelOptions.temperature,
     topP: modelOptions.topP,
     maxOutputTokens: modelOptions.maxOutputTokens,
+    // Built-in tools are opt-in per model; multi-step tool loops are capped (issue #42).
+    tools: modelOptions.tools ? chatTools : undefined,
+    stopWhen: modelOptions.tools ? stepCountIs(MAX_TOOL_STEPS) : undefined,
     onChunk: ({ chunk }) => {
       if (chunk.type === 'text-delta' && chunk.text) {
         aiResponse += chunk.text
+        doSave()
+        return
+      }
+
+      if (chunk.type === 'tool-call') {
+        toolInvocations.push({ id: chunk.toolCallId, name: chunk.toolName, input: chunk.input, state: 'call' })
+        doSave()
+        return
+      }
+
+      if (chunk.type === 'tool-result') {
+        upsertToolInvocation(toolInvocations, {
+          id: chunk.toolCallId,
+          name: chunk.toolName,
+          input: chunk.input,
+          output: chunk.output,
+          state: 'result',
+        })
+        doSave()
+        return
+      }
+
+      if (chunk.type === 'tool-error') {
+        upsertToolInvocation(toolInvocations, {
+          id: chunk.toolCallId,
+          name: chunk.toolName,
+          input: chunk.input,
+          error: getErrorMessage(chunk.error as Error) ?? 'Tool call failed',
+          state: 'error',
+        })
         doSave()
       }
     },

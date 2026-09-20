@@ -37,11 +37,12 @@ const chatContext = useChatContext()
                   </CardTitle>
                 </CardHeader> -->
         <CardContent class="px-4 py-3 [&_.prose-hr]:(border-accent-foreground!)">
-          <div v-if="message.isStreaming && !message.content" class="flex gap-2">
+          <div v-if="message.isStreaming && !message.content && !message.toolInvocations?.length" class="flex gap-2">
             <div>{{ $t('generating') }}</div>
             <div class="spinner h-5 w-5" />
           </div>
-          <MDC v-else :key="String(message.isStreaming)" :value="message.content" class="only-child:[&>.prose-p]:my-0" />
+          <MDC v-else-if="message.content" :key="String(message.isStreaming)" :value="message.content" class="only-child:[&>.prose-p]:my-0" />
+          <ChatMessageToolInvocations :invocations="message.toolInvocations ?? []" />
           <ChatMessageAttachments :attachments="message.attachments ?? []" />
           <div class="hidden first:block">
             <Skeleton

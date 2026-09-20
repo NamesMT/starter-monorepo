@@ -337,7 +337,7 @@ async function pollToMessage({ message, resumeStreamId, threadId = threadIdRef.v
     messageId: message._id,
     lockerKey: getLockerKey(threadId),
   })
-  Object.assign(message, objectPick(messageFromConvex, ['content', 'context', 'isStreaming']))
+  Object.assign(message, objectPick(messageFromConvex, ['content', 'context', 'isStreaming', 'toolInvocations']))
 
   if (message.isStreaming) {
     // Wraps in a kontroller to make sure there is only one stream on the same message
@@ -384,6 +384,35 @@ function resolveStreamingMessage(message: CustomMessage) {
       return byStream
   }
   return message
+}
+
+interface ToolInvocationPatch {
+  id: string
+  name?: string
+  input?: unknown
+  output?: unknown
+  error?: string
+  state: 'call' | 'result' | 'error'
+}
+
+/** Inserts or updates a tool invocation on a message, keyed by the tool call id. */
+function upsertToolInvocation(target: CustomMessage, patch: ToolInvocationPatch) {
+  const invocations = (target.toolInvocations ??= [])
+  const existing = invocations.find(invocation => invocation.id === patch.id)
+
+  if (existing) {
+    Object.assign(existing, patch, { name: patch.name ?? existing.name })
+    return
+  }
+
+  invocations.push({
+    id: patch.id,
+    name: patch.name ?? 'tool',
+    input: patch.input,
+    output: patch.output,
+    error: patch.error,
+    state: patch.state,
+  })
 }
 
 async function streamToMessage({ message, userMessage, content, attachments, streamId, resumeStreamId }: StreamToMessageArgs) {
@@ -451,6 +480,35 @@ async function streamToMessage({ message, userMessage, content, attachments, str
         }
         case 'text-delta':
           streamedText += chunk.delta
+          break
+        case 'tool-input-start':
+          upsertToolInvocation(resolveStreamingMessage(message), {
+            id: chunk.toolCallId,
+            name: chunk.toolName,
+            state: 'call',
+          })
+          break
+        case 'tool-input-available':
+          upsertToolInvocation(resolveStreamingMessage(message), {
+            id: chunk.toolCallId,
+            name: chunk.toolName,
+            input: chunk.input,
+            state: 'call',
+          })
+          break
+        case 'tool-output-available':
+          upsertToolInvocation(resolveStreamingMessage(message), {
+            id: chunk.toolCallId,
+            output: chunk.output,
+            state: 'result',
+          })
+          break
+        case 'tool-output-error':
+          upsertToolInvocation(resolveStreamingMessage(message), {
+            id: chunk.toolCallId,
+            error: chunk.errorText,
+            state: 'error',
+          })
           break
         case 'error':
           streamedText += `\n\nError: ${chunk.errorText}`
