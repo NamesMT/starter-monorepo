@@ -30,4 +30,13 @@ const generate = computed(
   font-weight: 600;
   margin: 1rem 0 0.5em;
 }
+
+.prose-h4 > a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.prose-h4 > a:hover {
+  text-decoration: underline;
+}
 </style>

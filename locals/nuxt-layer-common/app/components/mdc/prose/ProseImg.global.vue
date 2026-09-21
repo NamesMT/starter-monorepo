@@ -59,9 +59,7 @@ const refinedSrc = computed(() => {
   font-size: 0.75rem;
   font-weight: 500;
 }
-</style>
-
-<style>
+/* inline images (e.g. badges) inside prose links */
 .prose-a .prose-img-wrapper {
   display: inline-block;
   margin: 0;

@@ -186,9 +186,7 @@ onUnmounted(() => {
 .prose-pre-card [name='code-wrapper']:hover > [name='collapse-button'] {
   display: flex;
 }
-</style>
-
-<style>
+/* code area */
 .prose-pre {
   margin: 0;
   white-space: normal;
@@ -200,53 +198,53 @@ onUnmounted(() => {
   max-height: v-bind(codeBlockMaxHeight);
 }
 
-.prose-pre code {
+.prose-pre :deep(code) {
   white-space: pre;
   display: block;
   font-family: var(--mdc-code-family);
 }
 
-.prose-pre code .line {
+.prose-pre :deep(code .line) {
   display: block;
   position: relative;
   padding: 0 1rem;
 }
 
-.prose-pre code .line.highlight {
+.prose-pre :deep(code .line.highlight) {
   background-color: var(--mdc-muted-80);
 }
 
 /* line diff */
-.prose-pre code .line.diff.remove {
+.prose-pre :deep(code .line.diff.remove) {
   background-color: #f43f5e24;
   opacity: 0.6;
 }
 
-.prose-pre code .line.diff.add {
+.prose-pre :deep(code .line.diff.add) {
   background-color: #10b98124;
 }
 
-.prose-pre code .line.diff.remove::before {
+.prose-pre :deep(code .line.diff.remove)::before {
   content: '-';
   color: #c23a3a;
   position: absolute;
   left: 4px;
 }
 
-.prose-pre code .line.diff.add::before {
+.prose-pre :deep(code .line.diff.add)::before {
   content: '+';
   color: #23b73c;
   position: absolute;
   left: 4px;
 }
 
-/* disable language-md line diff  */
-.prose-pre.language-md code .line.diff {
+/* disable line diff for markdown-family fences, their content is markdown rather than a diff */
+.prose-pre:is(.language-md, .language-mdc, .language-markdown) :deep(code .line.diff) {
   background-color: inherit !important;
   opacity: inherit !important;
 }
 
-.prose-pre.language-md code .line.diff::before {
+.prose-pre:is(.language-md, .language-mdc, .language-markdown) :deep(code .line.diff)::before {
   content: none !important;
 }
 </style>

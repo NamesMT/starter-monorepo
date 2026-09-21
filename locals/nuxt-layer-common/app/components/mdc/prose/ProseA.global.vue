@@ -23,6 +23,7 @@ const refinedTarget = computed(() => {
 
 <style scoped>
 .prose-a {
+  color: inherit;
   text-decoration: underline dotted;
   text-underline-offset: 4px;
 }
