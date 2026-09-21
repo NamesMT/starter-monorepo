@@ -1,6 +1,83 @@
 # Changelog
 
 
+## v5.0.0
+
+[compare changes](https://github.com/NamesMT/starter-monorepo/compare/v4.4.0...v5.0.0)
+
+### 🚀 Enhancements
+
+- **frontend:** ⚠️  Replace @namesmt/vue-query-nuxt with @peterbud/nuxt-query ([8f420cb](https://github.com/NamesMT/starter-monorepo/commit/8f420cb))
+- **devcontainer:** Migrate out of Alpine to Arch Linux glibc image ([768828a](https://github.com/NamesMT/starter-monorepo/commit/768828a))
+- **chat:** Per-model configuration, generation profiles and personal context ([6d9ee7b](https://github.com/NamesMT/starter-monorepo/commit/6d9ee7b))
+- **chat:** Built-in tools with multi-step tool calling ([437d838](https://github.com/NamesMT/starter-monorepo/commit/437d838))
+
+### 🔥 Performance
+
+- **chat:** Cut streaming render cost and stream bloat ([ce585cc](https://github.com/NamesMT/starter-monorepo/commit/ce585cc))
+
+### 🩹 Fixes
+
+- **frontend:** Register layout head outside the render scope, re-enable NuxtLoadingIndicator ([59484b0](https://github.com/NamesMT/starter-monorepo/commit/59484b0))
+- Correctness and lint cleanups found while upgrading ([d54abf2](https://github.com/NamesMT/starter-monorepo/commit/d54abf2))
+- **frontend:** Stop `nuxtSiteConfig.name` leaking into the page title ([9752ed2](https://github.com/NamesMT/starter-monorepo/commit/9752ed2))
+- **chat:** Rebuild message streaming and attachments ([a893257](https://github.com/NamesMT/starter-monorepo/commit/a893257))
+- **frontend:** Declare the chat page title meta key ([5ff99b4](https://github.com/NamesMT/starter-monorepo/commit/5ff99b4))
+- **chat:** Enable tools for the hosted model and surface the capability ([270e3f8](https://github.com/NamesMT/starter-monorepo/commit/270e3f8))
+- **frontend:** Make clipboard copy report real success ([34290d6](https://github.com/NamesMT/starter-monorepo/commit/34290d6))
+- **frontend:** Stop prose table styles from resetting every border ([1dc7c8f](https://github.com/NamesMT/starter-monorepo/commit/1dc7c8f))
+- **frontend:** Scope prose anchor styles so they stop leaking app-wide ([87146cc](https://github.com/NamesMT/starter-monorepo/commit/87146cc))
+- Multi root errors ([f457909](https://github.com/NamesMT/starter-monorepo/commit/f457909))
+
+### 💅 Refactors
+
+- Add `GlobalProvider.vue` top-level wrap ([353a584](https://github.com/NamesMT/starter-monorepo/commit/353a584))
+- Centralize locales and clean up dead code ([7ac089c](https://github.com/NamesMT/starter-monorepo/commit/7ac089c))
+- **i18n:** Migrate backend to @i18n-micro/core and frontend to nuxt-i18n-micro ([bdc1c94](https://github.com/NamesMT/starter-monorepo/commit/bdc1c94))
+- **backend:** Move `translate` locale into an options argument ([cbbe692](https://github.com/NamesMT/starter-monorepo/commit/cbbe692))
+- **frontend:** Extract shared Nuxt layer and add frontend-second ([15ce0ed](https://github.com/NamesMT/starter-monorepo/commit/15ce0ed))
+
+### 📖 Documentation
+
+- README ([b6d94cb](https://github.com/NamesMT/starter-monorepo/commit/b6d94cb))
+- Add AGENTS.md ([e8d54d4](https://github.com/NamesMT/starter-monorepo/commit/e8d54d4))
+- Tighten and align the READMEs and AGENTS.md ([01f34cb](https://github.com/NamesMT/starter-monorepo/commit/01f34cb))
+
+### 🏡 Chore
+
+- Add sample to exports r2 client with `r2-main` provider ([5315a65](https://github.com/NamesMT/starter-monorepo/commit/5315a65))
+- Update deps ([67db53c](https://github.com/NamesMT/starter-monorepo/commit/67db53c))
+- Update deps ([403a356](https://github.com/NamesMT/starter-monorepo/commit/403a356))
+- Adjust free models ([6846ab7](https://github.com/NamesMT/starter-monorepo/commit/6846ab7))
+- Update deps ([3d60f3a](https://github.com/NamesMT/starter-monorepo/commit/3d60f3a))
+- Update deps minor ([8b93d6b](https://github.com/NamesMT/starter-monorepo/commit/8b93d6b))
+- Upgrade some major deps `@nuxtjs/` ([a43fe08](https://github.com/NamesMT/starter-monorepo/commit/a43fe08))
+- Upgrade some major deps ([cff8347](https://github.com/NamesMT/starter-monorepo/commit/cff8347))
+- Upgrade some major deps ([e888079](https://github.com/NamesMT/starter-monorepo/commit/e888079))
+- Upgrade pnpm to 11 and align node to 24 ([4b69ecb](https://github.com/NamesMT/starter-monorepo/commit/4b69ecb))
+- Upgrade pnpm to 12 ([2701185](https://github.com/NamesMT/starter-monorepo/commit/2701185))
+- Update `localcert` ([f34404c](https://github.com/NamesMT/starter-monorepo/commit/f34404c))
+- **vscode:** Migrate to the new js/ts.* settings keys ([cae9c27](https://github.com/NamesMT/starter-monorepo/commit/cae9c27))
+- Update README ([9ce1926](https://github.com/NamesMT/starter-monorepo/commit/9ce1926))
+
+### ✅ Tests
+
+- **backend:** Add runtime API and helper tests ([e14d42a](https://github.com/NamesMT/starter-monorepo/commit/e14d42a))
+
+### 🤖 CI
+
+- Bump workflow actions and align CI Node with engines ([8645d78](https://github.com/NamesMT/starter-monorepo/commit/8645d78))
+- Standardize workflow action versions (checkout/setup-node v4) ([05b5af8](https://github.com/NamesMT/starter-monorepo/commit/05b5af8))
+
+#### ⚠️ Breaking Changes
+
+- **frontend:** ⚠️  Replace @namesmt/vue-query-nuxt with @peterbud/nuxt-query ([8f420cb](https://github.com/NamesMT/starter-monorepo/commit/8f420cb))
+
+### ❤️ Contributors
+
+- NamesMT ([@NamesMT](https://github.com/NamesMT))
+- Trung Dang ([@NamesMT](https://github.com/NamesMT))
+
 ## v4.4.0
 
 [compare changes](https://github.com/NamesMT/starter-monorepo/compare/v4.3.0...v4.4.0)
