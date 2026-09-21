@@ -75,9 +75,7 @@ So, if you use SSR, you should implement another auth solution.
 
 #### AI / LLM Chat
 
-> Done as an application for [**T3 Chat Cloneathon**](https://cloneathon.t3.chat/) competition in 1 week, with no prior AI SDK and chat streams experience, but I think I did an amazing job 🫡!
-> 
-> The focus of the project is for broad, easy personal self-host and family/friends group-use adoption, prioritizing easy-to-access UI/UX.
+> The focus of the project is for broad, easy personal self-host and family/friends group-use adoption, prioritizing easy-to-access UI/UX, and completely always free cloud plans.
 
 <details>
   <summary>A simple & friendly LLM Chat system, but still packing some powers, featuring:</summary>
