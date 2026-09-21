@@ -76,19 +76,20 @@ MONOREPO_ROOT_NAME="<your-project-name-here>"
 
 **2. Remove Demo Applications? (`REMOVE_DEMO_APPS`)**
 
-* > This template includes the following demo apps and libraries: `apps/frontend`, `apps/backend`, `apps/backend-convex`.  
+* > This template includes the following demo apps and libraries: `apps/frontend`, `apps/frontend-second`, `apps/backend`, `apps/backend-convex` and the shared Nuxt layer `locals/nuxt-layer-common`.  
   > Input the name of the apps that you want to remove.
-  * **Options**: should be a comma-separated list of choices, e.g., `frontend, backend, backend-convex` will removes the 3 listed apps.
+  * **Options**: should be a comma-separated list of choices, e.g., `frontend, frontend-second, backend, backend-convex` will removes the listed apps.
   <!-- Context for Agent:
     Here is some additional instructions to help you remove the apps:
-    * `frontend`:
-      * Remove `frontend` from `package.json`.
-      * Remove `frontendNuxtConfig` from `eslint.config.js`.
+    * `frontend` / `frontend-second`:
+      * Remove the app from the root `package.json` devDependencies (e.g. `frontend`) and update any `--filter=`/script references (e.g. the `devSST` script, `.github/workflows/frontend-to-gh-pages.yml`, `wrangler.jsonc`).
+      * Remove `frontendNuxtConfig` from `eslint.config.js` **only if no frontend app remains**.
+      * Remove `locals/nuxt-layer-common` too when no frontend app remains.
     * `backend`:
-      * Remove `backend` from `apps/frontend/package.json`, `apps/backend-convex/package.json`, `apps/frontend/tsconfig.json`.
+      * Remove `backend` from `apps/frontend/package.json`, `apps/frontend-second/package.json`, `apps/backend-convex/package.json`, `apps/frontend/tsconfig.json`, `apps/frontend-second/tsconfig.json`.
       * Remove the config block for `apps/backend/**` in `eslint.config.js`.
     * `backend-convex`:
-      * Remove `backend-convex` from `apps/frontend/package.json`, `apps/backend/package.json`, `apps/frontend/tsconfig.json`.
+      * Remove `backend-convex` from `apps/frontend/package.json`, `apps/frontend-second/package.json`, `apps/backend/package.json`, `apps/frontend/tsconfig.json`, `apps/frontend-second/tsconfig.json`.
       * Remove the config block for `apps/backend-convex/convex/**` in `eslint.config.js`.
     * **ANY APP**: apply to removal of every app.
       * Remove sections related to it in `README.md` and `Memory Bank` (if present).
@@ -131,10 +132,10 @@ TARGET_PROJECT_GOAL_AND_DESCRIPTION="""
 
 * > Specify whether your final project goal includes building *any* kind of frontend application:
   * **Value Inferrence:**
-    * If you kept the demo `frontend`, this is strictly automatically `true`.
-  * **When to Specify/Ask:** This setting is only relevant if you have removed the demo `frontend` (chosen `frontend` or `both`).
+    * If you kept any demo frontend app (`frontend` / `frontend-second`), this is strictly automatically `true`.
+  * **When to Specify/Ask:** This setting is only relevant if you have removed the demo frontend apps (chosen `frontend, frontend-second` or `both`).
   * **Effect:**
-    * If `false`: Agent will remove frontend-specific configurations like the root `uno.config.ts` and related ESLint settings/plugins.
+    * If `false`: Agent will remove frontend-specific configurations like the frontend apps' `uno.config.ts`, `locals/nuxt-layer-common` and related ESLint settings/plugins.
 
 ```text
 # TARGET_HAVE_FRONTEND="<true-or-false>"
@@ -147,9 +148,9 @@ TARGET_PROJECT_GOAL_AND_DESCRIPTION="""
 * **(Only need to ask if `TARGET_HAVE_FRONTEND` is true)**.
 * > Specify whether your target frontend application (if any) will use the Vue framework.
   * **Value Inferrence:**
-    * If you kept the demo `frontend`, this is strictly automatically `true`.
+    * If you kept any demo frontend app (`frontend` / `frontend-second`), this is strictly automatically `true`.
     * If `TARGET_HAVE_FRONTEND` is `false`, this is automatically `false`.
-  * **When to Specify/Ask:** This setting is only relevant if you have removed the demo `frontend`, and `TARGET_HAVE_FRONTEND` is `true`.
+  * **When to Specify/Ask:** This setting is only relevant if you have removed the demo frontend apps, and `TARGET_HAVE_FRONTEND` is `true`.
   * **Effect:**
     * If `false`, Agent will remove Vue-specific configurations (like ESLint configs) and the `locals/common-vue` directory.
 

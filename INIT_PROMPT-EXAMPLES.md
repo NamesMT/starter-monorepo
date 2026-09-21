@@ -18,7 +18,7 @@ REMOVE_SST="true"
 
 # Example 2: Removing demo apps and SST
 MONOREPO_ROOT_NAME="my-cli-tool"
-REMOVE_DEMO_APPS="frontend,backend"
+REMOVE_DEMO_APPS="frontend,frontend-second,backend"
 TARGET_PROJECT_GOAL_AND_DESCRIPTION="""
 Build a cool CLI tool.
 """
@@ -33,7 +33,7 @@ REMOVE_SST="true"
 
 # Example 3: Removing demo apps, target is a non-Vue frontend + Go backend, no SST
 MONOREPO_ROOT_NAME="my-react-go-fullstack"
-REMOVE_DEMO_APPS="frontend,backend"
+REMOVE_DEMO_APPS="frontend,frontend-second,backend"
 TARGET_PROJECT_GOAL_AND_DESCRIPTION="""
 Build a fullstack that uses React frontend and Go backend.
 """
@@ -50,7 +50,7 @@ REMOVE_SST="true"
 
 # Example 4: Keeping demo backend (uses SST), replacing demo frontend with own Vue app
 MONOREPO_ROOT_NAME="my-custom-vue-fullstack"
-REMOVE_DEMO_APPS="frontend"
+REMOVE_DEMO_APPS="frontend,frontend-second"
 TARGET_PROJECT_GOAL_AND_DESCRIPTION="""
 Build a fullstack that uses simple Vue
 """

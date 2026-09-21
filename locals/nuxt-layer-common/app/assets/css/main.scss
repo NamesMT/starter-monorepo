@@ -1,0 +1,40 @@
+@layer reset, base; // , una-base, fonts, properties, theme, preflights, icons, typography, shortcuts, default;
+@import '@unocss/reset/tailwind.css' layer(reset);
+
+@import './palette.css';
+@import './shadcn.css';
+@import './scrollbar.css';
+@import './mdc.css';
+
+html {
+  --at-apply: 'bg-surface-50 text-surface-800 transition-background-color duration-500';
+}
+
+html.dark {
+  --at-apply: 'bg-surface-900 text-surface-200';
+}
+
+pre,
+code {
+  --at-apply: 'font-mono';
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-left-color: var(--primary-500);
+  animation: spin 1s ease infinite;
+}
+
+.dark .spinner {
+  border-left-color: var(--primary-400);
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

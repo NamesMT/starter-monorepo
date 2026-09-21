@@ -1,3 +1,5 @@
+<!-- eslint-disable markdown/no-multiple-h1 -->
+
 <div align="center">
 
 <h1>Starter Monorepo</h1>
@@ -17,6 +19,7 @@
       * [AI / LLM Chat](#ai--llm-chat)
     * [Apps and Libraries](#apps-and-libraries)
       * [`frontend`: a Nuxt 4 app.](#frontend-a-nuxt-4-app)
+      * [`frontend-second`: a minimal sample app consuming the shared layer.](#frontend-second-a-minimal-sample-app-consuming-the-shared-layer)
       * [`backend`: a Hono🔥 app.](#backend-a-hono-app)
       * [`backend-convex`: a Convex app.](#backend-convex-a-convex-app)
     * [Local packages](#local-packages)
@@ -108,6 +111,15 @@ So, if you use SSR, you should implement another auth solution.
     * If the `frontend` and `backend` are on different domains then the backend will be called directly without proxy.
     * This could be configured in frontend's [`app.config.ts`](./apps/frontend/app/app.config.ts)
 
+The shared base between Nuxt apps lives in [`@local/nuxt-layer-common`](./locals/nuxt-layer-common/README.md):
+modules, UnoCSS design system, shadcn-vue UI kit, layouts, plugins, composables, utils and the
+`/api/*` dev proxy are all inherited via `extends`. See the layer's README for the authoring rules.
+
+#### [`frontend-second`](./apps/frontend-second): a minimal sample app consuming the shared layer.
+  * Boots on `127.0.0.1:3301`, reuses [`frontend`](./apps/frontend)'s translation bucket and
+    inherits the layer's shell; it only adds its own pages, a component and `app.config`/`uno.config` overrides.
+  * Use it as the template when adding another frontend to the monorepo.
+
 #### [`backend`](./apps/backend): a [Hono🔥](https://hono.dev/) app.
 
 #### [`backend-convex`](./apps/backend-convex): a [Convex](https://convex.dev/) app.
@@ -116,9 +128,10 @@ So, if you use SSR, you should implement another auth solution.
 
 + [`@local/locales`](./locals/locales/README.md): a shared central locales/i18n data library powered by [**spreadsheet-i18n**](https://github.com/NamesMT/spreadsheet-i18n--mono).
   + 🌐✨🤖 **AUTOMATIC** localization with AI, powered by [**lingo.dev**](https://lingo.dev/), just `pnpm run i18n`.
-  + 🔄️ Hot-reload and automatic-reload supported, changes are reflected in apps (`frontend`, `backend`) instantly.
+  + 🔄️ Hot-reload and automatic-reload supported, changes are reflected in apps (`frontend`, `frontend-second`, `backend`) instantly.
 + `@local/common`: a shared library that can contain constants, functions, types.
 + `@local/common-vue`: a shared library that can contain components, constants, functions, types for vue-based apps.
++ [`@local/nuxt-layer-common`](./locals/nuxt-layer-common/README.md): the shared [Nuxt layer](https://nuxt.com/docs/4.x/guide/going-further/layers) extended by the frontend apps.
 + `tsconfig`: `tsconfig.json`s used throughout the monorepo.
 
 ### Utilities
@@ -143,7 +156,7 @@ If you just want a quick check out, without having to set up anything, you can u
 To develop all apps and packages, run the following command:  
 `pnpm run dev`
 
-By default, the access URL is set to: `127.0.0.1:3300`
+By default, the access URL is set to: `127.0.0.1:3300` (`frontend`); `frontend-second` boots on `127.0.0.1:3301`.
 
 For local development environment variables / secrets, create a copy of `.env.dev` to `.env.dev.local`.
 
@@ -153,7 +166,7 @@ For local development environment variables / secrets, create a copy of `.env.de
 
 * Initial one-time setup:
   * Config enviroment variables and secrets for `wrangler` (refer to Cloudflare's docs).
-  * Config `frontend/.env.dev.local`: set `NUXT_PUBLIC_BACKEND_URL=https://127.0.0.1:3310`
+  * Config `frontend/.env.dev.local`: set `NUXT_PUBLIC_BACKEND_URL=https://127.0.0.1:3450`
   * Run `mkdir -p apps/frontend/.output/public` so that wrangler does not error about assets folder not found
 * Run `pnpm dlx wrangler dev` in one terminal, and `pnpm run dev` in another terminal, you can develop with HMR just like normal! (`127.0.0.1:3300`).
 
@@ -166,7 +179,7 @@ For local development environment variables / secrets, create a copy of `.env.de
   * Run `build:workerdLocal` script for `frontend` to generate SSG assets
   * Close the `backend` server
 * (Optional) Run the convex dev server if you use convex.
-* Run `pnpm dlx wrangler dev` to start wrangler dev server, and you can connect via `127.0.0.1:3310`.
+* Run `pnpm dlx wrangler dev` to start wrangler dev server, and you can connect via `127.0.0.1:3450`.
   * The included Dev Container uses a glibc-based Arch Linux image (`namesmt/linux-stuff:arch-node-dev`), so `workerd` works out of the box. If you swap in another base image, note that `workerd` does not work with Alpine (musl).
 
 #### IMPORTANT:
@@ -177,7 +190,7 @@ For the best development experience, for VSCode and its forks, you should use th
 
 * You can add your custom deploy instructions in `deploy` script and `scripts/deploy.sh` in each app, it could be a full script that deploys to a platform, or necessary actions before for some platform integration deploys it, `frontend` will only start [build and deploy after all backends are deployed](./apps/frontend/turbo.json), to have context for SSG.
 * The repo also contains some deployment presets samples:
-  + [GitHub Action to deploy frontend to GitHub Pages](./.github/workflows/frontend-to-gh-pages.yml)
+  + [GitHub Action to deploy `frontend` to GitHub Pages](./.github/workflows/frontend-to-gh-pages.yml)
   + [Wrangler configured to deploy fullstack to Cloudflare](./wrangler.jsonc), just run `npx wrangler deploy` or connect and deploy it through the Cloudflare Dashboard.
     + Wrangler will deploy `backend` and `frontend` at the same time, which might cause `frontend` to have old context for SSG, you should trigger a redeploy in such case.
   + [Deploy backend to Lambda via SST](./sst.config.ts)

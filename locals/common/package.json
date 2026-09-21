@@ -9,6 +9,7 @@
     "quickcheck": "pnpm run lint && pnpm run test:types"
   },
   "dependencies": {
+    "dayjs": "catalog:",
     "pathe": "catalog:"
   },
   "devDependencies": {

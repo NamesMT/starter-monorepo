@@ -1,44 +1,33 @@
 # frontend
 
-**frontend** is the consumer-facing website for the project, powered by [Nuxt 4](https://nuxt.com/)
+**frontend** is the main consumer-facing website for the project, powered by [Nuxt 4](https://nuxt.com/).
 
-## Features:
+It extends the shared base layer [`@local/nuxt-layer-common`](../../locals/nuxt-layer-common/README.md),
+which provides the modules, design system (UnoCSS + shadcn-vue), layouts, plugins, composables,
+utils and the `/api/*` dev proxy. This app keeps only what is specific to it, e.g.:
 
-* Type-safe integration with [`backend`](../backend/README.md) via `hono/client`, with `rpcApi` plugin to support Nuxt context and local dev proxy, cors, AWS Lambda OAC
-* ESLint
-  * [@nuxt/eslint](https://eslint.nuxt.com/packages/module)
-  * [@antfu/eslint-config](https://github.com/antfu/eslint-config)
-* [UnoCSS](https://unocss.dev/guide/)
-  * UnoCSS is an atomic CSS engine, similar to Tailwind but is super fast and have some amazing features like automatically imported icons in pure CSS.
-* [VueUse](https://vueuse.org/)
-  * + [VueUse Motion](https://motion.vueuse.org/)
-* Tanstack Query
-  * Default is configured for client-side fetching usage, data is persisted to IndexedDB.
-* [Shadcn/vue](https://www.shadcn-vue.com/) - Components-first UI library
-  * Configured for UnoCSS with [hyoban/unocss-preset-shadcn](https://github.com/hyoban/unocss-preset-shadcn).
-  * To add components, use `pnpm shad-add <component>`
-* [ColorMode](https://github.com/nuxt-modules/color-mode)
-  * Dark and Light mode with auto detection made easy with Nuxt.
-* [NuxtImage](https://image.nuxt.com/)
-  * Automatic optimized images for the app, as well as placeholder support.
-* [Nuxt MDC](https://github.com/nuxt-modules/mdc)
-  * @credit [sunshj](https://github.com/sunshj/mdc) for the prose preset
-* [NuxtSVGO](https://github.com/cpsoinos/nuxt-svgo)
-  * Support for loading SVGs and optimizing them.
-* [Nuxt Booster](https://basics.github.io/nuxt-booster/)
-  * Lighthouse score optimizations
-* [nuxt-i18n-micro](https://s00d.github.io/nuxt-i18n-micro/)
-  * Lightweight internationalization (i18n) for Nuxt, with SEO headers.
-  * With [`@local/locales`](../../locals/locales/README.md) as the shared localization source.
-* [Nuxt SEO](https://nuxtseo.com/)
-  * All the boring SEO work for Nuxt done.
-* [Nuxt LLMs](https://github.com/nuxtlabs/nuxt-llms)
+* `app/components/Logo.vue`, `app/components/layouts/default/**` — brand shell
+* `app/layouts/default.vue` — overrides the layer's generic default layout
+* `app/assets/css/**`, `app/components/OgImage/Frame.takumi.vue`, `uno.config.ts` — this app's styling identity (loaded after the layer's defaults, so it wins)
+* `nuxt.config.ts` — env loading, site/runtime config, dev port, i18n translation dir
+
+## Features
+
+Most features are inherited from the layer; the highlights it enables here:
+
+* Type-safe integration with [`backend`](../backend/README.md) via `hono/client`, with the layer's `rpcApi` plugin (Nuxt context, local dev proxy, cors, AWS Lambda OAC)
+* [VueUse](https://vueuse.org/) + [VueUse Motion](https://motion.vueuse.org/)
+* Tanstack Query, configured client-side with IndexedDB persistence
+* [Shadcn/vue](https://www.shadcn-vue.com/) UI kit — shared from the layer; add components with `pnpm -F=@local/nuxt-layer-common shad-add <component>`
+* [UnoCSS](https://unocss.dev/guide/) design system — the layer provides the tokens/rules, this app owns the palette ([`app/assets/css/palette.css`](./app/assets/css/palette.css)) and can extend [`uno.config.ts`](./uno.config.ts)
+* [Nuxt Color Mode](https://github.com/nuxt-modules/color-mode), [Nuxt Image](https://image.nuxt.com/), [Nuxt MDC](https://github.com/nuxt-modules/mdc), [Nuxt SVGO](https://github.com/cpsoinos/nuxt-svgo), [nuxt-i18n-micro](https://s00d.github.io/nuxt-i18n-micro/) (with [`@local/locales`](../../locals/locales/README.md) as the shared localization source), [Nuxt SEO](https://nuxtseo.com/), [Nuxt LLMs](https://github.com/nuxtlabs/nuxt-llms)
+* ESLint via [@nuxt/eslint](https://eslint.nuxt.com/packages/module) + [@antfu/eslint-config](https://github.com/antfu/eslint-config)
 
 Check the [Nuxt documentation](https://nuxt.com/) to learn more.
 
 ## Development Server
 
-Please refer to monorepo root [README](../../README.md)
+Please refer to monorepo root [README](../../README.md).
 
 ## Production
 
@@ -46,4 +35,4 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
 
 ## Notes
 
-The `deploy` script does not depends on `build` (look [HERE](./turbo.json)), so, the `deploy` script should includes the build command for CI.
+The `deploy` script does not depend on `build` (look [HERE](./turbo.json)), so, the `deploy` script should include the build command for CI.

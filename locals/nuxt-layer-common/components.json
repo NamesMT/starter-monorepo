@@ -1,0 +1,15 @@
+{
+  "$schema": "https://shadcn-vue.com/schema.json",
+  "style": "default",
+  "typescript": true,
+  "tailwind": {
+    "config": "uno.config.ts",
+    "css": "app/assets/css/shadcn.css",
+    "baseColor": "slate",
+    "cssVariables": true
+  },
+  "aliases": {
+    "components": "#layers/nuxt-layer-common/app/lib/shadcn/components",
+    "utils": "#layers/nuxt-layer-common/app/lib/shadcn/utils"
+  }
+}

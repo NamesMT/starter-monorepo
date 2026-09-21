@@ -1,15 +1,15 @@
 <script setup lang="ts">
+import Input from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/input/Input.vue'
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
-} from '@/lib/shadcn/components/ui/sheet'
-import { Textarea } from '@/lib/shadcn/components/ui/textarea'
+} from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/sheet'
+import { useSidebar } from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/sidebar'
+import Switch from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/switch/Switch.vue'
+import { Textarea } from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/textarea'
 import { useChatGlobalsContext } from '~/components/chat/ChatGlobalsProvider.vue'
-import Input from '~/lib/shadcn/components/ui/input/Input.vue'
-import { useSidebar } from '~/lib/shadcn/components/ui/sidebar'
-import Switch from '~/lib/shadcn/components/ui/switch/Switch.vue'
 
 const { $auth } = useNuxtApp()
 const sidebarContext = useSidebar()

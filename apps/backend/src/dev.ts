@@ -13,6 +13,6 @@ serve({
     return app.fetch(request)
   },
   hostname: env.APP_DEV_host,
-  port: +(env.APP_DEV_port ?? '3301'),
+  port: +(env.APP_DEV_port ?? '3400'),
   tls: { cert: localcertPath, key: localcertKeyPath },
 })

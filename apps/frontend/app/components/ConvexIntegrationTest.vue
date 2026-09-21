@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { api } from 'backend-convex/convex/_generated/api'
-import { useToast } from '~/lib/shadcn/components/ui/toast'
+import { useToast } from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/toast'
 
 const { toast } = useToast()
 const { $apiClient } = useNuxtApp()

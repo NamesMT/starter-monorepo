@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    // Temporarily sets the `paths` block below for shadcn-vue, ref: https://github.com/unovue/shadcn-vue/issues/1340
+    "paths": {
+      "~/*": ["./app/*"],
+      "@/*": ["./app/*"],
+      "~~/*": ["./*"],
+      "@@/*": ["./*"]
+    }
+  },
+  // https://nuxt.com/docs/guide/concepts/typescript
+  "references": [
+    { "path": "./.nuxt/tsconfig.app.json" },
+    { "path": "./.nuxt/tsconfig.server.json" },
+    { "path": "./.nuxt/tsconfig.node.json" },
+    { "path": "../backend" }
+  ],
+  "files": []
+}

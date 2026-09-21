@@ -3,7 +3,7 @@ import type { AgentsSettings, HostedProvider } from '@local/common/src/chat'
 import type { Doc } from 'backend-convex/convex/_generated/dataModel'
 import { keyBy } from '@namesmt/utils'
 import { useIDBKeyval } from '@vueuse/integrations/useIDBKeyval'
-import { SidebarProvider } from '@/lib/shadcn/components/ui/sidebar'
+import { SidebarProvider } from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/sidebar'
 
 // Load all async data
 const { data: threads, isFinished: threadsLoaded } = useIDBKeyval<Doc<'threads'>[]>('chat/threads', [])

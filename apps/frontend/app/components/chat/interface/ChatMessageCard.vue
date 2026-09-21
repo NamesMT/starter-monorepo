@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import LiquidGlassDiv from '~/components/LiquidGlassDiv.vue'
+import LiquidGlassDiv from '#layers/nuxt-layer-common/app/components/LiquidGlassDiv.vue'
 
 const {
   message,

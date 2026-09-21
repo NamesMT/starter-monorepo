@@ -4,8 +4,8 @@ import type { HTMLAttributes } from 'vue'
 import { reactiveOmit, useCurrentElement } from '@vueuse/core'
 import { ListboxItem, useForwardPropsEmits, useId } from 'reka-ui'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
-import { cn } from '@/lib/shadcn/utils'
-import { useCommand, useCommandGroup } from '~/lib/shadcn/components/ui/command'
+import { useCommand, useCommandGroup } from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/command'
+import { cn } from '#layers/nuxt-layer-common/app/lib/shadcn/utils'
 
 const props = defineProps<ListboxItemProps & { class?: HTMLAttributes['class'] }>()
 const emits = defineEmits<ListboxItemEmits>()

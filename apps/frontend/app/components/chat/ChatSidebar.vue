@@ -4,12 +4,13 @@ import { keyBy } from '@namesmt/utils'
 import { api } from 'backend-convex/convex/_generated/api'
 import { useConvexQuery } from 'convex-vue'
 import { computed, ref } from 'vue'
+import { Button } from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/button'
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuTrigger,
-} from '@/lib/shadcn/components/ui/context-menu'
+} from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/context-menu'
 import {
   Sidebar,
   SidebarContent,
@@ -17,9 +18,8 @@ import {
   SidebarGroup,
   SidebarHeader,
   useSidebar,
-} from '@/lib/shadcn/components/ui/sidebar'
+} from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/sidebar'
 import { useChatGlobalsContext } from '~/components/chat/ChatGlobalsProvider.vue'
-import { Button } from '~/lib/shadcn/components/ui/button'
 
 const { $auth, $init } = useNuxtApp()
 const colorMode = useColorMode()

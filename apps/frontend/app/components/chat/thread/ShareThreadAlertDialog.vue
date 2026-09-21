@@ -10,15 +10,15 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/lib/shadcn/components/ui/alert-dialog'
+} from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/alert-dialog'
+import Button from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/button/Button.vue'
+import { useToast } from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/toast'
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from '@/lib/shadcn/components/ui/tooltip'
-import Button from '~/lib/shadcn/components/ui/button/Button.vue'
-import { useToast } from '~/lib/shadcn/components/ui/toast'
-import { copyTextToClipboard } from '~/utils/clipboard'
+} from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/tooltip'
+import { copyTextToClipboard } from '#layers/nuxt-layer-common/app/utils/clipboard'
 
 const {
   thread,

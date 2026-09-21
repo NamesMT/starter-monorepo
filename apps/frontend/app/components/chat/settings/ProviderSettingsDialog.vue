@@ -7,18 +7,18 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/lib/shadcn/components/ui/dialog'
-import { Input } from '@/lib/shadcn/components/ui/input'
-import { Label } from '@/lib/shadcn/components/ui/label'
-import Switch from '@/lib/shadcn/components/ui/switch/Switch.vue'
+} from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/dialog'
+import { Input } from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/input'
+import { Label } from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/label'
+import Switch from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/switch/Switch.vue'
 import {
   TagsInput,
   TagsInputInput,
   TagsInputItem,
   TagsInputItemDelete,
   TagsInputItemText,
-} from '@/lib/shadcn/components/ui/tags-input'
-import { Textarea } from '@/lib/shadcn/components/ui/textarea'
+} from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/tags-input'
+import { Textarea } from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/textarea'
 
 type ModelSettings = CommonProviderAgentsSettings['models'][string]
 

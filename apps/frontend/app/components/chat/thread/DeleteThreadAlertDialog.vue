@@ -10,12 +10,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/lib/shadcn/components/ui/alert-dialog'
+} from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/alert-dialog'
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from '@/lib/shadcn/components/ui/tooltip'
+} from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/tooltip'
 
 const {
   thread,

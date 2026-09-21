@@ -18,7 +18,7 @@
   "upload_source_maps": true,
   "dev": {
     "ip": "127.0.0.1",
-    "port": 3310,
+    "port": 3450,
     "local_protocol": "https"
   },
 
@@ -51,8 +51,8 @@
     "CONVEX_URL": "https://amiable-octopus-367.convex.cloud",
 
     // The block below is intended for local development
-    // "WORKOS_REDIRECT_URI": "https://127.0.0.1:3310/api/auth/callback",
-    // "FRONTEND_URL": "https://127.0.0.1:3310",
+    // "WORKOS_REDIRECT_URI": "https://127.0.0.1:3450/api/auth/callback",
+    // "FRONTEND_URL": "https://127.0.0.1:3450",
     // "CONVEX_URL": "https://dazzling-panther-382.convex.cloud",
 
     "NO_COLOR": "true"

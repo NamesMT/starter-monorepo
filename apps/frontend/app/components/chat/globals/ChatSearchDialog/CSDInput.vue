@@ -4,8 +4,8 @@ import type { HTMLAttributes } from 'vue'
 import { reactiveOmit } from '@vueuse/core'
 import { Slash } from 'lucide-vue-next'
 import { ListboxFilter, useForwardProps } from 'reka-ui'
-import { cn } from '@/lib/shadcn/utils'
-import { useCommand } from '~/lib/shadcn/components/ui/command'
+import { useCommand } from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/command'
+import { cn } from '#layers/nuxt-layer-common/app/lib/shadcn/utils'
 import { useCSDContext } from '../ChatSearchDialog.vue'
 
 defineOptions({

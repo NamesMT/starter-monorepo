@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useSidebar } from '@/lib/shadcn/components/ui/sidebar/utils'
-import { useToast } from '~/lib/shadcn/components/ui/toast'
+import { useSidebar } from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/sidebar/utils'
+import { useToast } from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/toast'
 
 const { toast } = useToast()
 const { ts } = useI18n()

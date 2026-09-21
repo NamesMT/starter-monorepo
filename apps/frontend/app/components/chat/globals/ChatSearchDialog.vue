@@ -2,7 +2,7 @@
 import { createContext } from 'reka-ui'
 import {
   CommandDialog,
-} from '@/lib/shadcn/components/ui/command'
+} from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/command'
 
 export const [useCSDContext, provideCSDContext] = createContext<{
   open: Ref<boolean>

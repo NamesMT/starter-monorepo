@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type Lenis from 'lenis'
 import type { ChatAttachmentManager } from '~/utils/chat/attachments'
-import { useSidebar } from '~/lib/shadcn/components/ui/sidebar'
-import { useToast } from '~/lib/shadcn/components/ui/toast'
+import { useSidebar } from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/sidebar'
+import { useToast } from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/toast'
 
 const props = defineProps<{
   nearTopBottom: Array<null | boolean | number>

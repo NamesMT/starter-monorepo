@@ -4,7 +4,7 @@ import {
   CommandGroup,
   CommandList,
   CommandSeparator,
-} from '@/lib/shadcn/components/ui/command'
+} from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/command'
 import { useCSDContext } from '../ChatSearchDialog.vue'
 
 const { threads } = useChatContext()

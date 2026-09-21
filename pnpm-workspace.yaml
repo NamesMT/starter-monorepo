@@ -44,7 +44,6 @@ catalog:
   '@ai-sdk/groq': ^4.0.40
   '@ai-sdk/openai': ^4.0.65
   '@ai-sdk/provider': ^4.0.13
-  '@ai-sdk/vue': ^4.0.97
   '@antfu/eslint-config': ^9.5.1
   '@aws-sdk/client-dynamodb': ^3.1129.0
   '@aws-sdk/client-s3': ^3.1129.0
@@ -73,6 +72,7 @@ catalog:
   '@types/node': ^26.5.1
   '@unocss/eslint-plugin': ^66.10.1
   '@unocss/nuxt': ^66.10.1
+  '@unocss/reset': ^66.10.1
   '@vitest/coverage-v8': ^5.0.0
   '@vue/tsconfig': ^0.9.1
   '@vueuse/core': ^14.4.0
@@ -94,7 +94,6 @@ catalog:
   embla-carousel: ^8.6.0
   embla-carousel-vue: ^8.6.0
   eslint: ^10.10.0
-  fetch-result-please: ^0.2.0
   grammy: ^1.46.0
   h3-proxy: ^1.13.0
   hono: ^4.13.7
@@ -107,15 +106,14 @@ catalog:
   lint-staged: ^17.5.0
   lucide-vue-next: ^1.0.0
   nuxt: ^4.5.2
-  nuxt-booster: ^3.3.2
   nuxt-i18n-micro: ^3.29.5
   nuxt-llms: ^0.2.0
   nuxt-svgo: 5.3.0
-  ohash: ^2.0.12
   pathe: ^2.0.3
   reka-ui: ^2.10.4
   sass: ^1.104.0
   shadcn-nuxt: ^2.8.2
+  shiki: ^4.4.3
   simple-git-hooks: ^2.14.0
   spreadsheet-i18n: ^0.3.11
   srvx: ^1.0.4
@@ -135,5 +133,6 @@ catalog:
   vitest: ^5.0.0
   vue: ^3.5.42
   vue-router: ^5.3.1
+  vue-sonner: ^2.0.9
   vue-tsc: ^3.3.11
   zod: ^4.6.1

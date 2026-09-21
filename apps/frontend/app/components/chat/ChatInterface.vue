@@ -9,7 +9,7 @@ import { api } from 'backend-convex/convex/_generated/api'
 import { useConvexClient } from 'convex-vue'
 import { countdown, debounce, getInstance, throttle } from 'kontroll'
 import { VueLenis } from 'lenis/vue'
-import { useToast } from '~/lib/shadcn/components/ui/toast'
+import { useToast } from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/toast'
 
 const { $auth } = useNuxtApp()
 const convex = useConvexClient()
