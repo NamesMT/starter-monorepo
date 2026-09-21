@@ -1,42 +1,31 @@
 # frontend-second
 
-A deliberately **minimal sample app** that consumes the shared Nuxt base layer
-[`@local/nuxt-layer-common`](../../locals/nuxt-layer-common/README.md).
+**frontend-second** is a minimal sample app, powered by [Nuxt 4](https://nuxt.com/), and serves as the reference for adding a new frontend.
 
-Use it as the reference for how a new frontend in this monorepo should be set up: the app only
-declares what differs from the base, and inherits everything else.
+It extends [`@local/nuxt-layer-common`](../../locals/nuxt-layer-common/README.md), which provides the
+modules, design system (UnoCSS + shadcn-vue), layouts, plugins, composables, utils and the `/api/*`
+dev proxy. This app keeps only what is specific to it, e.g.:
 
-## What it inherits from the layer
+* `app/pages/**` — `/` and `/showcase`
+* `app/components/SecondHero.vue` — an app-local component
+* `app/assets/css/**`, `app/components/OgImage/Frame.takumi.vue`, `uno.config.ts` — styling identity
+  (loaded after the layer's defaults, so it wins)
+* `nuxt.config.ts` — env loading, site/runtime config, dev port, i18n translation dir
 
-* Nuxt modules & config (UnoCSS, shadcn-vue, MDC, SEO, i18n, image, VueUse, TanStack Query, convex, ...)
-* `app.vue` shell, `default`/`basic` layouts, global providers (`GlobalProvider`, `LoadingScreen`, ...)
-* Plugins (`init`, `rpcApi`, `auth`, `initConvex`, `li18n`, `vueQuery`, `lenis`)
-* Composables (`useLocalState`, `useHHMMSSFormat`) and utils (`cn`, `hcParse`, `getRandomThoughtPlaceholder`, ...)
-* The shadcn-vue UI kit (`Button`, `Card`, `Input`, `Switch`, ...) — all auto-imported
-* The `/api/*` dev proxy to the backend
+## Features
 
-## What this app adds/overrides
+Most features are inherited from the layer; the highlights it enables here:
 
-| File | Purpose |
-| --- | --- |
-| `nuxt.config.ts` | `extends: ['@local/nuxt-layer-common']`, env loading, dev port `3301`, site/runtime config, i18n translation dir |
-| `app/assets/css/**` | This app's styling identity (palette, shadcn vars, scrollbar, MDC, main.scss) — loaded after the layer's defaults, so it wins |
-| `app/components/OgImage/Frame.takumi.vue` | This app's OG-image frame (overrides the layer's default) |
-| `app/pages/index.vue` | Uses layer auto-imports (UI kit, composables, utils, i18n) |
-| `app/pages/showcase.vue` | Imports a layer component via `#layers/nuxt-layer-common/app/...` |
-| `app/components/SecondHero.vue` | An app-local component |
-| `uno.config.ts` | Re-exports the layer's shared UnoCSS design system |
-| `public/favicon.svg` | App-local static asset |
+* `app/pages/showcase.vue` — the layer's `LiquidGlassDiv` over a high-frequency backdrop, plus Sonner toasts (the layer's `sonner` kit)
+* The layer's shadcn-vue UI kit (`Button`, `Card`, `Input`, `Switch`, ...), all auto-imported
+* Layer auto-imports for composables/utils (`useLocalState`, `useHHMMSSFormat`, `cn`, `getRandomThoughtPlaceholder`) and i18n
 
-## Develop
+Check the [Nuxt documentation](https://nuxt.com/) to learn more.
 
-From the repository root:
+## Development Server
 
-```bash
-pnpm run dev            # all apps (frontend-second boots on 127.0.0.1:3301)
-# or just this app:
-pnpm -F=frontend-second run dev
-```
+Please refer to monorepo root [README](../../README.md).
 
-The dev server uses the shared HTTPS `localcert` from `@local/common/dev`, so open
-<https://127.0.0.1:3301>.
+## Notes
+
+Boots on `127.0.0.1:3301` and reuses `frontend`'s translation bucket (`locals/locales/dist/frontend`).

@@ -109,16 +109,15 @@ So, if you use SSR, you should implement another auth solution.
   * The `rpcApi` plugin will call the `/api/*` proxy if they're on the same domain but different ports (e.g: 127.0.0.1)
     * > this mimics a production environment where the static frontend and the backend lives on the same domain at /api, which is the most efficient configuration for Cloudfront + Lambda Function Url, or Cloudflare Workers.
     * If the `frontend` and `backend` are on different domains then the backend will be called directly without proxy.
-    * This could be configured in frontend's [`app.config.ts`](./apps/frontend/app/app.config.ts)
+    * Configurable through `enableProxy` in the layer's [`app.config.ts`](./locals/nuxt-layer-common/app/app.config.ts).
 
-The shared base between Nuxt apps lives in [`@local/nuxt-layer-common`](./locals/nuxt-layer-common/README.md):
-modules, UnoCSS design system, shadcn-vue UI kit, layouts, plugins, composables, utils and the
-`/api/*` dev proxy are all inherited via `extends`. See the layer's README for the authoring rules.
+Both frontends extend [`@local/nuxt-layer-common`](./locals/nuxt-layer-common/README.md), which
+provides the modules, design system (UnoCSS + shadcn-vue), layouts, plugins, composables, utils and
+the `/api/*` dev proxy. See the layer's README for the authoring rules.
 
 #### [`frontend-second`](./apps/frontend-second): a minimal sample app consuming the shared layer.
-  * Boots on `127.0.0.1:3301`, reuses [`frontend`](./apps/frontend)'s translation bucket and
-    inherits the layer's shell; it only adds its own pages, a component and `app.config`/`uno.config` overrides.
-  * Use it as the template when adding another frontend to the monorepo.
+  * Boots on `127.0.0.1:3301`; adds only its own pages, one component, styling and `uno.config`.
+  * Use it as the template for a new frontend.
 
 #### [`backend`](./apps/backend): a [Hono🔥](https://hono.dev/) app.
 
