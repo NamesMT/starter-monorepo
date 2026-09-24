@@ -91,6 +91,17 @@ jobs:
         run: |
           # a dry run must stay read-only: `-r` only tells repo-release which version to preview,
           # while `--bump`/`--release` are what make it write package.json and touch git
+          # repo-release commits and tags with plain git, and a runner has no identity
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # with no version there is nothing for repo-release to preview, only an
+          # interactive prompt — and --bump would write package.json
+          if [ "${{ inputs.dry-run }}" = "true" ] && [ -z "$VERSION" ]; then
+            echo "::error::a dry run needs an explicit version to preview"
+            exit 1
+          fi
+
           ARGS=(--pkg="$PACKAGE")
           if [ -n "$VERSION" ]; then ARGS+=(-r "$VERSION"); fi
           if [ "${{ inputs.dry-run }}" = "true" ]; then
