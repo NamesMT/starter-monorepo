@@ -1,0 +1,113 @@
+name: Release
+
+# Manual, per-package release for this monorepo. Dispatch with the workspace package to ship:
+#   * resolves the package and checks the requested version against the one on disk
+#   * runs `quickcheck` across the workspace
+#   * hands the package to repo-release, which writes its changelog, bumps its package.json,
+#     commits it, tags `<package>@<version>`, pushes, creates the GitHub release and — for a
+#     package that is not `"private"` — publishes it to npm
+#
+# This is deliberately a base pipeline: one package per run, no workspace build. A package that
+# needs a build declares its own `prepack` hook (npm publish runs it). Anything more elaborate —
+# coordinated multi-package releases, extra artifacts — belongs in its own workflow.
+#
+# Publishing uses npm trusted publishing (OIDC, no token): configure it once per published package
+# on npmjs.com → the package → Settings → Trusted Publisher, naming this repository and the
+# `release.yml` workflow. Until that is set up the publish step fails — uncheck `publish` to ship
+# the changelog, tag and GitHub release on their own.
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: Workspace package to release, by name (e.g. @local/common)
+        required: true
+        type: string
+      version:
+        description: Version to release, without a leading v. Leave empty to bump automatically from the commits.
+        required: false
+        type: string
+      publish:
+        description: Publish to npm (always skipped for a package whose package.json is private)
+        required: false
+        type: boolean
+        default: true
+      dry-run:
+        description: Stop before committing, pushing, releasing and publishing
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  id-token: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      PACKAGE: ${{ inputs.package }}
+      VERSION: ${{ inputs.version }}
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          # repo-release derives the changelog from the tags and the full history
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          # never cache in a release build
+          package-manager-cache: false
+
+      - name: Use a recent npm (trusted publishing needs >= 11.5.1)
+        run: npm install -g npm@latest
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Resolve the package
+        id: target
+        run: node scripts/release-target.mjs "$PACKAGE" "$VERSION" | tee -a "$GITHUB_OUTPUT"
+
+      - name: Lint and types
+        run: pnpm run quickcheck
+
+      - name: Changelog, version bump, commit, tag and release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # a dry run must stay read-only: `-r` only tells repo-release which version to preview,
+          # while `--bump`/`--release` are what make it write package.json and touch git
+          ARGS=(--pkg="$PACKAGE")
+          if [ -n "$VERSION" ]; then ARGS+=(-r "$VERSION"); fi
+          if [ "${{ inputs.dry-run }}" = "true" ]; then
+            echo "dry run — printing the changelog for $PACKAGE below"
+          else
+            if [ -z "$VERSION" ]; then ARGS+=(--bump); fi
+            ARGS+=(--release --push)
+            if [ "${{ inputs.publish }}" = "true" ] && [ "${{ steps.target.outputs.publish }}" = "true" ]; then
+              ARGS+=(--publish)
+            fi
+          fi
+          npx -y repo-release@latest "${ARGS[@]}"
+
+      - name: Summary
+        run: |
+          {
+            echo "### $PACKAGE$( [ "${{ inputs.dry-run }}" = "true" ] && echo ' (dry run)')"
+            echo
+            echo "\`${{ steps.target.outputs.path }}\` — version \`${VERSION:-auto}\`"
+          } >> "$GITHUB_STEP_SUMMARY"

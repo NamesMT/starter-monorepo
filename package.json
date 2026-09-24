@@ -18,6 +18,7 @@
     "deploy": "dotenvx run -- turbo run deploy",
     "i18n": "pnpm dlx lingo.dev run",
     "repo-release": "pnpm dlx repo-release --release --bump --push --pkg=",
+    "release:check": "node scripts/release-target.mjs",
     "prepare": "simple-git-hooks"
   },
   "dependencies": {
