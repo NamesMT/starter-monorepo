@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup actions/cache
         uses: actions/cache@v6
@@ -54,7 +54,7 @@ jobs:
           run_install: false
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: pnpm
@@ -63,7 +63,7 @@ jobs:
         uses: actions/configure-pages@v6
 
       - name: Install dependencies
-        run: pnpm i
+        run: pnpm install --frozen-lockfile
 
       - name: Run build command (nuxt generate) for frontend
         run: pnpm run build --filter=frontend
