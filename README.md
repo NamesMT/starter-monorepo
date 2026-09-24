@@ -31,6 +31,7 @@
         * [**Full** setup (everything behaves like `workerd`) for 100% Cloudflare `workerd` runtime testing:](#full-setup-everything-behaves-like-workerd-for-100-cloudflare-workerd-runtime-testing)
       * [IMPORTANT:](#important)
     * [Deploy](#deploy)
+    * [Release](#release)
     * [Notes](#notes)
       * [`import` ordering](#import-ordering)
       * [Dev with SSL](#dev-with-ssl)
@@ -195,6 +196,20 @@ For the best development experience, for VSCode and its forks, you should use th
   + `backend-convex` is disabled by default, to enable:
     + rename `_deploy` script to `deploy` in `backend-convex/package.json`
     + Run the `deploy` script once manually to get Convex's production url, set it to `NUXT_PUBLIC_CONVEX_URL` in `frontend/.env.prod` or CI / build machine env var.
+
+### Release
+
+Releases are **per package**, and run from **Actions → Release → Run workflow**
+([`.github/workflows/release.yml`](./.github/workflows/release.yml)): give it a workspace package
+name (e.g. `@local/common`) and, optionally, the version to ship.
+
+It resolves the package and checks the version, runs `quickcheck`, then lets
+[`repo-release`](https://github.com/namesmt/repo-release) write that package's `CHANGELOG.md`, bump
+its `package.json`, commit, tag `<package>@<version>`, push, create the GitHub release, and publish
+it to npm — publishing is skipped for a package marked `"private": true`, which every package in
+this template is. Ticking **dry-run** stops before anything is written back.
+
+Locally, `pnpm run release:check <package> [version]` validates a target before you dispatch.
 
 ### Notes
 
