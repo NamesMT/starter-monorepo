@@ -97,8 +97,8 @@ So, if you use SSR, you should implement another auth solution.
   * Mobile-friendly.
   * Fast ⚡ with local caching and optimistic updates.
 
-`*1`: currently the "stream" received when resuming or for other real-time users in the same thread is implemented via a polling, not SSE. it is intentionally chosed to be this way for more minimal infrastructure setup and wider hosting support, so smaller user groups can host their own version easily, it is still very performant and efficient.
-  * There is boilerplate code for SSE resume support, you can simply add a pub-sub to the backend and switch to using SSE resume in `ChatInterface` component.
+`*1`: new turns stream over HTTP, while the copy received when resuming or by other real-time users in the same thread is delivered by polling, not SSE. it is intentionally chosed to be this way for more minimal infrastructure setup and wider hosting support, so smaller user groups can host their own version easily, it is still very performant and efficient.
+  * The HTTP endpoint rejects `resumeStreamId` on purpose (see `convex/http/chat.ts`); to get SSE resume you add a pub-sub and drive `ChatInterface` from it instead of its polling loop.
 </details>
 
 ### Apps and Libraries

@@ -164,7 +164,13 @@ const { ignoreUpdates: ignorePathUpdate } = watchIgnorable(
 )
 
 // Efficient concurrent syncing support using counter Query.
+let unsubscribeMessagesCount: (() => void) | undefined
 watchImmediate(threadIdRef, (threadId) => {
+  // Drop the previous subscription before switching thread, and on scope teardown below,
+  // otherwise the last one outlives the component.
+  unsubscribeMessagesCount?.()
+  unsubscribeMessagesCount = undefined
+
   if (!threadId)
     return
 
@@ -177,10 +183,14 @@ watchImmediate(threadIdRef, (threadId) => {
         debounce(100, () => { ++fetchKey.value })
     },
   )
-  watchOnce(threadIdRef, () => {
+  unsubscribeMessagesCount = () => {
     unsubscribe()
     console.log(`Unsubscribed from: ${threadId}`)
-  })
+  }
+})
+onScopeDispose(() => {
+  unsubscribeMessagesCount?.()
+  unsubscribeMessagesCount = undefined
 })
 
 interface HandleSubmitArgs {
@@ -309,7 +319,8 @@ async function resumeStreamToMessage(streamSessionId: string, messageId: string)
   if (!message)
     return console.warn('Trying to resume stream for message that does not exist:', messageId)
 
-  if (getInstance(threadIdRef.value))
+  // Keyed to match the polling loop registered by `pollToMessage`, so this actually detects it.
+  if (getInstance(`messageStream-${streamSessionId}`))
     return console.warn('Trying to resume stream for message that is currently streaming:', messageId)
 
   // Currently SSE resume not implemented yet

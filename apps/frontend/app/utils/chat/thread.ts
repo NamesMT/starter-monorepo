@@ -11,7 +11,7 @@ export async function refreshThread(convex: ConvexClient | ConvexHttpClient, { t
     .then((res) => {
       const foundLocallyAt = chatContext.threads.value.findIndex(t => t._id === threadId)
       if (foundLocallyAt !== -1)
-        Object.assign(chatContext.threads.value[foundLocallyAt]!, convex.query(api.threads.get, { threadId, lockerKey: getLockerKey(threadId) }))
+        Object.assign(chatContext.threads.value[foundLocallyAt]!, res)
       else
         chatContext.threads.value.push(res)
     })
