@@ -20,9 +20,9 @@ export default frontendNuxtConfig(await antfu(
     },
   },
   {
-    files: ['apps/backend-convex/convex/**'],
+    // Convex reads env with `process.env`, and `utils/**` runs in the same runtime as `convex/**`.
+    files: ['apps/backend-convex/convex/**', 'apps/backend-convex/utils/**'],
     rules: {
-      // Disable automatically transform `type` to `interface`, because Hono require the Bindings to be type.
       'node/prefer-global/process': 'off',
     },
   },

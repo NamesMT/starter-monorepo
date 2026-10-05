@@ -19,6 +19,10 @@ packages:
   - locals/*
 
 overrides:
+  # `ai` pins @ai-sdk/provider exactly while some providers float to a newer patch; two
+  # copies make their `LanguageModelV4` nominally different types, so the model wrappers
+  # (ai-fallback, withProviderErrorAsText) stop type-checking. One copy for the workspace.
+  '@ai-sdk/provider': ^4.0.21
   is-arguments: npm:@nolyfill/is-arguments@^1.0.44
   is-core-module: npm:@nolyfill/is-core-module@^1.0.39
   is-generator-function: npm:@nolyfill/is-generator-function@^1.0.44
@@ -43,7 +47,8 @@ catalog:
   '@ai-sdk/google': ^4.0.67
   '@ai-sdk/groq': ^4.0.40
   '@ai-sdk/openai': ^4.0.65
-  '@ai-sdk/provider': ^4.0.13
+  '@ai-sdk/openai-compatible': ^3.0.62
+  '@ai-sdk/provider': ^4.0.21
   '@antfu/eslint-config': ^9.5.1
   '@aws-sdk/client-dynamodb': ^3.1129.0
   '@aws-sdk/client-s3': ^3.1129.0
@@ -82,6 +87,7 @@ catalog:
   '@vueuse/router': ^14.4.0
   '@workos-inc/node': ^10.13.0
   ai: ^7.0.97
+  ai-fallback: ^3.0.0
   arktype: ^2.2.3
   class-variance-authority: ^0.7.1
   clsx: ^2.1.1
