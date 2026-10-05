@@ -21,7 +21,6 @@ These are tradeoffs, not oversights — change them knowingly.
 
 - **Reasoning/thinking** is not represented or rendered.
 - **Regenerate / edit a turn** is not implemented.
-- **Tool calls from earlier turns are not replayed as tool messages**: `buildAiSdkMessage` emits `{ role, content }` strings only, so a past tool result reaches the next turn as prose.
 - **Prompt caching** is not configured; each turn re-sends the window uncached.
 
 Adopting `@ai-sdk/vue`'s `useChat` is the natural way to close most of these — it brings `stop`, `regenerate`, `addToolOutput` and reasoning rendering. It requires migrating storage to `parts` first, which is the real work; the streaming loop itself is not the blocker. `@ai-sdk/vue` pins the matching `ai` version exactly, so it needs no AI SDK bump.
