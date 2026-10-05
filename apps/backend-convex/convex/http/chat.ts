@@ -14,6 +14,7 @@ import { cors } from 'hono/cors'
 import { throttle } from 'kontroll'
 import { z } from 'zod'
 import { getAgentModel, getModelAttachmentAccept, withProviderErrorAsText } from '../../utils/agent'
+import { cachingCallProviderOptions, cachingStrategyFor, withAnthropicCacheBreakpoints } from '../../utils/caching'
 import { getErrorMessage, normalizePossibleSDKError } from '../../utils/error'
 import { buildModelMessages, buildSystemPrompt, historyBeforeMessage } from '../../utils/message'
 import { chatTools } from '../../utils/tools'
@@ -557,11 +558,24 @@ function respondWithAiStream({
   }
   startCancelWatch()
 
+  // Prompt caching. Without markers every turn of a thread re-sends the whole window at full
+  // input price, even though each turn's text is a superset of the previous one.
+  const cachingStrategy = cachingStrategyFor(provider)
+  const prompt = {
+    instructions: buildSystemPrompt({ model, modelSettings: modelOptions }, personalContext),
+    messages: messagesContext,
+  }
+  const cacheable = cachingStrategy === 'anthropic-explicit'
+    ? withAnthropicCacheBreakpoints(prompt)
+    : prompt
+  const cacheProviderOptions = cachingCallProviderOptions(cachingStrategy, threadId)
+
   const result = streamText({
     // Provider failures are converted to normal text output, see `withProviderErrorAsText`.
     model: withProviderErrorAsText(getAgentModel({ provider, model, apiKey })),
-    instructions: buildSystemPrompt({ model, modelSettings: modelOptions }, personalContext),
-    messages: messagesContext,
+    instructions: cacheable.instructions,
+    messages: cacheable.messages,
+    ...(cacheProviderOptions ? { providerOptions: cacheProviderOptions } : {}),
     temperature: modelOptions.temperature,
     topP: modelOptions.topP,
     maxOutputTokens: modelOptions.maxOutputTokens,
@@ -621,6 +635,15 @@ function respondWithAiStream({
           state: 'output-error',
         })
         doSave()
+        return
+      }
+
+      // Cache accounting is the only evidence caching engaged: a marker on a prefix below the
+      // provider's minimum caches nothing and reports no error, so log the read/write counts
+      // rather than leaving "is caching working?" unanswerable.
+      if (chunk.type === 'finish') {
+        const { noCacheTokens, cacheReadTokens, cacheWriteTokens } = chunk.totalUsage.inputTokenDetails
+        console.warn(`[chat] usage ${provider}/${model}: in=${chunk.totalUsage.inputTokens} noCache=${noCacheTokens} cacheRead=${cacheReadTokens} cacheWrite=${cacheWriteTokens}`)
       }
     },
     // Errors are surfaced as `error` parts on `result.stream`; just log them here.
