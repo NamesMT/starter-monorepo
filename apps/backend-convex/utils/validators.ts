@@ -8,20 +8,15 @@ import { v } from 'convex/values'
  * carry no `state`: whether a reply is still streaming is `message.isStreaming`, and keeping a
  * second copy of it in the parts meant the final write had to win a race against Convex
  * tearing the action down as the response ended.
- *
- * `state` stays accepted (and optional) only so rows written before that change still validate;
- * nothing writes it. `messages:dropPartState` strips it.
  */
 export const partValidator = v.union(
   v.object({
     type: v.literal('text'),
     text: v.string(),
-    state: v.optional(v.union(v.literal('streaming'), v.literal('done'))),
   }),
   v.object({
     type: v.literal('reasoning'),
     text: v.string(),
-    state: v.optional(v.union(v.literal('streaming'), v.literal('done'))),
   }),
   v.object({
     type: v.literal('dynamic-tool'),

@@ -24,14 +24,12 @@ const aiChatTables = {
     timestamp: v.number(),
     userId: v.optional(v.string()),
     lockerKey: v.optional(v.string()),
-    branchedFrom: v.optional(v.id('messages')),
     parentThread: v.optional(v.id('threads')),
     frozen: v.optional(v.boolean()),
   })
     .index('by_user_id', ['userId'])
     .index('by_user_id_and_timestamp', ['userId', 'timestamp'])
-    .index('by_session_id', ['sessionId'])
-    .index('by_timestamp', ['timestamp']),
+    .index('by_session_id', ['sessionId']),
 
   messages: defineTable({
     threadId: v.id('threads'),
@@ -42,25 +40,9 @@ const aiChatTables = {
      * calls, so it is stored as the AI SDK's part list rather than a flat string plus a
      * sibling tool array, which could not express what happened where.
      *
-     * Optional only so rows written before this schema existed still validate; Convex checks
-     * every existing row when the schema is pushed, so a required field here would make the
-     * deploy fail instead of being migratable. Read it through `resolveMessageParts`, which
-     * falls back to the legacy fields, and run `messages:migrateToParts` to backfill.
-     *
      * Text is read via `getMessageText` in `@local/common`.
      */
-    parts: v.optional(v.array(partValidator)),
-    /** Legacy flat content, superseded by `parts`. Only present until migrated. */
-    content: v.optional(v.string()),
-    /** Legacy tool invocations, superseded by tool parts. Only present until migrated. */
-    toolInvocations: v.optional(v.array(v.object({
-      id: v.string(),
-      name: v.string(),
-      input: v.optional(v.any()),
-      output: v.optional(v.any()),
-      error: v.optional(v.string()),
-      state: v.union(v.literal('call'), v.literal('result'), v.literal('error')),
-    }))),
+    parts: v.array(partValidator),
     context: v.optional(v.object({
       from: v.optional(v.string()),
       uid: v.optional(v.string()),
@@ -81,9 +63,7 @@ const aiChatTables = {
      */
     attachments: v.optional(v.array(attachmentValidator)),
   })
-    .index('by_thread', ['threadId'])
     .index('by_thread_and_timestamp', ['threadId', 'timestamp'])
-    .index('by_timestamp', ['timestamp'])
     .index('by_stream_id', ['streamId']),
 }
 

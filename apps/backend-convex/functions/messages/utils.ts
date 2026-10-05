@@ -21,7 +21,6 @@ export type MessageWithResolvedAttachments = Omit<Doc<'messages'>, 'attachments'
  * render them without extra round-trips.
  */
 export async function resolveMessageAttachments(ctx: GenericQueryCtx<any>, message: Doc<'messages'>): Promise<MessageWithResolvedAttachments> {
-  // Legacy rows are normalized here so a client only ever deals with parts.
   const parts = resolveMessageParts(message)
 
   if (!message.attachments?.length)

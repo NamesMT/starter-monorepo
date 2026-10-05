@@ -33,35 +33,10 @@ export function buildMetadataHeader(message: Pick<Doc<'messages'>, '_id' | 'role
 }
 
 /**
- * The message's parts, falling back to the legacy `content`/`toolInvocations` fields.
- *
- * Rows written before the parts schema still exist until `messages:migrateToParts` runs, and
- * a few code paths (a legacy row loaded into a live stream) can still hold the old shape.
+ * The message's parts, cast from the stored validator shape to the shared `ChatPart` type.
  */
-export function resolveMessageParts(message: Pick<Doc<'messages'>, 'parts' | 'content' | 'toolInvocations'>): ChatPart[] {
-  if (message.parts?.length)
-    return message.parts as ChatPart[]
-
-  const parts: ChatPart[] = []
-
-  if (message.content)
-    parts.push({ type: 'text', text: message.content })
-
-  for (const invocation of message.toolInvocations ?? []) {
-    parts.push({
-      type: 'dynamic-tool',
-      toolCallId: invocation.id,
-      toolName: invocation.name,
-      state: invocation.state === 'result'
-        ? 'output-available'
-        : invocation.state === 'error' ? 'output-error' : 'input-available',
-      input: invocation.input,
-      output: invocation.output,
-      errorText: invocation.error,
-    })
-  }
-
-  return parts
+export function resolveMessageParts(message: Pick<Doc<'messages'>, 'parts'>): ChatPart[] {
+  return message.parts as ChatPart[]
 }
 
 /**
