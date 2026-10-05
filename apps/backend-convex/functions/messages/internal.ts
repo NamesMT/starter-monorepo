@@ -156,6 +156,65 @@ export const resolveStuckStreamMessages = internalMutation({
   },
 })
 
+/**
+ * Rewrites a sent user message and drops every reply that followed it, then opens a fresh
+ * assistant message to answer the new text.
+ *
+ * Editing changes what the following turns were answering, so keeping them would leave the
+ * thread contradicting itself; they are deleted rather than orphaned. Done in one mutation so
+ * a reader never observes the rewritten question next to the old answer.
+ */
+export const editUserMessageAndRestart = internalMutation({
+  args: {
+    messageId: v.id('messages'),
+    parts: v.array(partValidator),
+    streamId: v.string(),
+    provider: v.string(),
+    model: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const target = await ctx.db.get(args.messageId)
+    if (!target)
+      throw new ConvexError('Message not found')
+    if (target.role !== 'user')
+      throw new ConvexError('Only a user message can be edited')
+
+    // Ordered ascending by timestamp, so everything after the target is exactly the part of
+    // the thread that answered the old text.
+    const threadMessages = await ctx.db
+      .query('messages')
+      .withIndex('by_thread_and_timestamp', q => q.eq('threadId', target.threadId))
+      .collect()
+
+    const targetIndex = threadMessages.findIndex(message => message._id === args.messageId)
+    if (targetIndex === -1)
+      throw new ConvexError('Message not found in its thread')
+
+    const later = threadMessages.slice(targetIndex + 1)
+
+    for (const message of later)
+      await ctx.db.delete(message._id)
+
+    await ctx.db.patch(args.messageId, { parts: args.parts })
+
+    const assistantMessageId = await ctx.db.insert('messages', {
+      threadId: target.threadId,
+      role: 'assistant',
+      parts: [],
+      isStreaming: true,
+      streamId: args.streamId,
+      provider: args.provider,
+      model: args.model,
+      timestamp: Date.now(),
+    })
+
+    // The deleted replies are replaced by the single one being generated.
+    await singleShardCounter.add(ctx, `messages-in-thread_${target.threadId}`, 1 - later.length)
+
+    return assistantMessageId
+  },
+})
+
 export const clearAll = internalMutation({
   args: {},
   handler: async (ctx) => {

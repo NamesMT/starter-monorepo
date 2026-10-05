@@ -61,6 +61,8 @@ export interface PostChatStreamArgs {
   resumeStreamId?: string
   /** Assistant message to regenerate in place. */
   regenerateMessageId?: string
+  /** User message to rewrite, replacing it and the replies that followed it. */
+  editMessageId?: string
   abortController?: AbortController
 }
 export async function postChatStream(args: PostChatStreamArgs) {
@@ -75,7 +77,7 @@ export async function postChatStream(args: PostChatStreamArgs) {
 
   // Listed explicitly rather than iterating `args`: callers spread an `AgentObject` in,
   // which also carries `modelSettings`, and `String()`-ing that posts "[object Object]".
-  const textFields = ['threadId', 'provider', 'model', 'apiKey', 'content', 'streamId', 'resumeStreamId', 'regenerateMessageId'] as const satisfies ReadonlyArray<keyof PostChatStreamArgs>
+  const textFields = ['threadId', 'provider', 'model', 'apiKey', 'content', 'streamId', 'resumeStreamId', 'regenerateMessageId', 'editMessageId'] as const satisfies ReadonlyArray<keyof PostChatStreamArgs>
   for (const key of textFields) {
     const value = args[key]
     if (value !== undefined)

@@ -210,11 +210,23 @@ chatApp
       resumeStreamId: z.optional(z.string()),
       /** Assistant message to regenerate in place, dropping the reply it currently holds. */
       regenerateMessageId: z.optional(z.string()),
+      /**
+       * User message to rewrite. The replies that followed it are dropped, since they
+       * answered the old text.
+       */
+      editMessageId: z.optional(z.string()),
       lockerKey: z.optional(z.string()),
-    }).refine(data => data.content !== undefined || data.resumeStreamId !== undefined || data.attachments.length > 0 || data.regenerateMessageId !== undefined, {
-      message: `Either 'content', 'resumeStreamId', 'regenerateMessageId' or 'attachments' must be provided.`,
-      path: ['content', 'resumeStreamId', 'regenerateMessageId', 'attachments'],
-    })),
+    }).refine(
+      data => data.content !== undefined
+        || data.resumeStreamId !== undefined
+        || data.attachments.length > 0
+        || data.regenerateMessageId !== undefined
+        || data.editMessageId !== undefined,
+      {
+        message: `Either 'content', 'resumeStreamId', 'regenerateMessageId', 'editMessageId' or 'attachments' must be provided.`,
+        path: ['content', 'resumeStreamId', 'regenerateMessageId', 'editMessageId', 'attachments'],
+      },
+    )),
     async (c) => {
       const {
         threadId: _threadId,
@@ -229,6 +241,7 @@ chatApp
         context = {},
         resumeStreamId,
         regenerateMessageId,
+        editMessageId,
         lockerKey,
       } = c.req.valid('form')
       let { streamId } = c.req.valid('form')
@@ -291,6 +304,54 @@ chatApp
           streamId,
           streamingMessageId,
           userMessageId: undefined,
+        })
+      }
+
+      // Edit: rewrite a user message, drop the replies that answered the old text, and
+      // generate a fresh answer.
+      if (editMessageId) {
+        if (thread.frozen)
+          throw new ConvexError(`Can't edit a message in a frozen thread`)
+        if (!content)
+          throw new ConvexError('Edited message must have content')
+
+        const target = await c.env.runQuery(internal.messages.getById, { messageId: editMessageId as Id<'messages'> })
+        if (!target || target.role !== 'user' || target.threadId !== threadId)
+          throw new ConvexError('Message to edit not found')
+
+        // Another reply is already in flight in this thread, so rewriting the history under it
+        // would let it finish against a transcript it was not generated from.
+        const current = await c.env.runQuery(api.messages.listByThread, { threadId, lockerKey })
+        if (current.some(message => message.isStreaming))
+          throw new ConvexError('Another message is still streaming')
+
+        streamId = `stream-${Date.now()}_${randomStr(4)}`
+        streamingMessageId = await c.env.runMutation(internal.messages.editUserMessageAndRestart, {
+          messageId: target._id,
+          parts: [{ type: 'text', text: content }],
+          streamId,
+          provider,
+          model,
+        })
+
+        const history = await c.env.runQuery(api.messages.listByThread, { threadId, lockerKey })
+        const messagesContext = await buildModelMessages(
+          windowChatHistory(history.filter(message => message._id !== streamingMessageId)),
+        )
+
+        return respondWithAiStream({
+          ctx: c.env,
+          threadId,
+          lockerKey,
+          provider,
+          model,
+          apiKey,
+          modelOptions,
+          personalContext,
+          messagesContext,
+          streamId,
+          streamingMessageId,
+          userMessageId: target._id,
         })
       }
 

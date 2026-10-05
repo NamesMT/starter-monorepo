@@ -10,9 +10,13 @@ const {
 const emit = defineEmits<{
   branchOffClicked: []
   regenerateClicked: []
+  editSubmit: [content: string]
 }>()
 
 const chatContext = useChatContext()
+
+/** The inline editor for this card, started by the edit button. */
+const isEditing = ref(false)
 
 /** Streaming with nothing to show yet. */
 const isGenerating = computed(() =>
@@ -43,42 +47,53 @@ const isGenerating = computed(() =>
                   </CardTitle>
                 </CardHeader> -->
         <CardContent class="px-4 py-3 [&_.prose-hr]:(border-accent-foreground!)">
-          <div v-if="isGenerating" class="flex gap-2">
-            <div>{{ $t('generating') }}</div>
-            <div class="spinner h-5 w-5" />
-          </div>
+          <!-- Editing replaces the rendered text in place, so the thread keeps its shape. -->
+          <CardEditMessage
+            v-if="isEditing"
+            v-model:editing="isEditing"
+            :message
+            @submit="(content) => { isEditing = false; emit('editSubmit', content) }"
+            @cancel="isEditing = false"
+          />
 
-          <!-- Parts render in order, so text, thinking and tool calls appear where they happened. -->
-          <template v-for="(part, index) of message.parts ?? []" :key="index">
-            <MDC
-              v-if="part.type === 'text' && part.text"
-              :key="`t-${index}-${message.isStreaming}`"
-              :value="part.text"
-              class="only-child:[&>.prose-p]:my-0"
-            />
-            <ChatMessageReasoning
-              v-else-if="part.type === 'reasoning' && part.text"
-              :part="part"
-              :streaming="!!message.isStreaming"
-            />
-            <ChatMessageToolInvocations
-              v-else-if="part.type === 'dynamic-tool'"
-              :invocations="[part]"
-            />
+          <template v-else>
+            <div v-if="isGenerating" class="flex gap-2">
+              <div>{{ $t('generating') }}</div>
+              <div class="spinner h-5 w-5" />
+            </div>
+
+            <!-- Parts render in order, so text, thinking and tool calls appear where they happened. -->
+            <template v-for="(part, index) of message.parts ?? []" :key="index">
+              <MDC
+                v-if="part.type === 'text' && part.text"
+                :key="`t-${index}-${message.isStreaming}`"
+                :value="part.text"
+                class="only-child:[&>.prose-p]:my-0"
+              />
+              <ChatMessageReasoning
+                v-else-if="part.type === 'reasoning' && part.text"
+                :part="part"
+                :streaming="!!message.isStreaming"
+              />
+              <ChatMessageToolInvocations
+                v-else-if="part.type === 'dynamic-tool'"
+                :invocations="[part]"
+              />
+            </template>
+
+            <ChatMessageAttachments :attachments="message.attachments ?? []" />
+
+            <!-- Placeholder while a reply has nothing to show yet. Explicit rather than
+                 positional (`hidden first:block`), which showed it forever whenever the parts
+                 rendered nothing — e.g. a user message still stored as legacy `content`. -->
+            <div v-if="isGenerating">
+              <Skeleton
+                class="rounded-full bg-muted-foreground h-5 max-w-full w-$c-W" :style="{
+                  '--c-W': `${(Math.floor(Math.random() * (300 - 100 + 1)) + 100) * (message.role === 'user' ? 1 : 2)}px`,
+                }"
+              />
+            </div>
           </template>
-
-          <ChatMessageAttachments :attachments="message.attachments ?? []" />
-
-          <!-- Placeholder while a reply has nothing to show yet. Explicit rather than
-               positional (`hidden first:block`), which showed it forever whenever the parts
-               rendered nothing — e.g. a user message still stored as legacy `content`. -->
-          <div v-if="isGenerating">
-            <Skeleton
-              class="rounded-full bg-muted-foreground h-5 max-w-full w-$c-W" :style="{
-                '--c-W': `${(Math.floor(Math.random() * (300 - 100 + 1)) + 100) * (message.role === 'user' ? 1 : 2)}px`,
-              }"
-            />
-          </div>
         </CardContent>
       </Card>
     </component>
@@ -90,6 +105,7 @@ const isGenerating = computed(() =>
       <div v-if="message.context?.from" class="text-xs mr-2">
         {{ message.context.from }}
       </div>
+      <CardEditButton :message @edit="isEditing = true" />
     </div>
 
     <div

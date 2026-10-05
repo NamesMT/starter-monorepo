@@ -388,6 +388,8 @@ interface StreamToMessageArgs {
   resumeStreamId?: string
   /** Assistant message to regenerate in place instead of adding a new turn. */
   regenerateMessageId?: string
+  /** User message to rewrite; the server drops the replies that followed it. */
+  editMessageId?: string
 }
 
 /**
@@ -427,8 +429,8 @@ async function stopStreaming() {
   await Promise.all(handles.map(handle => handle.abort()))
 }
 
-async function streamToMessage({ message, userMessage, content, attachments, streamId, resumeStreamId, regenerateMessageId }: StreamToMessageArgs) {
-  const streamKey = (streamId ?? resumeStreamId ?? regenerateMessageId)!
+async function streamToMessage({ message, userMessage, content, attachments, streamId, resumeStreamId, regenerateMessageId, editMessageId }: StreamToMessageArgs) {
+  const streamKey = (streamId ?? resumeStreamId ?? regenerateMessageId ?? editMessageId)!
   /** Pending throttled render timer, cleared once the stream settles. */
   let flushTimer: ReturnType<typeof setTimeout> | undefined
 
@@ -449,6 +451,7 @@ async function streamToMessage({ message, userMessage, content, attachments, str
       streamId,
       resumeStreamId,
       regenerateMessageId,
+      editMessageId,
     })
 
     // Expose a stop handle for this stream while it runs.
@@ -624,6 +627,48 @@ async function _regenerateMessage({ messageId }: { messageId: string }) {
   })
 }
 
+/**
+ * Rewrites a sent user message and regenerates the answer to it.
+ *
+ * The server drops every message that followed the edited one, because those were answering
+ * the old text; the client mirrors that immediately so the thread does not briefly show the
+ * new question beside the stale answers.
+ */
+async function _editMessage({ messageId, content }: { messageId: string, content: string }) {
+  if (Object.keys(streamingMessagesMap).length > 0)
+    return toast(ts('chat.toast.busyStreaming'))
+
+  const message = findMessageById(messageId)
+  if (!message || message.role !== 'user')
+    return
+
+  const index = messages.value.indexOf(message)
+  if (index === -1)
+    return
+
+  const streamId = `stream-${Date.now()}_${randomStr(4)}`
+  const targetMessage = {
+    id: `assistant-${Date.now()}_${randomStr(4)}`,
+    role: 'assistant',
+    model: chatContext.activeAgent.value.model,
+    parts: [],
+    isStreaming: true,
+    streamId,
+    threadId: message.threadId,
+  } as any as CustomMessage
+
+  // Drop the replies after the edited message and append the new streaming one.
+  messages.value = [...messages.value.slice(0, index + 1), targetMessage]
+  Object.assign(message, { parts: [{ type: 'text', text: content }] })
+
+  await streamToMessage({
+    message: targetMessage,
+    content,
+    streamId,
+    editMessageId: messageId,
+  })
+}
+
 function doScrollBottom({ smooth = true, maybe = false, tries = 0, lastScrollTop = 0 } = {}) {
   if (!lenisRef.value)
     return
@@ -675,6 +720,7 @@ function doScrollBottom({ smooth = true, maybe = false, tries = 0, lastScrollTop
               lockerKey: getLockerKey(message.threadId),
             })"
             @regenerate-clicked="_regenerateMessage({ messageId: message._id })"
+            @edit-submit="(content) => _editMessage({ messageId: message._id, content })"
           />
 
           <IUIMaybeGlassCard
