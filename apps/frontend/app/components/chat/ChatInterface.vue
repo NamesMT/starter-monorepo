@@ -1,9 +1,10 @@
 <!-- eslint-disable no-console -->
 <script setup lang="ts">
-import type { ChatAttachment, ChatPart, ChatStreamMetadata } from '@local/common/src/chat'
+import type { ChatAttachment, ChatPart } from '@local/common/src/chat'
 import type { Doc, Id } from 'backend-convex/convex/_generated/dataModel'
 import type Lenis from 'lenis'
-import { appendReasoningPart, appendTextPart, getMessageText, upsertToolPart } from '@local/common/src/chat'
+import { appendTextPart, getMessageText } from '@local/common/src/chat'
+import { applyStreamChunk, readStreamMetadata } from '@local/common/src/chatStream'
 import { objectPick, randomStr, sleep, uniquePromise } from '@namesmt/utils'
 import { parseJsonEventStream, uiMessageChunkSchema } from 'ai'
 import { api } from 'backend-convex/convex/_generated/api'
@@ -538,54 +539,17 @@ async function streamToMessage({ message, userMessage, content, attachments, str
 
       const chunk = event.value
 
-      switch (chunk.type) {
-        case 'start':
-        case 'message-metadata': {
-          const metadata = chunk.messageMetadata as ChatStreamMetadata | undefined
-          if (metadata?.messageId)
-            message._id = metadata.messageId as Id<'messages'>
-          if (metadata?.streamId)
-            message.streamId = metadata.streamId
-          if (metadata?.userMessageId && userMessage)
-            userMessage._id = metadata.userMessageId as Id<'messages'>
-          break
-        }
-        case 'text-delta':
-          appendTextPart(parts, chunk.delta)
-          break
-        case 'reasoning-delta':
-          appendReasoningPart(parts, chunk.delta)
-          break
-        case 'start-step':
-          parts.push({ type: 'step-start' })
-          break
-        case 'tool-input-available':
-          upsertToolPart(parts, {
-            toolCallId: chunk.toolCallId,
-            toolName: chunk.toolName,
-            input: chunk.input,
-            state: 'input-available',
-          })
-          break
-        case 'tool-output-available':
-          // `toolName` is not on output chunks; the part already exists from the input chunk.
-          upsertToolPart(parts, {
-            toolCallId: chunk.toolCallId,
-            output: chunk.output,
-            state: 'output-available',
-          })
-          break
-        case 'tool-output-error':
-          upsertToolPart(parts, {
-            toolCallId: chunk.toolCallId,
-            errorText: chunk.errorText,
-            state: 'output-error',
-          })
-          break
-        case 'error':
-          appendTextPart(parts, `\n\nError: ${chunk.errorText}`)
-          break
-      }
+      // Reconcile our optimistic objects with the server ids before anything else, then let
+      // the shared accumulator handle the content chunks (see `chatStream` in `@local/common`).
+      const { messageId, userMessageId, streamId: chunkStreamId } = readStreamMetadata(chunk)
+      if (messageId)
+        message._id = messageId as Id<'messages'>
+      if (chunkStreamId)
+        message.streamId = chunkStreamId
+      if (userMessageId && userMessage)
+        userMessage._id = userMessageId as Id<'messages'>
+
+      applyStreamChunk(parts, chunk)
 
       scheduleStreamFlush()
     }
