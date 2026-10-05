@@ -36,6 +36,7 @@
     "backend": "workspace:*",
     "backend-convex": "workspace:*",
     "convex": "catalog:",
+    "convex-vue": "catalog:",
     "destr": "catalog:",
     "dotenv": "catalog:",
     "kontroll": "catalog:",

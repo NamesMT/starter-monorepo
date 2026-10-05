@@ -88,6 +88,7 @@ catalog:
   convex: ^1.45.0
   convex-helpers: ^0.1.124
   convex-nuxt: ^0.1.5
+  convex-vue: ^0.1.5
   dayjs: ^1.11.23
   destr: ^2.0.5
   dotenv: ^17.4.2
