@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { api } from 'backend-convex/convex/_generated/api'
-import { useToast } from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/toast'
+import { toast } from 'vue-sonner'
 
-const { toast } = useToast()
 const { $apiClient } = useNuxtApp()
 const convexClient = useConvexClient()
 
@@ -13,7 +12,7 @@ const { mutate: mutateAddTask } = useConvexMutation(api.tasks.add)
 const taskInputRef = ref('')
 async function addTask() {
   await mutateAddTask({ text: taskInputRef.value })
-    .catch((e) => { toast({ variant: 'destructive', description: getConvexErrorMessage(e) }) })
+    .catch((e) => { toast.error(getConvexErrorMessage(e)) })
     .then(() => {
       taskInputRef.value = ''
     })
@@ -24,8 +23,8 @@ async function testConvexViaBackendTasksCTA() {
   isFetchingTasks.value = true
 
   await hcParse($apiClient.api.dummy.convexTasks.$get())
-    .then(r => toast({ description: r.map(t => t.text).join('\n') }))
-    .catch(e => toast({ variant: 'destructive', description: e.message }))
+    .then(r => toast(r.map(t => t.text).join('\n')))
+    .catch(e => toast.error(e.message))
 
   isFetchingTasks.value = false
 }

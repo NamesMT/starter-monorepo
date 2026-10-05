@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Doc } from 'backend-convex/convex/_generated/dataModel'
+import { toast } from 'vue-sonner'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,7 +13,6 @@ import {
   AlertDialogTrigger,
 } from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/alert-dialog'
 import Button from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/button/Button.vue'
-import { useToast } from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/toast'
 import {
   Tooltip,
   TooltipContent,
@@ -30,7 +30,6 @@ const {
 
 const { $auth } = useNuxtApp()
 const convex = useConvexClient()
-const { toast } = useToast()
 const { ts } = useI18n()
 
 const open = ref(false)
@@ -60,7 +59,7 @@ async function _shareThread() {
   }
   catch (error) {
     console.error('Failed to prepare the share link:', error)
-    toast({ variant: 'destructive', description: ts('chat.toast.shareLinkFailed') })
+    toast.error(ts('chat.toast.shareLinkFailed'))
   }
 }
 
@@ -71,11 +70,11 @@ async function _shareCopyToast() {
 
   const succeeded = await copyTextToClipboard(linkRef.value)
   if (!succeeded) {
-    toast({ variant: 'destructive', description: ts('chat.toast.copyFailed') })
+    toast.error(ts('chat.toast.copyFailed'))
     return
   }
 
-  toast({ description: ts('chat.toast.threadShareLinkCopied') })
+  toast(ts('chat.toast.threadShareLinkCopied'))
 }
 </script>
 

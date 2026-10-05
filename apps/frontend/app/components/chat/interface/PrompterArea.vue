@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type Lenis from 'lenis'
 import type { ChatAttachmentManager } from '~/utils/chat/attachments'
+import { toast } from 'vue-sonner'
 import { useSidebar } from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/sidebar'
-import { useToast } from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/toast'
 
 const props = defineProps<{
   nearTopBottom: Array<null | boolean | number>
@@ -24,7 +24,6 @@ const isDev = import.meta.dev
 const sidebarContext = useSidebar()
 const chatContext = useChatContext()
 const { ts } = useI18n()
-const { toast } = useToast()
 
 const multiStreamConfirmDialogOpen = ref(false)
 const { textarea: chatTextarea, input: chatInputTA } = useTextareaAutosize()
@@ -50,7 +49,7 @@ function stageFiles(files: Iterable<File>) {
 
   const { errors } = props.attachments.addFiles(files, attachmentAccept.value)
   for (const description of errors)
-    toast({ variant: 'destructive', description })
+    toast.error(description)
 }
 
 function onFileInputChange(event: Event) {

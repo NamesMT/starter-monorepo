@@ -5,7 +5,6 @@
   <!-- Register global Shadcn components -->
   <div>
     <ClientOnly>
-      <Toaster />
       <Sonner rich-colors />
     </ClientOnly>
   </div>

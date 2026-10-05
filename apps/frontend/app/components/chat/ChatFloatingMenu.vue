@@ -1,8 +1,7 @@
 <script setup lang="ts">
+import { toast } from 'vue-sonner'
 import { useSidebar } from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/sidebar/utils'
-import { useToast } from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/toast'
 
-const { toast } = useToast()
 const { ts } = useI18n()
 const firstTimeOpen = useLocalState('chat/firstTimeOpen', () => true)
 
@@ -13,7 +12,7 @@ const isExpanded = computed(() => isMobile.value ? openMobile.value : open.value
 
 if (firstTimeOpen.value) {
   until(isExpanded).toBeTruthy().then(() => {
-    toast({ description: ts('chat.toast.menuOpenedFirstTime') })
+    toast(ts('chat.toast.menuOpenedFirstTime'))
     firstTimeOpen.value = false
   })
 }

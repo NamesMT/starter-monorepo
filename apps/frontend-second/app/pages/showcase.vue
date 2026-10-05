@@ -76,7 +76,7 @@ function actionToast() {
           Sonner toasts
         </h2>
         <p class="text-xs text-surface-500">
-          Toaster mounted globally by the layer.
+          Sonner mounted globally by the layer; call `toast()` from `vue-sonner`.
         </p>
       </div>
 

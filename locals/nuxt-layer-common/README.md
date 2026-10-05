@@ -22,7 +22,7 @@ See [`apps/frontend`](../../apps/frontend) (full app) and
 | --- | --- |
 | `nuxt.config.ts` | Modules, `experimental`, dev-server TLS, Vite, MDC, SEO, i18n base, image, svgo, eslint, telemetry |
 | `app/components` | Shell (`GlobalProvider`, `LoadingScreen`, `IsSST`), MDC/prose, `LiquidGlassDiv`, default `OgImage/Frame.takumi.vue` |
-| `app/lib/shadcn` | The shared shadcn-vue UI kit |
+| `app/lib/shadcn` | The shared shadcn-vue UI kit; toasts are `vue-sonner`, mounted as `<Sonner />` in `GlobalRegister` — call `toast()` / `toast.error()` |
 | `app/composables` | `useLocalState`, `useHHMMSSFormat` |
 | `app/layouts` | `default` and `basic` layouts |
 | `app/plugins` | `init`, `rpcApi`, `auth`, `initConvex`, `li18n`, `vueQuery`, `lenis` |
