@@ -1,5 +1,6 @@
+import type { ChatPart } from './chat'
 import { describe, expect, it } from 'vitest'
-import { getHostedProvider, HOSTED_DEFAULT_MODEL, HOSTED_MODELS, matchesAttachmentAccept, windowChatHistory } from './chat'
+import { appendReasoningPart, appendTextPart, getHostedProvider, getMessageReasoning, getMessageText, HOSTED_DEFAULT_MODEL, HOSTED_MODELS, matchesAttachmentAccept, upsertToolPart, windowChatHistory } from './chat'
 
 describe('matchesAttachmentAccept', () => {
   it('accepts everything when the list is empty', () => {
@@ -106,5 +107,77 @@ describe('windowChatHistory', () => {
   it('handles an empty history', () => {
     expect(windowChatHistory([], 40)).toEqual([])
     expect(windowChatHistory([], 0)).toEqual([])
+  })
+})
+
+describe('chat parts', () => {
+  it('concatenates only text parts', () => {
+    const parts: ChatPart[] = [
+      { type: 'reasoning', text: 'thinking...' },
+      { type: 'text', text: 'Hello' },
+      { type: 'dynamic-tool', toolName: 'calc', toolCallId: 'c1', state: 'output-available' },
+      { type: 'text', text: ' world' },
+    ]
+
+    expect(getMessageText(parts)).toBe('Hello world')
+    expect(getMessageReasoning(parts)).toBe('thinking...')
+  })
+
+  it('projects empty text for a missing or empty list', () => {
+    expect(getMessageText(undefined)).toBe('')
+    expect(getMessageText([])).toBe('')
+    expect(getMessageReasoning(undefined)).toBe('')
+  })
+
+  it('coalesces consecutive streamed text into one part', () => {
+    const parts: ChatPart[] = []
+    for (const token of ['Hel', 'lo', ' world'])
+      appendTextPart(parts, token)
+
+    expect(parts).toEqual([{ type: 'text', text: 'Hello world' }])
+  })
+
+  it('starts a new text part after a tool call, preserving order', () => {
+    const parts: ChatPart[] = []
+    appendTextPart(parts, 'before')
+    upsertToolPart(parts, { toolCallId: 'c1', toolName: 'calc', state: 'input-available', input: { a: 1 } })
+    appendTextPart(parts, 'after')
+
+    expect(parts.map(p => p.type)).toEqual(['text', 'dynamic-tool', 'text'])
+    expect(getMessageText(parts)).toBe('beforeafter')
+  })
+
+  it('merges a tool call in place when its result arrives', () => {
+    const parts: ChatPart[] = []
+    upsertToolPart(parts, { toolCallId: 'c1', toolName: 'calc', state: 'input-available', input: { a: 1 } })
+    upsertToolPart(parts, { toolCallId: 'c1', toolName: 'calc', state: 'output-available', output: 2 })
+
+    expect(parts).toEqual([{
+      type: 'dynamic-tool',
+      toolCallId: 'c1',
+      toolName: 'calc',
+      state: 'output-available',
+      input: { a: 1 },
+      output: 2,
+    }])
+  })
+
+  it('keeps separate tool calls apart', () => {
+    const parts: ChatPart[] = []
+    upsertToolPart(parts, { toolCallId: 'c1', toolName: 'a' })
+    upsertToolPart(parts, { toolCallId: 'c2', toolName: 'b' })
+
+    expect(parts).toHaveLength(2)
+  })
+
+  it('coalesces reasoning separately from text', () => {
+    const parts: ChatPart[] = []
+    appendReasoningPart(parts, 'th')
+    appendReasoningPart(parts, 'ink')
+    appendTextPart(parts, 'answer')
+
+    expect(getMessageReasoning(parts)).toBe('think')
+    expect(getMessageText(parts)).toBe('answer')
+    expect(parts.map(p => p.type)).toEqual(['reasoning', 'text'])
   })
 })
