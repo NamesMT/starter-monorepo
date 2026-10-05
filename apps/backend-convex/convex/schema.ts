@@ -1,5 +1,6 @@
 import { defineSchema, defineTable } from 'convex/server'
 import { v } from 'convex/values'
+import { partValidator } from '../utils/validators'
 
 const tasksTables = {
   tasks: defineTable({
@@ -13,16 +14,6 @@ const attachmentValidator = v.object({
   name: v.string(),
   type: v.string(),
   size: v.number(),
-})
-
-/** A tool invocation made by the model while producing an assistant message. */
-const toolInvocationValidator = v.object({
-  id: v.string(),
-  name: v.string(),
-  input: v.optional(v.any()),
-  output: v.optional(v.any()),
-  error: v.optional(v.string()),
-  state: v.union(v.literal('call'), v.literal('result'), v.literal('error')),
 })
 
 const aiChatTables = {
@@ -46,7 +37,30 @@ const aiChatTables = {
     threadId: v.id('threads'),
     role: v.union(v.literal('user'), v.literal('assistant')),
     timestamp: v.number(),
-    content: v.string(),
+    /**
+     * Ordered content of the message. An assistant reply interleaves text, reasoning and tool
+     * calls, so it is stored as the AI SDK's part list rather than a flat string plus a
+     * sibling tool array, which could not express what happened where.
+     *
+     * Optional only so rows written before this schema existed still validate; Convex checks
+     * every existing row when the schema is pushed, so a required field here would make the
+     * deploy fail instead of being migratable. Read it through `resolveMessageParts`, which
+     * falls back to the legacy fields, and run `messages:migrateToParts` to backfill.
+     *
+     * Text is read via `getMessageText` in `@local/common`.
+     */
+    parts: v.optional(v.array(partValidator)),
+    /** Legacy flat content, superseded by `parts`. Only present until migrated. */
+    content: v.optional(v.string()),
+    /** Legacy tool invocations, superseded by tool parts. Only present until migrated. */
+    toolInvocations: v.optional(v.array(v.object({
+      id: v.string(),
+      name: v.string(),
+      input: v.optional(v.any()),
+      output: v.optional(v.any()),
+      error: v.optional(v.string()),
+      state: v.union(v.literal('call'), v.literal('result'), v.literal('error')),
+    }))),
     context: v.optional(v.object({
       from: v.optional(v.string()),
       uid: v.optional(v.string()),
@@ -66,10 +80,6 @@ const aiChatTables = {
      * the bytes live in Convex file storage and are resolved to URLs by queries.
      */
     attachments: v.optional(v.array(attachmentValidator)),
-    /**
-     * Tools the model invoked while producing this assistant message (issues #41/#42).
-     */
-    toolInvocations: v.optional(v.array(toolInvocationValidator)),
   })
     .index('by_thread', ['threadId'])
     .index('by_thread_and_timestamp', ['threadId', 'timestamp'])

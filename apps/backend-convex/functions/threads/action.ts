@@ -1,5 +1,5 @@
 import RateLimiter, { MINUTE } from '@convex-dev/rate-limiter'
-import { simpleMessagesToString } from '@local/common/src/chat'
+import { getMessageText, simpleMessagesToString } from '@local/common/src/chat'
 import { openrouter } from '@openrouter/ai-sdk-provider'
 import { generateText } from 'ai'
 import { v } from 'convex/values'
@@ -36,7 +36,7 @@ export const generateTitle = action({
           ? [`Messages:\n${await simpleMessagesToString(messages.map(m => ({
               id: m._id,
               role: m.role,
-              content: m.content,
+              content: getMessageText(m.parts),
             })))}`]
           : []),
       ].join('\n')}`,

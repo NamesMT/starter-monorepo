@@ -1,3 +1,4 @@
 export * from '../functions/messages/internal'
+export * from '../functions/messages/migrate'
 export * from '../functions/messages/mutate'
 export * from '../functions/messages/query'

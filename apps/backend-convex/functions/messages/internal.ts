@@ -2,12 +2,14 @@ import { clearUndefined, objectPick } from '@namesmt/utils'
 import { ConvexError, v } from 'convex/values'
 import { internalMutation, internalQuery } from '../../convex/_generated/server'
 import { singleShardCounter } from '../../utils/counters'
+import { resolveMessageParts } from '../../utils/message'
+import { partValidator } from '../../utils/validators'
 
 export const internalAdd = internalMutation({
   args: {
     threadId: v.id('threads'),
     role: v.union(v.literal('user'), v.literal('assistant')),
-    content: v.string(),
+    parts: v.array(partValidator),
     context: v.optional(v.object({
       from: v.optional(v.string()),
       uid: v.optional(v.string()),
@@ -28,7 +30,7 @@ export const internalAdd = internalMutation({
     await singleShardCounter.inc(ctx, `messages-in-thread_${args.threadId}`)
 
     return await ctx.db.insert('messages', {
-      ...objectPick(args, ['threadId', 'role', 'content', 'context', 'isStreaming', 'streamId', 'provider', 'model', 'attachments']),
+      ...objectPick(args, ['threadId', 'role', 'parts', 'context', 'isStreaming', 'streamId', 'provider', 'model', 'attachments']),
       timestamp: Date.now(),
     })
   },
@@ -37,17 +39,9 @@ export const internalAdd = internalMutation({
 export const updateStreamingMessage = internalMutation({
   args: {
     messageId: v.id('messages'),
-    content: v.string(),
+    parts: v.array(partValidator),
     isStreaming: v.optional(v.boolean()),
     lockerKey: v.optional(v.string()),
-    toolInvocations: v.optional(v.array(v.object({
-      id: v.string(),
-      name: v.string(),
-      input: v.optional(v.any()),
-      output: v.optional(v.any()),
-      error: v.optional(v.string()),
-      state: v.union(v.literal('call'), v.literal('result'), v.literal('error')),
-    }))),
   },
   handler: async (ctx, args) => {
     const message = await ctx.db.get(args.messageId)
@@ -55,9 +49,8 @@ export const updateStreamingMessage = internalMutation({
       throw new ConvexError('Message not found')
 
     await ctx.db.patch(args.messageId, clearUndefined({
-      content: args.content,
+      parts: args.parts,
       isStreaming: args.isStreaming,
-      toolInvocations: args.toolInvocations,
     }))
   },
 })
@@ -117,11 +110,10 @@ export const restartStreamingMessage = internalMutation({
   },
   handler: async (ctx, args) => {
     await ctx.db.patch(args.messageId, {
-      content: '',
+      parts: [],
       isStreaming: true,
       streamId: args.streamId,
       cancelRequested: undefined,
-      toolInvocations: undefined,
     })
   },
 })
@@ -158,7 +150,7 @@ export const resolveStuckStreamMessages = internalMutation({
         isStreaming: false,
         streamId: undefined,
         cancelRequested: undefined,
-        content: `${message.content}\nError: Streaming timed out`,
+        parts: [...resolveMessageParts(message), { type: 'text', text: '\nError: Streaming timed out' }],
       })
     }
   },

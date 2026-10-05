@@ -1,5 +1,6 @@
 import type { GenericQueryCtx } from 'convex/server'
 import type { Doc } from '../../convex/_generated/dataModel'
+import { resolveMessageParts } from '../../utils/message'
 
 /**
  * An attachment as sent to clients: persisted metadata plus a resolved, directly
@@ -9,8 +10,10 @@ export type ResolvedAttachment = NonNullable<Doc<'messages'>['attachments']>[num
   url: string | null
 }
 
-export type MessageWithResolvedAttachments = Omit<Doc<'messages'>, 'attachments'> & {
+export type MessageWithResolvedAttachments = Omit<Doc<'messages'>, 'attachments' | 'parts'> & {
   attachments?: ResolvedAttachment[]
+  /** Always present, even for a row still holding the legacy `content` field. */
+  parts: NonNullable<Doc<'messages'>['parts']>
 }
 
 /**
@@ -18,13 +21,16 @@ export type MessageWithResolvedAttachments = Omit<Doc<'messages'>, 'attachments'
  * render them without extra round-trips.
  */
 export async function resolveMessageAttachments(ctx: GenericQueryCtx<any>, message: Doc<'messages'>): Promise<MessageWithResolvedAttachments> {
+  // Legacy rows are normalized here so a client only ever deals with parts.
+  const parts = resolveMessageParts(message)
+
   if (!message.attachments?.length)
-    return message as MessageWithResolvedAttachments
+    return { ...message, parts } as MessageWithResolvedAttachments
 
   const attachments = await Promise.all(message.attachments.map(async attachment => ({
     ...attachment,
     url: await ctx.storage.getUrl(attachment.storageId),
   })))
 
-  return { ...message, attachments }
+  return { ...message, parts, attachments }
 }

@@ -1,87 +1,116 @@
-import type { PersonalContext } from '@local/common/src/chat'
-import type { AssistantContent, ModelMessage, ToolResultPart } from 'ai'
+import type { ChatPart, PersonalContext } from '@local/common/src/chat'
+import type { ModelMessage, UIMessage } from 'ai'
 import type { Doc } from '../convex/_generated/dataModel'
+import { convertToModelMessages } from 'ai'
 
 /**
- * Rebuilds a stored message for the model prompt.
- *
- * An assistant turn that invoked tools is replayed as `tool-call` parts followed by a
- * `tool` message carrying the matching results, so the model sees the same shape it
- * produced. Sending only the assistant's text would drop the tool context entirely, and
- * sending a `tool-call` without its result makes every provider reject the request.
+ * Stored parts deliberately mirror the AI SDK's UI-message parts, so this is a narrow cast
+ * rather than a translation; the two must stay in step.
  */
-export function buildAiSdkMessage(message: Doc<'messages'>): ModelMessage[] {
-  if (message.role === 'user')
-    return [{ role: 'user', content: buildUserMessageContent(message) }]
+function toUiPart(part: ChatPart): UIMessage['parts'][number] {
+  return part as UIMessage['parts'][number]
+}
 
-  const content: AssistantContent = []
+/** The `MM` header the system prompt documents, so the model can attribute each message. */
+export function buildMetadataHeader(message: Pick<Doc<'messages'>, '_id' | 'role' | 'provider' | 'model' | 'isStreaming' | 'context'>) {
+  const lines = [`<!-- MM START`, `MID: "${message._id}"`]
 
-  if (message.content)
-    content.push({ type: 'text', text: buildAssistantMessageContent(message) })
-
-  const completed = (message.toolInvocations ?? []).filter(invocation => invocation.state !== 'call')
-  if (completed.length) {
-    for (const invocation of completed)
-      content.push({ type: 'tool-call', toolCallId: invocation.id, toolName: invocation.name, input: invocation.input ?? {} })
+  if (message.role === 'user') {
+    if (message.context?.from)
+      lines.push(`Nickname: "${message.context.from}"`)
+    if (message.context?.uid)
+      lines.push(`UID: "${message.context.uid}"`)
+  }
+  else {
+    lines.push(`From: "${message.provider}/${message.model}"`)
+    if (message.isStreaming)
+      lines.push(`This message is still streaming, content is not finalized`)
   }
 
-  // A tool call with no result is invalid input, so a turn with only calls is skipped.
-  if (!content.length)
-    return []
+  lines.push(`MM END -->`, '')
 
-  const messages: ModelMessage[] = [{ role: 'assistant', content }]
-  if (!completed.length)
-    return messages
+  return lines.join('\n')
+}
 
-  messages.push({
-    role: 'tool',
-    content: completed.map<ToolResultPart>(invocation => ({
-      type: 'tool-result',
+/**
+ * The message's parts, falling back to the legacy `content`/`toolInvocations` fields.
+ *
+ * Rows written before the parts schema still exist until `messages:migrateToParts` runs, and
+ * a few code paths (a legacy row loaded into a live stream) can still hold the old shape.
+ */
+export function resolveMessageParts(message: Pick<Doc<'messages'>, 'parts' | 'content' | 'toolInvocations'>): ChatPart[] {
+  if (message.parts?.length)
+    return message.parts as ChatPart[]
+
+  const parts: ChatPart[] = []
+
+  if (message.content)
+    parts.push({ type: 'text', text: message.content })
+
+  for (const invocation of message.toolInvocations ?? []) {
+    parts.push({
+      type: 'dynamic-tool',
       toolCallId: invocation.id,
       toolName: invocation.name,
-      output: invocation.state === 'error'
-        ? { type: 'error-text', value: invocation.error ?? 'Tool call failed' }
-        : { type: 'json', value: (invocation.output ?? null) as never },
-    })),
-  })
+      state: invocation.state === 'result'
+        ? 'output-available'
+        : invocation.state === 'error' ? 'output-error' : 'input-available',
+      input: invocation.input,
+      output: invocation.output,
+      errorText: invocation.error,
+    })
+  }
 
-  return messages
+  return parts
 }
 
-export function buildUserMessageContent({ _id, content, context }: Pick<
-  Doc<'messages'>,
-  '_id' | 'content' | 'context'
->) {
-  const builtContent = [
-    `<!-- MM START`,
-    `MID: "${_id}"`,
-    ...(context?.from ? [`Nickname: "${context.from}"`] : []),
-    ...(context?.uid ? [`UID: "${context.uid}"`] : []),
-    `MM END -->`,
-    '',
-  ]
+/**
+ * Rebuilds a stored message as a UI message, prefixing the `MM` metadata header onto its
+ * first text part.
+ *
+ * Tool calls keep their position relative to text and reasoning, which is what lets
+ * `convertToModelMessages` pair each call with its own result.
+ */
+export function toUiMessage(message: Doc<'messages'>, header?: string): UIMessage {
+  const parts = resolveMessageParts(message).map(toUiPart)
 
-  builtContent.push(content)
+  if (header) {
+    const firstText = parts.findIndex(part => part.type === 'text')
 
-  return builtContent.join('\n')
+    if (firstText === -1)
+      parts.unshift({ type: 'text', text: header })
+    else
+      parts[firstText] = { type: 'text', text: `${header}\n${(parts[firstText] as { text: string }).text}` }
+  }
+
+  return { id: message._id, role: message.role, parts }
 }
 
-export function buildAssistantMessageContent({ _id, content, model, provider, isStreaming }: Pick<
-  Doc<'messages'>,
-  '_id' | 'content' | 'model' | 'provider' | 'isStreaming'
->) {
-  const builtContent = [
-    `<!-- MM START`,
-    `MID: "${_id}"`,
-    `From: "${provider}/${model}"`,
-    ...(isStreaming ? [`This message is still streaming, content is not finalized`] : []),
-    `MM END -->`,
-    '',
-  ]
+/**
+ * The history a regenerated reply should answer.
+ *
+ * Everything strictly before the target, because regenerating rewrites that reply's answer to
+ * the turn that prompted it. Passing the later messages too would let the model answer the
+ * newest message instead — regenerating the first reply in a two-turn thread would otherwise
+ * produce a reply to the second question.
+ */
+export function historyBeforeMessage<T extends { _id: string }>(history: readonly T[], messageId: string): T[] {
+  const index = history.findIndex(message => message._id === messageId)
 
-  builtContent.push(content)
+  return index === -1 ? [...history] : history.slice(0, index)
+}
 
-  return builtContent.join('\n')
+/**
+ * Builds the model prompt from stored messages.
+ *
+ * Uses the SDK's own converter rather than hand-rolling the mapping: it owns the
+ * tool-call/tool-result pairing rules, and a call that never produced a result is dropped
+ * by `ignoreIncompleteToolCalls` instead of being sent as invalid input.
+ */
+export async function buildModelMessages(messages: readonly Doc<'messages'>[]): Promise<ModelMessage[]> {
+  const uiMessages = messages.map(message => toUiMessage(message, buildMetadataHeader(message)))
+
+  return await convertToModelMessages(uiMessages, { ignoreIncompleteToolCalls: true })
 }
 
 export function buildSystemPrompt(
