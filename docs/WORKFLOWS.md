@@ -3,6 +3,7 @@
 ## Commands
 
 - Install: `pnpm install`; `postinstall` runs `nuxt prepare` (apps + layer) and `@local/locales`' CSV→JSON generation.
+- `lint` and the layer's tests read generated files (`apps/frontend/.nuxt/eslint.config.mjs`, the layer's `.nuxt/tsconfig.*.json`), so run `pnpm install`/`nuxt prepare` first — deleting `.nuxt` breaks `lint` until it is regenerated.
 - Root tasks go through Turbo: `lint`, `test`, `test:types`, `quickcheck`, `build`, `deploy`.
 - `pnpm run quickcheck` = per-package `lint && test:types` plus the workspace `test` task; `pnpm run lint` / `pnpm run test:types` / `pnpm run test` run one half each.
 - `pnpm run dev` = `dev:prepare` then `dev`; `pnpm run dev:noConvex` adds `--filter=!backend-convex`.
