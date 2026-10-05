@@ -1,4 +1,5 @@
 import process from 'node:process'
+import { localeCodes } from '@local/locales/src/index'
 import { describe, expect, it } from 'vitest'
 
 // `providersInit` initializes WorkOS on the first request; placeholder values are enough
@@ -39,6 +40,21 @@ describe('backend runtime', () => {
 
     expect(res.status).toBe(200)
     await expect(res.text()).resolves.toBe('Xin chào World!')
+  })
+
+  it('accepts every locale from the shared list, not just the first two', async () => {
+    for (const locale of localeCodes) {
+      const res = await app.request(`/api/dummy/greet?name=World&locale=${encodeURIComponent(locale)}`)
+
+      expect(res.status, `${locale} should be accepted`).toBe(200)
+      await expect(res.text()).resolves.toMatch(/^.+ World!$/)
+    }
+  })
+
+  it('rejects a locale that is not in the shared list', async () => {
+    const res = await app.request('/api/dummy/greet?name=World&locale=de')
+
+    expect(res.status).toBe(400)
   })
 
   it('rejects a missing name through the error handler', async () => {

@@ -1,3 +1,4 @@
+import { localeCodes } from '@local/locales/src/index'
 import { type } from 'arktype'
 import { describeRoute, resolver } from 'hono-openapi'
 import { customArktypeValidator } from '#src/helpers/arktype.js'
@@ -20,7 +21,8 @@ export const dummyGreetRoute = appFactory.createApp()
     }),
     customArktypeValidator('query', type({
       'name': 'string>0',
-      'locale?': `'en' | 'vi'`,
+      // Derived from the shared locale list so adding a locale cannot leave this stale.
+      'locale?': type.enumerated(...localeCodes),
     })),
     async (c) => {
       const { name, locale } = c.req.valid('query')
