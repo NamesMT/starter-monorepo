@@ -19,6 +19,40 @@ These are tradeoffs, not oversights — change them knowingly.
 - **History window, not summarization.** `windowChatHistory` keeps the last 40 messages. Deterministic and cheap; summarization would need an extra model call that can fail mid-conversation.
 - **Regenerate rewrites in place.** It replays the thread without that reply and reuses the same message row, so a regenerated turn keeps its position and id instead of appending a second answer.
 
+## The hosted free tier
+
+`H/auto/free` is the default agent and is a **fallback chain**, not one model. `HOSTED_FREE_CHAIN`
+in `@local/common` holds the ordered members; the server builds them into one `ai-fallback` model
+and `getAgentModel` returns it when the selection is `auto/free`.
+
+Order matters and is deliberate:
+
+1. `openrouter/free` — metered, best quality, tried first while its budget lasts.
+2. `pollinations/openai` — **keyless**, so it keeps answering once a metered key is spent.
+3. `ovh/llama-3.3-70b` — **keyless**, a second independent provider.
+
+`ai-fallback` moves to the next member on a retryable error (429, 5xx, auth) and returns to the
+top after a cooldown. `retryAfterOutput` is off: a stream that already emitted text cannot be
+retried without the user seeing two partial answers.
+
+### Why keyless members rather than more OpenRouter models
+
+OpenRouter's free allowance is **account-wide, not per-model** — 50 requests/day for the whole
+account, shared by every `:free` model (verified against `/api/v1/key`:
+`free_model_daily_requests: { used, limit: 50 }`). Adding more `:free` models there adds no
+capacity. Additional capacity has to come from a different provider, which is why the chain
+includes keyless endpoints that need no credential at all.
+
+Both keyless endpoints answered live with streaming and tool-calling. OVH is rate-limited to
+2 requests/minute per IP, which is why it sits last and why a retryable 429 is what the failover
+is for.
+
+`auto/free` advertises the **intersection** of the chain's capabilities: the keyless members take
+no attachments, so `auto/free` claims none. Pick a specific model to send a file.
+
+Entries declare an optional `apiKeyEnv`. A missing key skips that member rather than failing the
+request, so a fresh clone with no provider keys still answers from the keyless members.
+
 ## Migrating an existing deployment
 
 The parts schema is a **breaking change for stored data**: Convex validates every existing row

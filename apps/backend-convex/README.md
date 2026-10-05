@@ -17,6 +17,22 @@ Ref: https://docs.convex.dev/auth/authkit/#debugging-authentication
 
 `convex dev` might create a few new files when you run it for the first time, you should discard it: `tsconfig.json`, `.gitignore`, `README.md`
 
+## Environment
+
+Set these on the deployment with `pnpm -F=backend-convex exec convex env set <NAME> <value>`.
+
+| Variable | Purpose |
+| --- | --- |
+| `OPENROUTER_API_KEY` | Keyed member of the hosted free chain (`openrouter/free`). |
+| `OPENAI_API_KEY` | The BYOK `openai` provider. |
+| `CUSTOM_JWT_*` | Auth, see above. |
+| `REDIS_URL` | Rate limiter backing store. |
+
+The hosted free chain in `@local/common` also has **keyless** members (Pollinations, OVH) that need
+no variable at all, so a deployment with no AI keys still answers. A member whose `apiKeyEnv` is
+unset is skipped rather than failing the request. See [`docs/CHAT.md`](../../docs/CHAT.md#the-hosted-free-tier).
+
+
 ## Cookbook:
 
 For developing a new feature, and for small features, create functions in `convex/` directly as per common Convex usage.
