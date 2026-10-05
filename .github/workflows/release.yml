@@ -82,7 +82,7 @@ jobs:
         id: target
         run: node scripts/release-target.mjs "$PACKAGE" "$VERSION" | tee -a "$GITHUB_OUTPUT"
 
-      - name: Lint and types
+      - name: Lint, types and tests
         run: pnpm run quickcheck
 
       - name: Changelog, version bump, commit, tag and release
