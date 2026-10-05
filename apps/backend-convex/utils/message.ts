@@ -1,25 +1,51 @@
 import type { PersonalContext } from '@local/common/src/chat'
+import type { AssistantContent, ModelMessage, ToolResultPart } from 'ai'
 import type { Doc } from '../convex/_generated/dataModel'
 
-export interface BuiltMessage {
-  role: 'user' | 'assistant'
-  content: string
-}
-export function buildAiSdkMessage(message: Doc<'messages'>): BuiltMessage {
-  switch (message.role) {
-    case 'user':
-      return {
-        role: 'user',
-        content: buildUserMessageContent(message),
-      }
-    case 'assistant':
-      return {
-        role: 'assistant',
-        content: buildAssistantMessageContent(message),
-      }
-    default:
-      throw new Error(`Unknown message role: ${message.role}`)
+/**
+ * Rebuilds a stored message for the model prompt.
+ *
+ * An assistant turn that invoked tools is replayed as `tool-call` parts followed by a
+ * `tool` message carrying the matching results, so the model sees the same shape it
+ * produced. Sending only the assistant's text would drop the tool context entirely, and
+ * sending a `tool-call` without its result makes every provider reject the request.
+ */
+export function buildAiSdkMessage(message: Doc<'messages'>): ModelMessage[] {
+  if (message.role === 'user')
+    return [{ role: 'user', content: buildUserMessageContent(message) }]
+
+  const content: AssistantContent = []
+
+  if (message.content)
+    content.push({ type: 'text', text: buildAssistantMessageContent(message) })
+
+  const completed = (message.toolInvocations ?? []).filter(invocation => invocation.state !== 'call')
+  if (completed.length) {
+    for (const invocation of completed)
+      content.push({ type: 'tool-call', toolCallId: invocation.id, toolName: invocation.name, input: invocation.input ?? {} })
   }
+
+  // A tool call with no result is invalid input, so a turn with only calls is skipped.
+  if (!content.length)
+    return []
+
+  const messages: ModelMessage[] = [{ role: 'assistant', content }]
+  if (!completed.length)
+    return messages
+
+  messages.push({
+    role: 'tool',
+    content: completed.map<ToolResultPart>(invocation => ({
+      type: 'tool-result',
+      toolCallId: invocation.id,
+      toolName: invocation.name,
+      output: invocation.state === 'error'
+        ? { type: 'error-text', value: invocation.error ?? 'Tool call failed' }
+        : { type: 'json', value: (invocation.output ?? null) as never },
+    })),
+  })
+
+  return messages
 }
 
 export function buildUserMessageContent({ _id, content, context }: Pick<

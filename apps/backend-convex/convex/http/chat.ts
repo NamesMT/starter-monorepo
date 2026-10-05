@@ -299,10 +299,11 @@ chatApp
         const messages = await c.env.runQuery(api.messages.listByThread, { threadId, lockerKey })
 
         // Prepare messages for AI API, capped to a recent window so a long thread cannot
-        // grow the prompt (and its cost) without bound.
+        // grow the prompt (and its cost) without bound. One stored message can expand into
+        // several prompt messages (an assistant turn plus its tool results).
         const messagesContext = windowChatHistory(
           messages.filter(msg => msg._id !== streamingMessageId),
-        ).map(buildAiSdkMessage) as any[]
+        ).flatMap(buildAiSdkMessage)
 
         // Attach the files to the last (just persisted) user message.
         if (resolvedAttachments.length > 0) {
