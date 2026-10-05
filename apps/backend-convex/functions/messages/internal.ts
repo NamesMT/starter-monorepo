@@ -103,6 +103,29 @@ export const finishStreaming = internalMutation({
   },
 })
 
+/** Reads a message by id, for callers that already hold the id and checked access. */
+export const getById = internalQuery({
+  args: { messageId: v.id('messages') },
+  handler: async (ctx, args) => await ctx.db.get(args.messageId),
+})
+
+/** Resets an assistant reply so it can be generated again in place. */
+export const restartStreamingMessage = internalMutation({
+  args: {
+    messageId: v.id('messages'),
+    streamId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.messageId, {
+      content: '',
+      isStreaming: true,
+      streamId: args.streamId,
+      cancelRequested: undefined,
+      toolInvocations: undefined,
+    })
+  },
+})
+
 /**
  * Polled by the running action. Looks the message up by id, not by `streamId`: a stop
  * clears `streamId` so the client stops polling too, and the action must still see the flag.

@@ -212,11 +212,12 @@ chatApp
       streamId: z.optional(z.string()),
       context: z.optional(z.string().transform(val => JSON.parse(val))),
       resumeStreamId: z.optional(z.string()),
-      finishOnly: z.optional(z.coerce.boolean()),
+      /** Assistant message to regenerate in place, dropping the reply it currently holds. */
+      regenerateMessageId: z.optional(z.string()),
       lockerKey: z.optional(z.string()),
-    }).refine(data => data.content !== undefined || data.resumeStreamId !== undefined || data.attachments.length > 0, {
-      message: `Either 'content', 'resumeStreamId' or 'attachments' must be provided.`,
-      path: ['content', 'resumeStreamId', 'attachments'],
+    }).refine(data => data.content !== undefined || data.resumeStreamId !== undefined || data.attachments.length > 0 || data.regenerateMessageId !== undefined, {
+      message: `Either 'content', 'resumeStreamId', 'regenerateMessageId' or 'attachments' must be provided.`,
+      path: ['content', 'resumeStreamId', 'regenerateMessageId', 'attachments'],
     })),
     async (c) => {
       const {
@@ -231,6 +232,7 @@ chatApp
         personalContext = {},
         context = {},
         resumeStreamId,
+        regenerateMessageId,
         lockerKey,
       } = c.req.valid('form')
       let { streamId } = c.req.valid('form')
@@ -253,6 +255,47 @@ chatApp
       // Disable SSE resume, if you want SSE resume, implement a pub-sub.
       if (resumeStreamId)
         throw new ConvexError('SSE stream resume is disabled')
+
+      // Regenerate: replay the thread without the old reply and write the new one in place.
+      if (regenerateMessageId && !content) {
+        if (thread.frozen)
+          throw new ConvexError(`Can't regenerate in a frozen thread`)
+
+        const target = await c.env.runQuery(internal.messages.getById, { messageId: regenerateMessageId as Id<'messages'> })
+        if (!target || target.role !== 'assistant' || target.threadId !== threadId)
+          throw new ConvexError('Message to regenerate not found')
+
+        if (target.isStreaming)
+          throw new ConvexError('Message is still streaming')
+
+        streamId = `stream-${Date.now()}_${randomStr(4)}`
+        streamingMessageId = target._id
+        await c.env.runMutation(internal.messages.restartStreamingMessage, {
+          messageId: streamingMessageId,
+          streamId,
+        })
+
+        // History without this reply, so the model regenerates rather than continues it.
+        const history = await c.env.runQuery(api.messages.listByThread, { threadId, lockerKey })
+        const messagesContext = windowChatHistory(
+          history.filter(msg => msg._id !== streamingMessageId),
+        ).flatMap(buildAiSdkMessage)
+
+        return respondWithAiStream({
+          ctx: c.env,
+          threadId,
+          lockerKey,
+          provider: target.provider,
+          model: target.model,
+          apiKey,
+          modelOptions,
+          personalContext,
+          messagesContext,
+          streamId,
+          streamingMessageId,
+          userMessageId: undefined,
+        })
+      }
 
       // On new stream
       if (content || attachmentReferences.length > 0) {
