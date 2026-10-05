@@ -3,12 +3,10 @@
   "type": "module",
   "version": "0.0.0",
   "private": true,
-  "imports": {
-    "#src/*": "./src/*"
-  },
   "scripts": {
     "lint": "eslint .",
-    "test": "vitest",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
     "test:types": "tsc",
     "quickcheck": "pnpm run lint && pnpm run test:types",
     "check": "pnpm lint && pnpm test:types && vitest run --passWithNoTests",
@@ -39,6 +37,7 @@
     "@namesmt/utils": "catalog:",
     "convex": "catalog:",
     "kontroll": "catalog:",
+    "pathe": "catalog:",
     "vitest": "catalog:"
   }
 }

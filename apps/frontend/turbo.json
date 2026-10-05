@@ -13,6 +13,7 @@
     // Waits for dependency project to emit tsc first
     "quickcheck": {
       "dependsOn": [
+        "test",
         "^quickcheck"
       ]
     }

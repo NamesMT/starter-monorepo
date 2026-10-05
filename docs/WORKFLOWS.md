@@ -3,14 +3,14 @@
 ## Commands
 
 - Install: `pnpm install`; `postinstall` runs `nuxt prepare` (apps + layer) and `@local/locales`' CSV→JSON generation.
-- Root tasks go through Turbo: `lint`, `test:types`, `quickcheck`, `build`, `deploy`.
-- `pnpm run quickcheck` = per-package `lint && test:types`; `pnpm run lint` / `pnpm run test:types` run one half.
+- Root tasks go through Turbo: `lint`, `test`, `test:types`, `quickcheck`, `build`, `deploy`.
+- `pnpm run quickcheck` = per-package `lint && test:types` plus the workspace `test` task; `pnpm run lint` / `pnpm run test:types` / `pnpm run test` run one half each.
 - `pnpm run dev` = `dev:prepare` then `dev`; `pnpm run dev:noConvex` adds `--filter=!backend-convex`.
 - Env loading: root `dev`/`build`/`deploy` wrap Turbo in `dotenvx run`; `backend`/`backend-convex` scripts layer `.env.<mode>.local` → `.env.<mode>` → `.env` through `dotenvx`; each frontend's `nuxt.config.ts` loads `.env.<mode>.local` → `.env.<mode>` with `dotenv` (never the root `.env`), plus `.env.workerd.dev*` when `TARGET=workerdLocal`.
 - `pnpm run devSST` runs `sst dev` with `.env.sst` + `.env` for the frontend dev server.
 - `pnpm run i18n` = `pnpm dlx lingo.dev run`, using the root `i18n.json` CSV buckets.
 - `pnpm run release:check <package> [version]` validates a release target locally.
-- Backend tests: `pnpm -F=backend test` (watch) / `pnpm -F=backend check` (lint + types + coverage) / `pnpm -F=backend-convex check`.
+- Backend tests: `pnpm test` (Turbo, workspace) / `pnpm -F=backend test` (runs once) / `pnpm -F=backend test:watch` (watch) / `pnpm -F=backend check` (lint + types + coverage) / `pnpm -F=backend-convex check`.
 - Backend tests hit the real app with `app.request()` and stub `WORKOS_*`/`FRONTEND_URL` before importing `#src/app.js`.
 - `apps/frontend` extras: `build:workerdLocal` (sets `TARGET=workerdLocal`) and `preview`; `deploy` runs the build itself.
 - Turbo outputs cached for `build`: `.nuxt/**`, `.output/**`, `dist/**`; `globalDependencies` are `**/.env` and `**/.env.*`.
@@ -19,7 +19,8 @@
 ## Task graph (turbo.json)
 
 - `build` depends on `^build`; `deploy` depends on `build` + `quickcheck` and is not cached; `dev`/`dev:prepare` are persistent/uncached.
-- `apps/frontend/turbo.json` (extends `//`): `deploy` additionally waits on `backend#deploy` and `backend-convex#deploy` so SSG runs against deployed backends, and `quickcheck` depends on `^quickcheck`.
+- `test` is cacheable like `lint`; `quickcheck` depends on `test`, so `pnpm run quickcheck` runs the suites too. Packages without a `test` script (the frontends, the layer, the libraries) are simply skipped, so a fork can add tests to any package without touching Turborepo.
+- `apps/frontend/turbo.json` (extends `//`): `deploy` additionally waits on `backend#deploy` and `backend-convex#deploy` so SSG runs against deployed backends, and `quickcheck` depends on `^quickcheck` (plus the inherited `test`).
 - `frontend#deploy` therefore pulls in both backend deploys; `frontend-second#deploy` does not.
 
 ## CI pipelines (`.github/workflows/`)

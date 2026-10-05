@@ -16,7 +16,7 @@ Orientation for agents working here. Deeper sources of truth: [`README.md`](./RE
 pnpm install          # workspace install; @local/locales generates its JSON on postinstall
 pnpm run dev          # every app's dev server through turbo
 pnpm run dev:noConvex # same without Convex — the usual choice when not touching chat
-pnpm run quickcheck   # lint + test:types across the workspace: run before saying "done"
+pnpm run quickcheck   # lint + test:types + test across the workspace: run before saying "done"
 ```
 
 Ports (all `127.0.0.1`, all HTTPS): `frontend` 3300 · `frontend-second` 3301 · `backend` 3400 · wrangler/workerd 3450. Nuxt/backend TLS comes from the `locals/common/dev` localcert; `wrangler dev` serves its own local HTTPS.
@@ -46,7 +46,7 @@ Ports (all `127.0.0.1`, all HTTPS): `frontend` 3300 · `frontend-second` 3301 ·
 - App entries (`app.ts`, `$.ts`) only `.use` middlewares and `.route` routes, never define routes, and are named `<Name>App`; route files are `<Name>Route`, multiple routes in one file go in `$.routes.ts`, and a folder-prefix index route uses `$$.ts` (e.g. `src/api/$$.ts`, not `api.ts`).
 - `#src/providers` (3rd-party connectors, grouped by purpose), `#src/services` (orchestrating providers), `#src/helpers` (global helpers); locally reusable code sits next to its consumer as `*.helper.ts`.
 - Validation via `customArktypeValidator` + `describeRoute` (OpenAPI); errors flow through `errorHandler` (`DetailedError`/`HTTPException`). Import with `#src/*`; the dev script reads the committed `.env.dev`, and a gitignored `.env.dev.local` overrides it.
-- Tests: `pnpm -F=backend test` (watch) / `pnpm -F=backend check` (lint + types + coverage); they hit the real app with `app.request()`.
+- Tests: `pnpm test` (Turbo, whole workspace) or `pnpm -F=backend test`; `test:watch` for watch mode; `pnpm -F=backend check` adds coverage. They hit the real app with `app.request()`.
 
 ## Releases
 

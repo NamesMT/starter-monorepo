@@ -22,8 +22,13 @@
       ]
     },
     "lint": {},
+    "test": {},
     "test:types": {},
-    "quickcheck": {},
+    "quickcheck": {
+      "dependsOn": [
+        "test"
+      ]
+    },
     "dev": {
       "cache": false,
       "persistent": true

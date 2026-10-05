@@ -8,7 +8,8 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "test": "vitest",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
     "test:types": "tsc",
     "quickcheck": "pnpm run lint && pnpm run test:types",
     "check": "pnpm lint && pnpm test:types && vitest run --coverage",

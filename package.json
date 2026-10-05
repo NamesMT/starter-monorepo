@@ -9,6 +9,7 @@
   },
   "scripts": {
     "lint": "turbo run lint",
+    "test": "turbo run test",
     "test:types": "turbo run test:types",
     "quickcheck": "turbo run quickcheck",
     "dev": "dotenvx run -- turbo run dev:prepare && dotenvx run -- turbo run dev",
