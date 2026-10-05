@@ -20,7 +20,7 @@
 
 ## Task graph (turbo.json)
 
-- `build` depends on `^build`; `deploy` depends on `build` + `quickcheck` and is not cached; `dev`/`dev:prepare` are persistent/uncached.
+- `build` depends on `^build`; `deploy` depends on `build` + `quickcheck` and is not cached; `dev`/`dev:prepare` are persistent/uncached, and neither is marked `interactive` so `pnpm run dev` also works without a TTY (background job, container, CI).
 - `test` is cacheable like `lint`; `quickcheck` depends on `test`, so `pnpm run quickcheck` runs the suites too. Packages without a `test` script (the frontends, the layer, the libraries) are simply skipped, so a fork can add tests to any package without touching Turborepo.
 - `apps/frontend/turbo.json` (extends `//`): `deploy` additionally waits on `backend#deploy` and `backend-convex#deploy` so SSG runs against deployed backends, and `quickcheck` depends on `^quickcheck` (plus the inherited `test`).
 - `frontend#deploy` therefore pulls in both backend deploys; `frontend-second#deploy` does not.
