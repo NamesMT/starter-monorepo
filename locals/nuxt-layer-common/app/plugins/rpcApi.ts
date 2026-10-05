@@ -1,7 +1,6 @@
 import type { app } from 'backend/src/app'
 import type { ClientRequestOptions } from 'hono/client'
 import { hc } from 'hono/client'
-import { sha256 } from 'hono/utils/crypto'
 
 export default defineNuxtPlugin({
   name: 'local-rpcApi',
@@ -20,17 +19,22 @@ export default defineNuxtPlugin({
       ? requestUrl.origin + ((runtimeConfig.app.baseURL && runtimeConfig.app.baseURL !== '/') ? runtimeConfig.app.baseURL : '')
       : backendUrl
 
-    // this wrappedFetch calculates the sha256 hash of the request body and adds it to the headers, it is necessary for AWS Lambda + OAC on POST/PUT requests.
+    // `x-amz-content-sha256` is required by Lambda + CloudFront OAC on POST/PUT.
     const wrappedFetch = async (url: string | URL | Request, options: RequestInit = {}) => {
       options.headers = new Headers(options.headers || {})
       if (options.body) {
-        // TODO: make sure this work well with all forms of BodyInit, i.e: FormData, Blob, etc.
-        options.headers.set(
-          'x-amz-content-sha256',
-          (await sha256(typeof options.body === 'string'
-            ? options.body
-            : JSON.stringify(options.body)))!,
-        )
+        const payload = await buildOacPayload(options.body)
+
+        if (payload) {
+          options.headers.set('x-amz-content-sha256', payload.payloadHash)
+
+          if (payload.replaceBody) {
+            options.body = payload.bytes
+            // A materialized `FormData` carries its own boundary, which must match these bytes.
+            if (payload.contentType)
+              options.headers.set('content-type', payload.contentType)
+          }
+        }
       }
 
       return fetch(url, options)

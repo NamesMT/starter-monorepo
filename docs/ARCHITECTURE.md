@@ -7,6 +7,8 @@
 - `apps/frontend-second` — minimal sample Nuxt app proving the layer is reusable; dev `127.0.0.1:3301`.
 - `apps/backend` — main Hono API (auth, i18n, providers, OpenAPI/RPC); dev `127.0.0.1:3400`.
 - `apps/backend-convex` — optional Convex backend for AI chat; only `dev`/`dev:prepare`, deploy stays disabled as `_deploy`.
+  - `convex/crons.ts` wipes **all** threads and messages daily at 00:00 UTC (cost control for the demo) — remove those crons before real use.
+  - Attachment bytes live in Convex file storage; nothing calls `storage.delete`, so removing a message does not free its blobs.
 - `locals/common` — framework-agnostic shared code: `src/chat.ts`, `src/types/user.ts`, `src/utils/*`, `dev/` local TLS certs.
 - `locals/common-vue` — Vue-only shared components (`GridMaker.vue`) plus its own `uno.config.ts`.
 - `locals/locales` — i18n source of truth: CSVs under `src/sheets/` compile to JSON under `dist/`.
@@ -43,7 +45,7 @@
 - Layer merge: the app wins scalars/objects, arrays (`css`, `modules`) concatenate layer-first, and same-named files resolve app-first.
 - Each app re-exports the layer UnoCSS config (`@local/nuxt-layer-common/uno.config`) because `@unocss/nuxt` only loads the app's own file.
 - Add shadcn components only from the layer: `pnpm -F=@local/nuxt-layer-common shad-add <name>`.
-- `rpcApi` plugin (`hc<typeof app>`) calls `/api/*` through the layer proxy when frontend and backend share a hostname (`enableProxy: 'auto'`), otherwise the backend URL directly; it adds `x-amz-content-sha256` for Lambda + OAC.
+- `rpcApi` plugin (`hc<typeof app>`) calls `/api/*` through the layer proxy when frontend and backend share a hostname (`enableProxy: 'auto'`), otherwise the backend URL directly; it adds `x-amz-content-sha256` for Lambda + OAC via `app/utils/aws-oac.ts`.
 - `enableProxy` lives in the layer's `app/app.config.ts`; the proxy handler is `locals/nuxt-layer-common/server/api/[...].ts`.
 - `nuxt generate` writes `.output/public` and symlinks `apps/<app>/dist` to it; CI uploads `dist`.
 
