@@ -207,3 +207,38 @@ export function matchesAttachmentAccept(type: string, name: string, accept: read
     return lowerType === entry
   })
 }
+
+/**
+ * Conversation history sent to the model.
+ *
+ * A thread is unbounded, so replaying the whole transcript every turn grows cost, latency
+ * and the context window without limit. We send a window of recent messages instead.
+ */
+export const CHAT_HISTORY_LIMITS = {
+  /** Recent messages kept in the prompt; generous enough for a coherent conversation. */
+  maxMessages: 40,
+} as const
+
+/**
+ * Keeps the most recent `maxMessages` as a window for the model prompt.
+ *
+ * The window must not start on an assistant message: Anthropic rejects that with a 400, and
+ * our transcript count is odd because the in-flight assistant reply is excluded before this
+ * runs, so an even window would otherwise open on a reply. Any such leading reply is dropped
+ * (it is the answer to a user turn that fell outside the window, so it is the orphan).
+ * Always keeps at least one message.
+ */
+export function windowChatHistory<T extends { role: string }>(
+  messages: readonly T[],
+  maxMessages: number = CHAT_HISTORY_LIMITS.maxMessages,
+): T[] {
+  if (!messages.length)
+    return []
+
+  const capped = Math.max(1, maxMessages)
+  const window = messages.length <= capped ? [...messages] : messages.slice(-capped)
+
+  const firstUserAt = window.findIndex(message => message.role === 'user')
+
+  return firstUserAt > 0 ? window.slice(firstUserAt) : window
+}

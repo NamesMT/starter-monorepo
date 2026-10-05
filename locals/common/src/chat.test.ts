@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getHostedProvider, HOSTED_DEFAULT_MODEL, HOSTED_MODELS, matchesAttachmentAccept } from './chat'
+import { getHostedProvider, HOSTED_DEFAULT_MODEL, HOSTED_MODELS, matchesAttachmentAccept, windowChatHistory } from './chat'
 
 describe('matchesAttachmentAccept', () => {
   it('accepts everything when the list is empty', () => {
@@ -47,5 +47,64 @@ describe('hosted provider definition', () => {
 
   it('gives each caller an independent top-level object', () => {
     expect(getHostedProvider()).not.toBe(getHostedProvider())
+  })
+})
+
+describe('windowChatHistory', () => {
+  /** Alternating user/assistant turns, as a real transcript is. */
+  const alternating = (n: number) =>
+    Array.from({ length: n }, (_, i) => ({ role: i % 2 === 0 ? 'user' : 'assistant', id: `m${i}` }))
+  const ids = (messages: { id: string }[]) => messages.map(m => m.id)
+
+  it('returns a short history untouched', () => {
+    expect(ids(windowChatHistory(alternating(3), 40))).toEqual(['m0', 'm1', 'm2'])
+  })
+
+  it('keeps only the most recent messages when trimming', () => {
+    expect(ids(windowChatHistory(alternating(10), 4))).toEqual(['m6', 'm7', 'm8', 'm9'])
+  })
+
+  it('never opens the window on an assistant message', () => {
+    // 41 messages ends on a user turn (the in-flight reply is excluded before this runs),
+    // so an even window would otherwise start with the assistant reply it just dropped.
+    const window = windowChatHistory(alternating(41), 40)
+
+    expect(window[0]!.role).toBe('user')
+    expect(window.length).toBeLessThanOrEqual(40)
+  })
+
+  it('drops a leading assistant turn rather than sending it orphaned', () => {
+    const messages = [
+      { role: 'assistant', id: 'orphan' },
+      { role: 'user', id: 'u' },
+      { role: 'assistant', id: 'a' },
+    ]
+
+    expect(ids(windowChatHistory(messages, 3))).toEqual(['u', 'a'])
+  })
+
+  it('leaves an already user-first window alone', () => {
+    const messages = [{ role: 'user', id: 'u' }, { role: 'assistant', id: 'a' }]
+
+    expect(ids(windowChatHistory(messages, 2))).toEqual(['u', 'a'])
+  })
+
+  it('does not mutate its input', () => {
+    const input = alternating(10)
+    const snapshot = structuredClone(input)
+
+    windowChatHistory(input, 3)
+
+    expect(input).toEqual(snapshot)
+  })
+
+  it('always keeps at least one message', () => {
+    expect(ids(windowChatHistory(alternating(5), 0))).toEqual(['m4'])
+    expect(ids(windowChatHistory(alternating(5), -1))).toEqual(['m4'])
+  })
+
+  it('handles an empty history', () => {
+    expect(windowChatHistory([], 40)).toEqual([])
+    expect(windowChatHistory([], 0)).toEqual([])
   })
 })

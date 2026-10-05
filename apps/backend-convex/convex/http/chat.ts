@@ -5,7 +5,7 @@ import type { Id } from '../_generated/dataModel'
 import type { ActionCtx } from '../_generated/server'
 import RateLimiter, { MINUTE } from '@convex-dev/rate-limiter'
 import { zValidator } from '@hono/zod-validator'
-import { CHAT_ATTACHMENT_LIMITS, matchesAttachmentAccept } from '@local/common/src/chat'
+import { CHAT_ATTACHMENT_LIMITS, matchesAttachmentAccept, windowChatHistory } from '@local/common/src/chat'
 import { randomStr, sleep } from '@namesmt/utils'
 import { createUIMessageStreamResponse, stepCountIs, streamText, toUIMessageStream } from 'ai'
 import { ConvexError } from 'convex/values'
@@ -298,10 +298,11 @@ chatApp
         // Get conversation history
         const messages = await c.env.runQuery(api.messages.listByThread, { threadId, lockerKey })
 
-        // Prepare messages for AI API
-        const messagesContext = messages
-          .filter(msg => msg._id !== streamingMessageId)
-          .map(buildAiSdkMessage) as any[]
+        // Prepare messages for AI API, capped to a recent window so a long thread cannot
+        // grow the prompt (and its cost) without bound.
+        const messagesContext = windowChatHistory(
+          messages.filter(msg => msg._id !== streamingMessageId),
+        ).map(buildAiSdkMessage) as any[]
 
         // Attach the files to the last (just persisted) user message.
         if (resolvedAttachments.length > 0) {
