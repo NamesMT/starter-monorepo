@@ -1,21 +1,77 @@
-import type { AgentObject } from '@local/common/src/chat'
+import type { LanguageModelV4 } from '@ai-sdk/provider'
+import type { AgentObject, HostedFreeModel } from '@local/common/src/chat'
 import type { LanguageModel } from 'ai'
 import { createAnthropic } from '@ai-sdk/anthropic'
 import { createGoogle } from '@ai-sdk/google'
 import { createGroq } from '@ai-sdk/groq'
 import { createOpenAI } from '@ai-sdk/openai'
-import { DEFAULT_ATTACHMENT_ACCEPT, HOSTED_MODELS } from '@local/common/src/chat'
-import { createOpenRouter, openrouter } from '@openrouter/ai-sdk-provider'
+import { createOpenAICompatible } from '@ai-sdk/openai-compatible'
+import { DEFAULT_ATTACHMENT_ACCEPT, getHostedFreeModel, HOSTED_AUTO_MODEL, HOSTED_FREE_CHAIN, HOSTED_MODELS } from '@local/common/src/chat'
+import { createOpenRouter } from '@openrouter/ai-sdk-provider'
+import { createFallback } from 'ai-fallback'
 import { getErrorMessage, normalizePossibleSDKError } from './error'
+
+/**
+ * Resolves a hosted chain entry to a live language model.
+ *
+ * Entries declare the env var holding their key, so a keyless provider is just one with no
+ * `apiKeyEnv`. A missing key is not fatal: the entry is skipped so the chain still answers
+ * from the remaining members.
+ */
+function buildHostedModel(entry: HostedFreeModel): LanguageModelV4 | undefined {
+  const apiKey = entry.apiKeyEnv ? process.env[entry.apiKeyEnv] : undefined
+
+  if (entry.apiKeyEnv && !apiKey)
+    return undefined
+
+  if (entry.baseURL.includes('openrouter.ai'))
+    return createOpenRouter({ apiKey })(entry.modelId)
+
+  return createOpenAICompatible({
+    name: entry.id,
+    baseURL: entry.baseURL,
+    apiKey,
+  })(entry.modelId)
+}
+
+/**
+ * The hosted free chain with automatic failover.
+ *
+ * Extra free capacity comes from keyless members rather than more OpenRouter `:free` models:
+ * OpenRouter's free budget is account-wide (50/day), so additional models there add no quota.
+ * `retryAfterOutput` is off because a stream that already emitted text cannot be retried
+ * without the client seeing two partial answers.
+ */
+export function getHostedModel(model: string): LanguageModel {
+  const entries = model === HOSTED_AUTO_MODEL
+    ? HOSTED_FREE_CHAIN
+    : [getHostedFreeModel(model)].filter((entry): entry is HostedFreeModel => !!entry)
+
+  const models = entries
+    .map(buildHostedModel)
+    .filter((built): built is LanguageModelV4 => built !== undefined)
+
+  if (!models.length)
+    throw new Error(`No usable hosted model for "${model}"`)
+
+  if (models.length === 1)
+    return models[0]!
+
+  return createFallback({
+    models,
+    retryAfterOutput: false,
+    onError: (error, modelId) => {
+      console.warn(`[chat] hosted model "${modelId}" failed, trying the next in the chain:`, getErrorMessage(error))
+    },
+  }) as unknown as LanguageModel
+}
 
 export function getAgentModel({ provider, model, apiKey }: AgentObject): LanguageModel {
   if (provider === 'hosted') {
-    switch (model) {
-      case 'openrouter/free':
-        return openrouter('openrouter/free')
-      default:
-        throw new Error(`Invalid model for hosted provider`)
-    }
+    if (!HOSTED_MODELS[model])
+      throw new Error(`Invalid model for hosted provider`)
+
+    return getHostedModel(model)
   }
   else {
     return (() => {

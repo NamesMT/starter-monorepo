@@ -239,20 +239,92 @@ export const DEFAULT_ATTACHMENT_ACCEPT = [
 ] as const
 
 /**
- * The built-in hosted models, defined once so the client picker and the server's
- * capability checks cannot drift apart.
+ * One entry in the hosted free chain: where to reach it and what it can do.
+ *
+ * `id` is the selection/catalogue key; `modelId` is what goes on the wire. They differ
+ * because two providers can use the same wire name for different things.
  */
-export const HOSTED_MODELS: Record<string, CommonModelSettings> = {
-  'openrouter/free': {
+export interface HostedFreeModel extends CommonModelSettings {
+  id: string
+  /** OpenAI-compatible base URL. */
+  baseURL: string
+  /** Model id sent to that endpoint. */
+  modelId: string
+  /** Environment variable holding this provider's key; omitted means keyless. */
+  apiKeyEnv?: string
+}
+
+/**
+ * The ordered free chain behind `auto/free`.
+ *
+ * Order is the failover order, and it is deliberate: the metered OpenRouter entry first
+ * (best quality while its daily budget lasts), then the keyless endpoints, which need no
+ * credential and so keep answering when that budget is spent. `ai-fallback` walks this list
+ * on a retryable error (429, 5xx, auth) and returns to the top after a cooldown.
+ */
+export const HOSTED_FREE_CHAIN: HostedFreeModel[] = [
+  {
+    id: 'openrouter/free',
+    baseURL: 'https://openrouter.ai/api/v1',
+    modelId: 'openrouter/free',
+    apiKeyEnv: 'OPENROUTER_API_KEY',
     enabled: true,
     attachments: ['image/*', 'application/pdf'],
-    // Tools are opt-in per model; enable them for the hosted default.
+    tools: true,
+  },
+  {
+    id: 'pollinations/openai',
+    baseURL: 'https://text.pollinations.ai/v1',
+    modelId: 'openai',
+    enabled: true,
+    attachments: [],
+    tools: true,
+  },
+  {
+    id: 'ovh/llama-3.3-70b',
+    baseURL: 'https://oai.endpoints.kepler.ai.cloud.ovh.net/v1',
+    modelId: 'Meta-Llama-3_3-70B-Instruct',
+    enabled: true,
+    attachments: [],
+    tools: false,
+  },
+]
+
+/** The default hosted entry: the whole free chain with automatic failover. */
+export const HOSTED_AUTO_MODEL = 'auto/free'
+
+/**
+ * The built-in hosted models, defined once so the client picker and the server's
+ * capability checks cannot drift apart.
+ *
+ * `auto/free` advertises the *intersection* of the chain's capabilities, not the union: any
+ * member may end up serving the request, so it must only claim what all of them can do. The
+ * keyless members take no attachments, so `auto/free` advertises none — pick a specific
+ * model when sending an image.
+ */
+export const HOSTED_MODELS: Record<string, CommonModelSettings> = {
+  [HOSTED_AUTO_MODEL]: {
+    enabled: true,
+    attachments: [],
     tools: true,
   },
 }
 
+for (const entry of HOSTED_FREE_CHAIN) {
+  HOSTED_MODELS[entry.id] ??= {
+    enabled: entry.enabled,
+    attachments: entry.attachments,
+    tools: entry.tools,
+  }
+}
+
+/** Looks up a hosted chain entry by its catalogue id. */
+export function getHostedFreeModel(id: string): HostedFreeModel | undefined {
+  return HOSTED_FREE_CHAIN.find(entry => entry.id === id)
+}
+
 /** The model the hosted provider falls back to, and the default selected agent. */
-export const HOSTED_DEFAULT_MODEL = 'openrouter/free'
+export const HOSTED_DEFAULT_MODEL = HOSTED_AUTO_MODEL
 
 /**
  * Builds the hosted provider descriptor. A function rather than a constant so each

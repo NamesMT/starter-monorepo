@@ -1,6 +1,6 @@
 import type { ChatPart } from './chat'
 import { describe, expect, it } from 'vitest'
-import { appendReasoningPart, appendTextPart, getHostedProvider, getMessageReasoning, getMessageText, HOSTED_DEFAULT_MODEL, HOSTED_MODELS, matchesAttachmentAccept, upsertToolPart, windowChatHistory } from './chat'
+import { appendReasoningPart, appendTextPart, getHostedFreeModel, getHostedProvider, getMessageReasoning, getMessageText, HOSTED_AUTO_MODEL, HOSTED_DEFAULT_MODEL, HOSTED_FREE_CHAIN, HOSTED_MODELS, matchesAttachmentAccept, upsertToolPart, windowChatHistory } from './chat'
 
 describe('matchesAttachmentAccept', () => {
   it('accepts everything when the list is empty', () => {
@@ -48,6 +48,38 @@ describe('hosted provider definition', () => {
 
   it('gives each caller an independent top-level object', () => {
     expect(getHostedProvider()).not.toBe(getHostedProvider())
+  })
+
+  it('keeps a keyless member in the chain', () => {
+    // Keyless capacity is the only part that survives an exhausted metered key.
+    expect(HOSTED_FREE_CHAIN.some(entry => !entry.apiKeyEnv)).toBe(true)
+  })
+
+  it('gives every chain entry a unique id and a wire model id', () => {
+    const ids = HOSTED_FREE_CHAIN.map(entry => entry.id)
+
+    expect(new Set(ids).size).toBe(ids.length)
+    for (const entry of HOSTED_FREE_CHAIN) {
+      expect(entry.modelId).toBeTruthy()
+      expect(entry.baseURL).toMatch(/^https:\/\//)
+    }
+  })
+
+  it('exposes every chain entry and the auto entry in the picker', () => {
+    for (const entry of HOSTED_FREE_CHAIN)
+      expect(HOSTED_MODELS[entry.id]).toBeDefined()
+
+    expect(HOSTED_MODELS[HOSTED_AUTO_MODEL]).toBeDefined()
+  })
+
+  it('resolves a chain entry by id and nothing for an unknown id', () => {
+    expect(getHostedFreeModel(HOSTED_FREE_CHAIN[0]!.id)?.modelId).toBe(HOSTED_FREE_CHAIN[0]!.modelId)
+    expect(getHostedFreeModel('nope/does-not-exist')).toBeUndefined()
+  })
+
+  it('advertises no attachments on auto, since a keyless member may serve the request', () => {
+    // Claiming attachments would let a user attach a file the fallback cannot read.
+    expect(HOSTED_MODELS[HOSTED_AUTO_MODEL]?.attachments ?? []).toEqual([])
   })
 })
 
