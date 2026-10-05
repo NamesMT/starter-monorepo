@@ -122,6 +122,8 @@ the `/api/*` dev proxy. See the layer's README for the authoring rules.
 
 #### [`backend-convex`](./apps/backend-convex): a [Convex](https://convex.dev/) app.
 
+> ⚠️ Its crons wipe **all** threads and messages daily at 00:00 UTC for demo cost control — remove them before real use.
+
 ### Local packages
 
 + [`@local/locales`](./locals/locales/README.md): a shared central locales/i18n data library powered by [**spreadsheet-i18n**](https://github.com/NamesMT/spreadsheet-i18n--mono).
