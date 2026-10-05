@@ -28,6 +28,10 @@ Set these on the deployment with `pnpm -F=backend-convex exec convex env set <NA
 | `CUSTOM_JWT_*` | Auth, see above. |
 | `REDIS_URL` | Rate limiter backing store. |
 
+Prompt caching needs no variable: Anthropic markers and OpenAI's cache key are derived per
+request. Anthropic is the only provider here that needs explicit markers, so caching is inert on
+the keyless hosted members by design — see [`docs/CHAT.md`](../../docs/CHAT.md#prompt-caching).
+
 The hosted free chain in `@local/common` also has **keyless** members (Pollinations, OVH) that need
 no variable at all, so a deployment with no AI keys still answers. A member whose `apiKeyEnv` is
 unset is skipped rather than failing the request. See [`docs/CHAT.md`](../../docs/CHAT.md#the-hosted-free-tier).

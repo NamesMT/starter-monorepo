@@ -18,6 +18,46 @@ These are tradeoffs, not oversights — change them knowingly.
 - **No per-part `state`.** Whether a reply is still streaming is `message.isStreaming`. Keeping a second copy inside each part needed a final write to beat Convex tearing the action down as the response ended, and it lost that race.
 - **History window, not summarization.** `windowChatHistory` keeps the last 40 messages. Deterministic and cheap; summarization would need an extra model call that can fail mid-conversation.
 - **Regenerate rewrites in place.** It replays the thread without that reply and reuses the same message row, so a regenerated turn keeps its position and id instead of appending a second answer.
+- **Edit rewrites in place and drops what followed.** Editing a user message deletes every later message, because those answered text that no longer exists. Keeping them would leave the thread contradicting itself. There is no undo.
+
+## Prompt caching
+
+Without markers every turn of a thread re-sends the whole history window at full input price,
+even though each turn's prompt is a superset of the previous one. `utils/caching.ts` wires the
+per-provider mechanism.
+
+The strategies are keyed on the **user-selected provider**, not on the model object: the hosted
+chain wraps its members in a fallback model, so `model.provider` there names the wrapper rather
+than whichever member serves the request. Getting this wrong is why the module is tested at the
+wire level — cache configuration fails *silently*. A marker on a prefix a provider does not
+cache, in the wrong `providerOptions` namespace, or below the provider's minimum prefix length
+produces a perfectly successful request that simply never caches anything.
+
+| Provider | Mechanism | Why |
+| --- | --- | --- |
+| `anthropic` | Explicit markers: system message + last message | The only BYOK provider here that requires them |
+| `openai` | `promptCacheKey` = thread id | Caches implicitly already; the key only steers routing |
+| `google`, `groq` | None | Cache implicitly, no marker surface |
+| `openrouter` | None | Its `cache_control` is documented for Anthropic models only; our traffic is a free auto-router |
+| `hosted` | None | A metered free OpenRouter model plus two keyless OpenAI-compatible endpoints — none is Anthropic |
+
+Anthropic allows **4 markers per request** and silently discards the excess, so two are placed:
+the system message (identical every turn) and the last message. The second advances each turn,
+which is what makes the cache incremental — the previous turn's marked prefix is a prefix of
+this turn's request, so it is read back and only the new tail is written.
+
+Two things that look right and are not, both verified against the requests providers build:
+
+- A *call-level* `anthropic.cacheControl` is **not** these markers. It produces a top-level
+  `cache_control`, which is Anthropic's separate automatic-caching mode.
+- Unknown `providerOptions` namespaces are dropped rather than forwarded, so marking the keyless
+  members would be inert — they are asserted byte-clean instead.
+
+A marker is not a promise of an entry: Anthropic enforces a minimum prefix length, so on a short
+thread the markers are accepted and cache nothing. That degrades to the previous uncached
+behaviour rather than failing. Cache accounting is logged on the `finish` chunk
+(`cacheRead=`/`cacheWrite=`), because it is the only evidence caching engaged — verified live
+against the hosted path, which correctly reports `cacheRead=0` since its members cannot cache.
 
 ## The hosted free tier
 
@@ -79,7 +119,6 @@ blob that has not been attached yet looks exactly like an orphan.
 
 ## Known gaps
 
-- **Prompt caching** is not configured; each turn re-sends the window uncached.
 - **Stopping is cooperative**, so it lands within `CANCEL_POLL_MS` rather than instantly, and tokens burned inside that window are still spent.
 - **Attachment bytes are sent once.** `toUiMessage` emits no file parts, so an attachment reaches
   the model on the turn it was sent and is absent from every later turn's prompt — a follow-up
