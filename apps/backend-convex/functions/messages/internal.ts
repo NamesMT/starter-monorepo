@@ -98,7 +98,21 @@ export const finishStreaming = internalMutation({
     await ctx.db.patch(message._id, {
       streamId: undefined,
       isStreaming: false,
+      cancelRequested: undefined,
     })
+  },
+})
+
+/**
+ * Polled by the running action. Looks the message up by id, not by `streamId`: a stop
+ * clears `streamId` so the client stops polling too, and the action must still see the flag.
+ */
+export const isCancelRequested = internalQuery({
+  args: { messageId: v.id('messages') },
+  handler: async (ctx, args) => {
+    const message = await ctx.db.get(args.messageId)
+
+    return message?.cancelRequested === true
   },
 })
 
@@ -120,7 +134,8 @@ export const resolveStuckStreamMessages = internalMutation({
       await ctx.db.patch(message._id, {
         isStreaming: false,
         streamId: undefined,
-        content: message.content += `\nError: Streaming timed out`,
+        cancelRequested: undefined,
+        content: `${message.content}\nError: Streaming timed out`,
       })
     }
   },

@@ -26,6 +26,9 @@ const rateLimiter = new RateLimiter(components.rateLimiter, {
 /** Maximum tool-calling steps per response (issue #42). */
 const MAX_TOOL_STEPS = 5
 
+/** How often a generating action checks whether the user asked it to stop. */
+const CANCEL_POLL_MS = 1000
+
 /** Inserts or updates a tool invocation, keyed by its tool call id. */
 function upsertToolInvocation(invocations: ChatToolInvocation[], invocation: ChatToolInvocation) {
   const existing = invocations.find(entry => entry.id === invocation.id)
@@ -420,6 +423,29 @@ function respondWithAiStream({
       console.error('Save was stuck')
   }
 
+  // Convex actions get no abort signal, so a `stop` request is polled and turned into a
+  // local abort. The interval is a floor: each poll is a Convex query, and a stop that
+  // lands within it costs at most this long.
+  const cancelController = new AbortController()
+  let cancelTimer: ReturnType<typeof setInterval> | undefined
+  function startCancelWatch() {
+    cancelTimer ??= setInterval(() => {
+      ctx.runQuery(internal.messages.isCancelRequested, { messageId: streamingMessageId })
+        .then((requested) => {
+          if (requested)
+            cancelController.abort()
+        })
+        .catch(() => {})
+    }, CANCEL_POLL_MS)
+  }
+  function stopCancelWatch() {
+    if (cancelTimer) {
+      clearInterval(cancelTimer)
+      cancelTimer = undefined
+    }
+  }
+  startCancelWatch()
+
   const result = streamText({
     // Provider failures are converted to normal text output, see `withProviderErrorAsText`.
     model: withProviderErrorAsText(getAgentModel({ provider, model, apiKey })),
@@ -428,6 +454,7 @@ function respondWithAiStream({
     temperature: modelOptions.temperature,
     topP: modelOptions.topP,
     maxOutputTokens: modelOptions.maxOutputTokens,
+    abortSignal: cancelController.signal,
     // Built-in tools are opt-in per model; multi-step tool loops are capped (issue #42).
     tools: modelOptions.tools ? chatTools : undefined,
     stopWhen: modelOptions.tools ? stepCountIs(MAX_TOOL_STEPS) : undefined,
@@ -485,6 +512,11 @@ function respondWithAiStream({
       } satisfies ChatStreamMetadata
       : undefined,
     onError: (error) => {
+      // A user-requested stop aborts the call, which surfaces here as an abort error. It is
+      // not a failure, so it is not written into the reply.
+      if (cancelController.signal.aborted)
+        return 'Stopped'
+
       const normalized = normalizePossibleSDKError(error)
       const errorMessage = getErrorMessage(normalized) ?? 'Unknown error'
       aiResponse += `\n\nError encountered, stream stopped: ${normalized?.name ? `[${normalized.name}]: ` : ''}${errorMessage}`
@@ -492,6 +524,7 @@ function respondWithAiStream({
       return errorMessage
     },
     onEnd: async () => {
+      stopCancelWatch()
       await waitForSave()
       await ctx.runMutation(internal.messages.finishStreaming, { streamId })
       await ctx.runMutation(internal.threads.updateThreadInfo, { threadId, timestamp: Date.now() })

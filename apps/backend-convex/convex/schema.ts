@@ -53,6 +53,12 @@ const aiChatTables = {
     })),
     streamId: v.optional(v.string()),
     isStreaming: v.optional(v.boolean()),
+    /**
+     * Set by a `stop` request while the reply is still streaming. The running action polls
+     * this and stops itself: Convex actions have no abort signal, so cancellation has to be
+     * cooperative (the pattern Convex documents for stopping a generation across clients).
+     */
+    cancelRequested: v.optional(v.boolean()),
     provider: v.string(),
     model: v.string(),
     /**
