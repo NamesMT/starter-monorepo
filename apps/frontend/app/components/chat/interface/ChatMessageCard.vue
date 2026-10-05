@@ -68,7 +68,11 @@ const isGenerating = computed(() =>
           </template>
 
           <ChatMessageAttachments :attachments="message.attachments ?? []" />
-          <div class="hidden first:block">
+
+          <!-- Placeholder while a reply has nothing to show yet. Explicit rather than
+               positional (`hidden first:block`), which showed it forever whenever the parts
+               rendered nothing — e.g. a user message still stored as legacy `content`. -->
+          <div v-if="isGenerating">
             <Skeleton
               class="rounded-full bg-muted-foreground h-5 max-w-full w-$c-W" :style="{
                 '--c-W': `${(Math.floor(Math.random() * (300 - 100 + 1)) + 100) * (message.role === 'user' ? 1 : 2)}px`,

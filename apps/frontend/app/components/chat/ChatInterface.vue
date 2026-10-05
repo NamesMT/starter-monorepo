@@ -4,18 +4,17 @@ import type { ChatAttachment, ChatPart, ChatStreamMetadata } from '@local/common
 import type { Doc, Id } from 'backend-convex/convex/_generated/dataModel'
 import type Lenis from 'lenis'
 import { appendReasoningPart, appendTextPart, getMessageText, upsertToolPart } from '@local/common/src/chat'
-import { keyBy, objectPick, randomStr, sleep, uniquePromise } from '@namesmt/utils'
+import { objectPick, randomStr, sleep, uniquePromise } from '@namesmt/utils'
 import { parseJsonEventStream, uiMessageChunkSchema } from 'ai'
 import { api } from 'backend-convex/convex/_generated/api'
 import { useConvexClient } from 'convex-vue'
 import { countdown, debounce, getInstance, throttle } from 'kontroll'
 import { VueLenis } from 'lenis/vue'
-import { useToast } from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/toast'
+import { toast } from 'vue-sonner'
 
 const { $auth } = useNuxtApp()
 const convex = useConvexClient()
 const chatContext = useChatContext()
-const { toast } = useToast()
 const { ts } = useI18n()
 
 // Lenis have bug with useTemplateRef
@@ -55,8 +54,19 @@ const cachedThreadsMessages: {
   [threadId: string]: Array<CustomMessage>
 } = {}
 const messages = ref<Array<CustomMessage>>([])
-const messagesKeyed = computed(() => keyBy(messages.value, 'id'))
 const streamingMessagesMap = reactive<Record<string, true>>({ })
+
+/**
+ * Finds a message by either identifier.
+ *
+ * `id` starts as a local placeholder and `_id` only arrives with the stream metadata, so a
+ * caller holding one of them (a handler gets `_id`, a list key uses `id`) must not miss the
+ * message it means. Keying a map on a single field silently returned `undefined` for every
+ * message created in the current session.
+ */
+function findMessageById(id: string): CustomMessage | undefined {
+  return messages.value.find(message => message.id === id || message._id === id)
+}
 const isFetching = ref(false)
 const chatInput = ref('')
 
@@ -133,7 +143,7 @@ const { ignoreUpdates: ignorePathUpdate } = watchIgnorable(
           // If the owner have deleted the thread, remove it locally
           // (or the demo crons cleaned it)
           if (getConvexErrorMessage(e) === 'Thread not found') {
-            toast({ variant: 'destructive', description: ts('chat.toast.threadRemovedExternal') })
+            toast.error(ts('chat.toast.threadRemovedExternal'))
 
             const foundAt = chatContext.threads.value.findIndex(t => t._id === threadId)
             if (foundAt !== -1)
@@ -252,7 +262,7 @@ async function handleSubmit({ input }: HandleSubmitArgs) {
         })
       }
       catch (error) {
-        toast({ variant: 'destructive', description: ts('chat.toast.attachmentsUploadFailed') })
+        toast.error(ts('chat.toast.attachmentsUploadFailed'))
         console.error('Failed to upload attachments:', error)
         return
       }
@@ -275,7 +285,7 @@ async function handleSubmit({ input }: HandleSubmitArgs) {
     const userMessage = {
       id: `user-${Date.now()}_${randomStr(4)}`,
       role: 'user',
-      content: userInput,
+      parts: [{ type: 'text', text: userInput }],
       context: { from: getChatNickname() },
       attachments: optimisticAttachments,
     } as any as CustomMessage
@@ -316,7 +326,7 @@ async function handleSubmit({ input }: HandleSubmitArgs) {
 }
 
 async function resumeStreamToMessage(streamSessionId: string, messageId: string) {
-  const message = messagesKeyed.value[messageId]
+  const message = findMessageById(messageId)
   if (!message)
     return console.warn('Trying to resume stream for message that does not exist:', messageId)
 
@@ -613,7 +623,7 @@ async function streamToMessage({ message, userMessage, content, attachments, str
 
 async function _branchThreadFromMessage({ messageId, lockerKey }: BranchThreadFromMessageArgs) {
   if (Object.keys(streamingMessagesMap).length > 0)
-    throw new Error('Can not branch while streaming')
+    return toast(ts('chat.toast.busyStreaming'))
 
   const messagesLte = messages.value.slice(0, messages.value.findIndex(m => m._id === messageId) + 1)
 
@@ -627,15 +637,15 @@ async function _branchThreadFromMessage({ messageId, lockerKey }: BranchThreadFr
       if (lockerKey)
         setLockerKey(threadId, lockerKey)
 
-      toast({ description: ts('chat.toast.threadBranched') })
+      toast(ts('chat.toast.threadBranched'))
     })
 }
 
 async function _regenerateMessage({ messageId }: { messageId: string }) {
   if (Object.keys(streamingMessagesMap).length > 0)
-    throw new Error('Can not regenerate while streaming')
+    return toast(ts('chat.toast.busyStreaming'))
 
-  const message = messagesKeyed.value[messageId]
+  const message = findMessageById(messageId)
   if (!message)
     return
 
