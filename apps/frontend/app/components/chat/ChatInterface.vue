@@ -374,6 +374,8 @@ interface StreamToMessageArgs {
   attachments?: ChatAttachment[]
   streamId?: string
   resumeStreamId?: string
+  /** Assistant message to regenerate in place instead of adding a new turn. */
+  regenerateMessageId?: string
 }
 
 /**
@@ -442,8 +444,8 @@ function upsertToolInvocation(target: CustomMessage, patch: ToolInvocationPatch)
   })
 }
 
-async function streamToMessage({ message, userMessage, content, attachments, streamId, resumeStreamId }: StreamToMessageArgs) {
-  const streamKey = (streamId ?? resumeStreamId)!
+async function streamToMessage({ message, userMessage, content, attachments, streamId, resumeStreamId, regenerateMessageId }: StreamToMessageArgs) {
+  const streamKey = (streamId ?? resumeStreamId ?? regenerateMessageId)!
   /** Pending throttled render timer, cleared once the stream settles. */
   let flushTimer: ReturnType<typeof setTimeout> | undefined
 
@@ -460,6 +462,7 @@ async function streamToMessage({ message, userMessage, content, attachments, str
       attachments,
       streamId,
       resumeStreamId,
+      regenerateMessageId,
     })
 
     // Expose a stop handle for this stream while it runs.
@@ -649,6 +652,22 @@ async function _branchThreadFromMessage({ messageId, lockerKey }: BranchThreadFr
     })
 }
 
+async function _regenerateMessage({ messageId }: { messageId: string }) {
+  if (Object.keys(streamingMessagesMap).length > 0)
+    throw new Error('Can not regenerate while streaming')
+
+  const message = messagesKeyed.value[messageId]
+  if (!message)
+    return
+
+  // Drop the old reply locally; the server resets the same row in place.
+  messages.value = messages.value.filter(m => m._id !== messageId)
+  await streamToMessage({
+    message: { ...message, content: '', toolInvocations: undefined, isStreaming: true },
+    regenerateMessageId: messageId,
+  })
+}
+
 function doScrollBottom({ smooth = true, maybe = false, tries = 0, lastScrollTop = 0 } = {}) {
   if (!lenisRef.value)
     return
@@ -699,6 +718,7 @@ function doScrollBottom({ smooth = true, maybe = false, tries = 0, lastScrollTop
               messageId: message._id,
               lockerKey: getLockerKey(message.threadId),
             })"
+            @regenerate-clicked="_regenerateMessage({ messageId: message._id })"
           />
 
           <IUIMaybeGlassCard

@@ -9,6 +9,7 @@ const {
 
 const emit = defineEmits<{
   branchOffClicked: []
+  regenerateClicked: []
 }>()
 
 const chatContext = useChatContext()
@@ -70,6 +71,7 @@ const chatContext = useChatContext()
     >
       <CardCopyButton :message />
       <CardBranchOffButton :message @click="emit('branchOffClicked')" />
+      <CardRegenerateButton :message @regenerate="emit('regenerateClicked')" />
       <div class="text-xs ml-4">
         {{ message.model }}
       </div>

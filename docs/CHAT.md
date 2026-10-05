@@ -16,12 +16,13 @@ These are tradeoffs, not oversights — change them knowingly.
 - **Cooperative stop.** Convex actions have no abort signal, so stop sets `cancelRequested` on the message and the generating action polls it (`CANCEL_POLL_MS`) into a local abort. The `requestStop` mutation also finalizes the message itself, because aborting ends the HTTP response and the action's post-abort `onEnd` work is not guaranteed to survive that teardown — relying on it left `isStreaming` set and the client polling a reply that never ended.
 - **Flat `content: string`.** Simple to query and render, but it cannot express reasoning parts, and ordering across text/tool/step boundaries is lost (tool calls live in a sibling `toolInvocations` array). The AI SDK recommends storing `UIMessage` `parts` instead.
 - **History window, not summarization.** `windowChatHistory` keeps the last 40 messages. Deterministic and cheap; summarization would need an extra model call that can fail mid-conversation.
+- **Regenerate rewrites in place.** It replays the thread without that reply and reuses the same message row, so a regenerated turn keeps its position and id instead of appending a second answer.
 
 ## Known gaps
 
 - **Reasoning/thinking** is not represented or rendered.
-- **Regenerate / edit a turn** is not implemented.
+- **Editing a sent user message** is not implemented (regenerating an assistant reply is).
 - **Prompt caching** is not configured; each turn re-sends the window uncached.
 - **Stopping is cooperative**, so it lands within `CANCEL_POLL_MS` rather than instantly, and tokens burned inside that window are still spent.
 
-Adopting `@ai-sdk/vue`'s `useChat` is the natural way to close most of these — it brings `regenerate`, tool approvals and reasoning rendering. It requires migrating storage to `parts` first, which is the real work; the streaming loop itself is not the blocker. `@ai-sdk/vue` pins the matching `ai` version exactly, so it needs no AI SDK bump.
+Adopting `@ai-sdk/vue`'s `useChat` is the natural way to close most of these — it brings tool approvals and reasoning rendering. It requires migrating storage to `parts` first, which is the real work; the streaming loop itself is not the blocker. `@ai-sdk/vue` pins the matching `ai` version exactly, so it needs no AI SDK bump.
