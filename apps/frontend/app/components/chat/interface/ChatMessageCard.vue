@@ -13,6 +13,11 @@ const emit = defineEmits<{
 }>()
 
 const chatContext = useChatContext()
+
+/** Streaming with nothing to show yet. */
+const isGenerating = computed(() =>
+  !!message.isStreaming && !(message.parts ?? []).some(part => part.type !== 'step-start'),
+)
 </script>
 
 <template>
@@ -38,12 +43,30 @@ const chatContext = useChatContext()
                   </CardTitle>
                 </CardHeader> -->
         <CardContent class="px-4 py-3 [&_.prose-hr]:(border-accent-foreground!)">
-          <div v-if="message.isStreaming && !message.content && !message.toolInvocations?.length" class="flex gap-2">
+          <div v-if="isGenerating" class="flex gap-2">
             <div>{{ $t('generating') }}</div>
             <div class="spinner h-5 w-5" />
           </div>
-          <MDC v-else-if="message.content" :key="String(message.isStreaming)" :value="message.content" class="only-child:[&>.prose-p]:my-0" />
-          <ChatMessageToolInvocations :invocations="message.toolInvocations ?? []" />
+
+          <!-- Parts render in order, so text, thinking and tool calls appear where they happened. -->
+          <template v-for="(part, index) of message.parts ?? []" :key="index">
+            <MDC
+              v-if="part.type === 'text' && part.text"
+              :key="`t-${index}-${message.isStreaming}`"
+              :value="part.text"
+              class="only-child:[&>.prose-p]:my-0"
+            />
+            <ChatMessageReasoning
+              v-else-if="part.type === 'reasoning' && part.text"
+              :part="part"
+              :streaming="!!message.isStreaming"
+            />
+            <ChatMessageToolInvocations
+              v-else-if="part.type === 'dynamic-tool'"
+              :invocations="[part]"
+            />
+          </template>
+
           <ChatMessageAttachments :attachments="message.attachments ?? []" />
           <div class="hidden first:block">
             <Skeleton

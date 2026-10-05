@@ -1,8 +1,9 @@
 <!-- eslint-disable no-console -->
 <script setup lang="ts">
-import type { ChatAttachment, ChatStreamMetadata } from '@local/common/src/chat'
+import type { ChatAttachment, ChatPart, ChatStreamMetadata } from '@local/common/src/chat'
 import type { Doc, Id } from 'backend-convex/convex/_generated/dataModel'
 import type Lenis from 'lenis'
+import { appendReasoningPart, appendTextPart, getMessageText, upsertToolPart } from '@local/common/src/chat'
 import { keyBy, objectPick, randomStr, sleep, uniquePromise } from '@namesmt/utils'
 import { parseJsonEventStream, uiMessageChunkSchema } from 'ai'
 import { api } from 'backend-convex/convex/_generated/api'
@@ -282,7 +283,7 @@ async function handleSubmit({ input }: HandleSubmitArgs) {
       id: `assistant-${Date.now()}_${randomStr(4)}`,
       role: 'assistant',
       model: chatContext.activeAgent.value.model,
-      content: '',
+      parts: [],
       isStreaming: true,
       streamId,
     } as any as CustomMessage
@@ -348,7 +349,7 @@ async function pollToMessage({ message, resumeStreamId, threadId = threadIdRef.v
     messageId: message._id,
     lockerKey: getLockerKey(threadId),
   })
-  Object.assign(message, objectPick(messageFromConvex, ['content', 'context', 'isStreaming', 'toolInvocations']))
+  Object.assign(message, objectPick(messageFromConvex, ['parts', 'context', 'isStreaming']))
 
   if (message.isStreaming) {
     // Wraps in a kontroller to make sure there is only one stream on the same message
@@ -415,39 +416,13 @@ async function stopStreaming() {
   await Promise.all(handles.map(handle => handle.abort()))
 }
 
-interface ToolInvocationPatch {
-  id: string
-  name?: string
-  input?: unknown
-  output?: unknown
-  error?: string
-  state: 'call' | 'result' | 'error'
-}
-
-/** Inserts or updates a tool invocation on a message, keyed by the tool call id. */
-function upsertToolInvocation(target: CustomMessage, patch: ToolInvocationPatch) {
-  const invocations = (target.toolInvocations ??= [])
-  const existing = invocations.find(invocation => invocation.id === patch.id)
-
-  if (existing) {
-    Object.assign(existing, patch, { name: patch.name ?? existing.name })
-    return
-  }
-
-  invocations.push({
-    id: patch.id,
-    name: patch.name ?? 'tool',
-    input: patch.input,
-    output: patch.output,
-    error: patch.error,
-    state: patch.state,
-  })
-}
-
 async function streamToMessage({ message, userMessage, content, attachments, streamId, resumeStreamId, regenerateMessageId }: StreamToMessageArgs) {
   const streamKey = (streamId ?? resumeStreamId ?? regenerateMessageId)!
   /** Pending throttled render timer, cleared once the stream settles. */
   let flushTimer: ReturnType<typeof setTimeout> | undefined
+
+  // Declared outside the try so the catch/finally paths can still settle the parts.
+  let parts: ChatPart[] = []
 
   try {
     streamingMessagesMap[streamKey] = true
@@ -500,8 +475,9 @@ async function streamToMessage({ message, userMessage, content, attachments, str
     message.isStreaming = true
 
     // Accumulate locally so switching the resolved target (e.g. after a server
-    // reconciliation) never loses already-streamed text.
-    let streamedText = ''
+    // reconciliation) never loses already-streamed text. Parts are built with the same
+    // helpers the server uses, so the optimistic view matches what gets persisted.
+    parts = []
 
     // Re-parsing the whole markdown (including shiki-highlighted code) on every token is
     // what made long streams janky. Flush the accumulated text on a throttle instead and
@@ -515,12 +491,14 @@ async function streamToMessage({ message, userMessage, content, attachments, str
       }
 
       lastFlushAt = Date.now()
-      resolveStreamingMessage(message).content = streamedText
+      // A fresh array each flush: `parts` is mutated in place as tokens arrive, and Vue only
+      // tracks the assignment, so handing it the same array again would render nothing.
+      resolveStreamingMessage(message).parts = [...parts]
       nextTick(() => { doScrollBottom({ maybe: true }) })
     }
 
     function scheduleStreamFlush() {
-      const interval = Math.min(250, 60 + Math.floor(streamedText.length / 120))
+      const interval = Math.min(250, 60 + Math.floor(getMessageText(parts).length / 120))
       const elapsed = Date.now() - lastFlushAt
 
       if (elapsed >= interval) {
@@ -563,39 +541,39 @@ async function streamToMessage({ message, userMessage, content, attachments, str
           break
         }
         case 'text-delta':
-          streamedText += chunk.delta
+          appendTextPart(parts, chunk.delta)
           break
-        case 'tool-input-start':
-          upsertToolInvocation(resolveStreamingMessage(message), {
-            id: chunk.toolCallId,
-            name: chunk.toolName,
-            state: 'call',
-          })
+        case 'reasoning-delta':
+          appendReasoningPart(parts, chunk.delta)
+          break
+        case 'start-step':
+          parts.push({ type: 'step-start' })
           break
         case 'tool-input-available':
-          upsertToolInvocation(resolveStreamingMessage(message), {
-            id: chunk.toolCallId,
-            name: chunk.toolName,
+          upsertToolPart(parts, {
+            toolCallId: chunk.toolCallId,
+            toolName: chunk.toolName,
             input: chunk.input,
-            state: 'call',
+            state: 'input-available',
           })
           break
         case 'tool-output-available':
-          upsertToolInvocation(resolveStreamingMessage(message), {
-            id: chunk.toolCallId,
+          // `toolName` is not on output chunks; the part already exists from the input chunk.
+          upsertToolPart(parts, {
+            toolCallId: chunk.toolCallId,
             output: chunk.output,
-            state: 'result',
+            state: 'output-available',
           })
           break
         case 'tool-output-error':
-          upsertToolInvocation(resolveStreamingMessage(message), {
-            id: chunk.toolCallId,
-            error: chunk.errorText,
-            state: 'error',
+          upsertToolPart(parts, {
+            toolCallId: chunk.toolCallId,
+            errorText: chunk.errorText,
+            state: 'output-error',
           })
           break
         case 'error':
-          streamedText += `\n\nError: ${chunk.errorText}`
+          appendTextPart(parts, `\n\nError: ${chunk.errorText}`)
           break
       }
 
@@ -609,7 +587,7 @@ async function streamToMessage({ message, userMessage, content, attachments, str
     }
 
     const target = resolveStreamingMessage(message)
-    target.content = streamedText
+    target.parts = [...parts]
     target.isStreaming = false
   }
   catch (error) {
@@ -621,7 +599,8 @@ async function streamToMessage({ message, userMessage, content, attachments, str
     }
 
     const target = resolveStreamingMessage(message)
-    target.content += `\nError: ${(error as Error).message}`
+    appendTextPart(parts, `\nError: ${(error as Error).message}`)
+    target.parts = [...parts]
     target.isStreaming = false
   }
   finally {
@@ -660,10 +639,13 @@ async function _regenerateMessage({ messageId }: { messageId: string }) {
   if (!message)
     return
 
-  // Drop the old reply locally; the server resets the same row in place.
-  messages.value = messages.value.filter(m => m._id !== messageId)
+  // The reply stays in the list and is cleared in place: removing it would orphan the object
+  // the stream writes into (the stream resolves its target by id through `messages`), so the
+  // regenerated text would never render.
+  Object.assign(message, { parts: [], isStreaming: true, streamId: undefined })
+
   await streamToMessage({
-    message: { ...message, content: '', toolInvocations: undefined, isStreaming: true },
+    message,
     regenerateMessageId: messageId,
   })
 }

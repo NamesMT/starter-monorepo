@@ -37,16 +37,118 @@ export interface CommonModelSettings extends CommonModelGenerationSettings {
 }
 
 /**
- * A tool invocation made by the model, surfaced for display and persisted with the
- * assistant message (issues #41/#42).
+ * An ordered piece of a message.
+ *
+ * Order is why this replaced a flat string plus a sibling tool array: text, reasoning and
+ * tool calls interleave, and a separate array cannot express where a call happened.
  */
-export interface ChatToolInvocation {
-  id: string
-  name: string
+export interface ChatTextPart {
+  type: 'text'
+  text: string
+}
+
+export interface ChatReasoningPart {
+  type: 'reasoning'
+  text: string
+}
+
+/**
+ * A tool call the model made.
+ *
+ * Modelled as the SDK's `dynamic-tool` because the offered tools are per-model settings, not
+ * a fixed compile-time set, so the type cannot be the narrower `tool-${name}`.
+ */
+export interface ChatToolPart {
+  type: 'dynamic-tool'
+  toolName: string
+  toolCallId: string
+  state: 'input-streaming' | 'input-available' | 'output-available' | 'output-error'
   input?: unknown
   output?: unknown
-  error?: string
-  state: 'call' | 'result' | 'error'
+  errorText?: string
+}
+
+/** Marks a step boundary in a multi-step tool loop. */
+export interface ChatStepStartPart {
+  type: 'step-start'
+}
+
+export type ChatPart = ChatTextPart | ChatReasoningPart | ChatToolPart | ChatStepStartPart
+
+/** Concatenated text of a message, ignoring reasoning and tool parts. */
+export function getMessageText(parts: readonly ChatPart[] | undefined): string {
+  if (!parts?.length)
+    return ''
+
+  return parts
+    .filter((part): part is ChatTextPart => part.type === 'text')
+    .map(part => part.text)
+    .join('')
+}
+
+/** Concatenated reasoning text, for callers that treat thinking separately from the answer. */
+export function getMessageReasoning(parts: readonly ChatPart[] | undefined): string {
+  if (!parts?.length)
+    return ''
+
+  return parts
+    .filter((part): part is ChatReasoningPart => part.type === 'reasoning')
+    .map(part => part.text)
+    .join('')
+}
+
+/**
+ * Appends streamed text, continuing the trailing text part when there is one so a stream does
+ * not produce one part per token.
+ *
+ * Mutates in place on purpose: this runs per token, so rebuilding the array would make a long
+ * stream quadratic.
+ */
+export function appendTextPart(parts: ChatPart[], text: string): void {
+  const last = parts.at(-1)
+
+  if (last?.type === 'text') {
+    last.text += text
+    return
+  }
+
+  parts.push({ type: 'text', text })
+}
+
+/** Appends streamed reasoning, coalescing like {@link appendTextPart}. */
+export function appendReasoningPart(parts: ChatPart[], text: string): void {
+  const last = parts.at(-1)
+
+  if (last?.type === 'reasoning') {
+    last.text += text
+    return
+  }
+
+  parts.push({ type: 'reasoning', text })
+}
+
+/**
+ * Appends or updates the tool part for `toolCallId`.
+ *
+ * A tool call arrives in pieces (input, then output or an error), so parts are matched by id
+ * and merged instead of appended twice.
+ */
+export function upsertToolPart(parts: ChatPart[], patch: Partial<ChatToolPart> & { toolCallId: string }): void {
+  const existing = parts.find((part): part is ChatToolPart =>
+    part.type === 'dynamic-tool' && part.toolCallId === patch.toolCallId)
+
+  if (existing) {
+    Object.assign(existing, patch)
+    return
+  }
+
+  // A result chunk can arrive for a call we never saw, so fall back to a placeholder name.
+  parts.push({
+    type: 'dynamic-tool',
+    state: 'input-available',
+    toolName: 'tool',
+    ...patch,
+  } as ChatToolPart)
 }
 
 /**
