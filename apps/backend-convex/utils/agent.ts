@@ -4,7 +4,7 @@ import { createAnthropic } from '@ai-sdk/anthropic'
 import { createGoogle } from '@ai-sdk/google'
 import { createGroq } from '@ai-sdk/groq'
 import { createOpenAI } from '@ai-sdk/openai'
-import { DEFAULT_ATTACHMENT_ACCEPT } from '@local/common/src/chat'
+import { DEFAULT_ATTACHMENT_ACCEPT, HOSTED_MODELS } from '@local/common/src/chat'
 import { createOpenRouter, openrouter } from '@openrouter/ai-sdk-provider'
 import { getErrorMessage, normalizePossibleSDKError } from './error'
 
@@ -41,18 +41,12 @@ export function getAgentModel({ provider, model, apiKey }: AgentObject): Languag
  * The attachment capabilities the server enforces for a given model.
  *
  * This is the authoritative allow-list: the client uses the user's per-model
- * settings for UX, but the server never trusts those. Extend this map when a
- * hosted model gains different capabilities.
+ * settings for UX, but the server never trusts those. Hosted capabilities come
+ * from the shared `HOSTED_MODELS` map so both sides stay in step.
  */
 export function getModelAttachmentAccept({ provider, model }: Pick<AgentObject, 'provider' | 'model'>): readonly string[] {
-  if (provider === 'hosted') {
-    switch (model) {
-      case 'openrouter/free':
-        return ['image/*', 'application/pdf']
-      default:
-        return []
-    }
-  }
+  if (provider === 'hosted')
+    return HOSTED_MODELS[model]?.attachments ?? []
 
   // BYOK providers: we don't ship a per-model capability registry, so fall back to
   // the conservative shared default. Unknown models are not trusted with more.

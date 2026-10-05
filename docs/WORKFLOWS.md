@@ -12,6 +12,7 @@
 - `pnpm run release:check <package> [version]` validates a release target locally.
 - Backend tests: `pnpm test` (Turbo, workspace) / `pnpm -F=backend test` (runs once) / `pnpm -F=backend test:watch` (watch) / `pnpm -F=backend check` (lint + types + coverage) / `pnpm -F=backend-convex check`.
 - Backend tests hit the real app with `app.request()` and stub `WORKOS_*`/`FRONTEND_URL` before importing `#src/app.js`.
+- `@local/common` and `@local/nuxt-layer-common` have vitest too (their own `test`/`test:watch`); the layer's `test/` dir is outside `app/`, so Nuxt never auto-imports test files as utils.
 - `apps/frontend` extras: `build:workerdLocal` (sets `TARGET=workerdLocal`) and `preview`; `deploy` runs the build itself.
 - Turbo outputs cached for `build`: `.nuxt/**`, `.output/**`, `dist/**`; `globalDependencies` are `**/.env` and `**/.env.*`.
 - After changing a dependency, restart the dev server — Vite/HMR does not pick up new deps.

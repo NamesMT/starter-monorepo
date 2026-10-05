@@ -13,7 +13,7 @@
     { "path": "./.nuxt/tsconfig.app.json" },
     { "path": "./.nuxt/tsconfig.server.json" },
     { "path": "./.nuxt/tsconfig.node.json" },
-    { "path": "../backend" }
+    { "path": "../backend-convex" }
   ],
   "files": []
 }

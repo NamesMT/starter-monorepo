@@ -136,6 +136,34 @@ export const DEFAULT_ATTACHMENT_ACCEPT = [
   'text/*',
 ] as const
 
+/**
+ * The built-in hosted models, defined once so the client picker and the server's
+ * capability checks cannot drift apart.
+ */
+export const HOSTED_MODELS: Record<string, CommonModelSettings> = {
+  'openrouter/free': {
+    enabled: true,
+    attachments: ['image/*', 'application/pdf'],
+    // Tools are opt-in per model; enable them for the hosted default.
+    tools: true,
+  },
+}
+
+/** The model the hosted provider falls back to, and the default selected agent. */
+export const HOSTED_DEFAULT_MODEL = 'openrouter/free'
+
+/**
+ * Builds the hosted provider descriptor. A function rather than a constant so each
+ * caller gets its own object to hand to reactive state.
+ */
+export function getHostedProvider(): HostedProvider {
+  return {
+    enabled: true,
+    models: HOSTED_MODELS,
+    default: HOSTED_DEFAULT_MODEL,
+  }
+}
+
 /** Human readable file size, e.g. `1.4 MB`. */
 export function formatFileSize(bytes: number) {
   if (!Number.isFinite(bytes) || bytes < 0)

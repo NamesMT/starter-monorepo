@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { AgentsSettings, HostedProvider } from '@local/common/src/chat'
 import type { Doc } from 'backend-convex/convex/_generated/dataModel'
+import { getHostedProvider, HOSTED_DEFAULT_MODEL } from '@local/common/src/chat'
 import { keyBy } from '@namesmt/utils'
 import { useIDBKeyval } from '@vueuse/integrations/useIDBKeyval'
 import { SidebarProvider } from '#layers/nuxt-layer-common/app/lib/shadcn/components/ui/sidebar'
@@ -11,7 +12,7 @@ const { data: pinnedThreadIds, isFinished: pinnedThreadIdsLoaded } = useIDBKeyva
 const { data: agentsSettings, isFinished: agentsSettingsLoaded } = useIDBKeyval<AgentsSettings>('chat/agentsSettings', {
   providers: {
   },
-  selectedAgent: 'hosted/openrouter/free',
+  selectedAgent: `hosted/${HOSTED_DEFAULT_MODEL}`,
 })
 
 await until(computed(() =>
@@ -33,18 +34,7 @@ useHead({
 
 // ## Agents
 // TODO: load from backend
-const hostedProvider = computed<HostedProvider>(() => ({
-  enabled: true,
-  models: {
-    'openrouter/free': {
-      enabled: true,
-      attachments: ['image/*', 'application/pdf'],
-      // Tools are opt-in per model; enable them for the hosted default.
-      tools: true,
-    },
-  },
-  default: 'openrouter/free',
-}))
+const hostedProvider = computed<HostedProvider>(() => getHostedProvider())
 
 const activeAgent = computed(() => {
   let [provider, model]: [string, string] = agentsSettings.value.selectedAgent?.split(/\/(.*)/) as any
