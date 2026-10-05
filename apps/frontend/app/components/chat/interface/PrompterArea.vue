@@ -8,11 +8,14 @@ const props = defineProps<{
   nearTopBottom: Array<null | boolean | number>
   lenisRef: undefined | { $el: HTMLElement, lenis: Lenis }
   streamingMessagesMap: Record<string, true>
+  /** True while the thread's reply is still streaming, which swaps send for stop. */
+  isStreaming: boolean
   attachments: ChatAttachmentManager
 }>()
 
 const emit = defineEmits<{
   submit: [payload: { input: string }]
+  stop: []
 }>()
 
 const chatInput = defineModel<string>('chatInput', { required: true })
@@ -157,6 +160,16 @@ function handleSubmit({ confirmMultiStream = false } = {}) {
             >
           </div>
           <Button
+            v-if="isStreaming"
+            variant="destructive"
+            size="icon"
+            class="i-hugeicons:stop-circle"
+            :title="$t('chat.stopGenerating')"
+            :aria-label="$t('chat.stopGenerating')"
+            @click="emit('stop')"
+          />
+          <Button
+            v-else
             variant="default"
             size="icon"
             class="i-hugeicons:upload-square-01 disabled:bg-surface-500 enabled:bg-mainGradient"

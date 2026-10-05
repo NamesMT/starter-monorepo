@@ -397,6 +397,22 @@ function resolveStreamingMessage(message: CustomMessage) {
   return message
 }
 
+/**
+ * Stop handle per live stream, so the composer's stop button can reach the one it belongs to.
+ */
+const activeStreams = reactive<Record<string, { message: CustomMessage, abort: () => Promise<void> }>>({})
+
+/** True while the thread's assistant reply is still streaming. */
+const isStreaming = computed(() => Object.keys(streamingMessagesMap).length > 0)
+
+async function stopStreaming() {
+  const handles = Object.values(activeStreams)
+  if (!handles.length)
+    return
+
+  await Promise.all(handles.map(handle => handle.abort()))
+}
+
 interface ToolInvocationPatch {
   id: string
   name?: string
@@ -445,6 +461,29 @@ async function streamToMessage({ message, userMessage, content, attachments, str
       streamId,
       resumeStreamId,
     })
+
+    // Expose a stop handle for this stream while it runs.
+    activeStreams[streamKey] = {
+      message,
+      abort: async () => {
+        // Cooperative: ask the server to stop, which the generating action polls. The
+        // response stream is left open so the partial text still arrives and is saved.
+        const target = resolveStreamingMessage(message)
+        if (target._id) {
+          await convex.mutation(api.messages.requestStop, {
+            messageId: target._id as Id<'messages'>,
+            lockerKey: getLockerKey(currentThreadId),
+          }).catch((error) => {
+            console.warn('Stop request failed:', error)
+            // Fall back to dropping the connection so the UI is not stuck streaming.
+            abortController.abort()
+          })
+        }
+        else {
+          abortController.abort()
+        }
+      },
+    }
 
     if (!response.ok) {
       const errorText = await response.text()
@@ -584,6 +623,7 @@ async function streamToMessage({ message, userMessage, content, attachments, str
   }
   finally {
     delete streamingMessagesMap[streamKey]
+    delete activeStreams[streamKey]
   }
 
   console.log('Stream completed')
@@ -675,9 +715,10 @@ function doScrollBottom({ smooth = true, maybe = false, tries = 0, lastScrollTop
     </VueLenis>
 
     <PrompterArea
-      v-bind="{ nearTopBottom, lenisRef, streamingMessagesMap, attachments }"
+      v-bind="{ nearTopBottom, lenisRef, streamingMessagesMap, isStreaming, attachments }"
       v-model:chat-input="chatInput"
       @submit="(payload) => handleSubmit(payload)"
+      @stop="stopStreaming"
     />
 
     <TopRightQuickSnacks />
