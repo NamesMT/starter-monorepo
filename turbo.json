@@ -34,8 +34,7 @@
       "persistent": true
     },
     "dev:prepare": {
-      "cache": false,
-      "interactive": true
+      "cache": false
     },
     "deploy": {
       "cache": false,
