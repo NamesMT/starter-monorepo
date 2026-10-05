@@ -2,13 +2,15 @@
 
 Orientation for agents working here. Deeper sources of truth: [`README.md`](./README.md),
 [`INIT_PROMPT.md`](./INIT_PROMPT.md), [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md),
-[`docs/WORKFLOWS.md`](./docs/WORKFLOWS.md), [`apps/backend/README.md`](./apps/backend/README.md),
+[`docs/WORKFLOWS.md`](./docs/WORKFLOWS.md), [`docs/CHAT.md`](./docs/CHAT.md),
+[`apps/backend/README.md`](./apps/backend/README.md),
 [`locals/nuxt-layer-common/README.md`](./locals/nuxt-layer-common/README.md).
 
 ## Docs
 
 - [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) — workspace map, layering rules, and how backend/frontend/locales pieces compose.
 - [`docs/WORKFLOWS.md`](./docs/WORKFLOWS.md) — dev/build/test/migration commands, the Turbo task graph, and CI/release behavior.
+- [`docs/CHAT.md`](./docs/CHAT.md) — how the AI chat streams and persists, its deliberate tradeoffs, and known gaps.
 
 ## Fast start
 

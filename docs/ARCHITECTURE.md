@@ -46,7 +46,7 @@
 - Each app re-exports the layer UnoCSS config (`@local/nuxt-layer-common/uno.config`) because `@unocss/nuxt` only loads the app's own file.
 - Add shadcn components only from the layer: `pnpm -F=@local/nuxt-layer-common shad-add <name>`.
 - `rpcApi` plugin (`hc<typeof app>`) calls `/api/*` through the layer proxy when frontend and backend share a hostname (`enableProxy: 'auto'`), otherwise the backend URL directly; it adds `x-amz-content-sha256` for Lambda + OAC via `app/utils/aws-oac.ts`.
-- `enableProxy` lives in the layer's `app/app.config.ts`; the proxy handler is `locals/nuxt-layer-common/server/api/[...].ts`.
+- `enableProxy` lives in the layer's `app/app.config.ts`; the proxy handler is `locals/nuxt-layer-common/server/utils/proxyToBackend.ts`, mounted by both `server/api/[...].ts` (everything under `/api`) and `server/api/index.ts` (bare `/api`, which a catch-all does not match).
 - `nuxt generate` writes `.output/public` and symlinks `apps/<app>/dist` to it; CI uploads `dist`.
 
 ## Locales data flow
