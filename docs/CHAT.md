@@ -55,22 +55,59 @@ request, so a fresh clone with no provider keys still answers from the keyless m
 
 ## Migrating an existing deployment
 
-The parts schema is a **breaking change for stored data**: Convex validates every existing row
-when the schema is pushed, so old rows would fail the deploy. The old fields are therefore still
-accepted as optional and read through `resolveMessageParts`, and two migrations convert data in
-place (batched, self-rescheduling):
+The parts schema was a **breaking change for stored data**: Convex validates every existing row
+when the schema is pushed, so old rows would have failed the deploy. The migration therefore ran
+in two phases — first the old fields stayed accepted as optional and were read through
+`resolveMessageParts`, then two batched, self-rescheduling migrations converted the data in
+place (`messages:migrateToParts`, then `messages:dropPartState`).
 
-```sh
-pnpm -F=backend-convex exec convex run messages:migrateToParts   # content + toolInvocations -> parts
-pnpm -F=backend-convex exec convex run messages:dropPartState   # strips the old per-part state
-```
+Both reported `remaining: 0` and the first-phase code has been removed: `parts` is now a
+**required** field, `content`/`toolInvocations` and the legacy per-part `state` are gone from the
+schema, and `resolveMessageParts` is a plain cast. The migration functions themselves were
+deleted with them, so a deployment that has not been migrated must run them from an older commit
+before upgrading past this point.
 
-The legacy fields can be dropped from `convex/schema.ts` once both report `remaining: 0`.
+## Reclaiming orphaned attachments
+
+Attachments live in Convex file storage; the message row only holds a `storageId`. Deleting a
+thread or message removes the rows but not the blobs, and the daily demo cron wipes every thread
+and message — so without a sweep every attachment ever uploaded stays orphaned and billed
+forever. `messages:clearOrphanedAttachments` (daily, 00:30 UTC, after the wipes) collects every
+referenced `storageId` and deletes stored files that are unreferenced **and** at least an hour
+old. The age guard matters: an upload and its message row are two steps, so a freshly uploaded
+blob that has not been attached yet looks exactly like an orphan.
 
 ## Known gaps
 
-- **Editing a sent user message** is not implemented (regenerating an assistant reply is).
 - **Prompt caching** is not configured; each turn re-sends the window uncached.
 - **Stopping is cooperative**, so it lands within `CANCEL_POLL_MS` rather than instantly, and tokens burned inside that window are still spent.
+- **Attachment bytes are sent once.** `toUiMessage` emits no file parts, so an attachment reaches
+  the model on the turn it was sent and is absent from every later turn's prompt — a follow-up
+  question about an image is answered from text alone. Fixing it means re-reading each referenced
+  blob into the prompt (cost, and a stored file can disappear), which is a deliberate tradeoff
+  rather than an oversight.
+- **Editing drops later replies.** An edited user message deletes every message after it, because
+  those answered the old text. There is no undo.
 
-Adopting `@ai-sdk/vue`'s `useChat` is the natural way to close most of these — it brings tool approvals and a maintained client stream loop. Storage is already in its `parts` shape, so the remaining work is the transport against the Convex HTTP action. `@ai-sdk/vue` pins the matching `ai` version exactly, so it needs no AI SDK bump.
+## On adopting `@ai-sdk/vue`
+
+The chat loop is hand-rolled on purpose, and migrating it is currently **not** justified. The
+decisive finding: the Vue `useChat` `throttle` option the docs advertise does not exist until
+`@ai-sdk/vue@4.0.108`, and that line pins `ai` exactly — so adopting it at our pinned
+`ai@7.0.97` would reinstate per-token reactive rendering, which is precisely the jank the
+hand-rolled adaptive flush (`min(250, 60 + textLength/120)`) was written to avoid. `AbstractChat`
+writes state once per chunk with no batching.
+
+Other concrete blockers, all verified against source: `HttpChatTransport` hardcodes
+`POST` + `Content-Type: application/json` + `JSON.stringify`, while our action is form-encoded
+(so a custom `ChatTransport` is required); the framework-agnostic `Chat` class is deprecated in
+favour of the composable; `regenerate()` assigns a fresh message id and truncates later messages,
+whereas ours rewrites one Convex row in place; `stop()` is a client-side abort only, so our
+cooperative `requestStop` stays necessary; and resume is React-only (`resume: true`) while our
+server deliberately rejects SSE resume.
+
+The response envelope already matches what the SDK parses, so nothing there needs to change.
+If this is ever revisited, the low-risk shape is `AbstractChat` (already installed, no version
+bump) plus a custom transport and our own throttled `ChatState` — adopt the chunk→parts state
+machine, not the render loop.
+
