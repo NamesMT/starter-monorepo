@@ -1,11 +1,11 @@
-import type { ChatAttachment, ChatStreamMetadata, ChatToolInvocation, PersonalContext } from '@local/common/src/chat'
-import type { UserContent } from 'ai'
+import type { ChatAttachment, ChatPart, ChatStreamMetadata, PersonalContext } from '@local/common/src/chat'
+import type { ModelMessage, UserContent } from 'ai'
 import type { HonoWithConvex } from 'convex-helpers/server/hono'
 import type { Id } from '../_generated/dataModel'
 import type { ActionCtx } from '../_generated/server'
 import RateLimiter, { MINUTE } from '@convex-dev/rate-limiter'
 import { zValidator } from '@hono/zod-validator'
-import { CHAT_ATTACHMENT_LIMITS, matchesAttachmentAccept, windowChatHistory } from '@local/common/src/chat'
+import { appendReasoningPart, appendTextPart, CHAT_ATTACHMENT_LIMITS, matchesAttachmentAccept, upsertToolPart, windowChatHistory } from '@local/common/src/chat'
 import { randomStr, sleep } from '@namesmt/utils'
 import { createUIMessageStreamResponse, stepCountIs, streamText, toUIMessageStream } from 'ai'
 import { ConvexError } from 'convex/values'
@@ -15,7 +15,7 @@ import { throttle } from 'kontroll'
 import { z } from 'zod'
 import { getAgentModel, getModelAttachmentAccept, withProviderErrorAsText } from '../../utils/agent'
 import { getErrorMessage, normalizePossibleSDKError } from '../../utils/error'
-import { buildAiSdkMessage, buildSystemPrompt } from '../../utils/message'
+import { buildModelMessages, buildSystemPrompt, historyBeforeMessage } from '../../utils/message'
 import { chatTools } from '../../utils/tools'
 import { api, components, internal } from '../_generated/api'
 
@@ -26,17 +26,13 @@ const rateLimiter = new RateLimiter(components.rateLimiter, {
 /** Maximum tool-calling steps per response (issue #42). */
 const MAX_TOOL_STEPS = 5
 
+/** Deep copy of plain JSON data; the Convex isolate does not guarantee `structuredClone`. */
+function jsonClone<T>(value: T): T {
+  return JSON.parse(JSON.stringify(value))
+}
+
 /** How often a generating action checks whether the user asked it to stop. */
 const CANCEL_POLL_MS = 1000
-
-/** Inserts or updates a tool invocation, keyed by its tool call id. */
-function upsertToolInvocation(invocations: ChatToolInvocation[], invocation: ChatToolInvocation) {
-  const existing = invocations.find(entry => entry.id === invocation.id)
-  if (existing)
-    Object.assign(existing, invocation)
-  else
-    invocations.push(invocation)
-}
 
 /** Attachment reference as sent by the client after uploading to Convex file storage. */
 const attachmentReferenceSchema = z.object({
@@ -275,11 +271,12 @@ chatApp
           streamId,
         })
 
-        // History without this reply, so the model regenerates rather than continues it.
+        // Only the turns before this reply: it is answering the message that prompted it, so
+        // including later messages would make the model reply to the newest one instead.
         const history = await c.env.runQuery(api.messages.listByThread, { threadId, lockerKey })
-        const messagesContext = windowChatHistory(
-          history.filter(msg => msg._id !== streamingMessageId),
-        ).flatMap(buildAiSdkMessage)
+        const messagesContext = await buildModelMessages(
+          windowChatHistory(historyBeforeMessage(history, streamingMessageId)),
+        )
 
         return respondWithAiStream({
           ctx: c.env,
@@ -321,7 +318,7 @@ chatApp
         userMessageId = await c.env.runMutation(internal.messages.internalAdd, {
           threadId,
           role: 'user',
-          content: content ?? '',
+          parts: [{ type: 'text', text: content ?? '' }],
           context: { ...context, uid: userIdentity?.subject ?? 'N/A' },
           provider,
           model,
@@ -333,7 +330,7 @@ chatApp
         streamingMessageId = await c.env.runMutation(internal.messages.internalAdd, {
           threadId,
           role: 'assistant',
-          content: '',
+          parts: [],
           isStreaming: true,
           streamId,
           provider,
@@ -347,16 +344,20 @@ chatApp
         // Prepare messages for AI API, capped to a recent window so a long thread cannot
         // grow the prompt (and its cost) without bound. One stored message can expand into
         // several prompt messages (an assistant turn plus its tool results).
-        const messagesContext = windowChatHistory(
-          messages.filter(msg => msg._id !== streamingMessageId),
-        ).flatMap(buildAiSdkMessage)
+        const messagesContext = await buildModelMessages(
+          windowChatHistory(messages.filter(msg => msg._id !== streamingMessageId)),
+        )
 
         // Attach the files to the last (just persisted) user message.
         if (resolvedAttachments.length > 0) {
           const lastMessage = messagesContext.at(-1)
 
           if (lastMessage?.role === 'user') {
-            const userContent: UserContent = [{ type: 'text', text: lastMessage.content as string }]
+            const text = typeof lastMessage.content === 'string'
+              ? lastMessage.content
+              : (lastMessage.content.find(part => part.type === 'text') as { text?: string } | undefined)?.text ?? ''
+
+            const userContent: UserContent = [{ type: 'text', text }]
 
             for (const attachment of resolvedAttachments) {
               userContent.push({
@@ -407,7 +408,7 @@ interface RespondWithAiStreamArgs {
   }
   /** Personal context about the user (issue #44). */
   personalContext?: PersonalContext
-  messagesContext: any[]
+  messagesContext: ModelMessage[]
   streamId: string
   streamingMessageId: Id<'messages'>
   userMessageId?: Id<'messages'>
@@ -435,19 +436,25 @@ function respondWithAiStream({
   streamingMessageId,
   userMessageId,
 }: RespondWithAiStreamArgs) {
-  let aiResponse = ''
-  const toolInvocations: ChatToolInvocation[] = []
+  // Parts accumulate in place and are persisted as-is, so text, reasoning and tool calls keep
+  // their order instead of being flattened into one string plus a side array.
+  const parts: ChatPart[] = []
 
   let pendingSave = false
+  /** Set once the reply is finalized; stops the throttled save from overwriting it. */
+  let settled = false
   function doSave() {
+    if (settled)
+      return
+
     pendingSave = true
     throttle(
       500,
       async () => {
         await ctx.runMutation(internal.messages.updateStreamingMessage, {
           messageId: streamingMessageId,
-          content: aiResponse,
-          toolInvocations: toolInvocations.length ? toolInvocations : undefined,
+          // Deep-copied so a later mutation of `parts` cannot race the in-flight save.
+          parts: jsonClone(parts),
           lockerKey,
         }).finally(() => {
           pendingSave = false
@@ -503,36 +510,54 @@ function respondWithAiStream({
     stopWhen: modelOptions.tools ? stepCountIs(MAX_TOOL_STEPS) : undefined,
     onChunk: ({ chunk }) => {
       if (chunk.type === 'text-delta' && chunk.text) {
-        aiResponse += chunk.text
+        appendTextPart(parts, chunk.text)
+        doSave()
+        return
+      }
+
+      if (chunk.type === 'reasoning-delta' && chunk.text) {
+        appendReasoningPart(parts, chunk.text)
+        doSave()
+        return
+      }
+
+      // A new step in a multi-step loop; the boundary is part of the reply's shape.
+      if (chunk.type === 'start-step') {
+        parts.push({ type: 'step-start' })
         doSave()
         return
       }
 
       if (chunk.type === 'tool-call') {
-        toolInvocations.push({ id: chunk.toolCallId, name: chunk.toolName, input: chunk.input, state: 'call' })
+        upsertToolPart(parts, {
+          toolCallId: chunk.toolCallId,
+          toolName: chunk.toolName,
+          input: chunk.input,
+          state: 'input-available',
+        })
         doSave()
         return
       }
 
       if (chunk.type === 'tool-result') {
-        upsertToolInvocation(toolInvocations, {
-          id: chunk.toolCallId,
-          name: chunk.toolName,
+        upsertToolPart(parts, {
+          toolCallId: chunk.toolCallId,
+          toolName: chunk.toolName,
           input: chunk.input,
           output: chunk.output,
-          state: 'result',
+          state: 'output-available',
         })
         doSave()
         return
       }
 
       if (chunk.type === 'tool-error') {
-        upsertToolInvocation(toolInvocations, {
-          id: chunk.toolCallId,
-          name: chunk.toolName,
+        upsertToolPart(parts, {
+          toolCallId: chunk.toolCallId,
+          toolName: chunk.toolName,
           input: chunk.input,
-          error: getErrorMessage(chunk.error as Error) ?? 'Tool call failed',
-          state: 'error',
+          errorText: getErrorMessage(chunk.error as Error) ?? 'Tool call failed',
+          state: 'output-error',
         })
         doSave()
       }
@@ -543,7 +568,8 @@ function respondWithAiStream({
 
   const uiStream = toUIMessageStream({
     stream: result.stream,
-    sendReasoning: false,
+    // Reasoning is persisted and streamed so thinking-capable models can show it.
+    sendReasoning: true,
     // Only `start`/`finish` carry metadata. Returning it for every part made the SDK
     // emit a redundant `message-metadata` chunk after each token, bloating the stream.
     messageMetadata: ({ part }) => part.type === 'start' || part.type === 'finish'
@@ -562,12 +588,18 @@ function respondWithAiStream({
 
       const normalized = normalizePossibleSDKError(error)
       const errorMessage = getErrorMessage(normalized) ?? 'Unknown error'
-      aiResponse += `\n\nError encountered, stream stopped: ${normalized?.name ? `[${normalized.name}]: ` : ''}${errorMessage}`
+      appendTextPart(parts, `\n\nError encountered, stream stopped: ${normalized?.name ? `[${normalized.name}]: ` : ''}${errorMessage}`)
       doSave()
       return errorMessage
     },
     onEnd: async () => {
       stopCancelWatch()
+
+      // No final parts write: the throttled saves already hold the newest text, and whether a
+      // reply is still streaming lives on `isStreaming` alone. Persisting a per-part `state`
+      // needed a write to win a race against Convex tearing this action down as the response
+      // ended, which it did not reliably do.
+      settled = true
       await waitForSave()
       await ctx.runMutation(internal.messages.finishStreaming, { streamId })
       await ctx.runMutation(internal.threads.updateThreadInfo, { threadId, timestamp: Date.now() })
