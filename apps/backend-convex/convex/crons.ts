@@ -27,6 +27,15 @@ crons.interval(
   internal.messages.resolveStuckStreamMessages,
 )
 
+// Runs after the thread/message wipe above, while also reclaiming blobs orphaned by any
+// thread deleted earlier in the day. Without it those files are never freed.
+crons.daily(
+  'clear orphaned attachments',
+  { hourUTC: 0, minuteUTC: 30 },
+  internal.messages.clearOrphanedAttachments,
+  {},
+)
+
 // TODO: add cron to clean duplicate headers added to content by dumb models.
 
 export default crons
