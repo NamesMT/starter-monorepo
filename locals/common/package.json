@@ -5,6 +5,8 @@
   "private": true,
   "scripts": {
     "lint": "eslint .",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
     "test:types": "tsc --noEmit --skipLibCheck",
     "quickcheck": "pnpm run lint && pnpm run test:types"
   },
@@ -15,6 +17,7 @@
   "devDependencies": {
     "@local/tsconfig": "workspace:*",
     "dotenv": "catalog:",
-    "type-fest": "catalog:"
+    "type-fest": "catalog:",
+    "vitest": "catalog:"
   }
 }

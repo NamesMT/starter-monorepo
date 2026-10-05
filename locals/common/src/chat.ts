@@ -153,8 +153,10 @@ export function formatFileSize(bytes: number) {
 }
 
 /**
- * Checks a file against an attachment `accept` list, which may contain exact MIME
- * types (`image/png`), MIME wildcards (`image/*`) or extensions (`.pdf`).
+ * Checks a file against an attachment `accept` list.
+ *
+ * An entry is an exact MIME type (`image/png`), a MIME wildcard (`image/*`),
+ * the catch-all wildcard alone or with a slash (`*`), or a file extension (`.pdf`).
  */
 export function matchesAttachmentAccept(type: string, name: string, accept: readonly string[]) {
   if (!accept.length)
@@ -167,6 +169,9 @@ export function matchesAttachmentAccept(type: string, name: string, accept: read
     const entry = rawEntry.trim().toLowerCase()
     if (!entry)
       return false
+    // The catch-all wildcard, with or without the type slash.
+    if (entry === '*' || entry === '*/*')
+      return true
     if (entry.startsWith('.'))
       return lowerName.endsWith(entry)
     if (entry.endsWith('/*'))
