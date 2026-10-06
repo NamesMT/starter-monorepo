@@ -57,8 +57,25 @@ Ports (all `127.0.0.1`, all HTTPS): `frontend` 3300 · `frontend-second` 3301 ·
 - One package per run, no workspace build (declare a `prepack` hook if a package needs one); `pnpm run release:check <package> [version]` validates a target locally before dispatch; the root `CHANGELOG.md` is pre-per-package history.
 - Dry-run needs an explicit version and previews only — it stops before committing, pushing, releasing and publishing.
 
+## How to work here
+
+- Check callers before changing it; if impact is unclear, say so.
+- Never rewrite a section you haven't understood; don't invent requirements, surface what's needed.
+- Report risk, not just the change: correctness, security, operational, integration.
+- **Fix the root cause, not the instance** — one bug under different names (copied helper, duplicated rule, a second path) is one class; fix it once, in scope.
+- Verify before claiming, say which direction you checked: a green test pins nothing.
+- Missing project recall: read this file, `docs/` and `git log`.
+
+## Conciseness (applies everywhere)
+
+Prune verbose, keep correctness — code, comments, docs. One idea per sentence; cut what wouldn't change a reader's action. Delete history `git log` holds — keep the rule, not the story. Never drop a caveat to save a line.
+
+## User-facing docs
+
+`README.md` and `docs/*.md` target a person: concise first read, `<details>` for depth. Docs ship with the change.
+
 ## Conventions
 
 - Conventional commits: `type(scope): subject` (e.g. `fix(frontend): ...`).
 - ESLint via `@antfu/eslint-config`; `lint-staged` runs `eslint --fix` on commit. Imports are sorted by eslint; no blank lines between them.
-- Keep comments sparse — explain non-obvious intent only. Put scratch/temp files in `/tmp`.
+- Put scratch/temp files in `/tmp`.
