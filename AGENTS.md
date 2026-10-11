@@ -61,7 +61,8 @@ Ports (all `127.0.0.1`, all HTTPS): `frontend` 3300 · `frontend-second` 3301 ·
 
 ## Conciseness
 
-Prune verbose, keep correctness — code, comments, docs. One idea per sentence; cut what wouldn't change a reader's action. Keep comments sparse: explain non-obvious intent only, never restate the line. Delete history `git log` holds — keep the rule, not the story. Never drop a caveat to save a line.
+Prune verbose, keep correctness — code, comments, docs. One idea per sentence; cut what wouldn't change a reader's action. Keep comments sparse and short: explain non-obvious intent only, never restate the line, and never
+argue for the change in the comment — that is the commit message. Delete history `git log` holds — keep the rule, not the story. Never drop a caveat to save a line.
 
 ## User-facing docs
 
