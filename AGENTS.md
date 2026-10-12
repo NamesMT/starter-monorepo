@@ -8,12 +8,18 @@ Orientation for agents working here. Deeper sources of truth: [`README.md`](./RE
 
 ## Docs
 
-Three tiers, so a reader loads only what the task needs:
+Where knowledge lives, and when to reach for each:
 
-1. **`AGENTS.md`** (this file) — orientation and the rules that prevent defects. Read every session.
-2. **`.agentDocs/`** — depth that would bloat this file: module rationale, traps with their causes,
-   compatibility rules. Read on demand.
-3. **`docs/` / `README.md`** — for a person using the packages, not for an agent.
+| tier | what it holds | when you use it |
+| --- | --- | --- |
+| `AGENTS.md` — this file | orientation and the rules that prevent defects | read every session; write when a rule is learned the hard way |
+| `.agentDocs/` | depth: module rationale, traps with their causes, compatibility | read on demand, before touching that area; write when a rule needs its reasoning kept |
+| `docs/` | how-to and reference for a person using this package | read when the task is user-facing; write in the same commit as the change |
+| `README.md` | the first read, for a person | write alongside `docs/` |
+
+- **One home per fact.** State the rule here, keep the reasoning in `.agentDocs/` and link it — never both.
+- **A dead pointer is a bug.** If the target is gone, delete the pointer rather than leave it.
+- Move depth behind a pointer once a section outgrows a screen or two; keep the rule inline.
 
 **There is no `.agentDocs/` here yet and none is needed at this size.** Create one when a section
 above outgrows a screen or two: move the *reasoning* out and keep the *rule* here with a pointer to
@@ -52,17 +58,38 @@ Ports (all `127.0.0.1`, all HTTPS): `frontend` 3300 · `frontend-second` 3301 ·
 
 ## How to work here
 
-- Check callers before changing it; if impact is unclear, say so.
-- Never rewrite a section you haven't understood; don't invent requirements, surface what's needed.
-- Report risk, not just the change: correctness, security, operational, integration.
-- **Fix the root cause, not the instance** — one bug under different names (copied helper, duplicated rule, a second path) is one class; fix it once, in scope.
-- **Verify before claiming, and say what you checked.** A green test proves only what it asserts — **break the thing it guards and watch it fail.** If it still passes, either the test is decoration or a different guard is running; find out which. Where a stub cannot answer the question, drive the real thing. Mark anything unverified as unverified.
-- Missing project recall: read this file, `docs/` and `git log`.
+- **Check the callers before you change anything.** Grep who uses it and which tests name it. If the
+  impact is unclear, say so — do not guess.
+- **Never overwrite or delete a large section you have not understood.** Read it, or say what you could
+  not determine and ask.
+- **Do not invent requirements.** Build what was asked; surface what else you notice and let it be
+  decided.
+- **Fix the class, not the instance.** A copied helper, a rule stated twice, a guard bypassed by a
+  second path is one problem: one implementation, one guard. That is the work, not a follow-up to ask
+  for. Stay inside the task rather than refactoring the world.
+- **Verify before claiming, and say what you checked.** A passing test is not evidence it pins
+  anything — **break the thing it guards and watch it fail.** If it still passes, either the test is
+  decoration or a different guard is running; find out which. Where a stub cannot answer the question,
+  drive the real thing.
+- **Never write an identifier from memory.** A commit hash, path, line number or version must be quoted
+  from the source; a plausible-looking invented one is worse than none.
+- **A stated blocker is a hypothesis, not a fact.** Re-test "cannot install X" / "tool unavailable"
+  before inheriting it, and never report a failure your own flag forced.
+- **Report the risk with the change** — correctness, security, operational and integration; plus what
+  you could not verify and every assumption you made. An unverified claim marked as such beats a
+  confident one that is wrong.
+- **Missing recall of this repo?** Read this file, `.agentDocs/` and `git log` before acting, then ask
+  1–3 focused questions rather than guessing at intent.
 
 ## Conciseness
 
-Prune verbose, keep correctness — code, comments, docs. One idea per sentence; cut what wouldn't change a reader's action. Keep comments sparse and short: explain non-obvious intent only, never restate the line, and never
-argue for the change in the comment — that is the commit message. Delete history `git log` holds — keep the rule, not the story. Never drop a caveat to save a line.
+**Prune verbose, keep correctness** — code, comments, docs alike.
+
+- Code: a comment only for non-obvious *intent*, never to restate the line, and never long. A block
+  arguing for its own change is a commit message.
+- Docs: one idea per sentence. Cut anything that would not change what a reader does.
+- Delete history `git log` already holds — keep the *rule* that came out of it, not the story.
+- **Never drop a caveat to save a line.** Concise means no filler, not fewer facts.
 
 ## User-facing docs
 
@@ -79,11 +106,11 @@ argue for the change in the comment — that is the commit message. Delete histo
 
 - Both frontends `extends: ['@local/nuxt-layer-common']`: app-specific code stays in the app, shared setup in the layer. Read the layer README before touching the layer or shadcn kit.
 - Add shadcn components with `pnpm -F=@local/nuxt-layer-common shad-add <name>`, never from an app.
-- Per-app styling (`app/assets/css/*`, `app/components/OgImage/Frame.takumi.vue`) overrides layer defaults.
+- Per-app styling (`apps/<app>/app/assets/css/*`, `apps/<app>/app/components/OgImage/Frame.takumi.vue`) overrides layer defaults.
 
 ## Backend (Hono)
 
-- `src/app.ts` is the root entry; `api/` mirrors the URL path (`/api/dummy/hello` → `src/api/dummy/hello.ts`).
+- `apps/backend/src/app.ts` is the root entry; `api/` mirrors the URL path (`/api/dummy/hello` → `apps/backend/src/api/dummy/hello.ts`).
 - App entries (`app.ts`, `$.ts`) only `.use` middlewares and `.route` routes, never define routes, and are named `<Name>App`; route files are `<Name>Route`, multiple routes in one file go in `$.routes.ts`, and a folder-prefix index route uses `$$.ts` (e.g. `src/api/$$.ts`, not `api.ts`).
 - `#src/providers` (3rd-party connectors, grouped by purpose), `#src/services` (orchestrating providers), `#src/helpers` (global helpers); locally reusable code sits next to its consumer as `*.helper.ts`.
 - Validation via `customArktypeValidator` + `describeRoute` (OpenAPI); errors flow through `errorHandler` (`DetailedError`/`HTTPException`). Import with `#src/*`; the dev script reads the committed `.env.dev`, and a gitignored `.env.dev.local` overrides it.
