@@ -42,6 +42,28 @@ function jsonClone<T>(value: T): T {
   return JSON.parse(JSON.stringify(value))
 }
 
+/**
+ * Whether the caller may rewrite the thread's history.
+ *
+ * `assertThreadAccess` only asks "may you see this thread": a share recipient legitimately
+ * can, which is why edit and regenerate need a stricter question. Both destroy content —
+ * regenerate overwrites a reply in place, edit drops every later message — so they are
+ * owner-only. A thread claimed by a user is owned by that user; an anonymous thread has no
+ * owner beyond the `lockerKey` that created it.
+ */
+function assertOwnsThread(
+  thread: { userId?: string },
+  { userIdentity, lockerKey }: { userIdentity: { subject: string } | null, lockerKey?: string },
+) {
+  if (thread.userId && thread.userId !== userIdentity?.subject)
+    throw new ConvexError('Only the thread owner can change its messages')
+
+  // An anonymous thread is owned by whoever holds its key; `assertThreadAccess` already
+  // proved that when the thread was read.
+  if (!thread.userId && !lockerKey)
+    throw new ConvexError('Only the thread owner can change its messages')
+}
+
 /** How often a generating action checks whether the user asked it to stop. */
 const CANCEL_POLL_MS = 1000
 
@@ -287,6 +309,8 @@ chatApp
         if (thread.frozen)
           throw new ConvexError(`Can't regenerate in a frozen thread`)
 
+        assertOwnsThread(thread, { userIdentity, lockerKey })
+
         const target = await c.env.runQuery(internal.messages.getById, { messageId: regenerateMessageId as Id<'messages'> })
         if (!target || target.role !== 'assistant' || target.threadId !== threadId)
           throw new ConvexError('Message to regenerate not found')
@@ -331,6 +355,8 @@ chatApp
           throw new ConvexError(`Can't edit a message in a frozen thread`)
         if (!content)
           throw new ConvexError('Edited message must have content')
+
+        assertOwnsThread(thread, { userIdentity, lockerKey })
 
         const target = await c.env.runQuery(internal.messages.getById, { messageId: editMessageId as Id<'messages'> })
         if (!target || target.role !== 'user' || target.threadId !== threadId)
