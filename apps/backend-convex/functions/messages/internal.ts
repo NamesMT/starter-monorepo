@@ -1,9 +1,11 @@
 import { clearUndefined, objectPick } from '@namesmt/utils'
 import { ConvexError, v } from 'convex/values'
+import { internal } from '../../convex/_generated/api'
 import { internalMutation, internalQuery } from '../../convex/_generated/server'
 import { singleShardCounter } from '../../utils/counters'
 import { resolveMessageParts } from '../../utils/message'
 import { partValidator } from '../../utils/validators'
+import { deleteInBatches } from '../shared/batch-delete'
 
 export const internalAdd = internalMutation({
   args: {
@@ -27,11 +29,26 @@ export const internalAdd = internalMutation({
     }))),
   },
   handler: async (ctx, args) => {
+    // Claimed here, not by the caller: a mutation is serialisable, so this read and the insert
+    // below cannot interleave with another claim.
+    if (args.streamId) {
+      const claimed = await ctx.db
+        .query('messages')
+        .withIndex('by_stream_id', q => q.eq('streamId', args.streamId))
+        .first()
+
+      if (claimed)
+        throw new ConvexError('streamId is already in use')
+    }
+
     await singleShardCounter.inc(ctx, `messages-in-thread_${args.threadId}`)
+
+    const now = Date.now()
 
     return await ctx.db.insert('messages', {
       ...objectPick(args, ['threadId', 'role', 'parts', 'context', 'isStreaming', 'streamId', 'provider', 'model', 'attachments']),
-      timestamp: Date.now(),
+      timestamp: now,
+      ...(args.isStreaming ? { lastActivityAt: now } : {}),
     })
   },
 })
@@ -51,27 +68,8 @@ export const updateStreamingMessage = internalMutation({
     await ctx.db.patch(args.messageId, clearUndefined({
       parts: args.parts,
       isStreaming: args.isStreaming,
+      lastActivityAt: livenessFor(args.isStreaming),
     }))
-  },
-})
-
-export const getStreamingMessage = internalQuery({
-  args: { streamId: v.string() },
-  handler: async (ctx, args) => {
-    const message = await ctx.db
-      .query('messages')
-      .withIndex('by_stream_id', q =>
-        q.eq('streamId', args.streamId))
-      .filter(q => q.eq(q.field('isStreaming'), true))
-      .first()
-    if (!message)
-      return null
-
-    const thread = await ctx.db.get(message.threadId)
-    if (!thread)
-      return null
-
-    return message
   },
 })
 
@@ -114,6 +112,7 @@ export const restartStreamingMessage = internalMutation({
       isStreaming: true,
       streamId: args.streamId,
       cancelRequested: undefined,
+      lastActivityAt: Date.now(),
     })
   },
 })
@@ -134,13 +133,15 @@ export const isCancelRequested = internalQuery({
 export const resolveStuckStreamMessages = internalMutation({
   args: { },
   handler: async (ctx) => {
-    const messages = await ctx.db
+    const cutoff = Date.now() - 10 * 60 * 1000
+
+    // Streaming rows only: the index covers them, `isStreaming` is not indexed.
+    const streaming = await ctx.db
       .query('messages')
-      // Get messages that are currently streaming
       .withIndex('by_stream_id', q => q.gte('streamId', ''))
-      // Filter to those that are older than 10 mins
-      .filter(q => q.lte(q.field('timestamp'), Date.now() - 10 * 60 * 1000))
       .collect()
+
+    const messages = streaming.filter(message => isStuckStream(message, cutoff))
 
     if (!messages.length)
       return
@@ -150,6 +151,7 @@ export const resolveStuckStreamMessages = internalMutation({
         isStreaming: false,
         streamId: undefined,
         cancelRequested: undefined,
+        lastActivityAt: undefined,
         parts: [...resolveMessageParts(message), { type: 'text', text: '\nError: Streaming timed out' }],
       })
     }
@@ -218,7 +220,36 @@ export const editUserMessageAndRestart = internalMutation({
 export const clearAll = internalMutation({
   args: {},
   handler: async (ctx) => {
-    const messages = await ctx.db.query('messages').collect()
-    await Promise.all(messages.map(message => ctx.db.delete(message._id)))
+    const { deleted, remaining } = await deleteInBatches(ctx, ctx.db.query('messages'))
+
+    if (remaining)
+      await ctx.scheduler.runAfter(0, internal.messages.clearAll, {})
+
+    return { deleted, remaining }
   },
 })
+
+/**
+ * Whether a streaming message has gone silent for long enough to be considered abandoned.
+ *
+ * Keyed on the *last activity*, not `timestamp`: the latter is the creation time and never
+ * moves, so an earlier version killed healthy generations that simply ran longer than ten
+ * minutes. Rows written before `lastActivityAt` existed carry none and fall back to `timestamp`.
+ */
+export function isStuckStream(
+  message: { lastActivityAt?: number, timestamp: number },
+  cutoff: number,
+) {
+  return (message.lastActivityAt ?? message.timestamp) <= cutoff
+}
+
+/**
+ * The `lastActivityAt` to write alongside a save.
+ *
+ * Every save is progress, and the periodic one passes no `isStreaming` at all — so this must
+ * not require it to be `true`, or the heartbeat never refreshes and the sweep falls back to
+ * killing streams for their age. Only an explicit `false` (the stream ended) clears it.
+ */
+export function livenessFor(isStreaming: boolean | undefined, now = Date.now()) {
+  return isStreaming === false ? undefined : now
+}

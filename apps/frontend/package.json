@@ -6,7 +6,10 @@
   "scripts": {
     "lint": "eslint .",
     "test:types": "nuxt typecheck",
-    "quickcheck": "pnpm run lint && pnpm run test:types",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
+    "test:e2e": "dotenvx run -f ../../.env -- playwright test",
+    "quickcheck": "pnpm run lint && pnpm run test:types && pnpm run test",
     "dev": "nuxt dev",
     "build": "nuxt generate",
     "build:workerdLocal": "export TARGET=workerdLocal && nuxt generate",
@@ -23,6 +26,7 @@
     "reka-ui": "catalog:"
   },
   "devDependencies": {
+    "@dotenvx/dotenvx": "catalog:",
     "@local/common": "workspace:*",
     "@local/common-vue": "workspace:*",
     "@local/locales": "workspace:*",
@@ -30,6 +34,8 @@
     "@local/tsconfig": "workspace:*",
     "@namesmt/utils": "catalog:",
     "@nuxt/eslint": "catalog:",
+    "@playwright/test": "catalog:",
+    "@vue/test-utils": "catalog:",
     "@vueuse/core": "catalog:",
     "@vueuse/integrations": "catalog:",
     "ai": "catalog:",
@@ -39,9 +45,11 @@
     "convex-vue": "catalog:",
     "destr": "catalog:",
     "dotenv": "catalog:",
+    "happy-dom": "catalog:",
     "kontroll": "catalog:",
     "nuxt": "catalog:",
     "unocss": "catalog:",
+    "vitest": "catalog:",
     "vue": "catalog:"
   }
 }

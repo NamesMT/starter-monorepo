@@ -65,18 +65,19 @@ export interface PostChatStreamArgs {
   editMessageId?: string
   abortController?: AbortController
 }
-export async function postChatStream(args: PostChatStreamArgs) {
-  const {
-    abortController = new AbortController(),
-  } = args
-
-  const { convexApiUrl } = useRuntimeConfig().public
-  const { $auth } = useNuxtApp()
-
+/**
+ * The multipart body for a chat turn. Split out from the request so it is testable without a
+ * Nuxt instance — the caller supplies the nickname and key it looked up.
+ *
+ * Fields are listed explicitly rather than iterated: callers spread an `AgentObject` in, which
+ * also carries `modelSettings`, and `String()`-ing that posts "[object Object]".
+ */
+export function buildChatStreamForm(
+  args: PostChatStreamArgs,
+  { nickname, lockerKey }: { nickname: string, lockerKey?: string },
+) {
   const formData = new FormData()
 
-  // Listed explicitly rather than iterating `args`: callers spread an `AgentObject` in,
-  // which also carries `modelSettings`, and `String()`-ing that posts "[object Object]".
   const textFields = ['threadId', 'provider', 'model', 'apiKey', 'content', 'streamId', 'resumeStreamId', 'regenerateMessageId', 'editMessageId'] as const satisfies ReadonlyArray<keyof PostChatStreamArgs>
   for (const key of textFields) {
     const value = args[key]
@@ -98,8 +99,24 @@ export async function postChatStream(args: PostChatStreamArgs) {
   if (args.personalContext)
     formData.append('personalContext', JSON.stringify(args.personalContext))
 
-  formData.append('context', JSON.stringify({ from: getChatNickname() }))
-  formData.append('lockerKey', getLockerKey(args.threadId) ?? '')
+  formData.append('context', JSON.stringify({ from: nickname }))
+  formData.append('lockerKey', lockerKey ?? '')
+
+  return formData
+}
+
+export async function postChatStream(args: PostChatStreamArgs) {
+  const {
+    abortController = new AbortController(),
+  } = args
+
+  const { convexApiUrl } = useRuntimeConfig().public
+  const { $auth } = useNuxtApp()
+
+  const formData = buildChatStreamForm(args, {
+    nickname: getChatNickname(),
+    lockerKey: getLockerKey(args.threadId),
+  })
 
   const response = await fetch(`${convexApiUrl}/api/chat/stream`, {
     method: 'POST',

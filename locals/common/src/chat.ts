@@ -229,6 +229,22 @@ export const CHAT_ATTACHMENT_LIMITS = {
 } as const
 
 /**
+ * Upper bounds on what a single turn may put into the prompt.
+ *
+ * Every field here is client-supplied and concatenated into the request, and the deployment
+ * pays for the tokens. Without a ceiling a caller sends a multi-megabyte message and a huge
+ * `maxOutputTokens` and turns one request into an arbitrarily expensive one.
+ */
+export const CHAT_INPUT_LIMITS = {
+  /** Characters of a single message. */
+  maxContentLength: 32_000,
+  /** Characters of user-supplied persona/context text. */
+  maxContextLength: 4_000,
+  /** Output tokens a caller may request; the rest is the model's own default. */
+  maxOutputTokens: 8_000,
+} as const
+
+/**
  * Fallback attachment capabilities used when a model does not declare its own
  * `attachments` accept list. Kept deliberately conservative.
  */
@@ -359,10 +375,14 @@ export function formatFileSize(bytes: number) {
  *
  * An entry is an exact MIME type (`image/png`), a MIME wildcard (`image/*`),
  * the catch-all wildcard alone or with a slash (`*`), or a file extension (`.pdf`).
+ *
+ * An empty list means the model takes no files — the same reading as the
+ * `CommonModelSettings.attachments` doc and the hosted chain's keyless members, which
+ * declare `[]`. Returning `true` here shipped files to models that cannot accept them.
  */
 export function matchesAttachmentAccept(type: string, name: string, accept: readonly string[]) {
   if (!accept.length)
-    return true
+    return false
 
   const lowerType = type.toLowerCase()
   const lowerName = name.toLowerCase()

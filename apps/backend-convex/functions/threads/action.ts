@@ -14,13 +14,14 @@ export const generateTitle = action({
   args: {
     threadId: v.id('threads'),
     lockerKey: v.optional(v.string()),
-    apiKey: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const userIdentity = await ctx.auth.getUserIdentity()
 
-    rateLimiter.limit(ctx, 'generateTitle', { key: userIdentity?.subject ?? args.lockerKey, throws: true })
+    await rateLimiter.limit(ctx, 'generateTitle', { key: userIdentity?.subject ?? args.lockerKey, throws: true })
 
+    // Spends the deployment's own OpenRouter key, so the access check must run first: only a
+    // thread the caller can prove access to reaches the model call.
     const thread = await ctx.runQuery(api.threads.get, { threadId: args.threadId, lockerKey: args.lockerKey })
 
     const messages = await ctx.runQuery(api.messages.listByThread, { threadId: args.threadId, lockerKey: args.lockerKey })

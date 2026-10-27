@@ -50,6 +50,11 @@ const aiChatTables = {
     streamId: v.optional(v.string()),
     isStreaming: v.optional(v.boolean()),
     /**
+     * When the stream last made progress. The stuck-stream sweep keys on this, not on
+     * `timestamp`: a slow but healthy generation must not be killed for being old.
+     */
+    lastActivityAt: v.optional(v.number()),
+    /**
      * Set by a `stop` request while the reply is still streaming. The running action polls
      * this and stops itself: Convex actions have no abort signal, so cancellation has to be
      * cooperative (the pattern Convex documents for stopping a generation across clients).

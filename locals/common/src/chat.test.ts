@@ -3,8 +3,9 @@ import { describe, expect, it } from 'vitest'
 import { appendReasoningPart, appendTextPart, getHostedFreeModel, getHostedProvider, getMessageReasoning, getMessageText, HOSTED_AUTO_MODEL, HOSTED_DEFAULT_MODEL, HOSTED_FREE_CHAIN, HOSTED_MODELS, matchesAttachmentAccept, upsertToolPart, windowChatHistory } from './chat'
 
 describe('matchesAttachmentAccept', () => {
-  it('accepts everything when the list is empty', () => {
-    expect(matchesAttachmentAccept('application/zip', 'a.zip', [])).toBe(true)
+  it('accepts nothing when the list is empty, which means the model takes no files', () => {
+    expect(matchesAttachmentAccept('application/zip', 'a.zip', [])).toBe(false)
+    expect(matchesAttachmentAccept('image/png', 'a.png', [])).toBe(false)
   })
 
   it('matches an exact MIME type', () => {

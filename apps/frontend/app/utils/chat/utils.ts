@@ -1,9 +1,4 @@
-import { randomStr } from '@namesmt/utils'
 import { destr } from 'destr'
-
-export function getRandomLockerKey() {
-  return `locker_${Date.now()}_${randomStr(8)}`
-}
 
 export function setLockerKey(kid: string, lockerKey: string) {
   localStorage.setItem(`locker_${kid}`, lockerKey)

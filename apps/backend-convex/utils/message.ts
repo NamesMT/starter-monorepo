@@ -11,18 +11,30 @@ function toUiPart(part: ChatPart): UIMessage['parts'][number] {
   return part as UIMessage['parts'][number]
 }
 
+/**
+ * A value that cannot break out of its quoted `MM` line.
+ *
+ * Every header field is one `Key: "value"` line, so a newline or quote in a nickname could
+ * forge the fields below it — a client could write its own `UID` and claim any author. Values
+ * are collapsed to one line and stripped of quotes.
+ */
+function headerValue(value: string) {
+  // Strip quotes and collapse any newline so the value stays inside one `Key: "value"` line.
+  return value.replace(/["\r\n]+/g, ' ').trim()
+}
+
 /** The `MM` header the system prompt documents, so the model can attribute each message. */
 export function buildMetadataHeader(message: Pick<Doc<'messages'>, '_id' | 'role' | 'provider' | 'model' | 'isStreaming' | 'context'>) {
-  const lines = [`<!-- MM START`, `MID: "${message._id}"`]
+  const lines = [`<!-- MM START`, `MID: "${headerValue(message._id)}"`]
 
   if (message.role === 'user') {
     if (message.context?.from)
-      lines.push(`Nickname: "${message.context.from}"`)
+      lines.push(`Nickname: "${headerValue(message.context.from)}"`)
     if (message.context?.uid)
-      lines.push(`UID: "${message.context.uid}"`)
+      lines.push(`UID: "${headerValue(message.context.uid)}"`)
   }
   else {
-    lines.push(`From: "${message.provider}/${message.model}"`)
+    lines.push(`From: "${headerValue(message.provider)}/${headerValue(message.model)}"`)
     if (message.isStreaming)
       lines.push(`This message is still streaming, content is not finalized`)
   }

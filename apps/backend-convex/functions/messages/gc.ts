@@ -50,25 +50,30 @@ export const clearOrphanedAttachments = internalMutation({
     const limit = args.limit ?? BATCH_SIZE
     const now = Date.now()
 
+    // Streamed, not collected: an over-limit mutation throws and deletes nothing.
     const referenced = new Set<string>()
-    for (const message of await ctx.db.query('messages').collect()) {
+    for await (const message of ctx.db.query('messages')) {
       for (const attachment of message.attachments ?? [])
         referenced.add(attachment.storageId)
     }
 
     // A user message is written with its attachments in the same turn, but the blob is
     // uploaded first, so only messages are a source of references.
-    const stored = await ctx.db.system.query('_storage').collect()
-    const orphans = selectOrphans(stored, referenced, now)
+    const orphans: string[] = []
+    for await (const file of ctx.db.system.query('_storage')) {
+      if (orphans.length >= limit)
+        break
+      orphans.push(...selectOrphans([file], referenced, now, ORPHAN_MIN_AGE_MS))
+    }
 
-    const batch = orphans.slice(0, limit)
-    for (const storageId of batch)
+    for (const storageId of orphans)
       await ctx.storage.delete(storageId as any)
 
-    const remaining = orphans.length - batch.length
+    // A full batch means more may remain; the next pass re-reads `referenced` anyway.
+    const remaining = orphans.length >= limit ? 1 : 0
     if (remaining > 0)
       await ctx.scheduler.runAfter(0, internal.messages.clearOrphanedAttachments, { limit })
 
-    return { deleted: batch.length, remaining }
+    return { deleted: orphans.length, remaining }
   },
 })

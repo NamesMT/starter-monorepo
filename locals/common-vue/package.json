@@ -6,14 +6,21 @@
   "scripts": {
     "lint": "eslint .",
     "test:types": "vue-tsc --noEmit",
-    "quickcheck": "pnpm run lint && pnpm run test:types"
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
+    "quickcheck": "pnpm run lint && pnpm run test:types && pnpm run test"
   },
   "dependencies": {
     "unocss": "catalog:",
     "vue": "catalog:"
   },
   "devDependencies": {
+    "@local/common": "workspace:*",
     "@local/tsconfig": "workspace:*",
+    "@vitejs/plugin-vue": "catalog:",
+    "@vue/test-utils": "catalog:",
+    "happy-dom": "catalog:",
+    "vitest": "catalog:",
     "vue-tsc": "catalog:"
   }
 }

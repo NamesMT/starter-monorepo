@@ -39,6 +39,20 @@ const nearTopBottom = computed(() => {
 
 const threadIdRef = useThreadIdRef()
 const isThreadFrozen = computed(() => chatContext.activeThread.value?.frozen)
+/**
+ * Whether this browser may rewrite the thread's history.
+ *
+ * Mirrors the server rule: edit and regenerate destroy content, so they are owner-only — a
+ * share recipient may read and continue a thread but not rewrite it. The server enforces this;
+ * hiding the controls keeps the UI from offering an action that will be refused.
+ */
+const canRewriteThread = computed(() => {
+  const thread = chatContext.activeThread.value
+  if (!thread)
+    return false
+
+  return thread.userId ? thread.userId === $auth.user?.id : true
+})
 const fetchKey = ref(0)
 
 const sendMessageRef = useRouteQuery<string | undefined>('sendMessage')
@@ -231,15 +245,12 @@ async function handleSubmit({ input }: HandleSubmitArgs) {
   try {
     // Create new thread
     if (!threadIdRef.value) {
-      // Set lockerKey to maintain permission if user is anonymous
-      const lockerKey = $auth.loggedIn ? undefined : getRandomLockerKey()
-      const newThreadId = await createNewThread(convex, {
+      const { threadId: newThreadId, lockerKey } = await createNewThread(convex, {
         title: userInput || attachments.items.value[0]?.name || 'New chat',
-        lockerKey,
       })
       ignorePathUpdate(() => { threadIdRef.value = newThreadId })
 
-      // Store lockerKey locally
+      // A guest's key is minted server-side; keep it so this browser can return to the thread.
       if (lockerKey)
         setLockerKey(newThreadId, lockerKey)
 
@@ -599,16 +610,21 @@ async function _branchThreadFromMessage({ messageId, lockerKey }: BranchThreadFr
   messages.value = messagesLte
 
   await branchThreadFromMessage(convex, { messageId, lockerKey })
-    .then((threadId) => {
+    .then(({ threadId, lockerKey: branchedLockerKey }) => {
       ignorePathUpdate(() => { threadIdRef.value = threadId })
-      if (lockerKey)
-        setLockerKey(threadId, lockerKey)
+
+      // The branch is its own thread with its own key, minted by the server for a guest.
+      if (branchedLockerKey)
+        setLockerKey(threadId, branchedLockerKey)
 
       toast(ts('chat.toast.threadBranched'))
     })
 }
 
 async function _regenerateMessage({ messageId }: { messageId: string }) {
+  if (!canRewriteThread.value)
+    return toast.error(ts('chat.toast.notThreadOwner'))
+
   if (Object.keys(streamingMessagesMap).length > 0)
     return toast(ts('chat.toast.busyStreaming'))
 
@@ -635,6 +651,9 @@ async function _regenerateMessage({ messageId }: { messageId: string }) {
  * new question beside the stale answers.
  */
 async function _editMessage({ messageId, content }: { messageId: string, content: string }) {
+  if (!canRewriteThread.value)
+    return toast.error(ts('chat.toast.notThreadOwner'))
+
   if (Object.keys(streamingMessagesMap).length > 0)
     return toast(ts('chat.toast.busyStreaming'))
 
@@ -715,6 +734,7 @@ function doScrollBottom({ smooth = true, maybe = false, tries = 0, lastScrollTop
           <ChatMessageCard
             v-for="message of messages" :key="message.id"
             :message
+            :can-rewrite="canRewriteThread"
             @branch-off-clicked="_branchThreadFromMessage({
               messageId: message._id,
               lockerKey: getLockerKey(message.threadId),

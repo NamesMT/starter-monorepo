@@ -37,7 +37,7 @@
 - App entries are named `<Name>App`; route definitions are named `<Name>Route`.
 - Providers initialize once per process on sharing platforms and per request on `workerd` (`nonSharingPlatforms`); the Convex init is allowed to fail.
 - Validation uses `customArktypeValidator` + `describeRoute`; errors are normalized by `errorHandler` for `HTTPException` and `DetailedError`.
-- `setupOpenAPI` serves `/openapi/spec.json` and the Scalar UI at `/openapi/ui`.
+- `setupOpenAPI` serves the spec and the Scalar UI under the public prefix: `/api/openapi/spec.json` and `/api/openapi/ui`. The auth middleware documents its own `security`/401, tags are assigned by path prefix, and the generated spec is cached until it rejects.
 
 ## Frontend composition
 

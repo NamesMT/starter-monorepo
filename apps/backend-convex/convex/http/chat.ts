@@ -5,7 +5,7 @@ import type { Id } from '../_generated/dataModel'
 import type { ActionCtx } from '../_generated/server'
 import RateLimiter, { MINUTE } from '@convex-dev/rate-limiter'
 import { zValidator } from '@hono/zod-validator'
-import { appendReasoningPart, appendTextPart, CHAT_ATTACHMENT_LIMITS, matchesAttachmentAccept, upsertToolPart, windowChatHistory } from '@local/common/src/chat'
+import { appendReasoningPart, appendTextPart, CHAT_ATTACHMENT_LIMITS, CHAT_INPUT_LIMITS, matchesAttachmentAccept, upsertToolPart, windowChatHistory } from '@local/common/src/chat'
 import { randomStr, sleep } from '@namesmt/utils'
 import { createUIMessageStreamResponse, stepCountIs, streamText, toUIMessageStream } from 'ai'
 import { ConvexError } from 'convex/values'
@@ -13,6 +13,7 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { throttle } from 'kontroll'
 import { z } from 'zod'
+import { ownerMismatch } from '../../functions/threads/utils'
 import { getAgentModel, getModelAttachmentAccept, withProviderErrorAsText } from '../../utils/agent'
 import { cachingCallProviderOptions, cachingStrategyFor, withAnthropicCacheBreakpoints } from '../../utils/caching'
 import { getErrorMessage, normalizePossibleSDKError } from '../../utils/error'
@@ -22,6 +23,16 @@ import { api, components, internal } from '../_generated/api'
 
 const rateLimiter = new RateLimiter(components.rateLimiter, {
   aiChat: { kind: 'token bucket', rate: 10, period: MINUTE, capacity: 3 },
+  /**
+   * Deployment-wide ceiling.
+   *
+   * `aiChat` is keyed per caller, and a guest's key is a `lockerKey` the client picks at
+   * thread creation — free and unauthenticated — so a fresh thread buys a fresh bucket. This
+   * one is shared by every caller, bounding what the deployment can spend between human
+   * interventions with a limit no new key escapes. Generous enough that a normal group never
+   * notices it; lower it where the deployment is publicly reachable.
+   */
+  aiChatGlobal: { kind: 'fixed window', rate: 120, period: MINUTE, capacity: 120 },
 })
 
 /** Maximum tool-calling steps per response (issue #42). */
@@ -30,6 +41,25 @@ const MAX_TOOL_STEPS = 5
 /** Deep copy of plain JSON data; the Convex isolate does not guarantee `structuredClone`. */
 function jsonClone<T>(value: T): T {
   return JSON.parse(JSON.stringify(value))
+}
+
+/**
+ * Whether the caller may rewrite the thread's history.
+ *
+ * `assertThreadAccess` only asks "may you see this thread": a share recipient legitimately
+ * can, which is why edit and regenerate need a stricter question. Both destroy content —
+ * regenerate overwrites a reply in place, edit drops every later message — so they are
+ * owner-only. A thread claimed by a user is owned by that user; an anonymous thread has no
+ * owner beyond the `lockerKey` that created it.
+ */
+function assertOwnsThread(
+  thread: { userId?: string },
+  { userIdentity, lockerKey }: { userIdentity: { subject: string } | null, lockerKey?: string },
+) {
+  if (!ownerMismatch(thread, userIdentity?.subject, lockerKey))
+    return
+
+  throw new ConvexError('Only the thread owner can change its messages')
 }
 
 /** How often a generating action checks whether the user asked it to stop. */
@@ -117,7 +147,7 @@ chatApp
       provider: z.string(),
       model: z.string(),
       apiKey: z.optional(z.string()),
-      content: z.optional(z.string()),
+      content: z.optional(z.string().max(CHAT_INPUT_LIMITS.maxContentLength)),
       /**
        * JSON-encoded array of `{ storageId, name, type, size }`, produced by uploading
        * the files to the URLs issued by `api.files.generateUploadUrl`.
@@ -179,8 +209,8 @@ chatApp
         z.object({
           temperature: z.optional(z.number().min(0).max(2)),
           topP: z.optional(z.number().min(0).max(1)),
-          maxOutputTokens: z.optional(z.number().int().positive()),
-          traits: z.optional(z.string()),
+          maxOutputTokens: z.optional(z.number().int().positive().max(CHAT_INPUT_LIMITS.maxOutputTokens)),
+          traits: z.optional(z.string().max(CHAT_INPUT_LIMITS.maxContextLength)),
           tools: z.optional(z.boolean()),
         }),
       ),
@@ -202,12 +232,20 @@ chatApp
           return arg
         },
         z.object({
-          aboutYou: z.optional(z.string()),
-          customInstructions: z.optional(z.string()),
+          aboutYou: z.optional(z.string().max(CHAT_INPUT_LIMITS.maxContextLength)),
+          customInstructions: z.optional(z.string().max(CHAT_INPUT_LIMITS.maxContextLength)),
         }),
       ),
       streamId: z.optional(z.string()),
-      context: z.optional(z.string().transform(val => JSON.parse(val))),
+      /**
+       * Message attribution. Only `from` is honoured; `uid` is server-derived, so a client
+       * cannot claim another author. Bounded because the nickname is echoed into the model's
+       * prompt header.
+       */
+      context: z.optional(z.string().transform((val) => {
+        const parsed = JSON.parse(val)
+        return { from: z.string().max(CHAT_INPUT_LIMITS.maxContextLength).optional().parse(parsed?.from) }
+      })),
       resumeStreamId: z.optional(z.string()),
       /** Assistant message to regenerate in place, dropping the reply it currently holds. */
       regenerateMessageId: z.optional(z.string()),
@@ -253,7 +291,13 @@ chatApp
       if (userIdentity === null && !lockerKey)
         throw new ConvexError({ msg: 'Not authenticated' })
 
-      await rateLimiter.limit(c.env, 'aiChat', { key: userIdentity?.subject ?? lockerKey, throws: true })
+      // The per-caller bucket is keyed on identity where we have one; a guest's `lockerKey`
+      // is client-chosen, so it is only ever a fairness hint. The global bucket is what
+      // actually bounds spend.
+      await Promise.all([
+        rateLimiter.limit(c.env, 'aiChatGlobal', { key: 'deployment', throws: true }),
+        rateLimiter.limit(c.env, 'aiChat', { key: userIdentity?.subject ?? lockerKey, throws: true }),
+      ])
 
       // Cast type and runQuery to check for permission
       const threadId = _threadId as Id<'threads'>
@@ -270,6 +314,8 @@ chatApp
       if (regenerateMessageId && !content) {
         if (thread.frozen)
           throw new ConvexError(`Can't regenerate in a frozen thread`)
+
+        assertOwnsThread(thread, { userIdentity, lockerKey })
 
         const target = await c.env.runQuery(internal.messages.getById, { messageId: regenerateMessageId as Id<'messages'> })
         if (!target || target.role !== 'assistant' || target.threadId !== threadId)
@@ -316,6 +362,8 @@ chatApp
         if (!content)
           throw new ConvexError('Edited message must have content')
 
+        assertOwnsThread(thread, { userIdentity, lockerKey })
+
         const target = await c.env.runQuery(internal.messages.getById, { messageId: editMessageId as Id<'messages'> })
         if (!target || target.role !== 'user' || target.threadId !== threadId)
           throw new ConvexError('Message to edit not found')
@@ -361,11 +409,9 @@ chatApp
         if (thread.frozen)
           throw new ConvexError(`Can't send new messages to frozen thread`)
 
-        // If user provides a streamId, check if its properly unused
-        if (streamId) {
-          if (await c.env.runQuery(internal.messages.getStreamingMessage, { streamId }))
-            throw new ConvexError('streamId is already in use')
-        }
+        // A client-supplied `streamId` is claimed atomically inside `internalAdd`, where the
+        // check and the insert share one serialisable mutation. Checking here instead would
+        // let two concurrent requests both pass.
         streamId = streamId ?? `stream-${Date.now()}_${randomStr(4)}`
 
         // Validate attachments against the stored blobs + model capabilities before
@@ -522,7 +568,11 @@ function respondWithAiStream({
           pendingSave = false
         })
       },
-      { trailing: true },
+      // Kontroll keys on `fn.toString()` by default, and every stream builds an identical
+      // closure — so concurrent streams in one isolate shared a slot and only the first
+      // callback survived: the other stream's text was never saved and its `pendingSave`
+      // stayed set, making `waitForSave` log "Save was stuck". Key it per message.
+      { trailing: true, key: streamingMessageId },
     )
   }
 

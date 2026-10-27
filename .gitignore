@@ -46,6 +46,10 @@ yarn-error.log*
 # turbo
 .turbo/
 
+# playwright
+test-results/
+playwright-report/
+
 # cloud services
 .vercel/
 .netlify/

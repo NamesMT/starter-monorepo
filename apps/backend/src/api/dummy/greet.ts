@@ -9,12 +9,19 @@ export const dummyGreetRoute = appFactory.createApp()
   .get(
     '',
     describeRoute({
-      description: 'Say hello to a user',
+      summary: 'Greet a named user in a locale',
+      description: 'Returns the translated `hello` message and the supplied `name` as plain text, e.g. `Hello World!` (`Xin chào World!` for `locale=vi`). Public, no session needed, and the response is derived only from the query string: `name` is required and must be at least one character, `locale` is optional and must be one of the shared locale codes, defaulting to the default locale. Invalid input returns 400 with the shared error body — `locale=de` or a missing `name` both produce `{"message":"Validation failed","code":"DetailedError","detail":[...]}`. The route writes nothing.',
       responses: {
         200: {
           description: 'Successful response',
           content: {
             'text/plain': { schema: resolver(type('string')) },
+          },
+        },
+        400: {
+          description: 'Validation failed: `name` missing or empty, or `locale` not in the shared locale list',
+          content: {
+            'application/json': { schema: { $ref: '#/components/schemas/Error' } },
           },
         },
       },

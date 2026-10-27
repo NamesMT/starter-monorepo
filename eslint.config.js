@@ -10,6 +10,8 @@ export default frontendNuxtConfig(await antfu(
       '.sst',
       '**/convex/_generated/**',
       '**/lib/shadcn/**',
+      '**/test-results/**',
+      '**/playwright-report/**',
     ],
   },
   {

@@ -1,4 +1,5 @@
 import { type } from 'arktype'
+import { describeRoute } from 'hono-openapi'
 import { env } from 'std-env'
 import { customArktypeValidator } from '#src/helpers/arktype.js'
 import { appFactory } from '#src/helpers/factory.js'
@@ -10,6 +11,8 @@ export const dummyGrammyRoute = appFactory.createApp()
    */
   .post(
     '',
+    // Machine-only: Telegram calls this webhook, not API clients. Hidden from the public spec.
+    describeRoute({ hide: true }),
     async (c) => {
       // Initialize grammy on-demand
       const { routeHandler } = getCachedGrammy() ?? await initGrammy()
@@ -23,6 +26,8 @@ export const dummyGrammyRoute = appFactory.createApp()
    */
   .put(
     '',
+    // Dev-only sample that sends real Telegram messages. Hidden from the public spec.
+    describeRoute({ hide: true }),
     customArktypeValidator('json', type({
       'message': 'object',
       'chatId': 'number | string',

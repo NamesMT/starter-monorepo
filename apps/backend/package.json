@@ -13,6 +13,7 @@
     "test:types": "tsc",
     "quickcheck": "pnpm run lint && pnpm run test:types",
     "check": "pnpm lint && pnpm test:types && vitest run --coverage",
+    "openapi:assert": "dotenvx run -f .env.dev.local -f .env.dev -f .env -- tsx scripts/assert-openapi.ts",
     "dev": "dotenvx run -f .env.dev.local -f .env.dev -f .env -- tsx watch src/dev.ts",
     "build": "dotenvx run -f .env.prod.local -f .env.prod -f .env -- tsdown",
     "deploy": "dotenvx run -f .env.prod.local -f .env.prod -f .env -- sh scripts/deploy.sh"

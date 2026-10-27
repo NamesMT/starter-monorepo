@@ -85,11 +85,19 @@ describe('backend runtime', () => {
     expect(res.headers.get('access-control-allow-credentials')).toBe('true')
   })
 
-  it('serves the OpenAPI spec', async () => {
-    const res = await app.request('/openapi/spec.json')
+  it('serves the OpenAPI spec under the public prefix', async () => {
+    const res = await app.request('/api/openapi/spec.json')
 
     expect(res.status).toBe(200)
-    const body = (await res.json()) as { openapi?: string }
+    const body = (await res.json()) as { openapi?: string, paths?: Record<string, unknown> }
     expect(body.openapi).toBeTruthy()
+    // The spec documents the API it is served from, not itself.
+    expect(body.paths).toHaveProperty('/api')
+  })
+
+  it('does not serve the OpenAPI spec at the app root', async () => {
+    const res = await app.request('/openapi/spec.json')
+
+    expect(res.status).toBe(404)
   })
 })

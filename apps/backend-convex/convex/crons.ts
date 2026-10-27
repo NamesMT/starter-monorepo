@@ -9,16 +9,18 @@ crons.interval(
   internal.tasks.clearAll,
 )
 
-crons.daily(
-  'clear threads table',
-  { hourUTC: 0, minuteUTC: 0 },
-  internal.threads.clearAll,
-)
-
+// Children first, a few minutes apart: a wipe that runs concurrently can orphan a message whose
+// thread is already gone, which then throws "Thread not found" forever.
 crons.daily(
   'clear messages table',
   { hourUTC: 0, minuteUTC: 0 },
   internal.messages.clearAll,
+)
+
+crons.daily(
+  'clear threads table',
+  { hourUTC: 0, minuteUTC: 5 },
+  internal.threads.clearAll,
 )
 
 crons.interval(
