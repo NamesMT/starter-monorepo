@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getAgentModel } from './utils/agent'
+import { getAgentModel } from './agent'
 
 describe('getAgentModel BYOK key requirement', () => {
   it('refuses a BYOK provider with no apiKey instead of falling back to the env key', () => {

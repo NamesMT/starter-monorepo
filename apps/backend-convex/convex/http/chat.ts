@@ -22,6 +22,16 @@ import { api, components, internal } from '../_generated/api'
 
 const rateLimiter = new RateLimiter(components.rateLimiter, {
   aiChat: { kind: 'token bucket', rate: 10, period: MINUTE, capacity: 3 },
+  /**
+   * Deployment-wide ceiling.
+   *
+   * `aiChat` is keyed per caller, and a guest's key is a `lockerKey` the client picks at
+   * thread creation — free and unauthenticated — so a fresh thread buys a fresh bucket. This
+   * one is shared by every caller, bounding what the deployment can spend between human
+   * interventions with a limit no new key escapes. Generous enough that a normal group never
+   * notices it; lower it where the deployment is publicly reachable.
+   */
+  aiChatGlobal: { kind: 'fixed window', rate: 120, period: MINUTE, capacity: 120 },
 })
 
 /** Maximum tool-calling steps per response (issue #42). */
@@ -253,7 +263,13 @@ chatApp
       if (userIdentity === null && !lockerKey)
         throw new ConvexError({ msg: 'Not authenticated' })
 
-      await rateLimiter.limit(c.env, 'aiChat', { key: userIdentity?.subject ?? lockerKey, throws: true })
+      // The per-caller bucket is keyed on identity where we have one; a guest's `lockerKey`
+      // is client-chosen, so it is only ever a fairness hint. The global bucket is what
+      // actually bounds spend.
+      await Promise.all([
+        rateLimiter.limit(c.env, 'aiChatGlobal', { key: 'deployment', throws: true }),
+        rateLimiter.limit(c.env, 'aiChat', { key: userIdentity?.subject ?? lockerKey, throws: true }),
+      ])
 
       // Cast type and runQuery to check for permission
       const threadId = _threadId as Id<'threads'>

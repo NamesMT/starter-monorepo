@@ -61,7 +61,7 @@ export const branchThreadFromMessage = mutation({
   handler: async (ctx, args) => {
     const userIdentity = await ctx.auth.getUserIdentity()
 
-    rateLimiter.limit(ctx, 'branchThread', { key: userIdentity?.subject ?? args.lockerKey, throws: true })
+    await rateLimiter.limit(ctx, 'branchThread', { key: userIdentity?.subject ?? args.lockerKey, throws: true })
 
     const message = await ctx.db.get(args.messageId)
     if (!message)
