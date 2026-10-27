@@ -45,18 +45,17 @@ export async function branchThreadFromMessage(convex: ConvexClient | ConvexHttpC
 
 export interface CreateNewThreadArgs {
   title: string
-  lockerKey?: string
 }
 export async function createNewThread(convex: ConvexClient | ConvexHttpClient, {
   title,
-  lockerKey,
 }: CreateNewThreadArgs) {
   const { $init } = useNuxtApp()
 
+  // A guest's key is minted by the server (CSPRNG) and returned; a signed-in thread has none
+  // until it is shared.
   return await convex.mutation(api.threads.create, {
     title,
     sessionId: $init.sessionId,
-    lockerKey,
   })
 }
 
@@ -123,7 +122,8 @@ export async function generateThreadTitle(convex: ConvexClient | ConvexHttpClien
 
 export interface ThreadSetLockerKeyArgs {
   threadId: Id<'threads'>
-  newLockerKey: string
+  /** Omit to have the server mint a CSPRNG key, which is the normal path for a share link. */
+  newLockerKey?: string
   /** The key the caller already holds; proves ownership of an anonymous thread. */
   currentLockerKey?: string
 }
@@ -132,7 +132,7 @@ export async function threadSetLockerKey(convex: ConvexClient | ConvexHttpClient
   newLockerKey,
   currentLockerKey,
 }: ThreadSetLockerKeyArgs) {
-  await convex.mutation(api.threads.setLockerKey, {
+  return await convex.mutation(api.threads.setLockerKey, {
     threadId,
     newLockerKey,
     currentLockerKey,

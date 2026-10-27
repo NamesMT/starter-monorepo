@@ -3,6 +3,7 @@ import { ConvexError, v } from 'convex/values'
 import { components, internal } from '../../convex/_generated/api'
 import { mutation } from '../../convex/_generated/server'
 import { singleShardCounter } from '../../utils/counters'
+import { generateLockerKey } from '../../utils/locker-key'
 import { deleteInBatches } from '../shared/batch-delete'
 import { assertThreadAccess, canRotateAnonymousLockerKey } from './utils'
 
@@ -17,13 +18,22 @@ export const create = mutation({
     lockerKey: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    return await ctx.db.insert('threads', {
+    const userId = (await ctx.auth.getUserIdentity())?.subject
+
+    // A guest's key is generated here, not accepted from the caller: it is this thread's only
+    // credential, so its strength must not depend on the client. A signed-in thread needs none
+    // until it is shared.
+    const lockerKey = userId ? args.lockerKey : generateLockerKey()
+
+    const threadId = await ctx.db.insert('threads', {
       sessionId: args.sessionId,
       title: args.title,
       timestamp: Date.now(),
-      lockerKey: args.lockerKey,
-      userId: (await ctx.auth.getUserIdentity())?.subject,
+      lockerKey,
+      userId,
     })
+
+    return { threadId, lockerKey }
   },
 })
 
@@ -92,11 +102,13 @@ export const branchThreadFromMessage = mutation({
       .withIndex('by_thread_and_timestamp', q => q.eq('threadId', thread._id).lte('timestamp', message.timestamp))
       .collect()
 
+    const lockerKey = userIdentity?.subject ? args.lockerKey : generateLockerKey()
+
     const newThreadId = await ctx.db.insert('threads', {
       sessionId: args.sessionId,
       title: thread.title,
       timestamp: Date.now(),
-      lockerKey: args.lockerKey,
+      lockerKey,
       userId: userIdentity?.subject,
       parentThread: thread._id,
     })
@@ -111,7 +123,7 @@ export const branchThreadFromMessage = mutation({
 
     await singleShardCounter.add(ctx, `messages-in-thread_${newThreadId}`, messages.length)
 
-    return newThreadId
+    return { threadId: newThreadId, lockerKey }
   },
 })
 
@@ -178,7 +190,8 @@ export const migrateToUser = mutation({
 export const setLockerKey = mutation({
   args: {
     threadId: v.id('threads'),
-    newLockerKey: v.string(),
+    /** Omit to have the server mint one; a caller-supplied key is accepted for compatibility. */
+    newLockerKey: v.optional(v.string()),
     /**
      * The thread's current key, when the caller is not signed in.
      *
@@ -205,8 +218,10 @@ export const setLockerKey = mutation({
       throw new ConvexError('You are not authorized to change this thread\'s share key')
     }
 
-    await ctx.db.patch(args.threadId, {
-      lockerKey: args.newLockerKey,
-    })
+    const lockerKey = args.newLockerKey ?? generateLockerKey()
+
+    await ctx.db.patch(args.threadId, { lockerKey })
+
+    return { lockerKey }
   },
 })

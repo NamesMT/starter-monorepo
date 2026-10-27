@@ -245,15 +245,12 @@ async function handleSubmit({ input }: HandleSubmitArgs) {
   try {
     // Create new thread
     if (!threadIdRef.value) {
-      // Set lockerKey to maintain permission if user is anonymous
-      const lockerKey = $auth.loggedIn ? undefined : getRandomLockerKey()
-      const newThreadId = await createNewThread(convex, {
+      const { threadId: newThreadId, lockerKey } = await createNewThread(convex, {
         title: userInput || attachments.items.value[0]?.name || 'New chat',
-        lockerKey,
       })
       ignorePathUpdate(() => { threadIdRef.value = newThreadId })
 
-      // Store lockerKey locally
+      // A guest's key is minted server-side; keep it so this browser can return to the thread.
       if (lockerKey)
         setLockerKey(newThreadId, lockerKey)
 
@@ -613,10 +610,12 @@ async function _branchThreadFromMessage({ messageId, lockerKey }: BranchThreadFr
   messages.value = messagesLte
 
   await branchThreadFromMessage(convex, { messageId, lockerKey })
-    .then((threadId) => {
+    .then(({ threadId, lockerKey: branchedLockerKey }) => {
       ignorePathUpdate(() => { threadIdRef.value = threadId })
-      if (lockerKey)
-        setLockerKey(threadId, lockerKey)
+
+      // The branch is its own thread with its own key, minted by the server for a guest.
+      if (branchedLockerKey)
+        setLockerKey(threadId, branchedLockerKey)
 
       toast(ts('chat.toast.threadBranched'))
     })
