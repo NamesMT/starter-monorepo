@@ -1,7 +1,29 @@
+import type { MiddlewareHandler } from 'hono'
 import { DetailedError } from '@namesmt/utils'
+import { describeRoute } from 'hono-openapi'
 import { decode, verifyWithJwks } from 'hono/jwt'
 import { appFactory } from '#src/helpers/factory.js'
+import { BACKEND_AUTH_SCHEME, errorResponse } from '#src/helpers/openapi.js'
 import { getWorkOS, getWorkOSJwks } from '#src/providers/auth/workos-main.js'
+
+/**
+ * Teaches the OpenAPI generator that this middleware requires the session cookie, and that it can
+ * answer 401. Attached to every `checkAuth()` variant so guarded routes — including future ones —
+ * are documented without any per-route boilerplate.
+ *
+ * `describeRoute` must be applied to the middleware itself: `findTargetHandler` reads the spec off
+ * the handler Hono stores, and a guard registered before the route's own `describeRoute` keeps its
+ * `security`/`401` because hono-openapi merges middleware specs in registration order.
+ */
+function documentedAuth<T extends MiddlewareHandler<any, any, any>>(middleware: T, security: Record<string, string[]>[]) {
+  return Object.assign(
+    middleware,
+    describeRoute({
+      security,
+      responses: { 401: errorResponse('No session, or its token is expired/revoked.') },
+    }),
+  )
+}
 
 export function keepAuthFresh() {
   return appFactory.createMiddleware(async (c, next) => {
@@ -55,7 +77,7 @@ export type checkAuthParams = {
   throwOnBadToken?: boolean
 }
 export function checkAuth({ throwOnUnauthenticated = true, throwOnBadToken = true }: checkAuthParams = {}) {
-  return appFactory.createMiddleware(async (c, next) => {
+  const middleware = appFactory.createMiddleware(async (c, next) => {
     const auth = c.get('backend-auth')
     const userAuth = auth.data.userAuth
 
@@ -79,4 +101,12 @@ export function checkAuth({ throwOnUnauthenticated = true, throwOnBadToken = tru
 
     await next()
   })
+
+  // Optional auth: the session may be absent, so the requirement is "cookie or no cookie".
+  // With `throwOnUnauthenticated: false` a bad token also only clears the session, hence no 401.
+  const security: Record<string, string[]>[] = throwOnUnauthenticated
+    ? [{ [BACKEND_AUTH_SCHEME]: [] }]
+    : [{ [BACKEND_AUTH_SCHEME]: [] }, {}]
+
+  return documentedAuth(middleware, security)
 }

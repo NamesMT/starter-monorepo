@@ -4,7 +4,7 @@
 
 ## Features
 - Easy cross-function calls / Lambda triggers support with [hono-adapter-aws-lambda](https://github.com/NamesMT/hono-adapter-aws-lambda).
-- [RPC](https://hono.dev/docs/guides/rpc) & [OpenAPI](https://github.com/rhinobase/hono-openapi): You can access the OpenAPI specs and Scalar UI at: https://127.0.0.1:3400/openapi/ui.
+- [RPC](https://hono.dev/docs/guides/rpc) & [OpenAPI](https://github.com/rhinobase/hono-openapi): You can access the OpenAPI spec and Scalar UI under the public prefix, at: https://127.0.0.1:3400/api/openapi/ui.
 - Shared i18n with monorepo via [`@local/locales`](../../locals/locales/README.md) (using [@i18n-micro/core](./src/helpers/i18n.ts)).
 - [Arktype](https://arktype.io/) validation setup.
 - [Session management](./src/middlewares/session.ts).
@@ -15,7 +15,7 @@
   - grammY telegram bot
 - And more minor goodies!
 
-*You can view the OpenAPI UI live demo [HERE](https://starter-monorepo.isthe.top/openapi/ui).*
+*You can view the OpenAPI UI live demo [HERE](https://starter-monorepo.isthe.top/api/openapi/ui).*
 
 ## Structuring cookbook:
 ### Root level:
