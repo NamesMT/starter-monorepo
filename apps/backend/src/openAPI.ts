@@ -15,7 +15,7 @@ const PUBLIC_PREFIX = '/api'
  * from jsDelivr with no version; `bundle` wins over `cdn` and over that default, and the pinned
  * entry derives its chunk URLs from its own release, so the whole UI stays in step.
  */
-const SCALAR_BUNDLE_URL = 'https://cdn.jsdelivr.net/npm/@scalar/api-reference@1.74.0/esm.js'
+const SCALAR_BUNDLE_URL = 'https://cdn.jsdelivr.net/npm/@scalar/api-reference@1.76.0/esm.js'
 
 const tags = [
   { name: 'Status', description: 'Liveness of the API itself.' },
