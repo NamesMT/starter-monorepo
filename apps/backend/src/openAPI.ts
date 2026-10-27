@@ -57,8 +57,9 @@ Authentication is a **sealed session cookie**, not a bearer token.
    \`path\` on the frontend.
 4. \`GET /api/auth/authState\` reports the current session; \`GET /api/auth/logout\` revokes it.
 
-A client that is not a browser must persist and replay the \`Set-Cookie\` headers; there is no
-header-based token to send.
+A non-browser client must persist and replay the \`Set-Cookie\` headers; there is no header-based
+token to send. The callback also requires the \`state\` value that \`/login\` stored, so a sign-in
+cannot be completed in a browser that did not start it.
 
 ## Permissions
 
@@ -86,10 +87,10 @@ Failures return a JSON body matching \`#/components/schemas/Error\`:
 
 - Unknown paths **outside** \`/api\` fall through to the frontend's SPA fallback (a \`200\` HTML page), so
   only \`/api/*\` reliably signals a missing route.
-- Cross-origin access is allowed for exactly one origin (\`FRONTEND_URL\`) and always with
-  credentials; any other origin gets no CORS headers at all.
+- CORS allows exactly one origin (\`FRONTEND_URL\`), always with credentials; any other origin
+  gets no CORS headers.
 - Behind CloudFront + Lambda Function URL, \`POST\`/\`PUT\` bodies must be signed with an
-  \`x-amz-content-sha256\` header; a plain HTTP client calling the API directly can omit it.
+  \`x-amz-content-sha256\` header; a client calling the API directly can omit it.
 - \`SameSite=Lax\` means cross-site \`fetch\` calls do not carry the session cookie: browser clients
   must be same-origin.
 `

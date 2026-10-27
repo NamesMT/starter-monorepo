@@ -50,10 +50,7 @@ export const clearOrphanedAttachments = internalMutation({
     const limit = args.limit ?? BATCH_SIZE
     const now = Date.now()
 
-    // Both scans are streamed rather than collected: reading every message and every stored
-    // file into one transaction exceeds Convex's read limits once the deployment grows, and a
-    // mutation that throws over its limit deletes nothing — the sweep would silently stop
-    // working exactly when orphaned blobs start to matter.
+    // Streamed, not collected: an over-limit mutation throws and deletes nothing.
     const referenced = new Set<string>()
     for await (const message of ctx.db.query('messages')) {
       for (const attachment of message.attachments ?? [])
@@ -72,8 +69,7 @@ export const clearOrphanedAttachments = internalMutation({
     for (const storageId of orphans)
       await ctx.storage.delete(storageId as any)
 
-    // A full batch means more may remain; the next pass re-reads, which also re-checks
-    // `referenced` against anything attached in the meantime.
+    // A full batch means more may remain; the next pass re-reads `referenced` anyway.
     const remaining = orphans.length >= limit ? 1 : 0
     if (remaining > 0)
       await ctx.scheduler.runAfter(0, internal.messages.clearOrphanedAttachments, { limit })

@@ -1,20 +1,11 @@
 /**
- * Generates a thread's share key.
+ * Generates a thread's share key: 32 random bytes from Web Crypto, base64url encoded.
  *
- * The key is the *only* credential protecting an anonymous thread: anyone holding it can read,
- * extend and delete that thread. It used to be built in the browser as
- * `locker_${Date.now()}_${randomStr(8)}`, where `randomStr` is `Math.random()` — 48 bits from a
- * non-cryptographic generator, behind a timestamp an attacker already knows.
- *
- * The Convex runtime provides Web Crypto (`crypto` is in its supported API list), so the key is
- * generated server-side from a CSPRNG. 32 bytes gives 256 bits, which makes guessing hopeless
- * rather than merely expensive.
+ * The key is an anonymous thread's only credential, so it is minted here rather than in the
+ * browser, where it was 48 bits of `Math.random()` behind a known timestamp.
  */
 export function generateLockerKey() {
-  const bytes = crypto.getRandomValues(new Uint8Array(32))
-
-  // base64url: URL-safe and short enough for a share link.
-  return `locker_${base64Url(bytes)}`
+  return `locker_${base64Url(crypto.getRandomValues(new Uint8Array(32)))}`
 }
 
 function base64Url(bytes: Uint8Array) {

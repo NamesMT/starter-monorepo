@@ -53,10 +53,8 @@ export const del = mutation({
 
     await assertThreadAccess(ctx, { thread, lockerKey: args.lockerKey })
 
-    // Messages first, thread last. The other order leaves messages pointing at a missing
-    // thread if the second half fails — `listByThread` then throws "Thread not found" for
-    // them forever. A thread is unbounded, so the delete is also paged: collecting every
-    // message would exceed the transaction read limit and delete nothing at all.
+    // Messages first, thread last: the other order can leave messages pointing at a missing
+    // thread, which then throws "Thread not found" forever.
     const { deleted, remaining } = await deleteInBatches(
       ctx,
       ctx.db.query('messages')

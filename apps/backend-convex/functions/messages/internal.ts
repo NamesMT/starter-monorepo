@@ -29,10 +29,7 @@ export const internalAdd = internalMutation({
     }))),
   },
   handler: async (ctx, args) => {
-    // Claim the stream id here rather than trusting a check the caller ran earlier. Callers
-    // used to read `getStreamingMessage` and then insert, which two concurrent requests could
-    // both pass; the second row then kept `isStreaming: true` forever because `finishStreaming`
-    // patches only the first match. A mutation is serialisable, so this read and the insert
+    // Claimed here, not by the caller: a mutation is serialisable, so this read and the insert
     // below cannot interleave with another claim.
     if (args.streamId) {
       const claimed = await ctx.db

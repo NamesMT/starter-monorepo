@@ -37,11 +37,8 @@ export const clearAll = internalMutation({
 })
 
 /**
- * Continues a thread deletion that ran out of transaction budget.
- *
- * `threads.del` deletes messages first and the thread row last; this finishes the job without
- * re-running the client's access check, because the caller already passed it and the thread is
- * half-gone — checking again would strand the leftovers.
+ * Finishes a deletion that ran out of transaction budget. It skips the client's access check on
+ * purpose: the original call already passed it, and a thread that is half-gone cannot be left so.
  */
 export const finishDelete = internalMutation({
   args: {

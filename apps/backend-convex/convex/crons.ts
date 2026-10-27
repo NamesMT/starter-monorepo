@@ -9,10 +9,8 @@ crons.interval(
   internal.tasks.clearAll,
 )
 
-// Messages before threads, and a minute apart. Both crons at 00:00 could interleave with an
-// insert landing between them, orphaning a message whose thread was already deleted —
-// `listByThread` then throws "Thread not found" for it forever. Children go first, and the
-// gap keeps the two wipes from racing at all.
+// Children first, a few minutes apart: a wipe that runs concurrently can orphan a message whose
+// thread is already gone, which then throws "Thread not found" forever.
 crons.daily(
   'clear messages table',
   { hourUTC: 0, minuteUTC: 0 },
