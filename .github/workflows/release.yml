@@ -2,7 +2,7 @@ name: Release
 
 # Manual, per-package release for this monorepo. Dispatch with the workspace package to ship:
 #   * resolves the package and checks the requested version against the one on disk
-#   * runs `quickcheck` across the workspace
+#   * runs `check` across the workspace
 #   * hands the package to repo-release, which writes its changelog, bumps its package.json,
 #     commits it, tags `<package>@<version>`, pushes, creates the GitHub release and — for a
 #     package that is not `"private"` — publishes it to npm
@@ -83,7 +83,7 @@ jobs:
         run: node scripts/release-target.mjs "$PACKAGE" "$VERSION" | tee -a "$GITHUB_OUTPUT"
 
       - name: Lint, types and tests
-        run: pnpm run quickcheck
+        run: pnpm run check
 
       - name: Changelog, version bump, commit, tag and release
         env:

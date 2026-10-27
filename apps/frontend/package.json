@@ -9,13 +9,14 @@
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest",
     "test:e2e": "dotenvx run -f ../../.env -- playwright test",
-    "quickcheck": "pnpm run lint && pnpm run test:types && pnpm run test",
+    "quickcheck": "pnpm run lint && pnpm run test:types",
     "dev": "nuxt dev",
     "build": "nuxt generate",
     "build:workerdLocal": "export TARGET=workerdLocal && nuxt generate",
     "deploy": "pnpm run build && sh scripts/deploy.sh",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "check": "pnpm run lint && pnpm run test:types && pnpm run test"
   },
   "dependencies": {
     "@unocss/reset": "catalog:",

@@ -1,4 +1,4 @@
-name: Run `quickcheck` script
+name: Run `check` script
 
 on:
   # Runs on pushes targeting the default branch
@@ -45,5 +45,5 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run quickcheck
-        run: pnpm run quickcheck
+      - name: Run check
+        run: pnpm run check

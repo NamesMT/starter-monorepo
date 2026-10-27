@@ -8,7 +8,8 @@
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest",
     "test:types": "tsc --noEmit --skipLibCheck",
-    "quickcheck": "pnpm run lint && pnpm run test:types"
+    "quickcheck": "pnpm run lint && pnpm run test:types",
+    "check": "pnpm run lint && pnpm run test:types && pnpm run test"
   },
   "dependencies": {
     "dayjs": "catalog:",

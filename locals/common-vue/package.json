@@ -8,7 +8,8 @@
     "test:types": "vue-tsc --noEmit",
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest",
-    "quickcheck": "pnpm run lint && pnpm run test:types && pnpm run test"
+    "quickcheck": "pnpm run lint && pnpm run test:types",
+    "check": "pnpm run lint && pnpm run test:types && pnpm run test"
   },
   "dependencies": {
     "unocss": "catalog:",

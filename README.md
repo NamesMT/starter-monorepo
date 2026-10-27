@@ -205,7 +205,7 @@ Releases are **per package**, and run from **Actions → Release → Run workflo
 ([`.github/workflows/release.yml`](./.github/workflows/release.yml)): give it a workspace package
 name (e.g. `@local/common`) and, optionally, the version to ship.
 
-It resolves the package and checks the version, runs `quickcheck`, then lets
+It resolves the package and checks the version, runs `check`, then lets
 [`repo-release`](https://github.com/namesmt/repo-release) write that package's `CHANGELOG.md`, bump
 its `package.json`, commit, tag `<package>@<version>`, push, create the GitHub release, and publish
 it to npm — publishing is skipped for a package marked `"private": true`, which every package in

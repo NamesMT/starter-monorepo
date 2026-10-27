@@ -24,11 +24,8 @@
     "lint": {},
     "test": {},
     "test:types": {},
-    "quickcheck": {
-      "dependsOn": [
-        "test"
-      ]
-    },
+    "quickcheck": {},
+    "check": {},
     "dev": {
       "cache": false,
       "persistent": true
@@ -38,7 +35,7 @@
     },
     "deploy": {
       "cache": false,
-      "dependsOn": ["build", "quickcheck"]
+      "dependsOn": ["build", "check"]
     }
   }
 }

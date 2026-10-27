@@ -35,7 +35,8 @@ it — nobody reads a file they do not open.
 pnpm install          # workspace install; @local/locales generates its JSON on postinstall
 pnpm run dev          # every app's dev server through turbo
 pnpm run dev:noConvex # same without Convex — the usual choice when not touching chat
-pnpm run quickcheck   # lint + test:types + test across the workspace: run before saying "done"
+pnpm run quickcheck   # lint + test:types across the workspace: fast, no tests
+pnpm run check        # quickcheck plus every package's tests: CI, deploy and release use this
 ```
 
 Ports (all `127.0.0.1`, all HTTPS): `frontend` 3300 · `frontend-second` 3301 · `backend` 3400 · wrangler/workerd 3450. Nuxt/backend TLS comes from the `locals/common/dev` localcert; `wrangler dev` serves its own local HTTPS.
@@ -52,7 +53,7 @@ Ports (all `127.0.0.1`, all HTTPS): `frontend` 3300 · `frontend-second` 3301 ·
 - pnpm workspace + Turborepo; versions pinned through the **catalog** in `pnpm-workspace.yaml` (`"<pkg>": "catalog:"`). After changing a dependency, **restart the dev server** — Vite/HMR does not pick up new deps (`Cannot find package`, `504 Outdated Optimize Dep`).
 - `@local/common` is imported by source path (`@local/common/src/...`) and declares almost no dependencies of its own; each app provides the packages those sources import, so a missing app-level declaration only breaks once that app stops providing it.
 - `@local/locales`: edit CSVs in `locals/locales/src/sheets/**`; JSON generates into `dist/` on `postinstall`/`dev`. Backend reads `dist/{locale}.json` + `dist/backend/*`; frontends read `dist/frontend` (global bucket merged in). `nuxtSiteConfig.name/description` keys are required for titles/meta; `pnpm run i18n` localizes via lingo.dev.
-- Tests are vitest per package (`pnpm test` runs them all). Frontend SFCs need `@vitejs/plugin-vue` + `happy-dom`; E2E is Playwright (`pnpm -F=frontend test:e2e`), kept out of `quickcheck` because it needs a browser and a server.
+- Tests are vitest per package (`pnpm test` runs them all) and live in that package's `check`, not `quickcheck`. Frontend SFCs need `@vitejs/plugin-vue` + `happy-dom`; E2E is Playwright (`pnpm -F=frontend test:e2e`), outside both because it needs a browser and a server.
 - Conventional commits: `type(scope): subject` (e.g. `fix(frontend): ...`).
 - ESLint via `@antfu/eslint-config`; `lint-staged` runs `eslint --fix` on commit. Imports are sorted by eslint; no blank lines between them.
 - Put scratch/temp files in `/tmp`.
@@ -99,7 +100,7 @@ Ports (all `127.0.0.1`, all HTTPS): `frontend` 3300 · `frontend-second` 3301 ·
 ## Releasing
 
 - Manual, per package: **Actions → Release → Run workflow** with a package name and optional version — the only publish path (a pushed tag publishes nothing).
-- It runs `quickcheck`, then hands off to [`repo-release`](https://github.com/namesmt/repo-release): package `CHANGELOG.md`, bump, commit, tag `<package>@<version>`, push, GitHub release; npm publish is skipped for `"private"` packages (all of them here) and otherwise needs a trusted publisher configured per package on npmjs.com.
+- It runs `check`, then hands off to [`repo-release`](https://github.com/namesmt/repo-release): package `CHANGELOG.md`, bump, commit, tag `<package>@<version>`, push, GitHub release; npm publish is skipped for `"private"` packages (all of them here) and otherwise needs a trusted publisher configured per package on npmjs.com.
 - One package per run, no workspace build (declare a `prepack` hook if a package needs one); `pnpm run release:check <package> [version]` validates a target locally before dispatch; the root `CHANGELOG.md` is pre-per-package history.
 - Dry-run needs an explicit version and previews only — it stops before committing, pushing, releasing and publishing.
 
