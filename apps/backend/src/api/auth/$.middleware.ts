@@ -9,13 +9,9 @@ import { BACKEND_AUTH_SCHEME, errorResponse } from '#src/helpers/openapi.js'
 import { getWorkOS, getWorkOSJwks } from '#src/providers/auth/workos-main.js'
 
 /**
- * Teaches the OpenAPI generator that this middleware requires the session cookie, and that it can
- * answer 401. Attached to every `checkAuth()` variant so guarded routes — including future ones —
- * are documented without any per-route boilerplate.
- *
- * `describeRoute` must be applied to the middleware itself: `findTargetHandler` reads the spec off
- * the handler Hono stores, and a guard registered before the route's own `describeRoute` keeps its
- * `security`/`401` because hono-openapi merges middleware specs in registration order.
+ * Documents the middleware itself as requiring the session cookie and able to answer 401, so every
+ * guarded route is covered without per-route boilerplate. hono-openapi merges specs in registration
+ * order, so a guard registered before the route's own `describeRoute` keeps its `security`.
  */
 function documentedAuth<T extends MiddlewareHandler<any, any, any>>(middleware: T, security: Record<string, string[]>[]) {
   return Object.assign(
@@ -29,36 +25,38 @@ function documentedAuth<T extends MiddlewareHandler<any, any, any>>(middleware: 
 
 export function keepAuthFresh() {
   return appFactory.createMiddleware(async (c, next) => {
-    const workos = await getWorkOS()
     const auth = c.get('backend-auth')
     const userAuth = auth.data.userAuth
 
+    // Most requests carry no session; resolving the provider first made every anonymous request
+    // pay for it.
     if (!userAuth)
       return await next()
 
-    // `decode` throws on a token that is not three dot-separated parts, and this runs for every
-    // request before any route — so an unguarded call turns one malformed cookie into a 500 for
-    // the whole API. A token we cannot read is a session we cannot use.
+    // A token we cannot decode is a session we cannot use. Unguarded, `decode` threw here — for
+    // every route, before any handler — so one malformed cookie 500'd the whole API.
     const expiresAt = tokenExpiry(userAuth.private.accessToken)
     if (expiresAt === undefined) {
       auth.data.userAuth = undefined
       return await next()
     }
 
-    // If token will expire in less than 20 minutes, refresh it
+    // Refresh when the token has under 20 minutes left.
     if (expiresAt * 1000 < Date.now() + 1000 * 60 * 20) {
+      const workos = await getWorkOS()
+
       await workos.userManagement.authenticateWithRefreshToken({
         clientId: workos.clientId!,
         refreshToken: userAuth.private.refreshToken,
       })
         .then(({ accessToken, refreshToken }) => {
+          const sessionId = tokenSessionId(accessToken)
+          if (!sessionId)
+            throw new Error('refreshed token carries no session id')
+
           auth.data.userAuth = {
             ...userAuth,
-            private: {
-              accessToken,
-              refreshToken,
-              sessionId: decode(accessToken).payload.sid as string,
-            },
+            private: { accessToken, refreshToken, sessionId },
           }
         })
         .catch((e) => {
@@ -72,11 +70,21 @@ export function keepAuthFresh() {
   })
 }
 
-/** The token's `exp` claim, or `undefined` when the token cannot be decoded at all. */
+/** The token's `exp`, or `undefined` when it cannot be decoded at all. */
 function tokenExpiry(token: string): number | undefined {
   try {
     const exp = decode(token).payload.exp
     return typeof exp === 'number' ? exp : undefined
+  }
+  catch {
+    return undefined
+  }
+}
+
+/** The token's `sid`, or `undefined` when it cannot be decoded. */
+function tokenSessionId(token: string): string | undefined {
+  try {
+    return decode(token).payload.sid as string | undefined
   }
   catch {
     return undefined
@@ -149,12 +157,9 @@ export function checkAuth({ throwOnUnauthenticated = true, throwOnBadToken = tru
 }
 
 /**
- * Returns why a verified token does not belong to the session that presented it, or
- * `undefined` when they agree.
- *
- * Signature verification alone cannot tell our WorkOS environment from any other — every
- * environment's tokens are signed by WorkOS — and it says nothing about *which* user the
- * cookie claims to be. These identity checks are what make the cookie non-forgeable.
+ * Why a verified token does not belong to the session that presented it, or `undefined` when it
+ * does. A signature check alone says nothing about which user the cookie claims to be, and every
+ * WorkOS environment's tokens are signed by WorkOS, so the client has to be bound too.
  */
 export function sessionTokenMismatch(
   payload: Record<string, any>,
