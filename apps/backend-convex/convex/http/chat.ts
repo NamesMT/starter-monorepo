@@ -237,7 +237,15 @@ chatApp
         }),
       ),
       streamId: z.optional(z.string()),
-      context: z.optional(z.string().transform(val => JSON.parse(val))),
+      /**
+       * Message attribution. Only `from` is honoured; `uid` is server-derived, so a client
+       * cannot claim another author. Bounded because the nickname is echoed into the model's
+       * prompt header.
+       */
+      context: z.optional(z.string().transform((val) => {
+        const parsed = JSON.parse(val)
+        return { from: z.string().max(CHAT_INPUT_LIMITS.maxContextLength).optional().parse(parsed?.from) }
+      })),
       resumeStreamId: z.optional(z.string()),
       /** Assistant message to regenerate in place, dropping the reply it currently holds. */
       regenerateMessageId: z.optional(z.string()),
