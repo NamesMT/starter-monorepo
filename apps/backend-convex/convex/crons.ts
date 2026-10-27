@@ -9,16 +9,20 @@ crons.interval(
   internal.tasks.clearAll,
 )
 
-crons.daily(
-  'clear threads table',
-  { hourUTC: 0, minuteUTC: 0 },
-  internal.threads.clearAll,
-)
-
+// Messages before threads, and a minute apart. Both crons at 00:00 could interleave with an
+// insert landing between them, orphaning a message whose thread was already deleted —
+// `listByThread` then throws "Thread not found" for it forever. Children go first, and the
+// gap keeps the two wipes from racing at all.
 crons.daily(
   'clear messages table',
   { hourUTC: 0, minuteUTC: 0 },
   internal.messages.clearAll,
+)
+
+crons.daily(
+  'clear threads table',
+  { hourUTC: 0, minuteUTC: 5 },
+  internal.threads.clearAll,
 )
 
 crons.interval(
