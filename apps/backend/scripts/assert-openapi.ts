@@ -87,8 +87,18 @@ const guarded = Object.entries(spec.paths).flatMap(([path, item]) =>
     .map(([method]) => `${method.toUpperCase()} ${path}`),
 )
 check(guarded.length > 0, 'no operation advertises `security`; the auth middleware is not documenting itself')
-for (const id of guarded)
-  check(true, `${id}: guarded`)
+
+// A route the middleware guards must carry the session scheme, not merely some scheme: a typo'd
+// name would still produce a `security` array and pass the check above.
+const sessionScheme = Object.keys((spec.components as any)?.securitySchemes ?? {})[0]
+for (const id of guarded) {
+  const [method, path] = id.split(' ')
+  const requirement = spec.paths[path]?.[method.toLowerCase()]?.security as Record<string, unknown>[] | undefined
+  check(
+    Boolean(requirement?.some(entry => sessionScheme in entry || Object.keys(entry).length === 0)),
+    `${id}: \`security\` does not reference the session scheme \`${sessionScheme}\``,
+  )
+}
 
 const components = (spec.components ?? {}) as Record<string, Record<string, unknown>>
 check(Boolean(components.schemas?.Error), 'missing shared `Error` schema')
