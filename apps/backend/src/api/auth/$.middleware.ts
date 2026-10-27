@@ -36,8 +36,17 @@ export function keepAuthFresh() {
     if (!userAuth)
       return await next()
 
+    // `decode` throws on a token that is not three dot-separated parts, and this runs for every
+    // request before any route — so an unguarded call turns one malformed cookie into a 500 for
+    // the whole API. A token we cannot read is a session we cannot use.
+    const expiresAt = tokenExpiry(userAuth.private.accessToken)
+    if (expiresAt === undefined) {
+      auth.data.userAuth = undefined
+      return await next()
+    }
+
     // If token will expire in less than 20 minutes, refresh it
-    if ((decode(userAuth.private.accessToken)?.payload?.exp || 0) * 1000 < Date.now() + 1000 * 60 * 20) {
+    if (expiresAt * 1000 < Date.now() + 1000 * 60 * 20) {
       await workos.userManagement.authenticateWithRefreshToken({
         clientId: workos.clientId!,
         refreshToken: userAuth.private.refreshToken,
@@ -61,6 +70,17 @@ export function keepAuthFresh() {
 
     await next()
   })
+}
+
+/** The token's `exp` claim, or `undefined` when the token cannot be decoded at all. */
+function tokenExpiry(token: string): number | undefined {
+  try {
+    const exp = decode(token).payload.exp
+    return typeof exp === 'number' ? exp : undefined
+  }
+  catch {
+    return undefined
+  }
 }
 
 export type checkAuthParams = {
