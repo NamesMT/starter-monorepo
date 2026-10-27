@@ -73,23 +73,26 @@ export function getAgentModel({ provider, model, apiKey }: AgentObject): Languag
 
     return getHostedModel(model)
   }
-  else {
-    return (() => {
-      switch (provider) {
-        case 'openrouter':
-          return createOpenRouter({ apiKey })(model)
-        case 'openai':
-          return createOpenAI({ apiKey })(model)
-        case 'google':
-          return createGoogle({ apiKey })(model)
-        case 'anthropic':
-          return createAnthropic({ apiKey })(model)
-        case 'groq':
-          return createGroq({ apiKey })(model)
-        default:
-          throw new Error(`Unknown provider: ${provider}`)
-      }
-    })()
+
+  // A BYOK provider must bring its own key. Each provider factory falls back to its own
+  // `process.env[<PROVIDER>_API_KEY]` when `apiKey` is undefined, so letting an absent key
+  // through spends the deployment's keys on a caller's request.
+  if (!apiKey?.trim())
+    throw new Error(`Provider "${provider}" requires an apiKey`)
+
+  switch (provider) {
+    case 'openrouter':
+      return createOpenRouter({ apiKey })(model)
+    case 'openai':
+      return createOpenAI({ apiKey })(model)
+    case 'google':
+      return createGoogle({ apiKey })(model)
+    case 'anthropic':
+      return createAnthropic({ apiKey })(model)
+    case 'groq':
+      return createGroq({ apiKey })(model)
+    default:
+      throw new Error(`Unknown provider: ${provider}`)
   }
 }
 
