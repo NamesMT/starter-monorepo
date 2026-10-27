@@ -13,7 +13,9 @@
 - `pnpm run release:check <package> [version]` validates a release target locally.
 - Backend tests: `pnpm test` (Turbo, workspace) / `pnpm -F=backend test` (runs once) / `pnpm -F=backend test:watch` (watch) / `pnpm -F=backend check` (lint + types + coverage) / `pnpm -F=backend-convex check`.
 - Backend tests hit the real app with `app.request()` and stub `WORKOS_*`/`FRONTEND_URL` before importing `#src/app.js`.
-- `@local/common` and `@local/nuxt-layer-common` have vitest too (their own `test`/`test:watch`); the layer's `test/` dir is outside `app/`, so Nuxt never auto-imports test files as utils.
+- `@local/common`, `@local/nuxt-layer-common`, `@local/common-vue`, `apps/frontend` and the backends all have vitest (`test`/`test:watch`); the layer's `test/` dir is outside `app/`, so Nuxt never auto-imports test files as utils. `@local/common-vue` and `apps/frontend` add `happy-dom` and `@vitejs/plugin-vue` so SFCs compile.
+- Frontend unit tests can't reach Nuxt's auto-imports or `useRuntimeConfig`, so they cover plain helpers and composables; `apps/frontend` therefore keeps its request building in pure functions (e.g. `buildChatStreamForm`) rather than inside the fetch call.
+- Frontend E2E is Playwright, outside `quickcheck` because it needs a browser and a server: `pnpm -F=frontend test:e2e` reuses a running dev server or starts one, and loads the root `.env` for `NODE_TLS_REJECT_UNAUTHORIZED` (without it the dev proxy's outbound TLS call fails and every `/api` request 500s).
 - `apps/frontend` extras: `build:workerdLocal` (sets `TARGET=workerdLocal`) and `preview`; `deploy` runs the build itself.
 - Turbo outputs cached for `build`: `.nuxt/**`, `.output/**`, `dist/**`; `globalDependencies` are `**/.env` and `**/.env.*`.
 - After changing a dependency, restart the dev server — Vite/HMR does not pick up new deps.

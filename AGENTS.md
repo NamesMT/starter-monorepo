@@ -52,6 +52,7 @@ Ports (all `127.0.0.1`, all HTTPS): `frontend` 3300 · `frontend-second` 3301 ·
 - pnpm workspace + Turborepo; versions pinned through the **catalog** in `pnpm-workspace.yaml` (`"<pkg>": "catalog:"`). After changing a dependency, **restart the dev server** — Vite/HMR does not pick up new deps (`Cannot find package`, `504 Outdated Optimize Dep`).
 - `@local/common` is imported by source path (`@local/common/src/...`) and declares almost no dependencies of its own; each app provides the packages those sources import, so a missing app-level declaration only breaks once that app stops providing it.
 - `@local/locales`: edit CSVs in `locals/locales/src/sheets/**`; JSON generates into `dist/` on `postinstall`/`dev`. Backend reads `dist/{locale}.json` + `dist/backend/*`; frontends read `dist/frontend` (global bucket merged in). `nuxtSiteConfig.name/description` keys are required for titles/meta; `pnpm run i18n` localizes via lingo.dev.
+- Tests are vitest per package (`pnpm test` runs them all). Frontend SFCs need `@vitejs/plugin-vue` + `happy-dom`; E2E is Playwright (`pnpm -F=frontend test:e2e`), kept out of `quickcheck` because it needs a browser and a server.
 - Conventional commits: `type(scope): subject` (e.g. `fix(frontend): ...`).
 - ESLint via `@antfu/eslint-config`; `lint-staged` runs `eslint --fix` on commit. Imports are sorted by eslint; no blank lines between them.
 - Put scratch/temp files in `/tmp`.
