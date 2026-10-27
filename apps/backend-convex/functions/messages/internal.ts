@@ -43,9 +43,12 @@ export const internalAdd = internalMutation({
 
     await singleShardCounter.inc(ctx, `messages-in-thread_${args.threadId}`)
 
+    const now = Date.now()
+
     return await ctx.db.insert('messages', {
       ...objectPick(args, ['threadId', 'role', 'parts', 'context', 'isStreaming', 'streamId', 'provider', 'model', 'attachments']),
-      timestamp: Date.now(),
+      timestamp: now,
+      ...(args.isStreaming ? { lastActivityAt: now } : {}),
     })
   },
 })
@@ -65,6 +68,7 @@ export const updateStreamingMessage = internalMutation({
     await ctx.db.patch(args.messageId, clearUndefined({
       parts: args.parts,
       isStreaming: args.isStreaming,
+      lastActivityAt: livenessFor(args.isStreaming),
     }))
   },
 })
@@ -108,6 +112,7 @@ export const restartStreamingMessage = internalMutation({
       isStreaming: true,
       streamId: args.streamId,
       cancelRequested: undefined,
+      lastActivityAt: Date.now(),
     })
   },
 })
@@ -128,13 +133,15 @@ export const isCancelRequested = internalQuery({
 export const resolveStuckStreamMessages = internalMutation({
   args: { },
   handler: async (ctx) => {
-    const messages = await ctx.db
+    const cutoff = Date.now() - 10 * 60 * 1000
+
+    // Streaming rows only: the index covers them, `isStreaming` is not indexed.
+    const streaming = await ctx.db
       .query('messages')
-      // Get messages that are currently streaming
       .withIndex('by_stream_id', q => q.gte('streamId', ''))
-      // Filter to those that are older than 10 mins
-      .filter(q => q.lte(q.field('timestamp'), Date.now() - 10 * 60 * 1000))
       .collect()
+
+    const messages = streaming.filter(message => isStuckStream(message, cutoff))
 
     if (!messages.length)
       return
@@ -144,6 +151,7 @@ export const resolveStuckStreamMessages = internalMutation({
         isStreaming: false,
         streamId: undefined,
         cancelRequested: undefined,
+        lastActivityAt: undefined,
         parts: [...resolveMessageParts(message), { type: 'text', text: '\nError: Streaming timed out' }],
       })
     }
@@ -220,3 +228,28 @@ export const clearAll = internalMutation({
     return { deleted, remaining }
   },
 })
+
+/**
+ * Whether a streaming message has gone silent for long enough to be considered abandoned.
+ *
+ * Keyed on the *last activity*, not `timestamp`: the latter is the creation time and never
+ * moves, so an earlier version killed healthy generations that simply ran longer than ten
+ * minutes. Rows written before `lastActivityAt` existed carry none and fall back to `timestamp`.
+ */
+export function isStuckStream(
+  message: { lastActivityAt?: number, timestamp: number },
+  cutoff: number,
+) {
+  return (message.lastActivityAt ?? message.timestamp) <= cutoff
+}
+
+/**
+ * The `lastActivityAt` to write alongside a save.
+ *
+ * Every save is progress, and the periodic one passes no `isStreaming` at all — so this must
+ * not require it to be `true`, or the heartbeat never refreshes and the sweep falls back to
+ * killing streams for their age. Only an explicit `false` (the stream ended) clears it.
+ */
+export function livenessFor(isStreaming: boolean | undefined, now = Date.now()) {
+  return isStreaming === false ? undefined : now
+}
