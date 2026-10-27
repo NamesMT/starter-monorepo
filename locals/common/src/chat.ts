@@ -359,10 +359,14 @@ export function formatFileSize(bytes: number) {
  *
  * An entry is an exact MIME type (`image/png`), a MIME wildcard (`image/*`),
  * the catch-all wildcard alone or with a slash (`*`), or a file extension (`.pdf`).
+ *
+ * An empty list means the model takes no files — the same reading as the
+ * `CommonModelSettings.attachments` doc and the hosted chain's keyless members, which
+ * declare `[]`. Returning `true` here shipped files to models that cannot accept them.
  */
 export function matchesAttachmentAccept(type: string, name: string, accept: readonly string[]) {
   if (!accept.length)
-    return true
+    return false
 
   const lowerType = type.toLowerCase()
   const lowerName = name.toLowerCase()
