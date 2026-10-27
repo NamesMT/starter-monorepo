@@ -24,3 +24,22 @@ export async function assertThreadAccess(ctx: GenericActionCtx<any> | GenericQue
     throw new ConvexError('You are not authorized to view this thread')
   }
 }
+
+/**
+ * Whether the caller is *not* the thread's owner.
+ *
+ * Distinct from `assertThreadAccess`, which asks "may you see this thread" — a share recipient
+ * legitimately may. Ownership is the narrower question that destructive edits need: a
+ * user-claimed thread belongs to that user, and an anonymous one to whoever holds its key.
+ * The client sends `getLockerKey(...) ?? ''`, so `''` counts as "no key".
+ */
+export function ownerMismatch(
+  thread: { userId?: string },
+  userId: string | undefined,
+  lockerKey: string | undefined,
+) {
+  if (thread.userId)
+    return thread.userId !== userId
+
+  return !lockerKey
+}

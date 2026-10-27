@@ -13,6 +13,7 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { throttle } from 'kontroll'
 import { z } from 'zod'
+import { ownerMismatch } from '../../functions/threads/utils'
 import { getAgentModel, getModelAttachmentAccept, withProviderErrorAsText } from '../../utils/agent'
 import { cachingCallProviderOptions, cachingStrategyFor, withAnthropicCacheBreakpoints } from '../../utils/caching'
 import { getErrorMessage, normalizePossibleSDKError } from '../../utils/error'
@@ -55,13 +56,10 @@ function assertOwnsThread(
   thread: { userId?: string },
   { userIdentity, lockerKey }: { userIdentity: { subject: string } | null, lockerKey?: string },
 ) {
-  if (thread.userId && thread.userId !== userIdentity?.subject)
-    throw new ConvexError('Only the thread owner can change its messages')
+  if (!ownerMismatch(thread, userIdentity?.subject, lockerKey))
+    return
 
-  // An anonymous thread is owned by whoever holds its key; `assertThreadAccess` already
-  // proved that when the thread was read.
-  if (!thread.userId && !lockerKey)
-    throw new ConvexError('Only the thread owner can change its messages')
+  throw new ConvexError('Only the thread owner can change its messages')
 }
 
 /** How often a generating action checks whether the user asked it to stop. */

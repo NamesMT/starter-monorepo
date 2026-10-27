@@ -3,8 +3,11 @@ import LiquidGlassDiv from '#layers/nuxt-layer-common/app/components/LiquidGlass
 
 const {
   message,
+  canRewrite = true,
 } = defineProps<{
   message: CustomMessage
+  /** Edit and regenerate destroy content, so only the thread owner is offered them. */
+  canRewrite?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -105,7 +108,7 @@ const isGenerating = computed(() =>
       <div v-if="message.context?.from" class="text-xs mr-2">
         {{ message.context.from }}
       </div>
-      <CardEditButton :message @edit="isEditing = true" />
+      <CardEditButton v-if="canRewrite" :message @edit="isEditing = true" />
     </div>
 
     <div
@@ -114,7 +117,7 @@ const isGenerating = computed(() =>
     >
       <CardCopyButton :message />
       <CardBranchOffButton :message @click="emit('branchOffClicked')" />
-      <CardRegenerateButton :message @regenerate="emit('regenerateClicked')" />
+      <CardRegenerateButton v-if="canRewrite" :message @regenerate="emit('regenerateClicked')" />
       <div class="text-xs ml-4">
         {{ message.model }}
       </div>
