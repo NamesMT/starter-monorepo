@@ -562,7 +562,11 @@ function respondWithAiStream({
           pendingSave = false
         })
       },
-      { trailing: true },
+      // Kontroll keys on `fn.toString()` by default, and every stream builds an identical
+      // closure — so concurrent streams in one isolate shared a slot and only the first
+      // callback survived: the other stream's text was never saved and its `pendingSave`
+      // stayed set, making `waitForSave` log "Save was stuck". Key it per message.
+      { trailing: true, key: streamingMessageId },
     )
   }
 
