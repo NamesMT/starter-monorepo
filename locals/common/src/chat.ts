@@ -229,6 +229,22 @@ export const CHAT_ATTACHMENT_LIMITS = {
 } as const
 
 /**
+ * Upper bounds on what a single turn may put into the prompt.
+ *
+ * Every field here is client-supplied and concatenated into the request, and the deployment
+ * pays for the tokens. Without a ceiling a caller sends a multi-megabyte message and a huge
+ * `maxOutputTokens` and turns one request into an arbitrarily expensive one.
+ */
+export const CHAT_INPUT_LIMITS = {
+  /** Characters of a single message. */
+  maxContentLength: 32_000,
+  /** Characters of user-supplied persona/context text. */
+  maxContextLength: 4_000,
+  /** Output tokens a caller may request; the rest is the model's own default. */
+  maxOutputTokens: 8_000,
+} as const
+
+/**
  * Fallback attachment capabilities used when a model does not declare its own
  * `attachments` accept list. Kept deliberately conservative.
  */

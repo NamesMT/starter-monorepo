@@ -5,7 +5,7 @@ import type { Id } from '../_generated/dataModel'
 import type { ActionCtx } from '../_generated/server'
 import RateLimiter, { MINUTE } from '@convex-dev/rate-limiter'
 import { zValidator } from '@hono/zod-validator'
-import { appendReasoningPart, appendTextPart, CHAT_ATTACHMENT_LIMITS, matchesAttachmentAccept, upsertToolPart, windowChatHistory } from '@local/common/src/chat'
+import { appendReasoningPart, appendTextPart, CHAT_ATTACHMENT_LIMITS, CHAT_INPUT_LIMITS, matchesAttachmentAccept, upsertToolPart, windowChatHistory } from '@local/common/src/chat'
 import { randomStr, sleep } from '@namesmt/utils'
 import { createUIMessageStreamResponse, stepCountIs, streamText, toUIMessageStream } from 'ai'
 import { ConvexError } from 'convex/values'
@@ -149,7 +149,7 @@ chatApp
       provider: z.string(),
       model: z.string(),
       apiKey: z.optional(z.string()),
-      content: z.optional(z.string()),
+      content: z.optional(z.string().max(CHAT_INPUT_LIMITS.maxContentLength)),
       /**
        * JSON-encoded array of `{ storageId, name, type, size }`, produced by uploading
        * the files to the URLs issued by `api.files.generateUploadUrl`.
@@ -211,8 +211,8 @@ chatApp
         z.object({
           temperature: z.optional(z.number().min(0).max(2)),
           topP: z.optional(z.number().min(0).max(1)),
-          maxOutputTokens: z.optional(z.number().int().positive()),
-          traits: z.optional(z.string()),
+          maxOutputTokens: z.optional(z.number().int().positive().max(CHAT_INPUT_LIMITS.maxOutputTokens)),
+          traits: z.optional(z.string().max(CHAT_INPUT_LIMITS.maxContextLength)),
           tools: z.optional(z.boolean()),
         }),
       ),
@@ -234,8 +234,8 @@ chatApp
           return arg
         },
         z.object({
-          aboutYou: z.optional(z.string()),
-          customInstructions: z.optional(z.string()),
+          aboutYou: z.optional(z.string().max(CHAT_INPUT_LIMITS.maxContextLength)),
+          customInstructions: z.optional(z.string().max(CHAT_INPUT_LIMITS.maxContextLength)),
         }),
       ),
       streamId: z.optional(z.string()),
