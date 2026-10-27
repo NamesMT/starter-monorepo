@@ -43,3 +43,17 @@ export function ownerMismatch(
 
   return !lockerKey
 }
+
+/**
+ * Whether the caller may replace an anonymous thread's share key.
+ *
+ * A guest has no identity, so the key it already holds is the only proof available — and it
+ * already grants every other right over the thread. A signed-in owner is handled separately
+ * by the caller: this only covers the key-held case.
+ */
+export function canRotateAnonymousLockerKey(
+  thread: { lockerKey?: string },
+  currentLockerKey: string | undefined,
+) {
+  return !!thread.lockerKey && currentLockerKey === thread.lockerKey
+}

@@ -124,13 +124,17 @@ export async function generateThreadTitle(convex: ConvexClient | ConvexHttpClien
 export interface ThreadSetLockerKeyArgs {
   threadId: Id<'threads'>
   newLockerKey: string
+  /** The key the caller already holds; proves ownership of an anonymous thread. */
+  currentLockerKey?: string
 }
 export async function threadSetLockerKey(convex: ConvexClient | ConvexHttpClient, {
   threadId,
   newLockerKey,
+  currentLockerKey,
 }: ThreadSetLockerKeyArgs) {
   await convex.mutation(api.threads.setLockerKey, {
     threadId,
     newLockerKey,
+    currentLockerKey,
   })
 }

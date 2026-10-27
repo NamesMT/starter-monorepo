@@ -51,7 +51,12 @@ async function _shareThread() {
     }
     else {
       const newLockerKey = getRandomLockerKey()
-      await threadSetLockerKey(convex, { threadId: thread._id, newLockerKey })
+      // Proves ownership when the caller is a guest rather than the signed-in owner.
+      await threadSetLockerKey(convex, {
+        threadId: thread._id,
+        newLockerKey,
+        currentLockerKey: getLockerKey(thread._id) ?? thread.lockerKey ?? undefined,
+      })
       setLockerKey(thread._id, newLockerKey)
     }
 

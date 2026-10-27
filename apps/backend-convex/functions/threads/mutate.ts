@@ -3,7 +3,7 @@ import { ConvexError, v } from 'convex/values'
 import { components } from '../../convex/_generated/api'
 import { mutation } from '../../convex/_generated/server'
 import { singleShardCounter } from '../../utils/counters'
-import { assertThreadAccess } from './utils'
+import { assertThreadAccess, canRotateAnonymousLockerKey } from './utils'
 
 const rateLimiter = new RateLimiter(components.rateLimiter, {
   branchThread: { kind: 'token bucket', rate: 10, period: MINUTE, capacity: 3 },
@@ -164,13 +164,31 @@ export const setLockerKey = mutation({
   args: {
     threadId: v.id('threads'),
     newLockerKey: v.string(),
+    /**
+     * The thread's current key, when the caller is not signed in.
+     *
+     * A guest has no identity to prove ownership with, so holding the key is the only proof
+     * available — and for an anonymous thread the holder of the key already has every other
+     * right over it, rotation included.
+     */
+    currentLockerKey: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const thread = await ctx.db.get(args.threadId)
     if (!thread)
-      throw new Error('Thread not found')
+      throw new ConvexError('Thread not found')
 
-    await assertThreadAccess(ctx, { thread })
+    const userIdentity = await ctx.auth.getUserIdentity()
+
+    // A claimed thread is owned by its user: an owner may set the first share key, and a
+    // key holder may not take it over. Only the anonymous case falls through to key proof.
+    if (thread.userId) {
+      if (thread.userId !== userIdentity?.subject)
+        throw new ConvexError('Only the thread owner can change its share key')
+    }
+    else if (!canRotateAnonymousLockerKey(thread, args.currentLockerKey)) {
+      throw new ConvexError('You are not authorized to change this thread\'s share key')
+    }
 
     await ctx.db.patch(args.threadId, {
       lockerKey: args.newLockerKey,
