@@ -78,14 +78,21 @@ export const authRoutesApp = appFactory.createApp()
       const workos = await getWorkOS()
       const auth = c.get('backend-auth')
 
+      // Correlates the callback with the browser that started the flow. Without it, an
+      // attacker can complete sign-in with their own account and hand the callback URL to a
+      // victim, silently signing the victim into the attacker's account.
+      const state = crypto.randomUUID()
+
       const authorizationUrl = workos.userManagement.getAuthorizationUrl({
       // Specify that we'd like AuthKit to handle the authentication flow
         provider: 'authkit',
         clientId: workos.clientId!,
         redirectUri: env.WORKOS_REDIRECT_URI!,
+        state,
       })
 
       auth.data.backToPath = c.req.query('path')
+      auth.data.authState = state
 
       // Redirect the user to the AuthKit sign-in page
       return c.redirect(authorizationUrl)
@@ -96,7 +103,7 @@ export const authRoutesApp = appFactory.createApp()
     '/callback',
     describeRoute({
       summary: 'Finish sign-in and set the session',
-      description: `Exchanges the AuthKit \`code\` for a WorkOS session, writes the profile plus its access and refresh tokens into the sealed \`backend-auth\` cookie, and redirects to the \`path\` saved by \`/login\` (default \`/\`, always on \`FRONTEND_URL\`). Public, no session needed: anyone holding an unconsumed code can complete it, and no \`state\` is checked. Answers 400 \`No code provided\` when \`code\` is absent; a bogus or expired code surfaces as a provider error, not a 401.`,
+      description: `Exchanges the AuthKit \`code\` for a WorkOS session, writes the profile plus its access and refresh tokens into the sealed \`backend-auth\` cookie, and redirects to the \`path\` saved by \`/login\` (default \`/\`, always on \`FRONTEND_URL\`). Public, no session needed, but \`state\` must match the value \`/login\` stored in the caller's sealed cookie; it is cleared on first use, so a callback URL cannot be replayed and login CSRF is refused. Answers 400 \`No code provided\` when \`code\` is absent and 400 \`Invalid sign-in state\` on a missing or mismatched \`state\`; a bogus or expired code surfaces as a provider error, not a 401.`,
       responses: {
         302: {
           description: 'Redirect back to the frontend, with the session cookie set.',
@@ -106,7 +113,7 @@ export const authRoutesApp = appFactory.createApp()
           },
         },
         400: {
-          description: 'Missing `code`.',
+          description: 'Missing `code`, or a missing or mismatched `state`.',
           content: { 'text/plain': { schema: resolver(type('string')) } },
         },
       },
@@ -118,6 +125,13 @@ export const authRoutesApp = appFactory.createApp()
       const code = c.req.query('code')
       if (!code)
         return c.text('No code provided', 400)
+
+      // Single-use: cleared whether or not it matched, so a leaked callback URL cannot be
+      // replayed and a failed check cannot be retried with a guessed value.
+      const expectedState = auth.data.authState
+      delete auth.data.authState
+      if (!expectedState || c.req.query('state') !== expectedState)
+        return c.text('Invalid sign-in state', 400)
 
       const { user, accessToken, refreshToken } = await workos.userManagement.authenticateWithCode({
         clientId: workos.clientId!,
