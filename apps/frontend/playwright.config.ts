@@ -25,9 +25,12 @@ export default defineConfig({
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
   ],
-  // Reuse a dev server that is already up; start one only when there is none.
+  // Reuse a dev server that is already up; start one only when there is none. The command
+  // carries the root `.env`, because `NODE_TLS_REJECT_UNAUTHORIZED` lives there and without it
+  // the dev proxy fails its own outbound call — every `/api` request would 500.
   webServer: {
-    command: 'pnpm run dev',
+    command: 'dotenvx run -f ../../.env -- pnpm run dev',
+    cwd: '.',
     url: baseURL,
     reuseExistingServer: true,
     timeout: 180_000,
