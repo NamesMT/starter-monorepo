@@ -1,9 +1,11 @@
 import { clearUndefined, objectPick } from '@namesmt/utils'
 import { ConvexError, v } from 'convex/values'
+import { internal } from '../../convex/_generated/api'
 import { internalMutation, internalQuery } from '../../convex/_generated/server'
 import { singleShardCounter } from '../../utils/counters'
 import { resolveMessageParts } from '../../utils/message'
 import { partValidator } from '../../utils/validators'
+import { deleteInBatches } from '../shared/batch-delete'
 
 export const internalAdd = internalMutation({
   args: {
@@ -218,7 +220,11 @@ export const editUserMessageAndRestart = internalMutation({
 export const clearAll = internalMutation({
   args: {},
   handler: async (ctx) => {
-    const messages = await ctx.db.query('messages').collect()
-    await Promise.all(messages.map(message => ctx.db.delete(message._id)))
+    const { deleted, remaining } = await deleteInBatches(ctx, ctx.db.query('messages'))
+
+    if (remaining)
+      await ctx.scheduler.runAfter(0, internal.messages.clearAll, {})
+
+    return { deleted, remaining }
   },
 })

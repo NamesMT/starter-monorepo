@@ -1,8 +1,9 @@
 import RateLimiter, { MINUTE } from '@convex-dev/rate-limiter'
 import { ConvexError, v } from 'convex/values'
-import { components } from '../../convex/_generated/api'
+import { components, internal } from '../../convex/_generated/api'
 import { mutation } from '../../convex/_generated/server'
 import { singleShardCounter } from '../../utils/counters'
+import { deleteInBatches } from '../shared/batch-delete'
 import { assertThreadAccess, canRotateAnonymousLockerKey } from './utils'
 
 const rateLimiter = new RateLimiter(components.rateLimiter, {
@@ -42,13 +43,27 @@ export const del = mutation({
 
     await assertThreadAccess(ctx, { thread, lockerKey: args.lockerKey })
 
-    const messages = await ctx.db.query('messages')
-      // Use this index because its likely to be cached
-      .withIndex('by_thread_and_timestamp', q => q.eq('threadId', args.threadId))
-      .collect()
+    // Messages first, thread last. The other order leaves messages pointing at a missing
+    // thread if the second half fails — `listByThread` then throws "Thread not found" for
+    // them forever. A thread is unbounded, so the delete is also paged: collecting every
+    // message would exceed the transaction read limit and delete nothing at all.
+    const { deleted, remaining } = await deleteInBatches(
+      ctx,
+      ctx.db.query('messages')
+        // Use this index because its likely to be cached
+        .withIndex('by_thread_and_timestamp', q => q.eq('threadId', args.threadId)),
+    )
+
+    if (remaining) {
+      await ctx.scheduler.runAfter(0, internal.threads.finishDelete, {
+        threadId: args.threadId,
+        lockerKey: args.lockerKey,
+      })
+      return { deleted, remaining }
+    }
 
     await ctx.db.delete(args.threadId)
-    await Promise.all(messages.map(message => ctx.db.delete(message._id)))
+    return { deleted, remaining: 0 }
   },
 })
 
