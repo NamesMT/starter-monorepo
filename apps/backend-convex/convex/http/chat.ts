@@ -401,11 +401,9 @@ chatApp
         if (thread.frozen)
           throw new ConvexError(`Can't send new messages to frozen thread`)
 
-        // If user provides a streamId, check if its properly unused
-        if (streamId) {
-          if (await c.env.runQuery(internal.messages.getStreamingMessage, { streamId }))
-            throw new ConvexError('streamId is already in use')
-        }
+        // A client-supplied `streamId` is claimed atomically inside `internalAdd`, where the
+        // check and the insert share one serialisable mutation. Checking here instead would
+        // let two concurrent requests both pass.
         streamId = streamId ?? `stream-${Date.now()}_${randomStr(4)}`
 
         // Validate attachments against the stored blobs + model capabilities before

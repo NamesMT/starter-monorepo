@@ -29,6 +29,21 @@ export const internalAdd = internalMutation({
     }))),
   },
   handler: async (ctx, args) => {
+    // Claim the stream id here rather than trusting a check the caller ran earlier. Callers
+    // used to read `getStreamingMessage` and then insert, which two concurrent requests could
+    // both pass; the second row then kept `isStreaming: true` forever because `finishStreaming`
+    // patches only the first match. A mutation is serialisable, so this read and the insert
+    // below cannot interleave with another claim.
+    if (args.streamId) {
+      const claimed = await ctx.db
+        .query('messages')
+        .withIndex('by_stream_id', q => q.eq('streamId', args.streamId))
+        .first()
+
+      if (claimed)
+        throw new ConvexError('streamId is already in use')
+    }
+
     await singleShardCounter.inc(ctx, `messages-in-thread_${args.threadId}`)
 
     return await ctx.db.insert('messages', {
@@ -54,26 +69,6 @@ export const updateStreamingMessage = internalMutation({
       parts: args.parts,
       isStreaming: args.isStreaming,
     }))
-  },
-})
-
-export const getStreamingMessage = internalQuery({
-  args: { streamId: v.string() },
-  handler: async (ctx, args) => {
-    const message = await ctx.db
-      .query('messages')
-      .withIndex('by_stream_id', q =>
-        q.eq('streamId', args.streamId))
-      .filter(q => q.eq(q.field('isStreaming'), true))
-      .first()
-    if (!message)
-      return null
-
-    const thread = await ctx.db.get(message.threadId)
-    if (!thread)
-      return null
-
-    return message
   },
 })
 
