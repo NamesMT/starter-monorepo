@@ -4,9 +4,23 @@ The AI chat lives in `apps/backend-convex` (model calls, persistence) and `apps/
 
 ## Shape
 
-- `POST /api/chat` (a Convex HTTP action, `convex/http/chat.ts`) validates the turn, persists the user message, then streams the model reply back as an AI SDK UI-message stream.
+- `POST /api/chat/stream` (a Convex HTTP action, `convex/http/chat.ts`, mounted at `/api/chat` in `convex/http.ts`) validates the turn, persists the user message, then streams the model reply back as an AI SDK UI-message stream. The bare `POST /api/chat` is a 404.
 - New turns stream over HTTP. Other realtime updates (another user's message, a resumed stream) arrive by polling a Convex counter subscription, not SSE.
 - Persistence is `threads` + `messages`; attachments are Convex file storage blobs referenced from the message.
+
+## Anonymous access
+
+A thread is identified either by a signed-in user (`threads.userId`, from the verified identity) or
+by a **`lockerKey`**: an opaque string the client chooses and stores, sent as a form field on every
+chat, thread and message call. `threads:create` is unauthenticated by design so a guest can chat,
+and `assertThreadAccess` then lets `lockerKey` stand in for identity.
+
+Two consequences, both currently unguarded and tracked as findings rather than fixed:
+
+- Anyone who knows or guesses a `lockerKey` **is** that guest. It is a bearer secret, so it must be
+  long and random; it is never derived from anything guessable.
+- The chat rate limit keys on `userIdentity?.subject ?? lockerKey` (`convex/http/chat.ts`), and
+  thread creation is free, so a new `lockerKey` buys a fresh bucket.
 
 ## Deliberate choices
 
